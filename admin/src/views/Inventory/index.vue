@@ -36,7 +36,7 @@
       <button class="nav-btn prev-btn" @click="scrollLeft"><i class="fas fa-chevron-left"></i></button>
 
       <div class="showcase-scroll" ref="categoryScroll">
-        <div v-for="(item, index) in categories" :key="index" class="showcase-card">
+        <div v-for="(item, index) in categories" :key="index" class="showcase-card" @click="goToDetail(item.id)">
           <img :src="item.image" :alt="item.name" class="showcase-image img-showcase">
           <span class="product-name">{{ item.name }}</span>
         </div>
@@ -75,6 +75,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
@@ -83,14 +84,20 @@ const warningChartCanvas = ref<HTMLCanvasElement | null>(null);
 const warehouseChartCanvas = ref<HTMLCanvasElement | null>(null);
 const categoryScroll = ref<HTMLElement | null>(null);
 
+const router = useRouter();
+
 const categories = [
-  { name: 'Meat', image: 'https://images.immediate.co.uk/production/volatile/sites/30/2024/06/Red-meat440-980233e.jpg?quality=90&webp=true&resize=440,400' },
-  { name: 'Vegetables', image: 'https://cdn.britannica.com/17/196817-050-6A15DAC3/vegetables.jpg?w=300' },
-  { name: 'Milks', image: 'https://emi.parkview.com/media/Image/Dashboard_952_Plant-Milk_10_22.jpg' },
-  { name: 'Ngũ cốc', image: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Ngu-coc-granola-vua-hat-ngon.jpg' },
-  { name: 'Trái cây', image: 'https://cdn.tgdd.vn/Files/2019/12/03/1224621/trai-cay-tot-nhung-nen-tranh-an-vao-cac-thoi-diem-nay-neu-khong-muon-tang-can-202112271556593399.jpg' },
-  { name: 'Gia vị', image: 'https://hoasenfoods.vn/wp-content/uploads/2024/01/danh-sach-gia-vi.jpg' }
+  { id: 'meat', name: 'Meat', image: 'https://images.immediate.co.uk/production/volatile/sites/30/2024/06/Red-meat440-980233e.jpg?quality=90&webp=true&resize=440,400' },
+  { id: 'vegetables', name: 'Vegetables', image: 'https://cdn.britannica.com/17/196817-050-6A15DAC3/vegetables.jpg?w=300' },
+  { id: 'milks', name: 'Milks', image: 'https://emi.parkview.com/media/Image/Dashboard_952_Plant-Milk_10_22.jpg' },
+  { id: 'grains', name: 'Ngũ cốc', image: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Ngu-coc-granola-vua-hat-ngon.jpg' },
+  { id: 'fruits', name: 'Trái cây', image: 'https://cdn.tgdd.vn/Files/2019/12/03/1224621/trai-cay-tot-nhung-nen-tranh-an-vao-cac-thoi-diem-nay-neu-khong-muon-tang-can-202112271556593399.jpg' },
+  { id: 'spices', name: 'Gia vị', image: 'https://hoasenfoods.vn/wp-content/uploads/2024/01/danh-sach-gia-vi.jpg' }
 ];
+
+const goToDetail = (id: string) => {
+  router.push({ name: 'category-detail', params: { id } });
+};
 
 const labels = ['Nhóm Thịt cá', 'Nhóm Rau củ', 'Nhóm Bơ sữa', 'Nhóm Đồ khô'];
 

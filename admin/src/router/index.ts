@@ -19,6 +19,12 @@ const router = createRouter({
           component: () => import('../views/Inventory/index.vue')
         },
         {
+          path: 'inventory/:id',
+          name: 'category-detail',
+          component: () => import('../views/Inventory/CategoryDetail.vue'),
+          props: true
+        },
+        {
           path: 'recipes',
           name: 'recipes',
           component: () => import('../views/Recipes/index.vue')

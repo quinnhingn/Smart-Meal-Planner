@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Sidebar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Bảng màu Vàng - Xanh - Trắng */
+            --primary-green: #4a8c54; 
+            --primary-yellow: #f4c553; 
+            --yellow-hover: #e0b240; 
+            
+            --bg-color: #f2f5f3; 
+            --sidebar-bg: #ffffff; 
+            
+            --text-dark: #243326; 
+            --text-muted: #6b7a6d; 
+            
+            --nav-active-bg: #fffce8; 
+            --nav-hover-bg: #f0f5f1; 
+            --promo-bg: #fffce8; 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Container */
+        .sidebar {
+            width: 320px; 
+            height: 90vh;
+            background-color: var(--sidebar-bg);
+            border-radius: 30px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(74, 140, 84, 0.08); 
+        }
+
+        /* Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 0 10px;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            background-color: var(--primary-yellow);
+            color: #ffffff;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1; 
+        }
+
+        .nav-item {
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--text-dark);
+            padding: 15px 20px;
+            font-size: 14px; 
+            font-weight: 500;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link i {
+            font-size: 18px;
+            color: var(--text-muted);
+            width: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover & Active States */
+        .nav-item:hover .nav-link {
+            background-color: var(--nav-hover-bg);
+            color: var(--primary-green);
+        }
+
+        .nav-item:hover .nav-link i {
+            color: var(--primary-green);
+        }
+
+        .nav-item.active {
+            background-color: var(--nav-active-bg);
+            box-shadow: 0 4px 15px rgba(244, 197, 83, 0.15); 
+        }
+
+        .nav-item.active .nav-link {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .nav-item.active .nav-link i {
+            color: var(--primary-yellow); 
+        }
+
+        /* Support/Promo Card Trở lại form cũ */
+        .promo-card {
+            background-color: var(--promo-bg);
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            margin-top: auto;
+            border: 1px dashed rgba(244, 197, 83, 0.5); 
+        }
+
+        .promo-illustration {
+            position: relative;
+            font-size: 50px;
+            color: var(--primary-green); 
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .discount-tag {
+            position: absolute;
+            bottom: -5px;
+            right: -15px;
+            background-color: #ff6b6b; 
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transform: rotate(15deg);
+            border: 2px solid white;
+        }
+
+        .promo-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .upgrade-btn {
+            background-color: var(--primary-yellow);
+            color: var(--text-dark); 
+            border: none;
+            padding: 12px 20px;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upgrade-btn:hover {
+            background-color: var(--yellow-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fa-solid fa-leaf"></i>
+            </div>
+            <span class="logo-text">Admin Panel</span>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item active">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span>Quản lý kho nguyên liệu</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>Quản lý công thức</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Quản lý người dùng</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Phân tích hành vi</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-cubes"></i>
+                    <span>Quản lý API & Models</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-crown"></i>
+                    <span>Quản lý gói đăng ký</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="promo-card">
+            <div class="promo-illustration">
+                <i class="fa-solid fa-book-open"></i>
+                <div class="discount-tag"><i class="fa-solid fa-bolt"></i> Mới</div>
+            </div>
+            <p>Khám phá tài liệu hướng dẫn tích hợp API phiên bản 2.0</p>
+            <button class="upgrade-btn">Xem tài liệu</button>
+        </div>
+    </aside>
+
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

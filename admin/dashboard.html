@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Kho Nguyên Liệu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Toàn bộ CSS */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-page {
+            background: #ffffff;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 50px;
+            box-sizing: border-box;
+        }
+
+        /* Khối giả lập hình ảnh */
+        .placeholder-image-showcase {
+            background: #f0f4f1;
+            color: #a0aab2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            border-radius: 50%;
+            border: 2px dashed #d1d8dd;
+            text-align: center;
+            padding: 10px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Khối cho ảnh thật */
+        .img-showcase {
+            object-fit: cover;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        .showcase-card:hover .placeholder-image-showcase {
+            border-color: #8EAE82;
+            background: #eaf1e8;
+            transform: scale(1.05);
+        }
+
+        .showcase-card:hover .img-showcase {
+            border-color: #8EAE82;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(142, 174, 130, 0.3);
+        }
+
+        /* Header */
+        .food-header {
+            margin-bottom: 40px;
+        }
+
+        .brand {
+            font-size: 14px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .food-header h1 {
+            font-size: 42px;
+            margin: 10px 0;
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+        .food-header p {
+            font-size: 14px;
+            color: #95a5a6;
+            margin: 0;
+            max-width: 350px;
+            line-height: 1.6;
+        }
+
+        /* Metrics and Main Dish section */
+        .metrics-main {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .metrics-grid {
+            width: 220px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .metric-card {
+            border-radius: 20px;
+            padding: 20px 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .metric-card.yellow {
+            background: #FFF9E6;
+            color: #333;
+        }
+
+        .metric-card.green {
+            background: #8EAE82;
+            color: #ffffff;
+            grid-column: span 2;
+            padding: 25px 15px;
+        }
+
+        .metric-card h2 {
+            font-size: 22px;
+            margin: 0 0 5px 0;
+            font-weight: 700;
+        }
+
+        .metric-card.green h2 {
+            font-size: 32px;
+        }
+
+        .metric-card p {
+            font-size: 12px;
+            margin: 0;
+            opacity: 0.8;
+            text-transform: lowercase;
+        }
+
+        .centerpiece {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            position: relative;
+        }
+
+        /* Container cho 2 biểu đồ */
+        .main-dish {
+            width: 280px;
+            height: 280px;
+            position: relative;
+        }
+
+        .side-elements {
+            width: 140px;
+            height: 140px;
+            margin-top: -100px;
+            position: relative;
+        }
+
+        /* SHOWCASE CÓ SCROLL */
+        .showcase-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .nav-btn {
+            background: #ffffff;
+            border: 1px solid #d1d8dd;
+            color: #2c3e50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            z-index: 2;
+        }
+
+        .nav-btn:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .showcase-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            flex: 1;
+            padding: 10px 0;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .showcase-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .showcase-card {
+            text-align: center;
+            min-width: 140px;
+            flex: 0 0 auto;
+            cursor: pointer;
+        }
+
+        .showcase-image {
+            height: 120px;
+            width: 120px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+        }
+
+        .product-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* BẢNG TÌNH TRẠNG KHO CSS (MỚI GỌN GÀNG HƠN) */
+        .inventory-dashboard {
+            width: 100%;
+        }
+
+        .status-legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #555;
+            justify-content: flex-end;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .cooking-review {
+            background: #FAFAFA;
+            border-radius: 30px;
+            padding: 30px 40px;
+            display: flex;
+            gap: 40px;
+        }
+
+        .review-meta {
+            width: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            /* Giúp các chữ dàn đều */
+        }
+
+        .review-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            padding-top: 2px;
+            /* Căn giữa nhẹ với thanh progress */
+        }
+
+        .progress-grid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+            /* Khoảng cách giữa các hàng */
+        }
+
+        .progress-row {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .progress-cell {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .progress-bar-bg {
+            background: #E8ECEF;
+            height: 8px;
+            border-radius: 10px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #888;
+            text-align: right;
+        }
+
+        .text-warning {
+            color: #faad14;
+            font-weight: bold;
+        }
+
+        .text-danger {
+            color: #ff4d4f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-page">
+        <div class="food-container">
+
+            <div class="food-header">
+                <span class="brand">Hệ thống quản lý</span>
+                <h1>Tổng quan kho</h1>
+                <p>Theo dõi số lượng, giá trị và tình trạng biến động của nguyên vật liệu theo thời gian thực.</p>
+            </div>
+
+            <div class="metrics-main">
+                <div class="metrics-grid">
+                    <div class="metric-card yellow">
+                        <h2>1,245</h2>
+                        <p>mặt hàng</p>
+                    </div>
+                    <div class="metric-card yellow">
+                        <h2>15.4T</h2>
+                        <p>khối lượng (tấn)</p>
+                    </div>
+                    <div class="metric-card green">
+                        <h2>850M ₫</h2>
+                        <p>tổng giá trị tồn</p>
+                    </div>
+                </div>
+
+                <div class="centerpiece">
+                    <div class="side-elements">
+                        <canvas id="warningChart"></canvas>
+                    </div>
+                    <div class="main-dish">
+                        <canvas id="warehouseChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="showcase-wrapper">
+                <button class="nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+
+                <div class="showcase-scroll" id="categoryScroll">
+                    <div class="showcase-card">
+                        <img src="https://images.immediate.co.uk/production/volatile/sites/30/2024/06/Red-meat440-980233e.jpg?quality=90&webp=true&resize=440,400"
+                            alt="Meat" class="showcase-image img-showcase">
+                        <span class="product-name">Meat</span>
+                    </div>
+                    <div class="showcase-card">
+                        <img src="https://cdn.britannica.com/17/196817-050-6A15DAC3/vegetables.jpg?w=300"
+                            alt="Vegetables" class="showcase-image img-showcase">
+                        <span class="product-name">Vegetables</span>
+                    </div>
+                    <div class="showcase-card">
+                        <img src="https://emi.parkview.com/media/Image/Dashboard_952_Plant-Milk_10_22.jpg" alt="Milks"
+                            class="showcase-image img-showcase">
+                        <span class="product-name">Milks</span>
+                    </div>
+                    <div class="showcase-card">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Ngu-coc-granola-vua-hat-ngon.jpg"
+                            alt="Ngũ cốc" class="showcase-image img-showcase">
+                        <span class="product-name">Ngũ cốc</span>
+                    </div>
+                    <div class="showcase-card">
+                        <img src="https://cdn.tgdd.vn/Files/2019/12/03/1224621/trai-cay-tot-nhung-nen-tranh-an-vao-cac-thoi-diem-nay-neu-khong-muon-tang-can-202112271556593399.jpg"
+                            alt="Trái cây" class="showcase-image img-showcase">
+                        <span class="product-name">Trái cây</span>
+                    </div>
+                    <div class="showcase-card">
+                        <img src="https://hoasenfoods.vn/wp-content/uploads/2024/01/danh-sach-gia-vi.jpg" alt="Gia vị"
+                            class="showcase-image img-showcase">
+                        <span class="product-name">Gia vị</span>
+                    </div>
+                </div>
+
+                <button class="nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <div class="inventory-dashboard">
+
+                <div class="status-legend">
+                    <div class="legend-item"><span class="legend-dot" style="background: #8EAE82;"></span>Tươi mới</div>
+                    <div class="legend-item"><span class="legend-dot" style="background: #1890ff;"></span>Ổn định</div>
+                    <div class="legend-item"><span class="legend-dot" style="background: #faad14;"></span>Sắp hết hạn
+                    </div>
+                    <div class="legend-item"><span class="legend-dot" style="background: #ff4d4f;"></span>Đã hết hạn
+                    </div>
+                </div>
+
+                <div class="cooking-review">
+                    <div class="review-meta">
+                        <span class="review-label">Nhóm Thịt cá</span>
+                        <span class="review-label">Nhóm Rau củ</span>
+                        <span class="review-label">Nhóm Bơ sữa</span>
+                        <span class="review-label">Nhóm Đồ khô</span>
+                    </div>
+
+                    <div class="progress-grid">
+
+                        <div class="progress-row">
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 60%; background: #8EAE82;"></div>
+                                </div>
+                                <div class="progress-text">60%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 30%; background: #1890ff;"></div>
+                                </div>
+                                <div class="progress-text">30%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 10%; background: #faad14;"></div>
+                                </div>
+                                <div class="progress-text text-warning">10%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 0%; background: #ff4d4f;"></div>
+                                </div>
+                                <div class="progress-text">0%</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-row">
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 40%; background: #8EAE82;"></div>
+                                </div>
+                                <div class="progress-text">40%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 35%; background: #1890ff;"></div>
+                                </div>
+                                <div class="progress-text">35%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 20%; background: #faad14;"></div>
+                                </div>
+                                <div class="progress-text text-warning">20%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 5%; background: #ff4d4f;"></div>
+                                </div>
+                                <div class="progress-text text-danger">5%</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-row">
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 50%; background: #8EAE82;"></div>
+                                </div>
+                                <div class="progress-text">50%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 40%; background: #1890ff;"></div>
+                                </div>
+                                <div class="progress-text">40%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 10%; background: #faad14;"></div>
+                                </div>
+                                <div class="progress-text text-warning">10%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 0%; background: #ff4d4f;"></div>
+                                </div>
+                                <div class="progress-text">0%</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-row">
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 90%; background: #8EAE82;"></div>
+                                </div>
+                                <div class="progress-text">90%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 10%; background: #1890ff;"></div>
+                                </div>
+                                <div class="progress-text">10%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 0%; background: #faad14;"></div>
+                                </div>
+                                <div class="progress-text">0%</div>
+                            </div>
+                            <div class="progress-cell">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 0%; background: #ff4d4f;"></div>
+                                </div>
+                                <div class="progress-text">0%</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const categoryScroll = document.getElementById('categoryScroll');
+        const nextBtn = document.querySelector('.next-btn');
+        const prevBtn = document.querySelector('.prev-btn');
+
+        const scrollAmount = 160;
+
+        nextBtn.addEventListener('click', () => {
+            categoryScroll.scrollLeft += scrollAmount;
+        });
+
+        prevBtn.addEventListener('click', () => {
+            categoryScroll.scrollLeft -= scrollAmount;
+        });
+
+
+        const ctxWarning = document.getElementById('warningChart').getContext('2d');
+        new Chart(ctxWarning, {
+            type: 'doughnut',
+            data: {
+                labels: ['Chưa khớp nhãn AI', 'Thiếu ảnh/Dinh dưỡng', 'Đã chuẩn hóa 100%'],
+                datasets: [{
+                    data: [12, 18, 70],
+                    backgroundColor: [
+                        '#ff4d4f',
+                        '#E8CA72',
+                        '#8EAE82'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        titleFont: { family: "'Poppins', sans-serif" },
+                        bodyFont: { family: "'Poppins', sans-serif" }
+                    }
+                }
+            }
+        });
+
+        const ctxWarehouse = document.getElementById('warehouseChart').getContext('2d');
+        new Chart(ctxWarehouse, {
+            type: 'pie',
+            data: {
+                labels: ['Thịt (Meat)', 'Rau củ (Vegetable)', 'Sữa (Dairy)', 'Ngũ cốc (Grain)', 'Trái cây (Fruit)', 'Gia vị (Seasoning)'],
+                datasets: [{
+                    data: [25, 30, 10, 15, 12, 8],
+                    backgroundColor: [
+                        '#ff7875', '#8EAE82', '#1890ff', '#E8CA72', '#ffc069', '#d9d9d9'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 15,
+                            font: {
+                                family: "'Poppins', sans-serif",
+                                size: 11
+                            }
+                        }
+                    },
+                    tooltip: {
+                        titleFont: { family: "'Poppins', sans-serif" },
+                        bodyFont: { family: "'Poppins', sans-serif" }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

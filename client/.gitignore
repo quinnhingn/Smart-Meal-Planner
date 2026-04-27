@@ -1,0 +1,60 @@
+# ==========================================
+# 1. NODE / REACT NATIVE EXPO (Frontend)
+# ==========================================
+node_modules/
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+/ios
+/android
+.metro-health-check*
+*.tsbuildinfo
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Native credentials & configs
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# ==========================================
+# 2. PYTHON / FLASK & AI (Backend)
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+instance/
+.pytest_cache/
+
+# AI YOLOv8 specific
+runs/
+# *.pt (Mở comment dòng này nếu bạn không muốn push file weights của model lên Github)
+
+# ==========================================
+# 3. ENVIRONMENT & SECRETS (Bảo mật)
+# ==========================================
+# Bắt buộc ignore toàn bộ file .env để không lộ thông tin Neon DB
+.env
+.env.*
+!.env.example
+*.pem
+
+# ==========================================
+# 4. HỆ ĐIỀU HÀNH & IDE (OS & Editors)
+# ==========================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

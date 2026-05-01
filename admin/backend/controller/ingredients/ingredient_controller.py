@@ -129,6 +129,43 @@ def auto_fill_nutrition():
     except Exception as e:
         return jsonify({"success": False, "message": f"Lỗi gọi API USDA: {str(e)}"}), 500
 
+@ingredient_bp.route('/guidelines', methods=['POST'])
+@jwt_required()
+def get_guidelines():
+    try:
+        data = request.get_json()
+        query = data.get('query', '').strip().lower()
+        if not query:
+            return jsonify({"success": False, "message": "Thiếu từ khóa tìm kiếm"}), 400
+
+        import os, json
+        # File is at admin/backend/data/integrident.json
+        # __file__ is admin/backend/controller/ingredients/ingredient_controller.py
+        # so data dir is at ../../data/integrident.json
+        json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../data/integrident.json'))
+        
+        if not os.path.exists(json_path):
+            return jsonify({"success": False, "message": f"Không tìm thấy file dữ liệu ở: {json_path}"}), 404
+            
+        with open(json_path, 'r', encoding='utf-8') as f:
+            guidelines = json.load(f)
+            
+        for item in guidelines:
+            if item.get('Tên Nguyên Liệu', '').strip().lower() == query:
+                return jsonify({
+                    "success": True,
+                    "data": {
+                        "storage": item.get('Cách Bảo Quản', ''),
+                        "min_weight": item.get('Cân Nặng Min (kg)', ''),
+                        "max_weight": item.get('Cân Nặng Max (kg)', ''),
+                        "notes": item.get('Ghi Chú Thêm', '')
+                    }
+                }), 200
+                
+        return jsonify({"success": False, "message": "Không tìm thấy hướng dẫn cho nguyên liệu này trong hệ thống."}), 404
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Lỗi server: {str(e)}"}), 500
+
 @ingredient_bp.route('', methods=['POST'])
 @admin_required() # Bắt buộc là Admin
 def create():

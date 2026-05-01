@@ -16,6 +16,22 @@ class IngredientModel(db.Model):
     protein_per_100g = db.Column(db.Float, default=0)
     fat_per_100g = db.Column(db.Float, default=0)
     carbs_per_100g = db.Column(db.Float, default=0)
+    
+    # New fields
+    sugar = db.Column(db.Float, default=0)
+    fiber = db.Column(db.Float, default=0)
+    saturated_fat = db.Column(db.Float, default=0)
+    sodium = db.Column(db.Float, default=0)
+    calcium = db.Column(db.Float, default=0)
+    iron = db.Column(db.Float, default=0)
+    vitamin_c = db.Column(db.Float, default=0)
+    vitamin_a = db.Column(db.Float, default=0)
+    
+    storage_method = db.Column(db.Text)
+    weight_min = db.Column(db.Float)
+    weight_max = db.Column(db.Float)
+    notes = db.Column(db.Text)
+
     created_by = db.Column(UUID(as_uuid=True), db.ForeignKey('scr_users.id', ondelete='SET NULL'))
     created_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
 
@@ -32,6 +48,18 @@ class IngredientModel(db.Model):
             "protein_per_100g": self.protein_per_100g,
             "fat_per_100g": self.fat_per_100g,
             "carbs_per_100g": self.carbs_per_100g,
+            "sugar": self.sugar,
+            "fiber": self.fiber,
+            "saturated_fat": self.saturated_fat,
+            "sodium": self.sodium,
+            "calcium": self.calcium,
+            "iron": self.iron,
+            "vitamin_c": self.vitamin_c,
+            "vitamin_a": self.vitamin_a,
+            "storage_method": self.storage_method,
+            "weight_min": self.weight_min,
+            "weight_max": self.weight_max,
+            "notes": self.notes,
             "created_by": str(self.created_by) if self.created_by else None,
             "created_at": self.created_at.isoformat() if self.created_at else None
         }

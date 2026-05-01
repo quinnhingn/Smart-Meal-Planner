@@ -12,3 +12,19 @@ class IngredientRequest(BaseModel):
     protein_per_100g: Optional[float] = 0
     fat_per_100g: Optional[float] = 0
     carbs_per_100g: Optional[float] = 0
+    
+    # New nutrition fields
+    sugar: Optional[float] = 0
+    fiber: Optional[float] = 0
+    saturated_fat: Optional[float] = 0
+    sodium: Optional[float] = 0
+    calcium: Optional[float] = 0
+    iron: Optional[float] = 0
+    vitamin_c: Optional[float] = 0
+    vitamin_a: Optional[float] = 0
+    
+    # Storage & Usage
+    storage_method: Optional[str] = None
+    weight_min: Optional[float] = None
+    weight_max: Optional[float] = None
+    notes: Optional[str] = None

@@ -1,0 +1,1242 @@
+[
+  {
+    "Tên Nguyên Liệu": "Thịt heo (nạc vai)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bảo quản ngăn mát 0-4°C trong 3 ngày, cấp đông -18°C dùng trong 3 tháng.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Tránh dùng cho người mỡ máu cao nếu có kèm mỡ."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá hồi",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bảo quản ngăn đông lạnh -18°C. Nếu để ngăn mát nên dùng trong 24h.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa nhiều Omega-3. Lưu ý dị ứng hải sản."
+  },
+  {
+    "Tên Nguyên Liệu": "Bơ sáp",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Để ngoài nhiệt độ phòng đến khi chín, sau đó bảo quản ngăn mát tủ lạnh từ 3-5 ngày.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 75,
+    "Ghi Chú Thêm": "Ít đường, giàu chất béo tốt. Phù hợp cho chế độ Keto."
+  },
+  {
+    "Tên Nguyên Liệu": "Cải bắp",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín bằng màng bọc thực phẩm, bảo quản ngăn mát tủ lạnh được 1-2 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Phù hợp mọi đối tượng. Người bị bướu cổ nên nấu chín kỹ."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu phộng",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Đựng trong hũ kín, để nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "CẢNH BÁO DỊ ỨNG CAO. Cân nhắc khi đưa vào thực đơn chung."
+  },
+  {
+    "Tên Nguyên Liệu": "Ức gà",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bảo quản ngăn mát 0-4°C (2-3 ngày), cấp đông -18°C (3 tháng).",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tốt cho tăng cơ, giảm mỡ. Người suy thận nên lưu ý lượng đạm."
+  },
+  {
+    "Tên Nguyên Liệu": "Thịt bò (thăn)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bảo quản ngăn mát 0-4°C (3-5 ngày), đông lạnh -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giàu sắt, kẽm. Không nên ăn quá nhiều vào buổi tối."
+  },
+  {
+    "Tên Nguyên Liệu": "Tôm sú",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cấp đông -18°C. Rã đông trước khi nấu.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "CẢNH BÁO DỊ ỨNG HẢI SẢN."
+  },
+  {
+    "Tên Nguyên Liệu": "Mực ống",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch, cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Khó tiêu nếu ăn nhiều vào buổi tối. Hàm lượng cholesterol khá cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Trứng gà",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Bảo quản ngăn mát tủ lạnh từ 3-4 tuần. Đầu to hướng lên trên.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Người mỡ máu cao nên lưu ý số lượng lòng đỏ (1-2 quả/tuần)."
+  },
+  {
+    "Tên Nguyên Liệu": "Sữa tươi không đường",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh, dùng hết trong 48h sau khi mở hộp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Lưu ý đối với người hội chứng bất dung nạp Lactose."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu hũ (Đậu phụ)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngâm nước, để ngăn mát 2-3 ngày (nên thay nước hàng ngày).",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Nguồn đạm thực vật tốt. Phù hợp ăn chay, thuần chay."
+  },
+  {
+    "Tên Nguyên Liệu": "Ngao (Nghêu)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngâm nước muối ớt xả cát, dùng ngay trong ngày.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "Tính hàn, người bụng yếu hoặc tỳ vị hư hàn nên hạn chế."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá lóc (Cá quả)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch, bảo quản ngăn đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Dễ tiêu hóa, thịt nạc ít xương, rất tốt cho người mới ốm dậy."
+  },
+  {
+    "Tên Nguyên Liệu": "Sữa chua không đường",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Bảo quản ngăn mát 4-8°C.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất tốt cho hệ tiêu hóa, chứa nhiều lợi khuẩn probiotics."
+  },
+  {
+    "Tên Nguyên Liệu": "Cải thìa (Cải chíp)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc giấy/màng bọc, ngăn mát tủ lạnh 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rửa kỹ từng bẹ lá vì dễ đọng đất cát. Phù hợp mọi đối tượng."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau muống",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Nhặt bỏ lá úa, bọc kín để ngăn mát 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tránh dùng cho người đang có vết thương hở (sẹo lồi), đau khớp."
+  },
+  {
+    "Tên Nguyên Liệu": "Cà chua",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Để nhiệt độ phòng. Tránh để tủ lạnh làm mất vị và bở thịt.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chứa nhiều lycopene. Người đau dạ dày hạn chế ăn lúc đói."
+  },
+  {
+    "Tên Nguyên Liệu": "Khoai tây",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Nơi khô ráo, thoáng tối. KHÔNG để tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "CẢNH BÁO: Bỏ ngay nếu có mầm xanh vì chứa độc tố solanine."
+  },
+  {
+    "Tên Nguyên Liệu": "Khoai lang",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Nơi thoáng mát, tối. Không để tủ lạnh (dễ hỏng lõi).",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chỉ số đường huyết (GI) thấp, ưu tiên dùng trong chế độ giảm cân."
+  },
+  {
+    "Tên Nguyên Liệu": "Cà rốt",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cắt bớt cuống lá, bọc màng bọc để ngăn mát 1-2 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giàu Vitamin A. Ăn quá nhiều liên tục có thể gây vàng da tạm thời."
+  },
+  {
+    "Tên Nguyên Liệu": "Bí đỏ",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Quả nguyên để ngoài mát hàng tháng. Cắt ra phải bọc kín cất tủ.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Tinh bột cao. Người tiểu đường nên ăn lượng vừa phải."
+  },
+  {
+    "Tên Nguyên Liệu": "Bông cải xanh (Broccoli)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín để ngăn mát tủ lạnh 3-5 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Siêu thực phẩm giàu chất chống oxy hóa, tốt cho mọi đối tượng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hành tây",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Nơi khô ráo, thoáng mát. Không để chung với khoai tây.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Có thể gây kích ứng, đầy hơi nếu ăn sống quá nhiều."
+  },
+  {
+    "Tên Nguyên Liệu": "Dưa leo (Dưa chuột)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh (nhưng không quá lạnh) khoảng 1 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tính mát, chứa nhiều nước. Ăn phần vỏ cung cấp nhiều chất xơ."
+  },
+  {
+    "Tên Nguyên Liệu": "Ớt chuông",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh từ 1-2 tuần.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cực kỳ giàu Vitamin C (đặc biệt quả màu đỏ)."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau ngót",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín, ngăn mát 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Phụ nữ mang thai 3 tháng đầu nên hạn chế ăn nhiều."
+  },
+  {
+    "Tên Nguyên Liệu": "Khổ qua (Mướp đắng)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc màng bọc, ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giúp hỗ trợ hạ đường huyết. Người huyết áp thấp lưu ý."
+  },
+  {
+    "Tên Nguyên Liệu": "Cà tím",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 3-5 ngày. Dễ bị thâm xỉn khi bổ ra.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Có chứa solanine ở lượng nhỏ, bắt buộc phải nấu chín kỹ."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau mồng tơi",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 2-3 ngày. Dễ bị nát nếu dính nước.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tính hàn, nhuận tràng. Người hay tiêu chảy nên hạn chế."
+  },
+  {
+    "Tên Nguyên Liệu": "Chuối tây",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng cho chín. Treo lên để tránh dập nát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giàu kali, carbohydrate hấp thu nhanh, tốt cho lúc tập thể thao."
+  },
+  {
+    "Tên Nguyên Liệu": "Táo (Fuji/Gala)",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh có thể giữ được 3-4 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ăn cả vỏ tốt hơn để lấy chất xơ (nếu đảm bảo rửa sạch)."
+  },
+  {
+    "Tên Nguyên Liệu": "Dưa hấu",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Để nguyên ngoài mát. Bổ ra phải bọc kín màng cất tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chỉ số đường huyết (GI) khá cao, người tiểu đường lưu ý lượng ăn."
+  },
+  {
+    "Tên Nguyên Liệu": "Đu đủ chín",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 2-3 ngày sau khi chín.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tốt cho tiêu hóa (chứa enzyme papain). Có tính nhuận tràng."
+  },
+  {
+    "Tên Nguyên Liệu": "Xoài chín",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Để ngoài cho chín, sau đó cho vào ngăn mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Hàm lượng đường cao, hạn chế khi đang theo chế độ siết cân gắt."
+  },
+  {
+    "Tên Nguyên Liệu": "Nho",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Không rửa trước khi cất, bọc kín để ngăn mát 1-2 tuần.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Chứa nhiều chất chống oxy hóa. Lưu ý nghẹn ở trẻ nhỏ."
+  },
+  {
+    "Tên Nguyên Liệu": "Sầu riêng",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Tách múi cho vào hộp kín, để ngăn mát hoặc ngăn đông.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 75,
+    "Ghi Chú Thêm": "Calo cực cao, tính nóng. Tránh dùng kèm rượu bia."
+  },
+  {
+    "Tên Nguyên Liệu": "Thanh long",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 3-5 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất giàu chất xơ hòa tan. Lành tính với hầu hết mọi người."
+  },
+  {
+    "Tên Nguyên Liệu": "Cam sành",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nơi thoáng mát hoặc ngăn mát tủ lạnh (1-2 tuần).",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nên ăn cả múi (bỏ hạt) để lấy chất xơ thay vì chỉ ép lấy nước."
+  },
+  {
+    "Tên Nguyên Liệu": "Dâu tây",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Không rửa trước, lót giấy thấm ẩm, ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Dễ hỏng, cần kiểm tra nấm mốc thường xuyên. Rửa kỹ trước khi ăn."
+  },
+  {
+    "Tên Nguyên Liệu": "Gạo tẻ",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Thùng/hũ kín, nơi khô ráo, tránh mọt ẩm.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Nguồn carb chính. Người tiểu đường nên kiểm soát lượng ăn."
+  },
+  {
+    "Tên Nguyên Liệu": "Gạo lứt",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Đựng hộp kín, nơi thoáng mát, khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất tốt cho giảm cân, nhưng cần nhai kỹ để tránh đau dạ dày."
+  },
+  {
+    "Tên Nguyên Liệu": "Yến mạch",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ thủy tinh đậy kín nắp, nơi khô mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa beta-glucan tốt cho tim mạch. Lựa chọn tuyệt vời cho bữa sáng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt chia",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ kín, để tủ lạnh để bảo quản lâu, tránh ẩm và ánh sáng.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cần ngâm nở hoàn toàn (ít nhất 10-15p) trước khi sử dụng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt điều",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ kín, có thể để tủ lạnh để hạt luôn giòn và không gắt dầu.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "Calo khá cao, mỗi ngày chỉ nên ăn 15-20 hạt."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt óc chó",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ kín, bảo quản ngăn mát hoặc ngăn đông tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "Chứa rất nhiều Omega-3. Nhanh hỏng do lượng tinh dầu cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu đen",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Lọ kín đậy nắp, nơi khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tính mát, thanh nhiệt. Cần ngâm 4-8h trước khi nấu."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu xanh",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hộp/Lọ kín, nơi khô mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Lành tính, dễ tiêu hóa, hỗ trợ giải nhiệt cơ thể."
+  },
+  {
+    "Tên Nguyên Liệu": "Bún tươi",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Dùng trong ngày, để ngăn mát sẽ bị chai cứng.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Người bụng yếu nên trụng qua nước sôi một lần trước khi ăn."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh mì đen",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Bọc kín để ngăn mát (vài ngày) hoặc cấp đông (vài tháng).",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chỉ số đường huyết (GI) thấp, hợp cho người ăn kiêng, tiểu đường."
+  },
+  {
+    "Tên Nguyên Liệu": "Tỏi",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Rổ/lưới thoáng khí, nhiệt độ phòng. KHÔNG để tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tránh ăn sống quá nhiều nếu bị viêm loét dạ dày."
+  },
+  {
+    "Tên Nguyên Liệu": "Gừng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Nơi thoáng mát hoặc bọc giấy bạc để ngăn mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tính ấm. Người có cơ địa nội nhiệt hoặc đang sốt cao nên kiêng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hành lá",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Rửa sạch, thái nhỏ, cho hộp/túi zip cấp đông dùng dần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Gia vị tạo hương vị phổ biến. Gần như không có chống chỉ định."
+  },
+  {
+    "Tên Nguyên Liệu": "Dầu dừa",
+    "Nhóm (Tùy chọn)": "Khác",
+    "Cách Bảo Quản": "Lọ thủy tinh, đậy kín, nhiệt độ phòng (sẽ đông đặc dưới 25°C).",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "Nhiều chất béo bão hòa, dùng lượng vừa phải khi xào nấu."
+  },
+  {
+    "Tên Nguyên Liệu": "Mật ong",
+    "Nhóm (Tùy chọn)": "Khác",
+    "Cách Bảo Quản": "Lọ đậy kín, để nơi thoáng mát. KHÔNG để tủ lạnh (dễ kết tinh đường).",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Tuyệt đối không dùng cho trẻ sơ sinh dưới 1 tuổi."
+  },
+  {
+    "Tên Nguyên Liệu": "Thịt vịt",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bảo quản ngăn mát 0-4°C (1-2 ngày), đông lạnh -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tính hàn. Người đang bị cảm lạnh nên hạn chế ăn."
+  },
+  {
+    "Tên Nguyên Liệu": "Thịt gà ta",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngăn mát 1-2 ngày, cấp đông lạnh -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giàu đạm. Phần da chứa nhiều mỡ bão hòa, cân nhắc khi siết mỡ."
+  },
+  {
+    "Tên Nguyên Liệu": "Sườn non heo",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngăn mát 2-3 ngày, đông lạnh -18°C cất được lâu dài.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Lượng calo và chất béo khá cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá thu",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch, bọc kín cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giàu Omega-3. Bà bầu nên hạn chế vì có thể chứa thủy ngân."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá rô phi",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngăn mát 1-2 ngày hoặc làm sạch cấp đông ngay.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất lành tính, thịt trắng nhiều đạm ít béo."
+  },
+  {
+    "Tên Nguyên Liệu": "Mực lá",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch nội tạng, bọc kín cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Cảnh báo dị ứng hải sản. Hàm lượng cholesterol cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Bạch tuộc",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch bằng muối, cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Dễ bị dai nếu đun trên lửa quá lâu."
+  },
+  {
+    "Tên Nguyên Liệu": "Cua biển",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Dùng khi còn sống, hoặc hấp sơ rồi mới cấp đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Chứa nhiều canxi. Phụ nữ mang thai 3 tháng đầu hay bị nghén nên lưu ý."
+  },
+  {
+    "Tên Nguyên Liệu": "Ghẹ xanh",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Dùng tươi sống hoặc hấp chín rồi trữ đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Tính hàn, dễ lạnh bụng. Người bụng yếu nên ăn kèm gừng."
+  },
+  {
+    "Tên Nguyên Liệu": "Ếch",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch kỹ nội tạng, bỏ chỉ đùi, bảo quản ngăn đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Bắt buộc nấu chín thật kỹ để phòng ngừa ký sinh trùng."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau dền",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín màng bọc, để ngăn mát 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chứa nhiều sắt và kẽm, tính mát, nhuận tràng."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau mầm",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hộp kín lót giấy thấm ướt, ngăn mát 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cần rửa thật sạch để tránh nhiễm khuẩn. Phù hợp làm salad."
+  },
+  {
+    "Tên Nguyên Liệu": "Cải ngọt",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc túi nilon đục lỗ, ngăn mát tủ lạnh 3-4 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất lành tính, dễ tiêu hóa cho mọi lứa tuổi."
+  },
+  {
+    "Tên Nguyên Liệu": "Cải xoăn (Kale)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc giấy lót ẩm, ngăn mát tủ lạnh 5-7 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chứa rất nhiều Vitamin K. Người dùng thuốc loãng máu nên lưu ý."
+  },
+  {
+    "Tên Nguyên Liệu": "Măng tây",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cắm gốc vào ly nước, trùm túi nilon cất tủ mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cực giàu axit folic, rất tốt cho phụ nữ đang chuẩn bị mang thai."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu cô ve",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Túi đục lỗ thoát hơi, ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chứa Saponin độc nhẹ khi sống, bắt buộc phải nấu chín kỹ."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu bắp",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Gói giấy báo, cất ngăn mát 2-3 ngày. Đừng rửa nước trước.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chất nhầy tự nhiên rất tốt cho khớp và lớp lót dạ dày."
+  },
+  {
+    "Tên Nguyên Liệu": "Bí đao",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Trái nguyên để ngoài được lâu. Cắt ra phải cất tủ mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Thanh nhiệt, hỗ trợ giảm cân cực tốt. Có tính hàn."
+  },
+  {
+    "Tên Nguyên Liệu": "Bầu",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 3-4 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Ít calo, nhiều nước, lợi tiểu."
+  },
+  {
+    "Tên Nguyên Liệu": "Mướp hương",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín màng bọc, ngăn mát 2-3 ngày.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tính mát. Người hay đau bụng tiêu chảy nên ăn ít."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau xà lách",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hộp kín có lót giấy thấm ẩm, ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cần rửa sạch kỹ dưới vòi nước chảy, ưu tiên ăn sống."
+  },
+  {
+    "Tên Nguyên Liệu": "Ngò rí (Rau mùi)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cắt rễ, cắm vào hũ nước nhỏ, trùm túi zip để tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Phụ nữ mang thai không nên ăn quá nhiều liên tục."
+  },
+  {
+    "Tên Nguyên Liệu": "Thì là",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc giấy ăn, cất ngăn mát tủ lạnh 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Có tác dụng làm ấm bụng, giảm đầy hơi, tiêu hóa tốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Tía tô",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 2-3 ngày, cẩn thận dễ dập nát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giúp giải cảm, đổ mồ hôi. Dùng tốt khi bị dị ứng hải sản."
+  },
+  {
+    "Tên Nguyên Liệu": "Diếp cá",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hộp kín lót giấy, ngăn mát 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Thanh nhiệt, giải độc tốt. Mùi vị đặc trưng không phải ai cũng quen."
+  },
+  {
+    "Tên Nguyên Liệu": "Nấm kim châm",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Giữ nguyên bao bì gốc, ngăn mát tủ lạnh 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Bắt buộc phải đun sôi chín kỹ để diệt khuẩn Listeria."
+  },
+  {
+    "Tên Nguyên Liệu": "Nấm đùi gà",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc giấy báo, ngăn mát tủ lạnh tối đa 1 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Kết cấu chắc thịt, nguồn đạm thực vật dồi dào cho người ăn chay."
+  },
+  {
+    "Tên Nguyên Liệu": "Nấm rơm",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Rất nhanh hỏng, nên dùng ngay trong 24h.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chọn nấm búp (chưa nở dù) để có vị ngọt nhất."
+  },
+  {
+    "Tên Nguyên Liệu": "Nấm hương",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Dạng tươi để tủ mát 3-4 ngày. Dạng khô để hũ kín ngoài.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cực giàu hương vị umami. Cần ngâm mềm nếu dùng loại khô."
+  },
+  {
+    "Tên Nguyên Liệu": "Nấm mèo (Mộc nhĩ)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Dạng khô cất nơi thoáng mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "TUYỆT ĐỐI không ngâm nước quá 4 tiếng để tránh sinh độc tố nấm."
+  },
+  {
+    "Tên Nguyên Liệu": "Chôm chôm",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Rổ thoáng khí, nhiệt độ phòng 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Chứa nhiều đường, có tính nóng, ăn nhiều dễ bị mụn nhọt."
+  },
+  {
+    "Tên Nguyên Liệu": "Nhãn",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Bọc kín để ngăn mát tủ lạnh được khoảng 1 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Chỉ số đường huyết cao, phụ nữ có thai nên ăn ít để tránh nóng trong."
+  },
+  {
+    "Tên Nguyên Liệu": "Măng cụt",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng mát. Vỏ bắt đầu cứng đanh lại là bị hỏng.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa hợp chất xanthones chống oxy hóa mạnh mẽ."
+  },
+  {
+    "Tên Nguyên Liệu": "Bưởi da xanh",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng. Để hơi héo vỏ một chút sẽ ngọt nước hơn.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chú ý tương tác với một số loại thuốc hạ huyết áp và mỡ máu."
+  },
+  {
+    "Tên Nguyên Liệu": "Quýt đường",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 1-2 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cung cấp vitamin C tự nhiên rất tốt cho đề kháng."
+  },
+  {
+    "Tên Nguyên Liệu": "Mít",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Tách múi, cất hộp kín để ngăn mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "Lượng đường và calo rất cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Ổi",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng cho chín thơm, cất tủ lạnh ăn dần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cực giàu vitamin C. Nên bỏ hạt nếu hay bị khó tiêu."
+  },
+  {
+    "Tên Nguyên Liệu": "Lê",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh có thể cất 2-3 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tính mát, nhuận phế, hỗ trợ giảm ho tiêu đờm."
+  },
+  {
+    "Tên Nguyên Liệu": "Kiwi",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng cho chín mềm, sau đó cất ngăn mát.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chứa enzyme actinidin hỗ trợ tiêu hóa các loại thịt đỏ rất tốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Chanh dây",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Để ngoài cho vỏ hơi nhăn, nước sẽ ngọt đậm đà hơn.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị chua gắt, người viêm loét dạ dày cẩn thận khi dùng lúc đói."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt dẻ",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ đậy kín, để ngoài mát hoặc cất tủ lạnh nếu đã rang.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Cung cấp lượng tinh bột cao hơn các loại hạt khác."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt sen",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Tươi để tủ đông. Khô để hũ kín nơi ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tâm sen có vị đắng giúp an thần, cải thiện giấc ngủ."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu đỏ",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ nhựa/thủy tinh, đậy kín nắp, tránh ẩm.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Nguồn tinh bột chậm tốt. Cần ngâm nước 4-6h trước khi ninh."
+  },
+  {
+    "Tên Nguyên Liệu": "Miến dong",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Buộc kín bọc nilon, để nơi khô ráo, tránh ẩm mốc.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất ít calo, không chứa tinh bột hấp thu nhanh, hợp với chế độ ăn kiêng."
+  },
+  {
+    "Tên Nguyên Liệu": "Phở khô",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Buộc kín, tránh ánh nắng trực tiếp và hơi ẩm.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Carbohydrate hấp thu nhanh, tốt cho việc nạp năng lượng trước khi tập."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh tráng",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Túi nilon kín. Không cất tủ lạnh vì sẽ bị giòn, nứt vỡ.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Hàm lượng tinh bột khá cao. Cân nhắc nếu đang cắt giảm carb."
+  },
+  {
+    "Tên Nguyên Liệu": "Quinoa (Diêm mạch)",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Lọ đậy kín nắp, cất nơi thoáng mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Siêu thực phẩm chứa protein hoàn chỉnh. Cần rửa qua rây để bớt đắng."
+  },
+  {
+    "Tên Nguyên Liệu": "Chanh giấy",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh hoặc bọc giấy báo từng quả.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Có tính axit cao, tránh uống nước chanh khi bụng đang rỗng."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột mì nguyên cám",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ đậy chặt nắp, nên để tủ mát tránh ôi dầu mầm lúa mì.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa nhiều chất xơ hơn bột trắng. Làm bánh sẽ có kết cấu đặc hơn."
+  },
+  {
+    "Tên Nguyên Liệu": "Nho khô",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Hộp đậy kín, nơi khô ráo hoặc ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "Lượng đường bị cô đặc lại rất cao. Người bị tiểu đường tuyệt đối lưu ý."
+  },
+  {
+    "Tên Nguyên Liệu": "Thịt cừu",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa nhiều protein, kẽm. Có mùi đặc trưng, cần sơ chế kỹ."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá ngừ",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cấp đông sâu -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giàu Omega-3. Bà bầu hạn chế ăn nhiều do nguy cơ nhiễm thủy ngân."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá diêu hồng",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngăn mát 1-2 ngày, cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Thịt ngọt, lành tính, ít xương dăm, dễ tiêu hóa."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá chép",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Tươi sống hoặc làm sạch cấp đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất tốt cho phụ nữ mang thai (an thai). Lưu ý nhiều xương dăm nhỏ."
+  },
+  {
+    "Tên Nguyên Liệu": "Lươn",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch nhớt, cất đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tính ôn, bổ khí huyết. Phải nấu thật chín để loại bỏ ký sinh trùng."
+  },
+  {
+    "Tên Nguyên Liệu": "Bề bề (Tôm tít)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Hấp sơ qua rồi mới cấp đông.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Cảnh báo dị ứng hải sản. Dễ bị ốp (rỗng thịt) nếu bảo quản sai cách."
+  },
+  {
+    "Tên Nguyên Liệu": "Giò lụa (Chả lụa)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bọc lá chuối/màng bọc, ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Thực phẩm chế biến sẵn, chú ý hàm lượng muối (natri) khá cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Trứng cút",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 2-3 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Hàm lượng dinh dưỡng cao, tốt cho trẻ em và người suy nhược."
+  },
+  {
+    "Tên Nguyên Liệu": "Sữa đặc",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Đậy kín nắp, ngăn mát tủ lạnh sau khi mở.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Rất nhiều đường và calo. Người tiểu đường tuyệt đối nên tránh."
+  },
+  {
+    "Tên Nguyên Liệu": "Phô mai (loại miếng)",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tiện lợi, bổ sung canxi và chất béo. Phù hợp làm bữa phụ."
+  },
+  {
+    "Tên Nguyên Liệu": "Cải thảo",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc màng bọc, ngăn mát 1-2 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tính mát, lượng nước cao. Rất hợp làm kim chi hoặc nấu canh."
+  },
+  {
+    "Tên Nguyên Liệu": "Su hào",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Để nguyên củ, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nhiều chất xơ, ít calo. Có thể ăn sống (salad) hoặc nấu chín."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ cải trắng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cắt bỏ lá, bảo quản ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tính mát, nhuận tràng, tiêu đờm."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ dền",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 1-2 tuần.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất giàu sắt, tốt cho người thiếu máu. Hạn chế ăn quá nhiều liên tục."
+  },
+  {
+    "Tên Nguyên Liệu": "Súp lơ trắng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín màng bọc, ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Có thể xay nhuyễn thay thế tinh bột (cauliflower rice) cho chế độ Keto."
+  },
+  {
+    "Tên Nguyên Liệu": "Măng tươi",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Luộc qua với muối, ngâm nước hoặc cấp đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa cyanide tự nhiên, bắt buộc luộc kỹ mở vung trước khi chế biến."
+  },
+  {
+    "Tên Nguyên Liệu": "Cần tây",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín phần gốc, ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giúp hạ huyết áp, lợi tiểu. Phụ nữ mang thai giai đoạn đầu nên hạn chế."
+  },
+  {
+    "Tên Nguyên Liệu": "Hành boa rô (Tỏi tây)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 1-2 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ít hăng hơn hành tây, gia vị tuyệt vời để nấu các món xào, súp."
+  },
+  {
+    "Tên Nguyên Liệu": "Lá lốt",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc màng bọc đục lỗ, ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tính ấm, chữa lạnh bụng, hỗ trợ người đau nhức xương khớp."
+  },
+  {
+    "Tên Nguyên Liệu": "Sả",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cắt khúc, cấp đông hoặc để ngăn mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tính ấm, kích thích tiêu hóa, khử mùi tanh thực phẩm rất tốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Ớt hiểm",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bỏ cuống, cất hộp kín trong ngăn mát/đông.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Gây kích ứng niêm mạc dạ dày nếu ăn quá cay khi bụng đói."
+  },
+  {
+    "Tên Nguyên Liệu": "Húng quế",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cắm gốc vào ly nước, để nơi thoáng mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giúp làm dịu co thắt dạ dày, tốt cho tiêu hóa."
+  },
+  {
+    "Tên Nguyên Liệu": "Kinh giới",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Lá gia vị hỗ trợ trị cảm mạo, nhức đầu, dị ứng mẩn ngứa."
+  },
+  {
+    "Tên Nguyên Liệu": "Ngò gai (Mùi tàu)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín ngăn mát tủ lạnh 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Kích thích tiêu hóa, khử mùi hôi thịt bò, cá."
+  },
+  {
+    "Tên Nguyên Liệu": "Dứa (Thơm)",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Bổ ra cất hộp kín, ngăn mát 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa enzyme bromelain giúp tiêu hóa đạm. Người đau dạ dày lưu ý."
+  },
+  {
+    "Tên Nguyên Liệu": "Bưởi Năm Roi",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng, để vỏ hơi héo ăn sẽ ngọt.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Lượng đường thấp, nhiều vitamin C, rất tốt cho quá trình giảm cân."
+  },
+  {
+    "Tên Nguyên Liệu": "Mận Bắc",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 1-2 tuần.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tính nóng, ăn nhiều dễ sinh mụn nhọt, xót ruột."
+  },
+  {
+    "Tên Nguyên Liệu": "Vải thiều",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Đóng hộp nhựa/túi zip, ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Tính cực kỳ nóng và lượng đường cao. Tránh ăn khi bụng đói."
+  },
+  {
+    "Tên Nguyên Liệu": "Cherry",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Không rửa, để hộp kín ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa melatonin tự nhiên giúp ngủ ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Dưa lưới",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Bổ ra cất hộp đậy kín, ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giàu kali và vitamin A. Tráng miệng giải nhiệt tốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Táo xanh",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh có thể giữ 3-4 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ít đường và chua hơn táo đỏ, phù hợp cho người ăn kiêng."
+  },
+  {
+    "Tên Nguyên Liệu": "Cam vàng (Cam Navel)",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 1-2 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vỏ dày, múi ngọt không hạt. Tốt nhất nên ăn cả múi thay vì ép nước."
+  },
+  {
+    "Tên Nguyên Liệu": "Mì tôm (Mì gói)",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Nơi khô ráo, thoáng mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "Thực phẩm chế biến sẵn, nghèo dinh dưỡng, nhiều chất béo chuyển hóa."
+  },
+  {
+    "Tên Nguyên Liệu": "Nui",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Túi/hộp đậy kín, nơi khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Nguồn tinh bột hấp thu nhanh, cần kết hợp thêm rau xanh và đạm."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột năng",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ kín, để nơi khô ráo tránh độ ẩm.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Làm từ củ sắn, cung cấp calo rỗng, chủ yếu dùng tạo độ sánh."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột bắp (Cornstarch)",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ đậy chặt, nơi khô mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Không chứa gluten, dùng trong các món súp, sốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu ngự",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ đậy kín, nơi khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Đậu hạt to, bở, tốt cho tim mạch, thường dùng để nấu chè."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu trắng",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Lọ đậy chặt, tránh ẩm mốc.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa chất cản trở hấp thụ carb, hỗ trợ kiểm soát cân nặng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt dưa",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ đậy kín, tránh không khí làm ỉu hạt.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Cung cấp chất béo thực vật tốt nhưng tiêu tốn thời gian nhai."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt bí",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ đậy kín, tránh không khí ẩm.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất giàu kẽm, tốt cho giấc ngủ và đề kháng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt hướng dương",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Lọ kín, tránh nhiệt độ nóng ẩm.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Calo cao, dễ gây ho, rát họng nếu ăn quá nhiều do vỏ lụa."
+  },
+  {
+    "Tên Nguyên Liệu": "Dầu Olive",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai tối màu, tránh ánh sáng trực tiếp.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Không dùng để chiên rán nhiệt độ cao. Trộn salad là tốt nhất."
+  },
+  {
+    "Tên Nguyên Liệu": "Nước mắm",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Nơi thoáng mát, đậy kín nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Hàm lượng natri rất cao. Người cao huyết áp nên chú ý khẩu phần."
+  },
+  {
+    "Tên Nguyên Liệu": "Nước tương (Xì dầu)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Đậy kín, cất ngăn mát nếu lâu không dùng.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nguồn gốc đậu nành lên men. Chú ý lượng natri nạp vào."
+  },
+  {
+    "Tên Nguyên Liệu": "Đường phèn",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ kín, nơi khô mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Vị thanh mát hơn đường cát trắng, nhưng bản chất vẫn là đường."
+  },
+  {
+    "Tên Nguyên Liệu": "Bơ lạt (Unsalted Butter)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Bọc kín, ngăn mát hoặc ngăn đông tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Cung cấp chất béo bão hòa. Phù hợp làm bánh, áp chảo."
+  },
+  {
+    "Tên Nguyên Liệu": "Giấm táo",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Nơi thoáng mát, đậy kín. Tránh ánh sáng.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Hỗ trợ tiêu hóa. Phải pha loãng với nước, tuyệt đối không uống trực tiếp."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm tôm",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Đậy nắp kín, bọc thêm túi nilon bên ngoài.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Dễ gây đau bụng ở người tỳ vị yếu. Phải chưng chín hoặc vắt chanh kỹ."
+  },
+  {
+    "Tên Nguyên Liệu": "Cà phê hạt/bột",
+    "Nhóm (Tùy chọn)": "thức uống",
+    "Cách Bảo Quản": "Túi zip van 1 chiều, nơi tối mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chứa caffeine. Người nhạy cảm có thể bị mất ngủ, ép tim."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu nành",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ kín, nơi khô ráo, thoáng mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Nguồn đạm thực vật tuyệt vời, chứa phytoestrogen."
+  }
+]

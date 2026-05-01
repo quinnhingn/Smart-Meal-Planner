@@ -111,21 +111,25 @@
 
         <!-- Nutrition per 100g -->
         <div class="card-panel">
-          <div class="section-title-row">
-            <h3>Thông số dinh dưỡng</h3>
-            <div style="display:flex; gap:8px; align-items:center">
-              <button class="ai-calc-btn" @click="autoFill" :disabled="isLoading || !form.name" style="background:#F0FDF4; color:#166534; border-color:#BBF7D0;">
+          <div class="section-title-row" style="align-items: flex-start; margin-bottom: 24px;">
+            <div style="flex: 1; padding-right: 16px;">
+              <h3 style="margin-bottom: 6px;">Thông số dinh dưỡng</h3>
+              <p class="panel-desc" style="margin-bottom: 0;">Nhập thủ công hoặc dùng nút "Lấy dữ liệu USDA" để tra cứu tự động.</p>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap; justify-content: flex-end;">
+              <button class="ai-calc-btn" @click="autoFill" :disabled="isLoading || !form.name" style="background:#F0FDF4; color:#166534; border-color:#BBF7D0; padding: 8px 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                 <i v-if="isLoading" class="fa-solid fa-spinner fa-spin"></i>
                 <i v-else class="fa-solid fa-cloud-arrow-down"></i> 
                 Lấy dữ liệu USDA
               </button>
-              <button class="ai-calc-btn" @click="calcNutritionFromSuitability" v-if="form.suitability.length > 0 && form.nutrition.calories">
+              <button class="ai-calc-btn" @click="calcNutritionFromSuitability" v-if="form.suitability.length > 0 && form.nutrition.calories" style="padding: 8px 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                 <i class="fa-solid fa-bullseye"></i> Tính theo mục tiêu
               </button>
-              <span class="unit-note">Trên <strong>100g</strong></span>
+              <span class="unit-note" style="white-space: nowrap; font-size: 13px; font-weight: 600; background: #F1F5F9; padding: 6px 12px; border-radius: 8px; color: #475569;">
+                Trên 100g
+              </span>
             </div>
           </div>
-          <p class="panel-desc">Nhập thủ công hoặc dùng nút "Lấy dữ liệu USDA" để tra cứu tự động.</p>
 
           <!-- Macro -->
           <div class="nutrition-group-label">Nhóm đa lượng (Macros)</div>
@@ -181,21 +185,9 @@
         <!-- Storage & Notes -->
         <div class="card-panel">
           <h3>Bảo quản & Gợi ý sử dụng</h3>
-          <div class="row-group">
-            <div class="input-group">
-              <label>Cách bảo quản</label>
-              <input type="text" v-model="form.storage" placeholder="VD: Bảo quản ngăn mát 0–4°C...">
-            </div>
-            <div class="input-group">
-              <label>Mùa vụ / Thời điểm</label>
-              <select v-model="form.season">
-                <option value="all">Quanh năm</option>
-                <option value="spring">Xuân</option>
-                <option value="summer">Hè</option>
-                <option value="autumn">Thu</option>
-                <option value="winter">Đông</option>
-              </select>
-            </div>
+          <div class="input-group" style="margin-bottom: 20px;">
+            <label>Cách bảo quản</label>
+            <input type="text" v-model="form.storage" placeholder="VD: Bảo quản ngăn đông lạnh -18°C...">
           </div>
 
           <!-- Weight range -->
@@ -308,6 +300,23 @@ const saveIngredient = async () => {
       protein_per_100g: form.value.nutrition.protein || 0,
       fat_per_100g: form.value.nutrition.fat || 0,
       carbs_per_100g: form.value.nutrition.carbs || 0,
+      
+      // New nutrition fields
+      sugar: form.value.nutrition.sugar || 0,
+      fiber: form.value.nutrition.fiber || 0,
+      saturated_fat: form.value.nutrition.saturatedFat || 0,
+      sodium: form.value.nutrition.sodium || 0,
+      calcium: form.value.nutrition.calcium || 0,
+      iron: form.value.nutrition.iron || 0,
+      vitamin_c: form.value.nutrition.vitaminC || 0,
+      vitamin_a: form.value.nutrition.vitaminA || 0,
+      
+      // Storage & Usage
+      storage_method: form.value.storage || '',
+      weight_min: form.value.weightMin,
+      weight_max: form.value.weightMax,
+      notes: form.value.notes || '',
+      
       image_url: null,
       gram_per_unit: 1.0
     };
@@ -399,8 +408,37 @@ const autoTranslate = async () => {
   }
 };
 
-const llmAutoFill = () => {
-  alert("Tính năng AI LLM tự động điền đang được phát triển. Vui lòng cuộn xuống mục Thông số dinh dưỡng và dùng nút 'Lấy dữ liệu USDA' nhé!");
+const llmAutoFill = async () => {
+  if (!form.value.name) {
+    alert("Vui lòng nhập Tên nguyên liệu trước!");
+    return;
+  }
+  
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('http://localhost:5000/api/ingredients/guidelines', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ query: form.value.name })
+    });
+    
+    const data = await res.json();
+    if (data.success && data.data) {
+      form.value.storage = data.data.storage;
+      form.value.weightMin = data.data.min_weight;
+      form.value.weightMax = data.data.max_weight;
+      form.value.notes = data.data.notes;
+      console.log("Đã lấy thông tin hướng dẫn bảo quản thành công!");
+    } else {
+      alert(data.message || "Không tìm thấy dữ liệu mẫu cho nguyên liệu này.");
+    }
+  } catch (e) {
+    console.error(e);
+    alert("Lỗi kết nối tới Server khi tra cứu dữ liệu mẫu!");
+  }
 };
 
 const autoFill = async () => {
@@ -486,7 +524,7 @@ const applyLookup = (data: any) => {
 
 const form = ref({
   name: '', nameEn: '', category: '', unit: 'g',
-  description: '', storage: '', season: 'all', notes: '',
+  description: '', storage: '', notes: '',
   weightMin: null as number | null,
   weightMax: null as number | null,
   suitability: [] as string[],

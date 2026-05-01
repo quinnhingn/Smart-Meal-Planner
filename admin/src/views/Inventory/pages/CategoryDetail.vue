@@ -21,10 +21,14 @@
         <input type="text" placeholder="Tìm kiếm nguyên liệu..." v-model="searchQuery">
       </div>
       <div class="filter-tags">
-        <span class="ftag" :class="{ active: activeFilter === 'all' }" @click="activeFilter = 'all'">Tất cả</span>
-        <span class="ftag" :class="{ active: activeFilter === 'lose' }" @click="activeFilter = 'lose'">Giảm cân</span>
-        <span class="ftag" :class="{ active: activeFilter === 'gain' }" @click="activeFilter = 'gain'">Tăng cơ</span>
-        <span class="ftag" :class="{ active: activeFilter === 'keto' }" @click="activeFilter = 'keto'">Keto</span>
+        <span class="ftag" 
+          v-for="f in categoryFilters" 
+          :key="f.id"
+          :class="{ active: activeFilter === f.id }" 
+          @click="activeFilter = f.id"
+        >
+          {{ f.label }}
+        </span>
       </div>
     </div>
 
@@ -112,14 +116,42 @@ const categoryTitle = computed(() => {
   return titles[route.params.id as string] || 'Danh mục nguyên liệu';
 });
 
+const categoryFilters = computed(() => {
+  const catId = route.params.id as string;
+  if (catId === 'meat') {
+    return [
+      { id: 'all', label: 'Tất cả' },
+      { id: 'red-meat', label: 'Thịt đỏ' },
+      { id: 'white-meat', label: 'Gia cầm' },
+      { id: 'seafood', label: 'Hải sản' },
+      { id: 'fish', label: 'Các loại cá' }
+    ];
+  }
+  if (catId === 'vegetables') {
+    return [
+      { id: 'all', label: 'Tất cả' },
+      { id: 'leafy', label: 'Rau xanh' },
+      { id: 'root', label: 'Củ' },
+      { id: 'fruit-veg', label: 'Quả' },
+      { id: 'mushroom', label: 'Nấm' }
+    ];
+  }
+  return [
+    { id: 'all', label: 'Tất cả' },
+    { id: 'lose', label: 'Giảm cân' },
+    { id: 'gain', label: 'Tăng cơ' },
+    { id: 'keto', label: 'Keto' }
+  ];
+});
+
 const ingredients = ref([
-  { id: 'uc-ga', name: 'Ức gà', nameEn: 'Chicken Breast', calories: 165, protein: 31, carbs: 0, fat: 3.6, completeness: 98, suitability: ['gain', 'lose', 'keto'], image: meatImg, cardColor: '#2D4A35' },
-  { id: 'thit-bo', name: 'Thịt bò', nameEn: 'Beef', calories: 250, protein: 26, carbs: 0, fat: 15, completeness: 95, suitability: ['gain'], image: meatImg2, cardColor: '#7A3535' },
-  { id: 'thit-co-heo', name: 'Thịt cổ heo', nameEn: 'Pork Neck', calories: 240, protein: 18, carbs: 0, fat: 19, completeness: 90, suitability: ['gain'], image: meatImg3, cardColor: '#3D5A7A' },
-  { id: 'de-suon-heo', name: 'Dẻ sườn heo', nameEn: 'Pork Ribs', calories: 310, protein: 22, carbs: 0, fat: 25, completeness: 85, suitability: ['gain'], image: meatImg, cardColor: '#7A6628' },
-  { id: 'thit-than-heo', name: 'Thịt thăn heo', nameEn: 'Pork Loin', calories: 180, protein: 21, carbs: 0, fat: 10, completeness: 92, suitability: ['gain', 'lose'], image: meatImg2, cardColor: '#4A3D7A' },
-  { id: 'ca-hoi', name: 'Cá hồi', nameEn: 'Salmon', calories: 208, protein: 20, carbs: 0, fat: 13, completeness: 96, suitability: ['gain', 'keto'], image: meatImg3, cardColor: '#2D5A6B' },
-  { id: 'tom', name: 'Tôm', nameEn: 'Shrimp', calories: 85, protein: 18, carbs: 0.9, fat: 0.9, completeness: 88, suitability: ['lose', 'keto'], image: meatImg, cardColor: '#6B3D2D' },
+  { id: 'uc-ga', name: 'Ức gà', nameEn: 'Chicken Breast', type: 'white-meat', calories: 165, protein: 31, carbs: 0, fat: 3.6, completeness: 98, suitability: ['gain', 'lose', 'keto'], image: meatImg, cardColor: '#2D4A35' },
+  { id: 'thit-bo', name: 'Thịt bò', nameEn: 'Beef', type: 'red-meat', calories: 250, protein: 26, carbs: 0, fat: 15, completeness: 95, suitability: ['gain'], image: meatImg2, cardColor: '#7A3535' },
+  { id: 'thit-co-heo', name: 'Thịt cổ heo', nameEn: 'Pork Neck', type: 'red-meat', calories: 240, protein: 18, carbs: 0, fat: 19, completeness: 90, suitability: ['gain'], image: meatImg3, cardColor: '#3D5A7A' },
+  { id: 'de-suon-heo', name: 'Dẻ sườn heo', nameEn: 'Pork Ribs', type: 'red-meat', calories: 310, protein: 22, carbs: 0, fat: 25, completeness: 85, suitability: ['gain'], image: meatImg, cardColor: '#7A6628' },
+  { id: 'thit-than-heo', name: 'Thịt thăn heo', nameEn: 'Pork Loin', type: 'red-meat', calories: 180, protein: 21, carbs: 0, fat: 10, completeness: 92, suitability: ['gain', 'lose'], image: meatImg2, cardColor: '#4A3D7A' },
+  { id: 'ca-hoi', name: 'Cá hồi', nameEn: 'Salmon', type: 'fish', calories: 208, protein: 20, carbs: 0, fat: 13, completeness: 96, suitability: ['gain', 'keto'], image: meatImg3, cardColor: '#2D5A6B' },
+  { id: 'tom', name: 'Tôm', nameEn: 'Shrimp', type: 'seafood', calories: 85, protein: 18, carbs: 0.9, fat: 0.9, completeness: 88, suitability: ['lose', 'keto'], image: meatImg, cardColor: '#6B3D2D' },
 ]);
 
 const filteredItems = computed(() => {
@@ -129,7 +161,12 @@ const filteredItems = computed(() => {
     list = list.filter(i => i.name.toLowerCase().includes(q) || i.nameEn.toLowerCase().includes(q));
   }
   if (activeFilter.value !== 'all') {
-    list = list.filter(i => i.suitability.includes(activeFilter.value));
+    // Check if filter is by type or suitability
+    list = list.filter(i => {
+      const isType = ['red-meat', 'white-meat', 'seafood', 'fish', 'leafy', 'root', 'fruit-veg', 'mushroom'].includes(activeFilter.value);
+      if (isType) return i.type === activeFilter.value;
+      return i.suitability.includes(activeFilter.value);
+    });
   }
   return list;
 });

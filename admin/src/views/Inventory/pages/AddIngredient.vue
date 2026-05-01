@@ -23,9 +23,8 @@
               <label>Tên nguyên liệu <span class="required">*</span></label>
               <input type="text" v-model="form.name" placeholder="VD: Ức gà, Cà chua bi..." @input="lookupResult = null">
             </div>
-            <button class="autofill-btn" @click="autoFill" :disabled="!form.name.trim() || isLoading">
-              <span v-if="isLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tìm...</span>
-              <span v-else><i class="fa-solid fa-wand-magic-sparkles"></i> Tự động điền</span>
+            <button class="autofill-btn" @click="llmAutoFill" :disabled="!form.name.trim()" title="Tự động điền thông tin bằng AI LLM">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> AI Tự động điền
             </button>
           </div>
 
@@ -54,7 +53,13 @@
             <i class="fa-solid fa-circle-exclamation"></i> Không tìm thấy trong CSDL. Bạn có thể nhập thủ công bên dưới.
           </div>
             <div class="input-group">
-              <label>Tên tiếng Anh</label>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label style="margin-bottom: 0;">Tên tiếng Anh</label>
+                <button class="mini-translate-btn" @click="autoTranslate" :disabled="isTranslating || !form.name.trim()" title="Dịch từ Tên nguyên liệu">
+                  <i v-if="isTranslating" class="fa-solid fa-spinner fa-spin"></i>
+                  <i v-else class="fa-solid fa-language"></i> Dịch nhanh
+                </button>
+              </div>
               <input type="text" v-model="form.nameEn" placeholder="VD: Chicken breast, Cherry tomato...">
             </div>
           </div>
@@ -109,13 +114,18 @@
           <div class="section-title-row">
             <h3>Thông số dinh dưỡng</h3>
             <div style="display:flex; gap:8px; align-items:center">
+              <button class="ai-calc-btn" @click="autoFill" :disabled="isLoading || !form.name" style="background:#F0FDF4; color:#166534; border-color:#BBF7D0;">
+                <i v-if="isLoading" class="fa-solid fa-spinner fa-spin"></i>
+                <i v-else class="fa-solid fa-cloud-arrow-down"></i> 
+                Lấy dữ liệu USDA
+              </button>
               <button class="ai-calc-btn" @click="calcNutritionFromSuitability" v-if="form.suitability.length > 0 && form.nutrition.calories">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Tính theo mục tiêu
+                <i class="fa-solid fa-bullseye"></i> Tính theo mục tiêu
               </button>
               <span class="unit-note">Trên <strong>100g</strong></span>
             </div>
           </div>
-          <p class="panel-desc">Nhập thủ công hoặc dùng nút "Tự động điền" ở trên để AI điền hộ.</p>
+          <p class="panel-desc">Nhập thủ công hoặc dùng nút "Lấy dữ liệu USDA" để tra cứu tự động.</p>
 
           <!-- Macro -->
           <div class="nutrition-group-label">Nhóm đa lượng (Macros)</div>
@@ -132,42 +142,39 @@
             </div>
           </div>
 
-          <!-- Sub-carb -->
-          <div class="nutrition-group-label" style="margin-top: 20px;">Chi tiết Carbohydrate</div>
-          <div class="row-group">
-            <div class="input-group small">
-              <label>Đường (Sugar)</label>
-              <div class="input-with-unit">
-                <input type="number" min="0" step="0.1" v-model="form.nutrition.sugar" placeholder="0">
-                <span>g</span>
-              </div>
-            </div>
-            <div class="input-group small">
-              <label>Chất xơ (Fiber)</label>
-              <div class="input-with-unit">
-                <input type="number" min="0" step="0.1" v-model="form.nutrition.fiber" placeholder="0">
-                <span>g</span>
-              </div>
-            </div>
-            <div class="input-group small">
-              <label>Chất béo bão hòa</label>
-              <div class="input-with-unit">
-                <input type="number" min="0" step="0.1" v-model="form.nutrition.saturatedFat" placeholder="0">
-                <span>g</span>
+          <!-- Dynamic Micronutrients -->
+          <div class="nutrition-group-label dynamic-header">
+            <span>Vi chất & Thành phần phụ (Tuỳ chọn)</span>
+            <div class="add-micro-dropdown">
+              <button class="add-micro-btn" type="button" @click="showMicroDropdown = !showMicroDropdown">
+                <i class="fa-solid fa-plus"></i> Thêm vi chất
+              </button>
+              <div class="micro-dropdown-menu" v-if="showMicroDropdown">
+                <div class="micro-option" v-for="m in availableMicros" :key="m.key" @click="addMicroField(m.key)">
+                  {{ m.label }} ({{ m.unit }})
+                </div>
+                <div class="micro-empty" v-if="availableMicros.length === 0">Đã thêm tất cả</div>
               </div>
             </div>
           </div>
 
-          <!-- Micro -->
-          <div class="nutrition-group-label" style="margin-top: 20px;">Vi chất (Micronutrients)</div>
-          <div class="row-group">
-            <div class="input-group small" v-for="m in micros" :key="m.key">
-              <label>{{ m.label }}</label>
-              <div class="input-with-unit">
-                <input type="number" min="0" step="0.01" v-model="form.nutrition[m.key]" placeholder="0">
-                <span>{{ m.unit }}</span>
+          <div class="dynamic-micros" v-if="activeMicros.length > 0">
+            <div class="row-group">
+              <div class="input-group small" v-for="key in activeMicros" :key="key">
+                <label class="dynamic-label">
+                  {{ getMicroLabel(key) }}
+                  <i class="fa-solid fa-xmark remove-micro" @click="removeMicroField(key)" title="Xoá vi chất này"></i>
+                </label>
+                <div class="input-with-unit">
+                  <input type="number" min="0" step="0.01" v-model="form.nutrition[key as NutritionKey]" placeholder="0">
+                  <span>{{ getMicroUnit(key) }}</span>
+                </div>
               </div>
             </div>
+          </div>
+          <div class="empty-micros" v-else>
+            <i class="fa-solid fa-flask"></i>
+            <p>Chưa có vi chất nào. Bấm "Thêm vi chất" hoặc dùng Tự động điền.</p>
           </div>
         </div>
 
@@ -259,8 +266,11 @@
           <p>{{ aiInsight }}</p>
         </div>
 
-        <button class="save-btn" @click="router.back()">
-          <i class="fa-solid fa-check"></i> Lưu nguyên liệu
+        <button class="save-btn" @click="saveIngredient" :disabled="isSaving">
+          <i v-if="isSaving" class="fa-solid fa-circle-notch fa-spin"></i>
+          <i v-else class="fa-solid fa-check"></i> 
+          <span v-if="isSaving">Đang lưu...</span>
+          <span v-else>Lưu nguyên liệu</span>
         </button>
       </div>
     </div>
@@ -273,8 +283,64 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+const isSaving = ref(false);
+
+const saveIngredient = async () => {
+  if (!form.value.name || form.value.nutrition.calories === null) {
+    alert('Vui lòng nhập tên nguyên liệu và lượng calo!');
+    return;
+  }
+  isSaving.value = true;
+  try {
+    const token = localStorage.getItem('admin_token');
+    if (!token) {
+      alert('Bạn chưa đăng nhập hoặc mất Token. Vui lòng đăng nhập lại.');
+      router.push('/login');
+      return;
+    }
+
+    const payload = {
+      name_vn: form.value.name,
+      name_en: form.value.nameEn || '',
+      category: form.value.category || 'other',
+      default_unit: form.value.unit || 'g',
+      calories_per_100g: form.value.nutrition.calories,
+      protein_per_100g: form.value.nutrition.protein || 0,
+      fat_per_100g: form.value.nutrition.fat || 0,
+      carbs_per_100g: form.value.nutrition.carbs || 0,
+      image_url: null,
+      gram_per_unit: 1.0
+    };
+
+    const res = await fetch('http://localhost:5000/api/ingredients', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    const data = await res.json();
+    if (data.success) {
+      alert('Thêm nguyên liệu thành công vào Database!');
+      router.back();
+    } else {
+      alert('Lỗi từ Server: ' + data.message);
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Lỗi kết nối đến Backend Server (Port 5000)');
+  } finally {
+    isSaving.value = false;
+  }
+};
+
 // ── Auto-fill database ──────────────────────────────
 const nutritionDB = [
+  { name: 'Thịt ba chỉ heo', nameEn: 'Pork Belly', category: 'meat', calories: 518, protein: 9, carbs: 0, fat: 53, sugar: 0, fiber: 0, saturatedFat: 19, sodium: 32, calcium: 10, iron: 0.8, vitaminC: 0, vitaminA: 0 },
+  { name: 'Sữa tươi không đường', nameEn: 'Unsweetened Whole Milk', category: 'milks', calories: 61, protein: 3.2, carbs: 4.8, fat: 3.3, sugar: 4.8, fiber: 0, saturatedFat: 1.9, sodium: 43, calcium: 113, iron: 0, vitaminC: 0, vitaminA: 46 },
+  { name: 'Gạo lứt', nameEn: 'Brown Rice (cooked)', category: 'grains', calories: 111, protein: 2.6, carbs: 23, fat: 0.9, sugar: 0.4, fiber: 1.8, saturatedFat: 0.2, sodium: 5, calcium: 10, iron: 0.4, vitaminC: 0, vitaminA: 0 },
   { name: 'Ức gà', nameEn: 'Chicken Breast', category: 'meat', calories: 165, protein: 31, carbs: 0, fat: 3.6, sugar: 0, fiber: 0, saturatedFat: 1, sodium: 74, calcium: 15, iron: 1, vitaminC: 0, vitaminA: 9 },
   { name: 'Thịt bò', nameEn: 'Beef', category: 'meat', calories: 250, protein: 26, carbs: 0, fat: 15, sugar: 0, fiber: 0, saturatedFat: 6, sodium: 72, calcium: 18, iron: 2.6, vitaminC: 0, vitaminA: 0 },
   { name: 'Cà chua', nameEn: 'Tomato', category: 'vegetables', calories: 18, protein: 0.9, carbs: 3.9, fat: 0.2, sugar: 2.6, fiber: 1.2, saturatedFat: 0, sodium: 5, calcium: 10, iron: 0.3, vitaminC: 14, vitaminA: 42 },
@@ -301,23 +367,97 @@ const isLoading = ref(false);
 const suggestions = ref<any[]>([]);
 const lookupResult = ref<any>(null);
 const noResult = ref(false);
+const isTranslating = ref(false);
 
-const autoFill = () => {
-  const q = form.value.name.trim().toLowerCase();
-  if (!q) return;
+const autoTranslate = async () => {
+  const q = form.value.name.trim();
+  if (!q) {
+    alert("Vui lòng nhập Tên nguyên liệu trước khi bấm dịch!");
+    return;
+  }
+  
+  isTranslating.value = true;
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('http://localhost:5000/api/ingredients/translate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ text: q })
+    });
+    
+    const data = await res.json();
+    if (data.success && data.translated_text) {
+      form.value.nameEn = data.translated_text;
+    }
+  } catch (err) {
+    console.error('Lỗi khi dịch tự động:', err);
+  } finally {
+    isTranslating.value = false;
+  }
+};
+
+const llmAutoFill = () => {
+  alert("Tính năng AI LLM tự động điền đang được phát triển. Vui lòng cuộn xuống mục Thông số dinh dưỡng và dùng nút 'Lấy dữ liệu USDA' nhé!");
+};
+
+const autoFill = async () => {
+  if (!form.value.name) {
+    alert("Vui lòng nhập Tên nguyên liệu trước khi bấm Tự động điền!");
+    return;
+  }
+  
+  // Nếu chưa dịch sang tiếng Anh, tự động chạy hàm dịch trước
+  if (!form.value.nameEn) {
+    await autoTranslate();
+  }
+  
+  const query = form.value.nameEn.trim();
+  if (!query) {
+    alert("Cần có Tên tiếng Anh để tra cứu Dữ liệu Dinh dưỡng Quốc tế.");
+    return;
+  }
+  
   isLoading.value = true;
-  suggestions.value = [];
-  noResult.value = false;
-
-  setTimeout(() => {
-    const results = nutritionDB.filter(i =>
-      i.name.toLowerCase().includes(q) || i.nameEn.toLowerCase().includes(q)
-    );
+  
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('http://localhost:5000/api/ingredients/auto-fill', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ query })
+    });
+    
+    const data = await res.json();
+    if (data.success && data.data) {
+      // Đổ dữ liệu vào form
+      Object.assign(form.value.nutrition, data.data);
+      
+      // Tự động mọc vi chất nếu thông số > 0
+      activeMicros.value = [];
+      allMicros.forEach(m => {
+        const val = data.data[m.key];
+        if (val !== undefined && val !== null && val > 0) {
+          activeMicros.value.push(m.key);
+        }
+      });
+      
+      // Hiển thị thông báo nhỏ
+      console.log("USDA FDC Match:", data.source);
+    } else {
+      alert("Lỗi: " + data.message);
+    }
+  } catch (err) {
+    console.error('Lỗi khi tra cứu USDA:', err);
+    alert("Lỗi kết nối tới Server!");
+  } finally {
     isLoading.value = false;
-    if (results.length === 0) { noResult.value = true; }
-    else if (results.length === 1) { applyLookup(results[0]); }
-    else { suggestions.value = results; }
-  }, 600);
+  }
 };
 
 const applyLookup = (data: any) => {
@@ -330,6 +470,16 @@ const applyLookup = (data: any) => {
     sodium: data.sodium, calcium: data.calcium, iron: data.iron,
     vitaminC: data.vitaminC, vitaminA: data.vitaminA,
   });
+  
+  // Tự động thêm các vi chất có thông số > 0 vào danh sách hiển thị
+  activeMicros.value = [];
+  allMicros.forEach(m => {
+    const val = data[m.key];
+    if (val !== undefined && val !== null && val > 0) {
+      activeMicros.value.push(m.key);
+    }
+  });
+
   suggestions.value = [];
   noResult.value = false;
 };
@@ -380,13 +530,38 @@ const macros: { key: NutritionKey, label: string, unit: string, icon: string, co
   { key: 'fat', label: 'Chất béo', unit: 'g', icon: 'fa-solid fa-droplet', color: '#EF4444', bg: '#FEF2F2' },
 ];
 
-const micros: { key: NutritionKey, label: string, unit: string }[] = [
+const allMicros = [
+  { key: 'sugar', label: 'Đường (Sugar)', unit: 'g' },
+  { key: 'fiber', label: 'Chất xơ (Fiber)', unit: 'g' },
+  { key: 'saturatedFat', label: 'Béo bão hòa', unit: 'g' },
   { key: 'sodium', label: 'Natri (Sodium)', unit: 'mg' },
   { key: 'calcium', label: 'Canxi (Calcium)', unit: 'mg' },
   { key: 'iron', label: 'Sắt (Iron)', unit: 'mg' },
   { key: 'vitaminC', label: 'Vitamin C', unit: 'mg' },
   { key: 'vitaminA', label: 'Vitamin A', unit: 'mcg' },
 ];
+
+const showMicroDropdown = ref(false);
+const activeMicros = ref<string[]>([]); 
+
+const availableMicros = computed(() => {
+  return allMicros.filter(m => !activeMicros.value.includes(m.key));
+});
+
+const getMicroLabel = (key: string) => allMicros.find(m => m.key === key)?.label || key;
+const getMicroUnit = (key: string) => allMicros.find(m => m.key === key)?.unit || '';
+
+const addMicroField = (key: string) => {
+  if (!activeMicros.value.includes(key)) {
+    activeMicros.value.push(key);
+  }
+  showMicroDropdown.value = false;
+};
+
+const removeMicroField = (key: string) => {
+  activeMicros.value = activeMicros.value.filter(k => k !== key);
+  form.value.nutrition[key as NutritionKey] = null;
+};
 
 const macroPreview: { key: NutritionKey, label: string, color: string, max: number }[] = [
   { key: 'protein', label: 'Protein', color: '#3B82F6', max: 40 },
@@ -546,6 +721,41 @@ const aiInsight = computed(() => {
 .nut-field input:focus { outline: none; border-color: #8EAE82; }
 .nut-field span { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 
+.dynamic-header { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; margin-bottom: 16px; }
+.add-micro-dropdown { position: relative; }
+.add-micro-btn {
+  background: white; border: 1px dashed #CBD5E1; color: var(--text-dark);
+  padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;
+}
+.add-micro-btn:hover { border-color: #8EAE82; color: #4a8c54; }
+
+.micro-dropdown-menu {
+  position: absolute; top: calc(100% + 4px); right: 0; width: 180px;
+  background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 10; padding: 6px;
+}
+.micro-option {
+  padding: 8px 12px; font-size: 13px; color: var(--text-dark); font-weight: 600;
+  border-radius: 8px; cursor: pointer; transition: 0.2s;
+}
+.micro-option:hover { background: #F0FDF4; color: #166534; }
+.micro-empty { padding: 10px; font-size: 12px; color: var(--text-muted); text-align: center; }
+
+.empty-micros {
+  border: 1px dashed #CBD5E1; border-radius: 14px; padding: 24px;
+  text-align: center; background: #F8FAFC; color: #94A3B8;
+}
+.empty-micros i { font-size: 24px; margin-bottom: 8px; }
+.empty-micros p { margin: 0; font-size: 13px; }
+
+.dynamic-label { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.remove-micro { 
+  color: #CBD5E1; cursor: pointer; font-size: 13px; padding: 4px;
+  transition: 0.2s; border-radius: 50%;
+}
+.remove-micro:hover { color: #EF4444; background: #FEF2F2; }
+
 .input-with-unit { display: flex; align-items: center; gap: 8px; }
 .input-with-unit input {
   flex: 1; padding: 12px 16px; border: 1px solid #CBD5E1; border-radius: 12px;
@@ -570,6 +780,14 @@ const aiInsight = computed(() => {
   cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;
 }
 .ai-calc-btn:hover { background: #DBEAFE; }
+
+.mini-translate-btn {
+  background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534;
+  padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; gap: 4px; transition: 0.2s;
+}
+.mini-translate-btn:hover:not(:disabled) { background: #DCFCE7; }
+.mini-translate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 /* Weight range */
 .weight-range-section {

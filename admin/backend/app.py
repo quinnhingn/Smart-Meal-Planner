@@ -1,10 +1,11 @@
 import os
-import sys
+from datetime import timedelta
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from database.db import db
 from controller.auth.auth_controller import auth_bp
+from controller.ingredients.ingredient_controller import ingredient_bp
 from dotenv import load_dotenv
 
 # Đọc cấu hình từ file .env
@@ -20,13 +21,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Cấu hình JWT (Token bảo mật)
 app.config['JWT_SECRET_KEY'] = 'SmartMeal_Super_Secret_Key_2026'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24) # Tăng lên 24 tiếng để dev cho thoải mái
 jwt = JWTManager(app)
 
 # Khởi tạo Database
 db.init_app(app)
 
-# Đăng ký Blueprint của Auth
+# Đăng ký Blueprint
 app.register_blueprint(auth_bp)
+app.register_blueprint(ingredient_bp)
 
 @app.route('/')
 def health_check():

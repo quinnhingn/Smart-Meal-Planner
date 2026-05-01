@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import meatImg from '@/stores/image/image.png';
 import meatImg2 from '@/stores/image/image2.png';
@@ -144,15 +144,43 @@ const categoryFilters = computed(() => {
   ];
 });
 
-const ingredients = ref([
-  { id: 'uc-ga', name: 'Ức gà', nameEn: 'Chicken Breast', type: 'white-meat', calories: 165, protein: 31, carbs: 0, fat: 3.6, completeness: 98, suitability: ['gain', 'lose', 'keto'], image: meatImg, cardColor: '#2D4A35' },
-  { id: 'thit-bo', name: 'Thịt bò', nameEn: 'Beef', type: 'red-meat', calories: 250, protein: 26, carbs: 0, fat: 15, completeness: 95, suitability: ['gain'], image: meatImg2, cardColor: '#7A3535' },
-  { id: 'thit-co-heo', name: 'Thịt cổ heo', nameEn: 'Pork Neck', type: 'red-meat', calories: 240, protein: 18, carbs: 0, fat: 19, completeness: 90, suitability: ['gain'], image: meatImg3, cardColor: '#3D5A7A' },
-  { id: 'de-suon-heo', name: 'Dẻ sườn heo', nameEn: 'Pork Ribs', type: 'red-meat', calories: 310, protein: 22, carbs: 0, fat: 25, completeness: 85, suitability: ['gain'], image: meatImg, cardColor: '#7A6628' },
-  { id: 'thit-than-heo', name: 'Thịt thăn heo', nameEn: 'Pork Loin', type: 'red-meat', calories: 180, protein: 21, carbs: 0, fat: 10, completeness: 92, suitability: ['gain', 'lose'], image: meatImg2, cardColor: '#4A3D7A' },
-  { id: 'ca-hoi', name: 'Cá hồi', nameEn: 'Salmon', type: 'fish', calories: 208, protein: 20, carbs: 0, fat: 13, completeness: 96, suitability: ['gain', 'keto'], image: meatImg3, cardColor: '#2D5A6B' },
-  { id: 'tom', name: 'Tôm', nameEn: 'Shrimp', type: 'seafood', calories: 85, protein: 18, carbs: 0.9, fat: 0.9, completeness: 88, suitability: ['lose', 'keto'], image: meatImg, cardColor: '#6B3D2D' },
+const ingredients = ref<any[]>([
+  { id: 'uc-ga', name: 'Ức gà (Mock)', nameEn: 'Chicken Breast', type: 'white-meat', calories: 165, protein: 31, carbs: 0, fat: 3.6, completeness: 98, suitability: ['gain', 'lose', 'keto'], image: meatImg, cardColor: '#2D4A35' },
+  { id: 'thit-bo', name: 'Thịt bò (Mock)', nameEn: 'Beef', type: 'red-meat', calories: 250, protein: 26, carbs: 0, fat: 15, completeness: 95, suitability: ['gain'], image: meatImg2, cardColor: '#7A3535' },
 ]);
+
+onMounted(async () => {
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('http://localhost:5000/api/ingredients', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    
+    if (data.success && data.data) {
+      // Map API data to the UI format
+      const apiItems = data.data.map((item: any) => ({
+        id: String(item.id),
+        name: item.name_vn,
+        nameEn: item.name_en || '',
+        type: item.category || 'other',
+        calories: item.calories_per_100g,
+        protein: item.protein_per_100g,
+        carbs: item.carbs_per_100g,
+        fat: item.fat_per_100g,
+        completeness: 100, // Data xịn từ DB là 100%
+        suitability: [], // Chưa có mapping suitability thật
+        image: item.image_url || meatImg3, // Hình fallback
+        cardColor: '#4A3D7A' // Màu nền random/fallback
+      }));
+      
+      // Merge mock data và data thật từ DB
+      ingredients.value = [...ingredients.value, ...apiItems];
+    }
+  } catch (err) {
+    console.error('Lỗi khi fetch danh sách nguyên liệu:', err);
+  }
+});
 
 const filteredItems = computed(() => {
   let list = ingredients.value;

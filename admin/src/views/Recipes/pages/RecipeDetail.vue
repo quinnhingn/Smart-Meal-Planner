@@ -30,9 +30,7 @@
               <span class="tag meal-tag">
                 <i class="fa-solid fa-clock"></i> {{ mealTimeText }}
               </span>
-              <span class="tag ai-tag">
-                <i class="fa-solid fa-check-circle"></i> {{ recipe.aiMatch }} AI
-              </span>
+
             </div>
             <div class="quick-macros">
               <div class="macro-pill"><span>P</span> {{ recipe.protein }}</div>

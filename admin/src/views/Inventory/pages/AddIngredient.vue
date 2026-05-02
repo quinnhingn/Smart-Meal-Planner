@@ -5,8 +5,8 @@
         <i class="fa-solid fa-arrow-left"></i>
       </button>
       <div>
-        <h1>Thêm nguyên liệu mới</h1>
-        <p class="header-desc">Bổ sung nguyên liệu và thông số dinh dưỡng vào hệ thống tư vấn công thức.</p>
+        <h1>{{ isEditMode ? 'Chỉnh sửa nguyên liệu' : 'Thêm nguyên liệu mới' }}</h1>
+        <p class="header-desc">{{ isEditMode ? 'Cập nhật lại các thông số dinh dưỡng và bảo quản.' : 'Bổ sung nguyên liệu và thông số dinh dưỡng vào hệ thống.' }}</p>
       </div>
     </div>
 
@@ -267,6 +267,18 @@
               <p>Chưa có ảnh. Hãy dán URL vào ô trên.</p>
             </div>
           </div>
+
+          <!-- AI Remove BG Button -->
+          <button 
+            class="ai-remove-bg-btn" 
+            v-if="imagePreview" 
+            @click="handleRemoveBg" 
+            :disabled="isRemovingBg"
+          >
+            <i v-if="isRemovingBg" class="fa-solid fa-spinner fa-spin"></i>
+            <i v-else class="fa-solid fa-wand-magic-sparkles"></i>
+            {{ isRemovingBg ? 'Đang tách nền...' : 'AI Tách nền' }}
+          </button>
         </div>
 
         <!-- Nutrition Preview -->
@@ -310,7 +322,7 @@
           <i v-if="isSaving" class="fa-solid fa-circle-notch fa-spin"></i>
           <i v-else class="fa-solid fa-check"></i> 
           <span v-if="isSaving">Đang lưu...</span>
-          <span v-else>Lưu nguyên liệu</span>
+          <span v-else>{{ isEditMode ? 'Lưu thay đổi' : 'Lưu nguyên liệu' }}</span>
         </button>
       </div>
     </div>
@@ -318,12 +330,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
+
+const isEditMode = computed(() => !!route.params.ingredientId);
 
 const isSaving = ref(false);
+const isRemovingBg = ref(false);
 const imageMode = ref<'upload' | 'url'>('upload');
 const imageUrlInput = ref('');
 
@@ -362,6 +378,119 @@ const clearImage = () => {
   selectedFile.value = null;
   imageUrlInput.value = '';
 };
+
+const handleRemoveBg = async () => {
+  if (!imagePreview.value) return;
+  isRemovingBg.value = true;
+  
+  try {
+    const token = localStorage.getItem('admin_token');
+    let urlToProcess = imagePreview.value;
+
+    // 1. Nếu là file vừa chọn từ máy (base64), phải upload lên trước để lấy link xử lý
+    if (selectedFile.value) {
+      const formData = new FormData();
+      formData.append('image', selectedFile.value);
+      const uploadRes = await fetch('http://localhost:5000/api/ingredients/upload', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData
+      });
+      const uploadData = await uploadRes.json();
+      if (uploadData.success) {
+        urlToProcess = uploadData.image_url;
+      } else {
+        throw new Error("Không thể upload ảnh để xử lý");
+      }
+    }
+
+    // 2. Gọi API tách nền
+    const res = await fetch('http://localhost:5000/api/ingredients/remove-bg', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ image_url: urlToProcess })
+    });
+    
+    const data = await res.json();
+    if (data.success) {
+      imagePreview.value = data.image_url;
+      imageUrlInput.value = data.image_url;
+      imageMode.value = 'url'; // Chuyển sang mode URL để dùng link ảnh đã tách nền
+      selectedFile.value = null;
+    } else {
+      alert("Lỗi tách nền: " + data.message);
+    }
+  } catch (err: any) {
+    console.error(err);
+    alert("Lỗi khi kết nối AI tách nền: " + err.message);
+  } finally {
+    isRemovingBg.value = false;
+  }
+};
+
+onMounted(async () => {
+  if (isEditMode.value) {
+    const id = route.params.ingredientId;
+    try {
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`http://localhost:5000/api/ingredients/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        const item = data.data;
+        form.value.name = item.name_vn;
+        form.value.nameEn = item.name_en;
+        form.value.category = item.category;
+        form.value.unit = item.default_unit;
+        form.value.description = ''; // Chưa có field này trong DB cũ
+        form.value.storage = item.storage_method;
+        form.value.notes = item.notes;
+        form.value.weightMin = item.weight_min;
+        form.value.weightMax = item.weight_max;
+        form.value.suitability = []; // Mapping logic if needed
+        
+        // Nutrition
+        form.value.nutrition.calories = item.calories_per_100g;
+        form.value.nutrition.protein = item.protein_per_100g;
+        form.value.nutrition.carbs = item.carbs_per_100g;
+        form.value.nutrition.fat = item.fat_per_100g;
+        form.value.nutrition.sugar = item.sugar;
+        form.value.nutrition.fiber = item.fiber;
+        form.value.nutrition.saturatedFat = item.saturated_fat;
+        form.value.nutrition.cholesterol = item.cholesterol;
+        form.value.nutrition.sodium = item.sodium;
+        form.value.nutrition.potassium = item.potassium;
+        form.value.nutrition.calcium = item.calcium;
+        form.value.nutrition.iron = item.iron;
+        form.value.nutrition.vitaminC = item.vitamin_c;
+        form.value.nutrition.vitaminA = item.vitamin_a;
+        form.value.nutrition.vitaminD = item.vitamin_d;
+
+        // Image
+        if (item.image_url) {
+          imagePreview.value = item.image_url;
+          if (item.image_url.startsWith('http')) {
+            imageMode.value = 'url';
+            imageUrlInput.value = item.image_url;
+          }
+        }
+
+        // Active Micros
+        activeMicros.value = [];
+        allMicros.forEach(m => {
+          const val = (item as any)[m.key] || (item as any)[m.key.replace(/[A-Z]/g, (l:string) => `_${l.toLowerCase()}`)];
+          if (val > 0) activeMicros.value.push(m.key);
+        });
+      }
+    } catch (e) {
+      console.error("Lỗi khi load dữ liệu chỉnh sửa:", e);
+    }
+  }
+});
 
 const saveIngredient = async () => {
   if (!form.value.name || form.value.nutrition.calories === null) {
@@ -429,8 +558,12 @@ const saveIngredient = async () => {
       gram_per_unit: 1.0
     };
 
-    const res = await fetch('http://localhost:5000/api/ingredients', {
-      method: 'POST',
+    const apiUrl = isEditMode.value 
+      ? `http://localhost:5000/api/ingredients/${route.params.ingredientId}`
+      : 'http://localhost:5000/api/ingredients';
+    
+    const res = await fetch(apiUrl, {
+      method: isEditMode.value ? 'PUT' : 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -440,7 +573,7 @@ const saveIngredient = async () => {
     
     const data = await res.json();
     if (data.success) {
-      alert('Thêm nguyên liệu thành công vào Database!');
+      alert(isEditMode.value ? 'Cập nhật thành công!' : 'Thêm nguyên liệu thành công!');
       router.back();
     } else {
       alert('Lỗi từ Server: ' + data.message);
@@ -1047,4 +1180,19 @@ const aiInsight = computed(() => {
 }
 .url-empty-preview i { font-size: 32px; }
 .url-empty-preview p { font-size: 13px; margin: 0; }
+
+.ai-remove-bg-btn {
+  width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  color: white; border: none; font-weight: 700; font-size: 14px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 8px; transition: 0.3s; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+.ai-remove-bg-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+}
+.ai-remove-bg-btn:disabled {
+  opacity: 0.7; cursor: not-allowed; background: #94A3B8; box-shadow: none;
+}
 </style>

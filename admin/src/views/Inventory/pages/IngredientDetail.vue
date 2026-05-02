@@ -10,7 +10,9 @@
         <p class="header-desc">Chi tiết thông số dinh dưỡng nguyên liệu</p>
       </div>
       <div class="header-actions">
-        <button class="btn-outline"><i class="fa-solid fa-pen"></i> Chỉnh sửa</button>
+        <button class="btn-outline" @click="router.push({ name: 'ingredient-edit', params: { id: route.params.id, ingredientId: route.params.ingredientId } })">
+          <i class="fa-solid fa-pen"></i> Chỉnh sửa
+        </button>
         <button class="btn-danger"><i class="fa-solid fa-trash"></i> Xoá</button>
       </div>
     </div>

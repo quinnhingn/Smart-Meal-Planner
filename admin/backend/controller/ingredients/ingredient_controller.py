@@ -244,3 +244,69 @@ def upload_image():
             
     except Exception as e:
         return jsonify({"success": False, "message": f"Lỗi upload: {str(e)}"}), 500
+
+@ingredient_bp.route('/remove-bg', methods=['POST'])
+@jwt_required()
+def remove_background():
+    try:
+        data = request.get_json()
+        image_url = data.get('image_url')
+        
+        if not image_url:
+            return jsonify({"success": False, "message": "Thiếu URL ảnh"}), 400
+
+        # 1. Tải ảnh về từ URL hoặc đọc từ Local
+        import requests
+        from io import BytesIO
+        from rembg import remove
+        from PIL import Image
+        import uuid
+        import os
+
+        input_image = None
+        
+        # Nếu là ảnh local của mình (localhost:5000/uploads/...)
+        if "localhost:5000/uploads/" in image_url:
+            filename = image_url.split("/")[-1]
+            upload_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../uploads'))
+            local_path = os.path.join(upload_path, filename)
+            if os.path.exists(local_path):
+                input_image = Image.open(local_path)
+        
+        # Nếu là link từ ngoài internet
+        if not input_image:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            response = requests.get(image_url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                input_image = Image.open(BytesIO(response.content))
+            else:
+                return jsonify({"success": False, "message": f"Không thể tải ảnh từ URL (Mã lỗi: {response.status_code})"}), 400
+
+        if not input_image:
+            return jsonify({"success": False, "message": "Không thể định dạng được hình ảnh này."}), 400
+
+        # Chuyển đổi sang RGB nếu cần (tránh lỗi với một số định dạng lạ)
+        if input_image.mode != 'RGB' and input_image.mode != 'RGBA':
+            input_image = input_image.convert('RGB')
+
+        # 2. Xử lý tách nền bằng AI
+        output_image = remove(input_image)
+
+        # 3. Lưu ảnh mới vào thư mục uploads
+        filename = f"no-bg_{uuid.uuid4()}.png"
+        upload_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../uploads'))
+        if not os.path.exists(upload_path):
+            os.makedirs(upload_path)
+            
+        save_path = os.path.join(upload_path, filename)
+        output_image.save(save_path)
+
+        return jsonify({
+            "success": True,
+            "image_url": f"http://localhost:5000/uploads/{filename}"
+        }), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Lỗi tách nền: {str(e)}"}), 500

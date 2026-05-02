@@ -1,11 +1,18 @@
 // src/navigation/RootNavigator.js
-import React from 'react';
+import React, { useState } from 'react'; // BỔ SUNG: import useState
 import { View, Text, Pressable, Platform, useWindowDimensions, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons'; // Thêm bộ icon
+import { Ionicons } from '@expo/vector-icons';
 import { BREAKPOINTS, COLORS } from '../constants/theme';
 
+// BỔ SUNG: Import Zustand store
+import { useAppStore } from '../store/useAppStore'; 
+
+// BỔ SUNG: Import ĐẦY ĐỦ các màn hình
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import OnboardingScreen from '../screens/OnboardingScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import PantryScreen from '../screens/PantryScreen';
 import ShoppingScreen from '../screens/ShoppingScreen';
@@ -18,7 +25,8 @@ const screens = [
   { name: 'Shopping', component: ShoppingScreen, label: 'Đi chợ', icon: 'cart' },
 ];
 
-const WebTopNavbar = ({ state, descriptors, navigation }) => {
+// Thêm prop logout vào WebTopNavbar
+const WebTopNavbar = ({ state, descriptors, navigation, logout }) => {
   return (
     <View style={styles.webNavbar}>
       <Text style={styles.logoText}>SmartMeal</Text>
@@ -39,6 +47,10 @@ const WebTopNavbar = ({ state, descriptors, navigation }) => {
             </Pressable>
           );
         })}
+        {/* Nút Đăng xuất cho Web */}
+        <Pressable onPress={logout} style={{ marginLeft: 20, cursor: 'pointer' }}>
+          <Text style={{ color: COLORS.danger, fontWeight: 'bold' }}>Thoát</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -48,23 +60,43 @@ const RootNavigator = () => {
   const { width } = useWindowDimensions();
   const isWebLarge = Platform.OS === 'web' && width > BREAKPOINTS.mobileMax;
 
+  // Lấy data từ Zustand
+  const { token, hasProfile, logout } = useAppStore();
+  const [authScreen, setAuthScreen] = useState('login'); // 'login' | 'register'
+
+  // AUTH GUARD: 1. Chưa có Token -> Luồng Đăng nhập / Đăng ký
+  if (!token) {
+    if (authScreen === 'register') {
+      return <RegisterScreen onNavigateToLogin={() => setAuthScreen('login')} />;
+    }
+    return <LoginScreen onNavigateToRegister={() => setAuthScreen('register')} />;
+  }
+
+  // AUTH GUARD: 2. Có Token nhưng chưa setup profile -> Luồng Khảo sát
+  if (token && !hasProfile) {
+    return <OnboardingScreen />;
+  }
+
+  // AUTH GUARD: 3. Vào app chính
   return (
     <NavigationContainer>
       <Tab.Navigator
-        // ĐIỂM SỬA QUAN TRỌNG: Chỉ truyền hàm khi là Web lớn. 
-        // Nếu là mobile, truyền undefined trực tiếp (không bọc trong arrow function) 
-        // để nó kích hoạt thanh Tab mặc định của thư viện.
-        tabBar={isWebLarge ? (props) => <WebTopNavbar {...props} /> : undefined}
+        tabBar={isWebLarge ? (props) => <WebTopNavbar {...props} logout={logout} /> : undefined}
         screenOptions={({ route }) => ({
           headerShown: !isWebLarge,
           tabBarActiveTintColor: COLORS.primary,
           tabBarInactiveTintColor: 'gray',
-          // Thêm icon cho Mobile
           tabBarIcon: ({ focused, color, size }) => {
             const screen = screens.find(s => s.name === route.name);
             const iconName = focused ? screen.icon : `${screen.icon}-outline`;
             return <Ionicons name={iconName} size={size} color={color} />;
           },
+          // Thêm nút Đăng xuất trên Mobile Header để dễ test
+          headerRight: () => (
+            <Pressable onPress={logout} style={{ marginRight: 15 }}>
+              <Ionicons name="log-out-outline" size={24} color={COLORS.danger} />
+            </Pressable>
+          ),
         })}
       >
         {screens.map(s => (
@@ -102,6 +134,7 @@ const styles = StyleSheet.create({
   navItems: {
     flexDirection: 'row',
     gap: 30,
+    alignItems: 'center', // Căn giữa các item trên navbar
   },
   navItem: {
     position: 'relative',

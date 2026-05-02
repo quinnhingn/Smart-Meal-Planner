@@ -265,15 +265,22 @@ def remove_background():
 
         input_image = None
         
-        # Nếu là ảnh local của mình (localhost:5000/uploads/...)
-        if "localhost:5000/uploads/" in image_url:
+        # 1. Nếu là mã ảnh Base64 (data:image/...)
+        if image_url.startswith("data:image"):
+            import base64
+            header, encoded = image_url.split(",", 1)
+            image_data = base64.b64decode(encoded)
+            input_image = Image.open(BytesIO(image_data))
+        
+        # 2. Nếu là ảnh local của mình (localhost:5000/uploads/...)
+        elif "localhost:5000/uploads/" in image_url:
             filename = image_url.split("/")[-1]
             upload_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../uploads'))
             local_path = os.path.join(upload_path, filename)
             if os.path.exists(local_path):
                 input_image = Image.open(local_path)
         
-        # Nếu là link từ ngoài internet
+        # 3. Nếu là link từ ngoài internet
         if not input_image:
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'

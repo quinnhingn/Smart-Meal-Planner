@@ -29,9 +29,10 @@ def init_db():
         # Nếu muốn xoá hết sạch sành sanh thì dùng db.drop_all()
         try:
             print("🗑️  Đang xoá bảng scr_ingredients cũ (nếu có)...")
-            IngredientModel.__table__.drop(db.engine, checkfirst=True)
+            # IngredientModel.__table__.drop(db.engine, checkfirst=True)
             
             print("🏗️  Đang tạo lại các bảng với cấu trúc mới nhất...")
+            # db.drop_all() # Đã vô hiệu hóa lệnh xóa để tránh mất dữ liệu
             db.create_all()
             
             print("✅ Hoàn tất! Bảng scr_ingredients đã sẵn sàng với đầy đủ các chỉ số mới.")

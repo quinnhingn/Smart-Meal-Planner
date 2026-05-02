@@ -19,19 +19,25 @@ const ResponsiveContainer = ({ children, style, useImageBg = false }) => {
         // Lớp nền 2: Dùng Mesh Gradient (Dành cho Dashboard và App chính)
         <>
           <LinearGradient
-            colors={['#F5F7FA', '#E4EBF5']}
+            colors={['#E8F5E9', '#C8E6C9']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.absoluteBackground}
           />
-          <View style={[styles.blob, styles.blobTopLeft]} />
-          <View style={[styles.blob, styles.blobBottomRight]} />
-          <View style={[styles.blob, styles.blobCenter]} />
+          <View style={[styles.blob, styles.blobTopLeft, { backgroundColor: '#A5D6A7' }]} />
+          <View style={[styles.blob, styles.blobBottomRight, { backgroundColor: '#81C784' }]} />
+          <View style={[styles.blob, styles.blobCenter, { backgroundColor: '#E2EBF0' }]} />
         </>
       )}
 
       {/* Lớp 3: Nội dung chính bọc trong SafeAreaView mới */}
-      <SafeAreaView style={[styles.safeArea, style]} edges={['top', 'left', 'right']}>
+      <SafeAreaView 
+        style={[
+          styles.safeArea, 
+          style
+        ]} 
+        edges={['top', 'left', 'right']}
+      >
         {children}
       </SafeAreaView>
     </View>
@@ -42,7 +48,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     overflow: 'hidden',
-    backgroundColor: '#F5F7FA', 
+    backgroundColor: '#F1F8E9', 
   },
   absoluteBackground: {
     ...StyleSheet.absoluteFillObject,
@@ -61,17 +67,14 @@ const styles = StyleSheet.create({
   },
   blobTopLeft: {
     width: 350, height: 350,
-    backgroundColor: '#D1D9E6',
     top: '-10%', left: '-15%',
   },
   blobBottomRight: {
     width: 450, height: 450,
-    backgroundColor: '#CFD9DF',
     bottom: '-15%', right: '-10%',
   },
   blobCenter: {
     width: 250, height: 250,
-    backgroundColor: '#E2EBF0',
     top: '30%', left: '20%',
     opacity: 0.4,
   }

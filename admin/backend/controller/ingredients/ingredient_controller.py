@@ -87,8 +87,9 @@ def auto_fill_nutrition():
         # Mặc định kết quả USDA là trên 100g
         nutrition_data = {
             "calories": 0, "protein": 0, "carbs": 0, "fat": 0,
-            "sugar": 0, "fiber": 0, "saturatedFat": 0, "sodium": 0,
-            "calcium": 0, "iron": 0, "vitaminC": 0, "vitaminA": 0
+            "sugar": 0, "fiber": 0, "saturatedFat": 0, "cholesterol": 0,
+            "sodium": 0, "potassium": 0, "calcium": 0, "iron": 0,
+            "vitaminC": 0, "vitaminA": 0, "vitaminD": 0
         }
         
         for nut in nutrients:
@@ -109,8 +110,12 @@ def auto_fill_nutrition():
                 nutrition_data['fiber'] = val
             elif 'fatty acids, total saturated' in name:
                 nutrition_data['saturatedFat'] = val
+            elif 'cholesterol' in name:
+                nutrition_data['cholesterol'] = val
             elif 'sodium, na' in name:
                 nutrition_data['sodium'] = val
+            elif 'potassium, k' in name:
+                nutrition_data['potassium'] = val
             elif 'calcium, ca' in name:
                 nutrition_data['calcium'] = val
             elif 'iron, fe' in name:
@@ -119,6 +124,8 @@ def auto_fill_nutrition():
                 nutrition_data['vitaminC'] = val
             elif 'vitamin a' in name:
                 nutrition_data['vitaminA'] = val
+            elif 'vitamin d' in name:
+                nutrition_data['vitaminD'] = val
                 
         return jsonify({
             "success": True, 
@@ -205,3 +212,35 @@ def delete(id):
         return jsonify(result), result.get("status_code", 200)
     except Exception as e:
         return jsonify({"success": False, "message": f"Lỗi máy chủ: {str(e)}"}), 500
+
+@ingredient_bp.route('/upload', methods=['POST'])
+@jwt_required()
+def upload_image():
+    try:
+        if 'image' not in request.files:
+            return jsonify({"success": False, "message": "Không tìm thấy file ảnh"}), 400
+        
+        file = request.files['image']
+        if file.filename == '':
+            return jsonify({"success": False, "message": "Tên file trống"}), 400
+            
+        if file:
+            import uuid
+            # Tạo tên file duy nhất để tránh trùng lặp
+            filename = str(uuid.uuid4()) + "_" + file.filename
+            
+            import os
+            upload_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../uploads'))
+            if not os.path.exists(upload_path):
+                os.makedirs(upload_path)
+                
+            save_path = os.path.join(upload_path, filename)
+            file.save(save_path)
+            
+            return jsonify({
+                "success": True, 
+                "image_url": f"http://localhost:5000/uploads/{filename}"
+            }), 200
+            
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Lỗi upload: {str(e)}"}), 500

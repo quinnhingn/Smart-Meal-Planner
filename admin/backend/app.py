@@ -1,6 +1,6 @@
 import os
 from datetime import timedelta
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from database.db import db
@@ -34,6 +34,10 @@ app.register_blueprint(ingredient_bp)
 @app.route('/')
 def health_check():
     return {"status": "ok", "message": "Smart Meal Planner API is running!"}
+
+@app.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    return send_from_directory('uploads', filename)
 
 if __name__ == '__main__':
     print("🚀 Khởi động Server Backend trên cổng 5000...")

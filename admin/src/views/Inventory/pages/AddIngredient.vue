@@ -213,11 +213,59 @@
       <div class="form-sidebar">
         <!-- Image upload -->
         <div class="card-panel">
-          <h3>Hình ảnh</h3>
-          <div class="upload-area">
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-            <p>Kéo thả ảnh vào đây hoặc <span>Tải lên</span></p>
-            <small>PNG, JPG tối đa 5MB</small>
+          <div class="panel-header-inline">
+            <h3>Hình ảnh</h3>
+            <div class="image-toggle">
+              <button :class="{ active: imageMode === 'upload' }" @click="imageMode = 'upload'">
+                <i class="fa-solid fa-upload"></i>
+              </button>
+              <button :class="{ active: imageMode === 'url' }" @click="imageMode = 'url'">
+                <i class="fa-solid fa-link"></i>
+              </button>
+            </div>
+          </div>
+
+          <div v-if="imageMode === 'upload'" class="upload-area" @click="triggerFileInput" :class="{ 'has-preview': imagePreview }">
+            <template v-if="!imagePreview">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p>Kéo thả ảnh hoặc <span>Tải lên</span></p>
+              <small>PNG, JPG tối đa 5MB</small>
+            </template>
+            <template v-else>
+              <img :src="imagePreview" class="img-preview" />
+              <div class="upload-overlay">
+                <i class="fa-solid fa-camera-rotate"></i>
+                <span>Đổi ảnh khác</span>
+              </div>
+            </template>
+            <input 
+              type="file" 
+              ref="fileInput" 
+              style="display: none" 
+              accept="image/*" 
+              @change="handleFileChange"
+            >
+          </div>
+
+          <div v-else class="url-input-container">
+            <div class="input-group">
+              <input 
+                type="text" 
+                v-model="imageUrlInput" 
+                placeholder="Dán link ảnh từ Google/Web..." 
+                @input="handleUrlInput"
+              >
+            </div>
+            <div class="url-preview-box" v-if="imagePreview">
+              <img :src="imagePreview" class="img-preview">
+              <button class="remove-preview-btn" @click="clearImage">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="url-empty-preview" v-else>
+              <i class="fa-solid fa-image"></i>
+              <p>Chưa có ảnh. Hãy dán URL vào ô trên.</p>
+            </div>
           </div>
         </div>
 
@@ -276,6 +324,44 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const isSaving = ref(false);
+const imageMode = ref<'upload' | 'url'>('upload');
+const imageUrlInput = ref('');
+
+const fileInput = ref<HTMLInputElement | null>(null);
+const imagePreview = ref<string | null>(null);
+const selectedFile = ref<File | null>(null);
+
+const triggerFileInput = () => {
+  fileInput.value?.click();
+};
+
+const handleFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Kích thước ảnh không được vượt quá 5MB!");
+      return;
+    }
+    selectedFile.value = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreview.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const handleUrlInput = () => {
+  imagePreview.value = imageUrlInput.value;
+  selectedFile.value = null; // Clear file if URL is used
+};
+
+const clearImage = () => {
+  imagePreview.value = null;
+  selectedFile.value = null;
+  imageUrlInput.value = '';
+};
 
 const saveIngredient = async () => {
   if (!form.value.name || form.value.nutrition.calories === null) {
@@ -289,6 +375,25 @@ const saveIngredient = async () => {
       alert('Bạn chưa đăng nhập hoặc mất Token. Vui lòng đăng nhập lại.');
       router.push('/login');
       return;
+    }
+
+    let imageUrl = imageMode.value === 'url' ? imageUrlInput.value : null;
+    
+    if (imageMode.value === 'upload' && selectedFile.value) {
+      const formData = new FormData();
+      formData.append('image', selectedFile.value);
+      
+      const uploadRes = await fetch('http://localhost:5000/api/ingredients/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      const uploadData = await uploadRes.json();
+      if (uploadData.success) {
+        imageUrl = uploadData.image_url;
+      }
     }
 
     const payload = {
@@ -305,11 +410,14 @@ const saveIngredient = async () => {
       sugar: form.value.nutrition.sugar || 0,
       fiber: form.value.nutrition.fiber || 0,
       saturated_fat: form.value.nutrition.saturatedFat || 0,
+      cholesterol: form.value.nutrition.cholesterol || 0,
       sodium: form.value.nutrition.sodium || 0,
+      potassium: form.value.nutrition.potassium || 0,
       calcium: form.value.nutrition.calcium || 0,
       iron: form.value.nutrition.iron || 0,
       vitamin_c: form.value.nutrition.vitaminC || 0,
       vitamin_a: form.value.nutrition.vitaminA || 0,
+      vitamin_d: form.value.nutrition.vitaminD || 0,
       
       // Storage & Usage
       storage_method: form.value.storage || '',
@@ -317,7 +425,7 @@ const saveIngredient = async () => {
       weight_max: form.value.weightMax,
       notes: form.value.notes || '',
       
-      image_url: null,
+      image_url: imageUrl,
       gram_per_unit: 1.0
     };
 
@@ -529,13 +637,22 @@ const form = ref({
   weightMax: null as number | null,
   suitability: [] as string[],
   nutrition: {
-    calories: null as number | null, protein: null as number | null,
-    carbs: null as number | null, fat: null as number | null,
-    sugar: null as number | null, fiber: null as number | null,
-    saturatedFat: null as number | null, sodium: null as number | null,
-    calcium: null as number | null, iron: null as number | null,
-    vitaminC: null as number | null, vitaminA: null as number | null,
-  }
+    calories: null as number | null,
+    protein: null as number | null,
+    carbs: null as number | null,
+    fat: null as number | null,
+    sugar: null as number | null,
+    fiber: null as number | null,
+    saturatedFat: null as number | null,
+    cholesterol: null as number | null,
+    sodium: null as number | null,
+    potassium: null as number | null,
+    calcium: null as number | null,
+    iron: null as number | null,
+    vitaminC: null as number | null,
+    vitaminA: null as number | null,
+    vitaminD: null as number | null,
+  },
 });
 
 // Goal-based multipliers: adjust macros for each goal
@@ -559,7 +676,7 @@ const calcNutritionFromSuitability = () => {
   Object.assign(form.value.nutrition, { calories: cals, protein: prot, carbs, fat, sugar });
 };
 
-type NutritionKey = 'calories' | 'protein' | 'carbs' | 'fat' | 'sugar' | 'fiber' | 'saturatedFat' | 'sodium' | 'calcium' | 'iron' | 'vitaminC' | 'vitaminA';
+type NutritionKey = 'calories' | 'protein' | 'carbs' | 'fat' | 'sugar' | 'fiber' | 'saturatedFat' | 'cholesterol' | 'sodium' | 'potassium' | 'calcium' | 'iron' | 'vitaminC' | 'vitaminA' | 'vitaminD';
 
 const macros: { key: NutritionKey, label: string, unit: string, icon: string, color: string, bg: string }[] = [
   { key: 'calories', label: 'Calories', unit: 'kcal', icon: 'fa-solid fa-fire', color: '#F59E0B', bg: '#FFFBEB' },
@@ -572,11 +689,14 @@ const allMicros = [
   { key: 'sugar', label: 'Đường (Sugar)', unit: 'g' },
   { key: 'fiber', label: 'Chất xơ (Fiber)', unit: 'g' },
   { key: 'saturatedFat', label: 'Béo bão hòa', unit: 'g' },
+  { key: 'cholesterol', label: 'Cholesterol', unit: 'mg' },
   { key: 'sodium', label: 'Natri (Sodium)', unit: 'mg' },
+  { key: 'potassium', label: 'Kali (Potassium)', unit: 'mg' },
   { key: 'calcium', label: 'Canxi (Calcium)', unit: 'mg' },
   { key: 'iron', label: 'Sắt (Iron)', unit: 'mg' },
   { key: 'vitaminC', label: 'Vitamin C', unit: 'mg' },
   { key: 'vitaminA', label: 'Vitamin A', unit: 'mcg' },
+  { key: 'vitaminD', label: 'Vitamin D', unit: 'mcg' },
 ];
 
 const showMicroDropdown = ref(false);
@@ -845,9 +965,25 @@ const aiInsight = computed(() => {
 /* Sidebar */
 .upload-area {
   border: 2px dashed #CBD5E1; border-radius: 16px; padding: 36px 20px;
-  text-align: center; cursor: pointer; background: #F8FAFC; transition: 0.2s;
+  text-align: center; cursor: pointer; background: #F8FAFC; transition: 0.3s;
+  position: relative; overflow: hidden; min-height: 200px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
-.upload-area:hover { border-color: #8EAE82; background: #E6EFE5; }
+.upload-area:hover { border-color: #8EAE82; background: #F3F7F2; }
+.upload-area.has-preview { border-style: solid; padding: 0; border-color: #E2E8F0; }
+
+.img-preview { width: 100%; height: 200px; object-fit: cover; display: block; }
+
+.upload-overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); color: white;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; opacity: 0; transition: 0.3s;
+}
+.upload-area:hover .upload-overlay { opacity: 1; }
+.upload-overlay i { font-size: 24px; color: white !important; margin: 0 !important; }
+.upload-overlay span { font-weight: 600; font-size: 13px; }
+
 .upload-area i { font-size: 36px; color: #94A3B8; margin-bottom: 12px; display: block; }
 .upload-area p { margin: 0 0 4px 0; color: var(--text-muted); font-size: 14px; }
 .upload-area span { color: #3B82F6; font-weight: 600; }
@@ -885,5 +1021,30 @@ const aiInsight = computed(() => {
 }
 .save-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(244,197,83,0.4); }
 
-.form-sidebar { display: flex; flex-direction: column; }
+.image-toggle {
+  display: flex; background: #F1F5F9; padding: 4px; border-radius: 10px; gap: 4px;
+}
+.image-toggle button {
+  border: none; background: transparent; width: 32px; height: 32px; border-radius: 8px;
+  cursor: pointer; color: #64748B; transition: 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.image-toggle button.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+.panel-header-inline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.panel-header-inline h3 { margin: 0; }
+
+.url-input-container { display: flex; flex-direction: column; gap: 12px; }
+.url-preview-box { 
+  position: relative; height: 180px; border-radius: 14px; overflow: hidden; border: 1px solid #E2E8F0;
+}
+.remove-preview-btn {
+  position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(0,0,0,0.5); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.url-empty-preview {
+  height: 180px; background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94A3B8; gap: 8px;
+}
+.url-empty-preview i { font-size: 32px; }
+.url-empty-preview p { font-size: 13px; margin: 0; }
 </style>

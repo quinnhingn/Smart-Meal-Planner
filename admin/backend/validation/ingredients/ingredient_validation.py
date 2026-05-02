@@ -17,11 +17,14 @@ class IngredientRequest(BaseModel):
     sugar: Optional[float] = 0
     fiber: Optional[float] = 0
     saturated_fat: Optional[float] = 0
+    cholesterol: Optional[float] = 0
     sodium: Optional[float] = 0
+    potassium: Optional[float] = 0
     calcium: Optional[float] = 0
     iron: Optional[float] = 0
     vitamin_c: Optional[float] = 0
     vitamin_a: Optional[float] = 0
+    vitamin_d: Optional[float] = 0
     
     # Storage & Usage
     storage_method: Optional[str] = None

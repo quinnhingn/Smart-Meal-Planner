@@ -1,72 +1,80 @@
 // src/components/ResponsiveContainer.js
 import React from 'react';
-import { View, StyleSheet, useWindowDimensions, Platform, ImageBackground } from 'react-native';
-import { COLORS, BREAKPOINTS } from '../constants/theme';
-
-const bgImage = require('../../assets/bg.png'); 
+import { StyleSheet, View, ImageBackground } from 'react-native'; // Đã xóa SafeAreaView ở đây
+import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context'; // FIX: Import từ thư viện chuyên dụng
 
 const ResponsiveContainer = ({ children, style, useImageBg = false }) => {
-  const { width } = useWindowDimensions();
-  const isWebLarge = Platform.OS === 'web' && width > BREAKPOINTS.mobileMax;
-
-  // Nội dung lõi (Các form nhập liệu)
-  const innerContent = (
-    <View style={[
-      styles.container, 
-      isWebLarge && styles.webContainer, 
-      style
-    ]}>
-      {children}
-    </View>
-  );
-
-  // Nếu dùng ảnh nền (Cho màn Login, Register, Onboarding)
-  if (useImageBg) {
-    return (
-      <ImageBackground source={bgImage} style={styles.fullScreenBg} resizeMode="cover">
-        <View style={styles.overlay}>
-          {innerContent}
-        </View>
-      </ImageBackground>
-    );
-  }
-
-  // Nếu dùng nền màu trơn (Cho các màn Main App như Dashboard)
   return (
-    <View style={[styles.fullScreenBg, { backgroundColor: COLORS.background?.main || '#F4F7F6' }]}>
-      <View style={styles.overlay}>
-         {innerContent}
-      </View>
+    <View style={styles.wrapper}>
+      {/* KIỂM TRA ĐIỀU KIỆN RENDER BACKGROUND */}
+      {useImageBg ? (
+        // Lớp nền 1: Dùng ảnh (Dành cho Login, Register, Onboarding)
+        <ImageBackground 
+          source={require('../../assets/bg.png')} 
+          style={styles.absoluteBackground}
+          resizeMode="cover"
+        />
+      ) : (
+        // Lớp nền 2: Dùng Mesh Gradient (Dành cho Dashboard và App chính)
+        <>
+          <LinearGradient
+            colors={['#F5F7FA', '#E4EBF5']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.absoluteBackground}
+          />
+          <View style={[styles.blob, styles.blobTopLeft]} />
+          <View style={[styles.blob, styles.blobBottomRight]} />
+          <View style={[styles.blob, styles.blobCenter]} />
+        </>
+      )}
+
+      {/* Lớp 3: Nội dung chính bọc trong SafeAreaView mới */}
+      <SafeAreaView style={[styles.safeArea, style]} edges={['top', 'left', 'right']}>
+        {children}
+      </SafeAreaView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  fullScreenBg: {
+  wrapper: {
+    flex: 1,
+    overflow: 'hidden',
+    backgroundColor: '#F5F7FA', 
+  },
+  absoluteBackground: {
+    ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
+  },
+  safeArea: {
     flex: 1,
     width: '100%',
-    height: '100%', // Bắt buộc để Web phủ background ra sát mép trình duyệt
   },
-  overlay: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center',     // Căn giữa Form theo chiều ngang
-    justifyContent: 'center', // Căn giữa Form theo chiều dọc
-    backgroundColor: 'rgba(0, 0, 0, 0.15)', // Lớp phủ làm tối ảnh nền 1 chút để GlassCard trắng nổi bật hơn
+  // Các khối tạo hiệu ứng chiều sâu cho Glassmorphism khi không dùng ảnh
+  blob: {
+    position: 'absolute',
+    borderRadius: 999,
+    opacity: 0.6,
   },
-  container: {
-    flex: 1,
-    width: '100%',
-    padding: 16,
-    justifyContent: 'center',
+  blobTopLeft: {
+    width: 350, height: 350,
+    backgroundColor: '#D1D9E6',
+    top: '-10%', left: '-15%',
   },
-  webContainer: {
-    flex: 'none',
-    maxWidth: 480,
-    width: '100%',
-    padding: 0,
-    marginVertical: 30,
+  blobBottomRight: {
+    width: 450, height: 450,
+    backgroundColor: '#CFD9DF',
+    bottom: '-15%', right: '-10%',
   },
+  blobCenter: {
+    width: 250, height: 250,
+    backgroundColor: '#E2EBF0',
+    top: '30%', left: '20%',
+    opacity: 0.4,
+  }
 });
 
 export default ResponsiveContainer;

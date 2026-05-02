@@ -2,44 +2,64 @@
 import React from 'react';
 import { StyleSheet, View, Platform } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { COLORS } from '../constants/theme'; // BẮT BUỘC IMPORT COLORS CHỮ HOA
+import { COLORS } from '../constants/theme';
 
-const GlassCard = ({ children, style, intensity = 70 }) => {
+const GlassCard = ({ children, style, intensity = 75 }) => {
   return (
-    <View style={[styles.cardContainer, style]}>
-      <BlurView intensity={intensity} tint="light" style={styles.blurView}>
-        {children}
-      </BlurView>
+    <View style={[styles.shadowWrapper, style]}>
+      <View style={styles.overflowContainer}>
+        <BlurView 
+          intensity={intensity} 
+          tint="light" 
+          style={styles.blurView}
+        >
+          {/* 
+            Nhi lưu ý: Padding đã được đưa về 0. 
+            Mọi khoảng cách lề (padding) nên được định nghĩa ở Screen hoặc Container con 
+            để đảm bảo FlatList có thể chạy full-width bên trong thẻ kính.
+          */}
+          {children}
+        </BlurView>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  cardContainer: {
+  shadowWrapper: {
+    width: '100%',
+    alignSelf: 'center',
     borderRadius: 24,
-    overflow: 'hidden',
-    backgroundColor: COLORS.glass.bg, // SỬA LỖI READING 'glass': Gọi chuẩn COLORS chữ hoa
-    borderWidth: 1.5,
-    borderColor: COLORS.glass.border,
-    marginVertical: 10,
-    
-    // FIX CẢNH BÁO SHADOW DEPRECATED BẰNG CROSS-PLATFORM LOGIC
+    backgroundColor: 'transparent',
     ...Platform.select({
-      web: {
-        boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.08)', // Web dùng chuẩn CSS
+      web: { 
+        // Dùng boxShadow thay vì shadow* để tránh cảnh báo deprecation trên Web
+        boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.1)' 
       },
-      default: {
-        // Mobile iOS/Android vẫn dùng chuẩn cũ
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
-        elevation: 3, 
+      default: { 
+        shadowColor: '#000', 
+        shadowOffset: { width: 0, height: 8 }, 
+        shadowOpacity: 0.1, 
+        shadowRadius: 20, 
+        elevation: 4 
       }
     })
   },
+
+  overflowContainer: {
+    flex: 1,
+    overflow: 'hidden', // Quan trọng: Giữ cho nội dung không tràn khỏi bo góc 24px
+    borderRadius: 24,
+    // Giữ nguyên màu Glass cũ của Nhi
+    backgroundColor: COLORS?.glass?.bg || 'rgba(255, 255, 255, 0.78)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+  },
+
   blurView: {
-    padding: 24,
+    width: '100%',
+    height: '100%',
+    padding: 0, // Đã đưa về 0 để tối ưu cho các luồng trượt (Slider/FlatList)
   },
 });
 

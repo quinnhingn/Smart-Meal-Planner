@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   webContainer: {
-    flex: 'none',     // Vô hiệu hóa flex: 1 để thẻ ôm sát content
-    maxWidth: 450,    // Giới hạn max-width cho form đẹp hơn trên màn hình máy tính lớn
+    flex: 'none',
+    maxWidth: 480,
     width: '100%',
-    padding: 0,       // Reset padding vì GlassCard đã tự có padding
-    marginVertical: 40, 
+    padding: 0,
+    marginVertical: 30,
   },
 });
 

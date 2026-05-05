@@ -1,4 +1,9 @@
 import os
+from dotenv import load_dotenv
+
+# Đọc cấu hình từ file .env trước khi import bất kỳ Controller nào
+load_dotenv(os.path.join(os.path.dirname(__file__), '../../.env'))
+
 from datetime import timedelta
 from flask import Flask, send_from_directory
 from flask_cors import CORS
@@ -6,10 +11,6 @@ from flask_jwt_extended import JWTManager
 from database.db import db
 from controller.auth.auth_controller import auth_bp
 from controller.ingredients.ingredient_controller import ingredient_bp
-from dotenv import load_dotenv
-
-# Đọc cấu hình từ file .env
-load_dotenv(os.path.join(os.path.dirname(__file__), '../../.env'))
 
 app = Flask(__name__)
 # Cho phép Frontend gọi API mà không bị chặn CORS
@@ -29,7 +30,14 @@ db.init_app(app)
 
 # Đăng ký Blueprint
 app.register_blueprint(auth_bp)
-app.register_blueprint(ingredient_bp)
+from controller.recipes.recipe_json_controller import recipe_json_bp
+from controller.ingredients.usda_controller import usda_bp
+from controller.recipes.video_controller import video_bp
+
+app.register_blueprint(ingredient_bp, url_prefix='/api/ingredients')
+app.register_blueprint(usda_bp, url_prefix='/api/ingredients')
+app.register_blueprint(recipe_json_bp, url_prefix='/api/recipes')
+app.register_blueprint(video_bp, url_prefix='/api/recipes')
 
 @app.route('/')
 def health_check():

@@ -30,10 +30,25 @@
           {{ f.label }}
         </span>
       </div>
+      
+      <!-- Nút chuyển đổi View Mode -->
+      <div class="view-toggle">
+        <button :class="{ active: viewMode === 'grid' }" @click="viewMode = 'grid'" title="Xem dạng lưới">
+          <i class="fa-solid fa-grid-2"></i>
+        </button>
+        <button :class="{ active: viewMode === 'list' }" @click="viewMode = 'list'" title="Xem dạng danh sách">
+          <i class="fa-solid fa-list"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Grid -->
-    <div class="ing-grid">
+    <!-- Loading State -->
+    <div class="loading-state" v-if="ingredientStore.isLoading">
+      <i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải dữ liệu...
+    </div>
+
+    <!-- Grid View -->
+    <div class="ing-grid" v-if="viewMode === 'grid' && !ingredientStore.isLoading">
       <div
         class="ing-card"
         v-for="item in filteredItems"
@@ -51,9 +66,6 @@
             </span>
             <span class="cbadge" v-if="item.carbs < 10">
               <i class="fa-solid fa-leaf"></i> Low-Carb
-            </span>
-            <span class="cbadge" v-if="item.calories < 100">
-              <i class="fa-solid fa-fire"></i> Ít Cal
             </span>
           </div>
         </div>
@@ -77,10 +89,6 @@
             <div class="macro-chip fat">F {{ item.fat }}g</div>
           </div>
 
-          <div class="suit-row">
-            <span class="suit-tag" v-for="s in item.suitability" :key="s">{{ suitLabel(s) }}</span>
-          </div>
-
           <button class="view-btn">
             <i class="fa-solid fa-eye"></i> Xem chi tiết
           </button>
@@ -88,7 +96,50 @@
       </div>
     </div>
 
-    <div class="empty-state" v-if="filteredItems.length === 0">
+    <!-- Table View -->
+    <div class="ing-table-wrap" v-if="viewMode === 'list' && !ingredientStore.isLoading">
+      <table class="ing-table">
+        <thead>
+          <tr>
+            <th>Nguyên liệu</th>
+            <th>Calo</th>
+            <th>Protein</th>
+            <th>Carbs</th>
+            <th>Chất béo</th>
+            <th>Độ hoàn thiện</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in filteredItems" :key="item.id" @click="goToDetail(item.id)">
+            <td>
+              <div class="table-ing-info">
+                <img :src="item.image" class="table-img">
+                <div>
+                  <div class="table-name">{{ item.name }}</div>
+                  <div class="table-en">{{ item.nameEn }}</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="t-macro cal">{{ item.calories }}</span></td>
+            <td><span class="t-macro prot">{{ item.protein }}g</span></td>
+            <td><span class="t-macro carb">{{ item.carbs }}g</span></td>
+            <td><span class="t-macro fat">{{ item.fat }}g</span></td>
+            <td>
+              <div class="t-completeness">
+                <div class="t-bar-bg"><div class="t-bar" :style="{ width: item.completeness + '%' }"></div></div>
+                <span>{{ item.completeness }}%</span>
+              </div>
+            </td>
+            <td>
+              <button class="t-view-btn"><i class="fa-solid fa-chevron-right"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" v-if="filteredItems.length === 0 && !ingredientStore.isLoading">
       <i class="fa-solid fa-magnifying-glass" style="font-size:32px; color:#CBD5E1; margin-bottom:12px; display:block"></i>
       Không tìm thấy nguyên liệu phù hợp.
     </div>
@@ -109,6 +160,7 @@ const ingredientStore = useIngredientStore();
 
 const searchQuery = ref('');
 const activeFilter = ref('all');
+const viewMode = ref<'grid' | 'list'>('grid'); // Mặc định là Grid
 
 // Mock data ban đầu (nếu muốn giữ lại)
 const mockIngredients = [
@@ -180,27 +232,41 @@ onMounted(() => {
 const filteredItems = computed(() => {
   let list = ingredients.value;
   
-  // 1. Lọc theo danh mục của trang hiện tại (route.params.id)
+  // 1. Lọc theo danh mục chính của trang (Thịt, Rau, Sữa...)
   const currentCatId = route.params.id as string;
   list = list.filter(i => {
-    // Nếu là mock data thì id là string 'uc-ga', 'thit-bo'...
-    // Nếu là data thật thì category lấy từ DB
     if (i.id === 'uc-ga' || i.id === 'thit-bo') return currentCatId === 'meat';
     return i.type === currentCatId;
   });
 
-  // 2. Lọc theo tìm kiếm
+  // 2. Lọc theo Tìm kiếm (Tên VN hoặc Tên EN)
   if (searchQuery.value) {
-    const q = searchQuery.value.toLowerCase();
-    list = list.filter(i => i.name.toLowerCase().includes(q) || i.nameEn.toLowerCase().includes(q));
+    const q = searchQuery.value.toLowerCase().trim();
+    list = list.filter(i => 
+      i.name.toLowerCase().includes(q) || 
+      i.nameEn.toLowerCase().includes(q)
+    );
   }
 
-  // 3. Lọc theo Tag (Thịt đỏ, Gia cầm...)
+  // 3. Lọc theo Tag (Lọc thông minh)
   if (activeFilter.value !== 'all') {
+    const f = activeFilter.value;
     list = list.filter(i => {
-      const isType = ['red-meat', 'white-meat', 'seafood', 'fish', 'leafy', 'root', 'fruit-veg', 'mushroom'].includes(activeFilter.value);
-      if (isType) return i.type === activeFilter.value;
-      return i.suitability.includes(activeFilter.value);
+      const name = i.name.toLowerCase();
+      // Logic lọc thông minh dựa trên từ khóa nếu chưa có sub_category chính thức
+      if (f === 'red-meat') return name.includes('bò') || name.includes('heo') || name.includes('cừu') || name.includes('lợn');
+      if (f === 'white-meat') return name.includes('gà') || name.includes('vịt') || name.includes('ngang') || name.includes('cầm');
+      if (f === 'seafood') return name.includes('tôm') || name.includes('cua') || name.includes('mực') || name.includes('nghêu') || name.includes('ốc');
+      if (f === 'fish') return name.includes('cá');
+      
+      // Cho các danh mục khác (Rau củ)
+      if (f === 'leafy') return name.includes('rau') || name.includes('lá');
+      if (f === 'root') return name.includes('củ') || name.includes('khoai');
+      if (f === 'fruit-veg') return name.includes('quả') || name.includes('trái');
+      if (f === 'mushroom') return name.includes('nấm');
+
+      // Lọc theo chế độ ăn (nếu có)
+      return i.suitability && i.suitability.includes(f);
     });
   }
   return list;
@@ -377,6 +443,134 @@ const goToDetail = (ingredientId: string) => {
   display: flex; align-items: center; gap: 6px; transition: 0.2s;
 }
 .view-btn:hover { border-color: #8EAE82; color: #4a8c54; }
+
+.view-toggle {
+  display: flex;
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+.view-toggle button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #94A3B8;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.view-toggle button.active {
+  background: #E6EFE5;
+  color: #4a8c54;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 100px;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 16px;
+}
+.loading-state i {
+  margin-right: 10px;
+  color: #8EAE82;
+}
+
+/* Table Style */
+.ing-table-wrap {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+.ing-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ing-table th {
+  text-align: left;
+  padding: 16px 20px;
+  background: #F8FAFC;
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748B;
+  border-bottom: 1px solid #E2E8F0;
+}
+.ing-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #F1F5F9;
+  font-size: 14px;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.ing-table tr:hover td {
+  background: #F8FAFC;
+}
+.table-ing-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.table-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #F1F5F9;
+}
+.table-name { font-weight: 800; color: var(--text-dark); }
+.table-en { font-size: 12px; color: var(--text-muted); }
+
+.t-macro {
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+.t-macro.cal { color: #D97706; background: #FFFBEB; }
+.t-macro.prot { color: #1D4ED8; background: #EFF6FF; }
+.t-macro.carb { color: #166534; background: #F0FDF4; }
+.t-macro.fat { color: #DC2626; background: #FEF2F2; }
+
+.t-completeness {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.t-bar-bg {
+  width: 80px;
+  height: 6px;
+  background: #E2E8F0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.t-bar {
+  height: 100%;
+  background: #22C55E;
+}
+
+.t-view-btn {
+  background: none;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 8px;
+  transition: 0.2s;
+}
+.ing-table tr:hover .t-view-btn {
+  color: #4a8c54;
+  transform: translateX(4px);
+}
 
 .empty-state { text-align: center; padding: 60px; color: var(--text-muted); font-size: 14px; }
 </style>

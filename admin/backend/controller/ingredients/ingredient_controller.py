@@ -317,3 +317,71 @@ def remove_background():
 
     except Exception as e:
         return jsonify({"success": False, "message": f"Lỗi tách nền: {str(e)}"}), 500
+
+@ingredient_bp.route('/auto-load-conversions', methods=['POST'])
+@jwt_required()
+def auto_load_conversions():
+    try:
+        data = request.get_json()
+        query = data.get('query', '').strip().lower()
+        if not query:
+            return jsonify({"success": False, "message": "Thiếu từ khóa tìm kiếm"}), 400
+
+        import os, json
+        # Lưu ý: Tên file có khoảng trắng ở giữa như Ngân đặt
+        json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../data/material- conversion.json'))
+        
+        if not os.path.exists(json_path):
+            return jsonify({"success": False, "message": "Không tìm thấy file dữ liệu quy đổi."}), 404
+            
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data_list = json.load(f)
+            
+        matches = []
+        for item in data_list:
+            if item.get('Tên Nguyên Liệu / Phân loại', '').strip().lower() == query:
+                matches.append({
+                    "from": item.get('Đơn vị thường gọi', ''),
+                    "to": f"{item.get('Quy đổi ra Gram (g) trung bình', '')}g",
+                    "note": item.get('Ghi chú', '')
+                })
+        
+        if not matches:
+             return jsonify({"success": False, "message": f"Không tìm thấy dữ liệu quy đổi cho '{query}'"}), 404
+             
+        return jsonify({"success": True, "data": matches}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Lỗi server: {str(e)}"}), 500
+
+@ingredient_bp.route('/auto-load-substitutions', methods=['POST'])
+@jwt_required()
+def auto_load_substitutions():
+    try:
+        data = request.get_json()
+        query = data.get('query', '').strip().lower()
+        if not query:
+            return jsonify({"success": False, "message": "Thiếu từ khóa tìm kiếm"}), 400
+
+        import os, json
+        # Lưu ý: Tên file có khoảng trắng ở giữa như Ngân đặt
+        json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../data/alternative- materials.json'))
+        
+        if not os.path.exists(json_path):
+            return jsonify({"success": False, "message": "Không tìm thấy file dữ liệu thay thế."}), 404
+            
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data_list = json.load(f)
+            
+        matches = []
+        for item in data_list:
+            if item.get('Nguyên Liệu Gốc', '').strip().lower() == query:
+                matches.append({
+                    "name": item.get('Nguyên Liệu Thay Thế', '')
+                })
+        
+        if not matches:
+             return jsonify({"success": False, "message": f"Không tìm thấy nguyên liệu thay thế cho '{query}'"}), 404
+             
+        return jsonify({"success": True, "data": matches}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Lỗi server: {str(e)}"}), 500

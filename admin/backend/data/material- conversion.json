@@ -1,0 +1,1142 @@
+[
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cơm trắng",
+    "Đơn vị thường gọi": "1 bát (chén)",
+    "Quy đổi ra Gram (g) trung bình": 130,
+    "Ghi chú": "Bát ăn cơm tiêu chuẩn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Phở / Bún",
+    "Đơn vị thường gọi": "1 bát (tô)",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Lượng bánh phở/bún trong 1 tô bình thường"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Trứng gà",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Trứng cỡ vừa, bỏ vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Trứng cút",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 10,
+    "Ghi chú": "Bỏ vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Táo / Lê",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Cỡ vừa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Chuối tây",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Bỏ vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Dầu ăn / Mỡ",
+    "Đơn vị thường gọi": "1 muỗng canh (thìa to)",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Khối lượng chất lỏng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đường / Muối",
+    "Đơn vị thường gọi": "1 muỗng cà phê (thìa nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 5,
+    "Ghi chú": "Gia vị dạng hạt"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Thịt heo / Bò",
+    "Đơn vị thường gọi": "1 lạng",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Đơn vị chợ truyền thống"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Sữa tươi",
+    "Đơn vị thường gọi": "1 hộp giấy",
+    "Quy đổi ra Gram (g) trung bình": 180,
+    "Ghi chú": "Hộp tiêu chuẩn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh mì Việt Nam",
+    "Đơn vị thường gọi": "1 ổ (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 90,
+    "Ghi chú": "Ổ bánh mì đặc ruột bình thường"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh mì Sandwich",
+    "Đơn vị thường gọi": "1 lát",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Cắt lát tiêu chuẩn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh bao",
+    "Đơn vị thường gọi": "1 cái (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Kích thước có nhân thịt thông thường"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh giò",
+    "Đơn vị thường gọi": "1 cái",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Khối lượng đã bóc lá"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh chưng",
+    "Đơn vị thường gọi": "1 góc (1/8 cái)",
+    "Quy đổi ra Gram (g) trung bình": 125,
+    "Ghi chú": "Cắt từ bánh chưng cỡ 1kg"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh tét",
+    "Đơn vị thường gọi": "1 khoanh",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Khoanh cắt dày khoảng 2cm"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Xôi mặn/ngọt",
+    "Đơn vị thường gọi": "1 gói/hộp (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Định lượng hộp xôi mua ngoài hàng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Quẩy",
+    "Đơn vị thường gọi": "1 chiếc (cặp)",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Dùng ăn kèm cháo, phở"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Miến khô",
+    "Đơn vị thường gọi": "1 vắt (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Định lượng cho 1 phần ăn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Yến mạch",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 10,
+    "Ghi chú": "Muỗng canh vun"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Khoai lang",
+    "Đơn vị thường gọi": "1 củ (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Kích thước vừa tay cầm"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Khoai tây",
+    "Đơn vị thường gọi": "1 củ (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bắp (Ngô)",
+    "Đơn vị thường gọi": "1 trái",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Khối lượng chưa luộc, tính cả lõi"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đậu hũ trắng",
+    "Đơn vị thường gọi": "1 miếng (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Cỡ cắt sẵn ngoài chợ/siêu thị"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đùi gà (góc phần tư)",
+    "Đơn vị thường gọi": "1 cái",
+    "Quy đổi ra Gram (g) trung bình": 250,
+    "Ghi chú": "Khối lượng bao gồm cả xương"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đùi gà (tỏi)",
+    "Đơn vị thường gọi": "1 cái",
+    "Quy đổi ra Gram (g) trung bình": 120,
+    "Ghi chú": "Loại đùi tỏi nhỏ, có xương"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cánh gà",
+    "Đơn vị thường gọi": "1 cái",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Gồm cả 3 khúc, có xương"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Khúc cá (Hồi/Thu/Lóc)",
+    "Đơn vị thường gọi": "1 lát/khứa",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Lát cắt ngang, dùng để kho/chiên"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Tôm sú / tôm thẻ",
+    "Đơn vị thường gọi": "1 con (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Tính nguyên vỏ và đầu"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Khô mực",
+    "Đơn vị thường gọi": "1 con (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Kích thước cỡ bàn tay"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Thịt băm",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 20,
+    "Ghi chú": "Muỗng canh vun thịt"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Sườn non",
+    "Đơn vị thường gọi": "1 dẻ",
+    "Quy đổi ra Gram (g) trung bình": 40,
+    "Ghi chú": "Dẻ sườn cắt sẵn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Xúc xích heo/bò",
+    "Đơn vị thường gọi": "1 cây",
+    "Quy đổi ra Gram (g) trung bình": 40,
+    "Ghi chú": "Loại đóng gói thông thường"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Lạp xưởng",
+    "Đơn vị thường gọi": "1 cây",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Kích thước trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Giò lụa (Chả lụa)",
+    "Đơn vị thường gọi": "1 khoanh",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Khoanh cắt dày khoảng 1cm"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Trứng vịt",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 65,
+    "Ghi chú": "Lớn hơn trứng gà, đã bỏ vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Trứng vịt lộn",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 80,
+    "Ghi chú": "Khối lượng tính cả phần nước bên trong"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cà chua",
+    "Đơn vị thường gọi": "1 quả (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Dưa leo",
+    "Đơn vị thường gọi": "1 quả (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cà rốt",
+    "Đơn vị thường gọi": "1 củ (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 120,
+    "Ghi chú": "Khối lượng đã gọt vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hành tây",
+    "Đơn vị thường gọi": "1 củ (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Đã bóc vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Tỏi",
+    "Đơn vị thường gọi": "1 tép",
+    "Quy đổi ra Gram (g) trung bình": 3,
+    "Ghi chú": "Tép tỏi ta"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Tỏi",
+    "Đơn vị thường gọi": "1 củ (nguyên)",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Nguyên củ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Ớt hiểm",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 2,
+    "Ghi chú": "Ớt tươi"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Chanh",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Khối lượng vỏ khá nặng, vắt được ~15g nước"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bắp cải",
+    "Đơn vị thường gọi": "1 bắp (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 500,
+    "Ghi chú": "Cỡ vừa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Xà lách",
+    "Đơn vị thường gọi": "1 cây (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Cỡ vừa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hành lá",
+    "Đơn vị thường gọi": "1 nhánh",
+    "Quy đổi ra Gram (g) trung bình": 5,
+    "Ghi chú": "Đã bỏ rễ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Ngò rí (Rau mùi)",
+    "Đơn vị thường gọi": "1 nhánh",
+    "Quy đổi ra Gram (g) trung bình": 2,
+    "Ghi chú": "Cỡ nhỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cam sành",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 250,
+    "Ghi chú": "Tính cả vỏ dày"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Quýt đường",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Cỡ vừa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Dưa hấu",
+    "Đơn vị thường gọi": "1 lát/miếng",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Lát cắt hình tam giác thông thường"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Xoài",
+    "Đơn vị thường gọi": "1 quả (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 300,
+    "Ghi chú": "Tính cả hạt và vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đu đủ chín",
+    "Đơn vị thường gọi": "1 miếng",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Cắt dọc"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nho",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 8,
+    "Ghi chú": "Cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Dâu tây",
+    "Đơn vị thường gọi": "1 quả (lớn)",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Quả to"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bơ",
+    "Đơn vị thường gọi": "1 quả (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Kích thước phổ biến ở chợ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Sầu riêng",
+    "Đơn vị thường gọi": "1 múi (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Chỉ tính phần thịt và hạt"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Măng cụt",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 80,
+    "Ghi chú": "Khối lượng vỏ chiếm rất nhiều"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Thanh long",
+    "Đơn vị thường gọi": "1 quả (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 350,
+    "Ghi chú": "Cỡ vừa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bưởi",
+    "Đơn vị thường gọi": "1 múi",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Đã bóc sạch vỏ xanh và vỏ lụa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Sữa chua",
+    "Đơn vị thường gọi": "1 hộp",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Hộp nhựa tiêu chuẩn (Vinamilk, TH...)"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bia",
+    "Đơn vị thường gọi": "1 lon",
+    "Quy đổi ra Gram (g) trung bình": 330,
+    "Ghi chú": "Dung tích ml tương đương gram"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nước ngọt (Cola/Sprite)",
+    "Đơn vị thường gọi": "1 lon",
+    "Quy đổi ra Gram (g) trung bình": 330,
+    "Ghi chú": "Dung tích ml tương đương gram"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Phô mai (con bò cười)",
+    "Đơn vị thường gọi": "1 viên (tam giác)",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Chuẩn định lượng 1 viên"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bơ đậu phộng",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 16,
+    "Ghi chú": "Muỗng phết bánh mì"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mật ong",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 21,
+    "Ghi chú": "Đặc và nặng hơn nước thông thường"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Tương ớt / Tương cà",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 17,
+    "Ghi chú": "Nặng hơn nước"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mayonnaise",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 14,
+    "Ghi chú": "Dùng để trộn salad"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hạt nêm / Bột ngọt",
+    "Đơn vị thường gọi": "1 muỗng cà phê",
+    "Quy đổi ra Gram (g) trung bình": 4,
+    "Ghi chú": "Định lượng nêm nếm cơ bản"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cà phê đen / Đen đá",
+    "Đơn vị thường gọi": "1 ly",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Dung tích ml tương đương gram"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cà phê sữa đá",
+    "Đơn vị thường gọi": "1 ly",
+    "Quy đổi ra Gram (g) trung bình": 250,
+    "Ghi chú": "Tính cả phần sữa đặc"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Trà sữa",
+    "Đơn vị thường gọi": "1 ly (size M)",
+    "Quy đổi ra Gram (g) trung bình": 500,
+    "Ghi chú": "Tương đương 500ml"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nước mía",
+    "Đơn vị thường gọi": "1 ly",
+    "Quy đổi ra Gram (g) trung bình": 300,
+    "Ghi chú": "Tương đương 300ml"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Sữa đậu nành",
+    "Đơn vị thường gọi": "1 bịch (túi nilon)",
+    "Quy đổi ra Gram (g) trung bình": 220,
+    "Ghi chú": "Phổ biến mua ngoài chợ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh xèo",
+    "Đơn vị thường gọi": "1 cái (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Kích thước chảo nhỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nem chua",
+    "Đơn vị thường gọi": "1 chiếc / cây",
+    "Quy đổi ra Gram (g) trung bình": 20,
+    "Ghi chú": "Loại gói lá chuối phổ biến"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Chả giò / Nem rán",
+    "Đơn vị thường gọi": "1 cuốn",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Cỡ ngón tay cái"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Gỏi cuốn",
+    "Đơn vị thường gọi": "1 cuốn",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Cuốn tôm thịt chuẩn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh bèo",
+    "Đơn vị thường gọi": "1 chén",
+    "Quy đổi ra Gram (g) trung bình": 20,
+    "Ghi chú": "Chén nhỏ, tính cả nhân"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh bột lọc",
+    "Đơn vị thường gọi": "1 cái",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Gói lá hoặc luộc trần"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Trứng cút lộn",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 12,
+    "Ghi chú": "Đã bóc vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Chôm chôm",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Tính cả vỏ và hạt"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nhãn",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 5,
+    "Ghi chú": "Tính cả vỏ và hạt"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Vải thiều",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 12,
+    "Ghi chú": "Tính cả vỏ và hạt"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mận Bắc",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 20,
+    "Ghi chú": "Cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Ổi",
+    "Đơn vị thường gọi": "1 quả (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cóc",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Cóc xanh/cóc Thái"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Lựu",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 250,
+    "Ghi chú": "Khối lượng nguyên quả có vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đào",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Quả tươi"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mít",
+    "Đơn vị thường gọi": "1 múi",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Chỉ tính phần thịt và hạt, bỏ xơ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Súp lơ / Bông cải",
+    "Đơn vị thường gọi": "1 bắp",
+    "Quy đổi ra Gram (g) trung bình": 400,
+    "Ghi chú": "Khối lượng nguyên bắp (chưa lặt)"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Su hào",
+    "Đơn vị thường gọi": "1 củ (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 300,
+    "Ghi chú": "Khối lượng chưa gọt vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Củ cải trắng",
+    "Đơn vị thường gọi": "1 củ (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 300,
+    "Ghi chú": "Cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Củ dền",
+    "Đơn vị thường gọi": "1 củ",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Cỡ nhỏ/vừa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bí đao",
+    "Đơn vị thường gọi": "1 khoanh",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Khoanh cắt ngang dày 3-4cm"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bí đỏ",
+    "Đơn vị thường gọi": "1 miếng (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Miếng cắt sẵn ngoài chợ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Khổ qua / Mướp đắng",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 120,
+    "Ghi chú": "Cỡ vừa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cà tím",
+    "Đơn vị thường gọi": "1 quả (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Loại thuôn dài"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đậu bắp",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nấm hương tươi",
+    "Đơn vị thường gọi": "1 tai nấm",
+    "Quy đổi ra Gram (g) trung bình": 5,
+    "Ghi chú": "Cỡ vừa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nấm đùi gà",
+    "Đơn vị thường gọi": "1 cây (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Loại phổ biến ở siêu thị"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nấm kim châm",
+    "Đơn vị thường gọi": "1 gói",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Gói tiêu chuẩn siêu thị"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Thịt ba chỉ / Ba rọi",
+    "Đơn vị thường gọi": "1 dải",
+    "Quy đổi ra Gram (g) trung bình": 300,
+    "Ghi chú": "Dải thịt nguyên miếng dài"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bò bít tết",
+    "Đơn vị thường gọi": "1 lát / phần",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Miếng cắt chuẩn steak"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Chả cá",
+    "Đơn vị thường gọi": "1 miếng / khoanh",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Loại chiên sẵn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mực ống",
+    "Đơn vị thường gọi": "1 con (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Khối lượng chưa sơ chế"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cua biển",
+    "Đơn vị thường gọi": "1 con",
+    "Quy đổi ra Gram (g) trung bình": 400,
+    "Ghi chú": "Tính cả vỏ bùn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Ghẹ",
+    "Đơn vị thường gọi": "1 con",
+    "Quy đổi ra Gram (g) trung bình": 250,
+    "Ghi chú": "Tính cả vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Ngao / Nghêu",
+    "Đơn vị thường gọi": "1 con",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Tính cả vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hàu",
+    "Đơn vị thường gọi": "1 con",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Chỉ tính phần thịt hàu"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đậu phộng rang",
+    "Đơn vị thường gọi": "1 nắm",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Nắm tay người lớn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hạt điều",
+    "Đơn vị thường gọi": "1 hạt",
+    "Quy đổi ra Gram (g) trung bình": 2,
+    "Ghi chú": "Đã bóc vỏ lụa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hạt óc chó",
+    "Đơn vị thường gọi": "1 hạt",
+    "Quy đổi ra Gram (g) trung bình": 5,
+    "Ghi chú": "Hạt nguyên đã tách vỏ cứng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hạnh nhân",
+    "Đơn vị thường gọi": "1 hạt",
+    "Quy đổi ra Gram (g) trung bình": 1,
+    "Ghi chú": "Loại sấy/rang sẵn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bột mì",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 10,
+    "Ghi chú": "Muỗng gạt ngang"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bột năng",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 10,
+    "Ghi chú": "Muỗng gạt ngang"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nước mắm",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Chất lỏng nặng hơn nước"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Xì dầu / Nước tương",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Chất lỏng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Giấm",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Chất lỏng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Sữa đặc",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 20,
+    "Ghi chú": "Rất đặc và nặng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Pizza",
+    "Đơn vị thường gọi": "1 miếng (slice)",
+    "Quy đổi ra Gram (g) trung bình": 120,
+    "Ghi chú": "Cắt từ bánh size M (8 miếng)"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Gà rán (KFC/Lotteria)",
+    "Đơn vị thường gọi": "1 miếng",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Phần đùi hoặc ức"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Khoai tây chiên",
+    "Đơn vị thường gọi": "1 phần (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 75,
+    "Ghi chú": "Gói nhỏ fastfood"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hamburger",
+    "Đơn vị thường gọi": "1 cái",
+    "Quy đổi ra Gram (g) trung bình": 250,
+    "Ghi chú": "Loại tiêu chuẩn kẹp bò/gà"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh cuốn",
+    "Đơn vị thường gọi": "1 đĩa (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 250,
+    "Ghi chú": "Khẩu phần ăn sáng cơ bản"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đậu que / Cô ve",
+    "Đơn vị thường gọi": "1 nắm",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Lượng đủ xào cho 1 người"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Chè (các loại)",
+    "Đơn vị thường gọi": "1 ly / cốc",
+    "Quy đổi ra Gram (g) trung bình": 250,
+    "Ghi chú": "Khẩu phần ăn vặt"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đậu hũ ky (váng đậu)",
+    "Đơn vị thường gọi": "1 lá / miếng khô",
+    "Quy đổi ra Gram (g) trung bình": 10,
+    "Ghi chú": "Dạng khô chưa ngâm nước"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh tráng (gói dế)",
+    "Đơn vị thường gọi": "1 xấp (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Xấp mỏng dùng cuốn gỏi/chả giò"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Rau muống / Các loại rau",
+    "Đơn vị thường gọi": "1 mớ (bó)",
+    "Quy đổi ra Gram (g) trung bình": 300,
+    "Ghi chú": "Khối lượng mớ rau tiêu chuẩn mua ngoài chợ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mồng tơi / Rau dền",
+    "Đơn vị thường gọi": "1 mớ (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Mớ nhỏ dùng đủ nấu 1 tô canh"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cải bẹ xanh / Cải ngọt",
+    "Đơn vị thường gọi": "1 cây (to)",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Cây cải to, chưa cắt thái"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hành tím",
+    "Đơn vị thường gọi": "1 củ",
+    "Quy đổi ra Gram (g) trung bình": 10,
+    "Ghi chú": "Củ hành ta cỡ nhỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Gừng tươi",
+    "Đơn vị thường gọi": "1 nhánh (đốt)",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Khối lượng cỡ lóng tay cái"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Sả",
+    "Đơn vị thường gọi": "1 cây",
+    "Quy đổi ra Gram (g) trung bình": 20,
+    "Ghi chú": "Sả cây đã cắt bớt phần lá xanh"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Củ sen",
+    "Đơn vị thường gọi": "1 khúc",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Khúc củ sen cắt sẵn cỡ vừa"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hoa chuối",
+    "Đơn vị thường gọi": "1 bắp",
+    "Quy đổi ra Gram (g) trung bình": 500,
+    "Ghi chú": "Bắp hoa chuối non nguyên vẹn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Lá lốt / Lá tía tô",
+    "Đơn vị thường gọi": "1 bó (khoảng 20 lá)",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Bó nhỏ thường dùng để cuốn chả"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Lòng non (Lợn)",
+    "Đơn vị thường gọi": "1 bộ (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 500,
+    "Ghi chú": "Khẩu phần dĩa lòng luộc cho 2-3 người"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Dồi sụn",
+    "Đơn vị thường gọi": "1 khoanh",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Khoanh cắt sẵn tiêu chuẩn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nem nướng / Nem lụi",
+    "Đơn vị thường gọi": "1 xiên (cây)",
+    "Quy đổi ra Gram (g) trung bình": 40,
+    "Ghi chú": "Xiên lụi bọc sả hoặc đũa tre"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Thịt heo xiên nướng",
+    "Đơn vị thường gọi": "1 xiên",
+    "Quy đổi ra Gram (g) trung bình": 35,
+    "Ghi chú": "Xiên nướng đường phố tiêu chuẩn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Lươn đồng",
+    "Đơn vị thường gọi": "1 con (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Lươn sống cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cá trê / Cá lóc",
+    "Đơn vị thường gọi": "1 con (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 500,
+    "Ghi chú": "Cỡ cá vừa đủ nấu 1 nồi canh chua"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Chả mực",
+    "Đơn vị thường gọi": "1 miếng (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Miếng chả giã tay nặn tròn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cá viên chiên / Bò viên",
+    "Đơn vị thường gọi": "1 xâu (xiên)",
+    "Quy đổi ra Gram (g) trung bình": 40,
+    "Ghi chú": "Xâu chiên cổng trường, thường gồm 4-5 viên"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bò viên (Phở)",
+    "Đơn vị thường gọi": "1 viên (to)",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Cỡ viên bò lớn trong tô phở"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Lạp xưởng",
+    "Đơn vị thường gọi": "1 cặp",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "Gồm 2 chiếc lạp xưởng nối nhau"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh tráng nướng",
+    "Đơn vị thường gọi": "1 cái",
+    "Quy đổi ra Gram (g) trung bình": 80,
+    "Ghi chú": "Trọng lượng tính cả topping (trứng, ruốc, hành)"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh tráng trộn",
+    "Đơn vị thường gọi": "1 bịch / hộp",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Định lượng tiêu chuẩn mua ngoài hàng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bột chiên",
+    "Đơn vị thường gọi": "1 đĩa",
+    "Quy đổi ra Gram (g) trung bình": 300,
+    "Ghi chú": "Khẩu phần 1 người ăn, gồm bột và trứng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Há cảo / Xíu mại",
+    "Đơn vị thường gọi": "1 viên",
+    "Quy đổi ra Gram (g) trung bình": 25,
+    "Ghi chú": "Cỡ viên dimsum chuẩn nhà hàng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh tiêu",
+    "Đơn vị thường gọi": "1 cái",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Bánh tiêu chiên phồng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh chuối chiên",
+    "Đơn vị thường gọi": "1 cái",
+    "Quy đổi ra Gram (g) trung bình": 120,
+    "Ghi chú": "Bánh ép dẹt áo bột chiên giòn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Kẹo cu đơ",
+    "Đơn vị thường gọi": "1 miếng",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Cắt từ bánh tròn lớn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mãng cầu xiêm",
+    "Đơn vị thường gọi": "1 quả (vừa)",
+    "Quy đổi ra Gram (g) trung bình": 800,
+    "Ghi chú": "Trái nguyên vỏ cỡ trung bình"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Dừa tươi",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 400,
+    "Ghi chú": "Chỉ tính phần nước dừa bên trong (1ml = 1g)"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cùi dừa (Cơm dừa)",
+    "Đơn vị thường gọi": "1 nửa quả",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Phần thịt dừa nạo xợi hoặc thái miếng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Trái cóc non (Cóc bao tử)",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 20,
+    "Ghi chú": "Cóc nhỏ nhai được cả hạt mềm"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Me chua / Me ngọt",
+    "Đơn vị thường gọi": "1 quả",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Trọng lượng tính nguyên vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Rượu trắng / Vodka",
+    "Đơn vị thường gọi": "1 ly (shot nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Tương đương 30ml"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Rượu vang",
+    "Đơn vị thường gọi": "1 ly",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Tương đương 150ml (chuẩn ly vang rót nhà hàng)"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Sinh tố (Bơ, dâu, xoài...)",
+    "Đơn vị thường gọi": "1 ly",
+    "Quy đổi ra Gram (g) trung bình": 350,
+    "Ghi chú": "Tương đương 350ml, tính cả lượng đá xay cùng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Chè khúc bạch / Thái",
+    "Đơn vị thường gọi": "1 chén (bát)",
+    "Quy đổi ra Gram (g) trung bình": 200,
+    "Ghi chú": "Khẩu phần ăn vặt tiêu chuẩn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Tào phớ (Đậu hũ nước đường)",
+    "Đơn vị thường gọi": "1 chén (bát)",
+    "Quy đổi ra Gram (g) trung bình": 150,
+    "Ghi chú": "Chén nhỏ truyền thống"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh flan (Caramen)",
+    "Đơn vị thường gọi": "1 hộp (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 60,
+    "Ghi chú": "Hộp nhựa nhỏ làm sẵn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Thạch rau câu",
+    "Đơn vị thường gọi": "1 viên (miếng)",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Khối vuông cắt sẵn bỏ vào trà sữa/chè"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Hạt chia / Hạt é",
+    "Đơn vị thường gọi": "1 muỗng cà phê",
+    "Quy đổi ra Gram (g) trung bình": 5,
+    "Ghi chú": "Hạt khô chưa ngâm nước"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bột cacao / Bột trà xanh",
+    "Đơn vị thường gọi": "1 muỗng cà phê",
+    "Quy đổi ra Gram (g) trung bình": 4,
+    "Ghi chú": "Bột tơi xốp, nhẹ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Gelatin",
+    "Đơn vị thường gọi": "1 lá",
+    "Quy đổi ra Gram (g) trung bình": 2,
+    "Ghi chú": "Lá gelatin khô tiêu chuẩn làm bánh"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Men nở (Yeast)",
+    "Đơn vị thường gọi": "1 muỗng cà phê",
+    "Quy đổi ra Gram (g) trung bình": 3,
+    "Ghi chú": "Men khô dạng hạt"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Baking soda / Baking powder",
+    "Đơn vị thường gọi": "1 muỗng cà phê",
+    "Quy đổi ra Gram (g) trung bình": 4,
+    "Ghi chú": "Bột nở làm bánh"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Chà bông (Ruốc)",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 10,
+    "Ghi chú": "Rất nhẹ và xốp, vun đầy muỗng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Khô gà / Khô bò",
+    "Đơn vị thường gọi": "1 đĩa (nhỏ)",
+    "Quy đổi ra Gram (g) trung bình": 50,
+    "Ghi chú": "Khẩu phần dọn ra đĩa ăn vặt / nhắm rượu"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mắm tôm / Mắm ruốc",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 18,
+    "Ghi chú": "Đặc sệt, nặng hơn nước mắm thông thường"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bơ lạt / Bơ mặn",
+    "Đơn vị thường gọi": "1 khối (cube)",
+    "Quy đổi ra Gram (g) trung bình": 10,
+    "Ghi chú": "Khối vuông nhỏ bọc giấy bạc cắt sẵn"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Sữa đặc",
+    "Đơn vị thường gọi": "1 muỗng cà phê",
+    "Quy đổi ra Gram (g) trung bình": 7,
+    "Ghi chú": "Dạng lỏng rất đặc và nặng"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Whipping cream",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Tương đương 15ml kem sữa tươi"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Cream cheese",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Phô mai kem đặc"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nước cốt dừa (lỏng)",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 15,
+    "Ghi chú": "Tương đương 15ml"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bột bắp (Cornstarch)",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 8,
+    "Ghi chú": "Bột nhẹ, thường dùng tạo độ sánh"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Đậu đen / Đỏ / Xanh (khô)",
+    "Đơn vị thường gọi": "1 muỗng canh",
+    "Quy đổi ra Gram (g) trung bình": 12,
+    "Ghi chú": "Hạt khô đong gạt ngang"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mộc nhĩ (Nấm mèo) khô",
+    "Đơn vị thường gọi": "1 tai",
+    "Quy đổi ra Gram (g) trung bình": 5,
+    "Ghi chú": "Rất nhẹ, ngâm nước sẽ nở to và nặng gấp 4-5 lần"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Nấm hương khô",
+    "Đơn vị thường gọi": "1 tai",
+    "Quy đổi ra Gram (g) trung bình": 3,
+    "Ghi chú": "Nấm khô chưa ngâm nước"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Gạo nếp / Gạo tẻ",
+    "Đơn vị thường gọi": "1 lon (sữa bò)",
+    "Quy đổi ra Gram (g) trung bình": 250,
+    "Ghi chú": "Đơn vị đong gạo phổ biến nhất của các gia đình Việt"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Bánh phồng tôm",
+    "Đơn vị thường gọi": "1 chiếc",
+    "Quy đổi ra Gram (g) trung bình": 3,
+    "Ghi chú": "Trọng lượng thô lúc chưa chiên nở"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Mì tôm (Mì gói)",
+    "Đơn vị thường gọi": "1 gói",
+    "Quy đổi ra Gram (g) trung bình": 75,
+    "Ghi chú": "Trọng lượng gói mì tiêu chuẩn (Hảo Hảo, Omachi...)"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Trứng cút",
+    "Đơn vị thường gọi": "1 chục",
+    "Quy đổi ra Gram (g) trung bình": 100,
+    "Ghi chú": "10 quả trứng cút đã lột vỏ"
+  },
+  {
+    "Tên Nguyên Liệu / Phân loại": "Kimbap (Cơm cuộn)",
+    "Đơn vị thường gọi": "1 khoanh",
+    "Quy đổi ra Gram (g) trung bình": 30,
+    "Ghi chú": "Cắt lát tiêu chuẩn khoảng 1.5 - 2cm"
+  }
+]

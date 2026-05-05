@@ -425,7 +425,7 @@
   },
   {
     "Tên Nguyên Liệu": "Dầu dừa",
-    "Nhóm (Tùy chọn)": "Khác",
+    "Nhóm (Tùy chọn)": "Gia vị",
     "Cách Bảo Quản": "Lọ thủy tinh, đậy kín, nhiệt độ phòng (sẽ đông đặc dưới 25°C).",
     "Cân Nặng Min (kg)": 45,
     "Cân Nặng Max (kg)": 80,
@@ -433,7 +433,7 @@
   },
   {
     "Tên Nguyên Liệu": "Mật ong",
-    "Nhóm (Tùy chọn)": "Khác",
+    "Nhóm (Tùy chọn)": "Gia vị",
     "Cách Bảo Quản": "Lọ đậy kín, để nơi thoáng mát. KHÔNG để tủ lạnh (dễ kết tinh đường).",
     "Cân Nặng Min (kg)": 40,
     "Cân Nặng Max (kg)": 85,
@@ -1238,5 +1238,2221 @@
     "Cân Nặng Min (kg)": 40,
     "Cân Nặng Max (kg)": 90,
     "Ghi Chú Thêm": "Nguồn đạm thực vật tuyệt vời, chứa phytoestrogen."
+  },
+  {
+    "Tên Nguyên Liệu": "Chim cút",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch, bọc kín cất ngăn đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Thịt ngọt, xương nhỏ mềm nhiều canxi. Phù hợp người gầy yếu."
+  },
+  {
+    "Tên Nguyên Liệu": "Thịt đà điểu",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngăn mát 0-4°C (1-2 ngày), đông lạnh -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giàu đạm, cực kỳ ít mỡ. Thích hợp giảm cân siết cơ gắt gao."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá mòi",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cấp đông -18°C hoặc mua loại đóng hộp.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giàu Omega-3 và canxi (nếu hầm nhừ ăn cả xương)."
+  },
+  {
+    "Tên Nguyên Liệu": "Mực sữa",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Rửa sạch, bọc hộp kín cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Nhỏ và mềm, dễ tiêu hóa hơn mực lá to, cholesterol khá cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Ốc hương",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngâm nước biển/muối sống được 1-2 ngày, hoặc luộc cất đông.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "CẢNH BÁO DỊ ỨNG. Ngon nhất khi hấp sả ăn tươi sống."
+  },
+  {
+    "Tên Nguyên Liệu": "Ốc bươu",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngâm nước gạo xả ớt cho sạch nhớt, luộc chín bốc thịt cất tủ.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tính hàn. Bắt buộc nấu chín kỹ để phòng ngừa ký sinh trùng."
+  },
+  {
+    "Tên Nguyên Liệu": "Sò huyết",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Nên dùng ngay trong ngày, bảo quản sục oxy nước mặn.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Bổ máu. Trẻ em, người bụng yếu và bà bầu nên luộc chín kỹ."
+  },
+  {
+    "Tên Nguyên Liệu": "Hến",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Đãi sạch vỏ, lấy thịt cất hộp kín ngăn mát 1-2 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tính mát. Nước luộc hến rất ngọt, hỗ trợ thanh nhiệt cơ thể."
+  },
+  {
+    "Tên Nguyên Liệu": "Bò viên",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bọc kín cất ngăn đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Chú ý hàm lượng bột và hàn the nếu mua ngoài chợ."
+  },
+  {
+    "Tên Nguyên Liệu": "Dạ dày heo (Bao tử)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bóp muối chanh thật sạch, luộc chín hoặc cấp đông sống.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giòn sật. Hàm lượng cholesterol nội tạng rất cao, ăn vừa phải."
+  },
+  {
+    "Tên Nguyên Liệu": "Dồi sụn",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Hấp sơ rồi bọc màng bọc cất đông -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Lượng calo và mỡ bão hòa rất cao do có thành phần mỡ heo."
+  },
+  {
+    "Tên Nguyên Liệu": "Su su",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Để nguyên vỏ, ngăn mát tủ lạnh 1-2 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nước luộc cực ngọt thanh. Rất lành tính cho trẻ nhỏ."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ năng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Gọt vỏ, ngâm nước cất tủ mát (nhớ thay nước mỗi ngày).",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tính mát, giải nhiệt. Ăn sống rôm rốp hoặc dùng nấu chè."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ sen",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cắt lát, ngâm giấm/chanh loãng để không bị thâm rồi cất mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Hỗ trợ an thần, dễ ngủ. Rất hợp hầm xương hoặc làm gỏi."
+  },
+  {
+    "Tên Nguyên Liệu": "Ngó sen",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngâm nước phèn chua hoặc chanh loãng để giữ độ trắng giòn.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Thanh mát. Lưu ý làm sạch phần rãnh ngó sen để loại bỏ bùn đất."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ sắn (Củ đậu)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Để nơi thoáng mát, không cần cho tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Mọng nước, xốp ngọt. Lượng calo cực thấp, hợp ăn kiêng."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu rồng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc nilon đục lỗ, ngăn mát tủ lạnh 3-4 ngày (nhanh bị đen rìa).",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nguồn đạm thực vật tốt. Ăn sống giòn sật rất ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau lang",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc màng bọc đục lỗ, ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Cực kỳ nhuận tràng. Hơi nhớt khi luộc, hợp với món xào tỏi."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau đay",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Nhặt sạch, bọc kín ngăn mát 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Thanh nhiệt, lợi sữa cho mẹ bầu. Chứa nhiều chất nhầy tự nhiên."
+  },
+  {
+    "Tên Nguyên Liệu": "Bắp cải tím",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Để nguyên bắp hoặc bọc màng bọc, cất ngăn mát 1-2 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất giàu anthocyanin (chống oxy hóa). Ăn salad sống rất tốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Cải bẹ xanh",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín bằng giấy báo, ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị hăng đắng nồng mùi mù tạt nhẹ. Rất hợp nấu canh cá."
+  },
+  {
+    "Tên Nguyên Liệu": "Dọc mùng (Bạc hà)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Tước vỏ, thái vát bóp muối cất tủ mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Bắt buộc sơ chế kỹ bóp muối rửa sạch để tránh bị ngứa họng."
+  },
+  {
+    "Tên Nguyên Liệu": "Bông súng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngâm nước để cuống hoa hút nước, giữ độ tươi giòn.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Dân dã, xốp mọng nước. Làm gỏi chua hoặc nhúng lẩu mắm."
+  },
+  {
+    "Tên Nguyên Liệu": "Hoa chuối",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Thái mỏng ngâm ngay vào nước mẻ/chanh để không bị thâm đen.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giàu xơ, hơi chát. Hợp làm nộm gỏi hoặc ăn kèm bún bò."
+  },
+  {
+    "Tên Nguyên Liệu": "Mãng cầu xiêm",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng cho chín, sau đó bọc màng cất ngăn mát.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Vị chua ngọt thanh. Làm sinh tố giải nhiệt cực kỳ ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Na (Mãng cầu ta)",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng cho chín mềm, có thể cất mát thêm 1-2 ngày.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Lượng đường cao. Tuyệt đối không cắn vỡ hạt vì chứa độc tính."
+  },
+  {
+    "Tên Nguyên Liệu": "Lựu",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng hoặc cất tủ lạnh nguyên quả (giữ được rất lâu).",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Siêu thực phẩm chống oxy hóa. Bỏ hạt nếu tiêu hóa kém."
+  },
+  {
+    "Tên Nguyên Liệu": "Đào",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Rửa sạch lông tơ ngoài vỏ, cất hộp kín ngăn mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ngọt thanh. Có quả giòn hoặc mềm dẻo tùy giống đào. Lành tính."
+  },
+  {
+    "Tên Nguyên Liệu": "Vú sữa",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng, tránh đè nén làm dập nát thịt quả bên trong.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Mềm, ngọt béo tự nhiên. Nhớ bỏ kỹ phần nhựa mủ sát cuống."
+  },
+  {
+    "Tên Nguyên Liệu": "Tắc (Quất)",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Hộp nhựa kín, đục lỗ nhỏ thoát hơi, cất ngăn mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tinh dầu vỏ rất thơm. Chưng phèn chua hoặc đường phèn trị ho tốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Quả sấu",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Cạo sạch vỏ, cấp đông -18°C có thể dùng nấu canh quanh năm.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị chua thanh dịu. Dùng nấu canh chua hoặc ngâm nước giải khát."
+  },
+  {
+    "Tên Nguyên Liệu": "Khế chua",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Rửa sạch, bọc hộp cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ít calo. Tránh ăn khi bụng đang đói cồn cào gây xót ruột."
+  },
+  {
+    "Tên Nguyên Liệu": "Bòn bon",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Rổ ráo ngoài mát hoặc cất tủ lạnh (vỏ sẽ nhanh bị xỉn đen).",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Ngọt dịu chua nhẹ. Vỏ có mủ trắng dính tay."
+  },
+  {
+    "Tên Nguyên Liệu": "Sơ ri",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Cho hộp có lót giấy hút ẩm, ngăn mát tủ lạnh 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Quả nhỏ nhưng hàm lượng Vitamin C vắt kiệt cao gấp nhiều lần cam."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt macca",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ đậy kín, nơi thoáng mát, nên cất ngăn mát nếu đã tách vỏ.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "Cực kỳ béo và nhiều calo. Vua các loại hạt. Mỗi ngày chỉ ăn 5-7 hạt."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt dẻ cười",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ kín, tránh không khí ẩm làm ỉu hạt.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Rang muối mặn nhẹ, calo cao. Món ăn vặt giải trí rất tốt cho não bộ."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột sắn dây",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ nhựa/thủy tinh đậy kín. Tránh độ ẩm tuyệt đối.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Cực mát, giải độc gan. Pha chín nước nóng màng trong suốt rất ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột nếp",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Kẹp chặt miệng túi hoặc cho hũ đậy kín nắp, nơi khô mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Dùng làm bánh trôi, chè trôi nước. Chỉ số đường huyết (GI) cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột gạo tẻ",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hộp đậy kín nắp, tránh gián chuột bọ.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Làm bánh canh, đúc bánh xèo. Giá trị năng lượng tương đương gạo tẻ."
+  },
+  {
+    "Tên Nguyên Liệu": "Bắp Mỹ (Ngô ngọt)",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Để nguyên bắp hoặc tách hạt cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Vị ngọt sắc, nước luộc thơm lừng. Carbohydrate hấp thu rất nhanh."
+  },
+  {
+    "Tên Nguyên Liệu": "Bắp nếp",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Luộc chín bảo quản mát, hoặc cất đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Dẻo bùi. Lượng tinh bột đặc, thích hợp ăn sáng chắc bụng no lâu."
+  },
+  {
+    "Tên Nguyên Liệu": "Bún nưa (Konjac)",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Bịch ngâm nước nguyên bản. Mở ra rửa sạch bằng nước ấm, cất mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Gần như 0 calo, 0 tinh bột. Vị cứu tinh của dân cắt giảm carb cực đoan."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh phở tươi",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Dùng hết trong ngày, nếu cất tủ lạnh sợi phở bị sượng cứng, dễ gãy.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Tinh bột hấp thu nhanh. Chú ý nguy cơ chứa chất bảo quản formol."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh đa cua khô",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Buộc chặt túi nilon, cất nơi khô ráo thoáng mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Đặc sản Hải Phòng. Tráng bằng nước màu đường caramel bắt mắt."
+  },
+  {
+    "Tên Nguyên Liệu": "Dầu hào",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Đậy kín, cất ngăn mát tủ lạnh sau khi mở nắp sẽ bảo quản được lâu.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị mặn ngọt đan xen, chứa tinh bột tạo độ sánh bóng bẩy cho món xào."
+  },
+  {
+    "Tên Nguyên Liệu": "Tương ớt",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Đậy nắp kín, nơi râm mát. Không bắt buộc cất tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Gia vị quốc dân. Chứa sẵn đường và natri khá cao, lưu ý khi nêm nếm."
+  },
+  {
+    "Tên Nguyên Liệu": "Mayonnaise",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh. KHÔNG cấp đông vì sẽ bị tách dầu nước mất ngon.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 80,
+    "Ghi Chú Thêm": "Lượng chất béo siêu cao. Rất dễ phá vỡ thặng dư calo nếu lạm dụng chấm salad."
+  },
+  {
+    "Tên Nguyên Liệu": "Bơ đậu phộng",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ thủy tinh đậy kín. Nên cất ngăn mát để tránh bị lớp dầu nổi lên trên.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Giàu protein và chất béo tốt. Ưu tiên chọn loại 100% đậu phộng không pha đường."
+  },
+  {
+    "Tên Nguyên Liệu": "Đường thốt nốt",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Bọc màng bọc thực phẩm từng viên, cất hộp nhựa đậy kín nắp.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Vị ngọt thanh tao, thơm mùi mật tự nhiên, không bị gắt cổ như đường trắng."
+  },
+  {
+    "Tên Nguyên Liệu": "Sữa chua Hy Lạp",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 4-8°C. Không cấp đông làm đá sẽ hỏng kết cấu.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc quánh do lọc bỏ whey, gấp đôi đạm sữa chua thường. Tốt cho người tập gym siết cơ."
+  },
+  {
+    "Tên Nguyên Liệu": "Cua đồng",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch, xay nhuyễn, lọc lấy nước cốt rồi mới cấp đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giải nhiệt mùa hè cực tốt. Chứa hàm lượng canxi tự nhiên rất cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Mực trứng",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Rửa sạch nhẹ tay tránh nát trứng, bọc kín cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Ngon nhất khi chiên mắm/hấp. Phụ nữ có thai nên ăn xíu thôi vì nhiều cholesterol."
+  },
+  {
+    "Tên Nguyên Liệu": "Cồi sò điệp",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cấp đông -18°C. Rã đông tự nhiên trong ngăn mát trước khi nấu.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Thịt ngọt, thanh, nhanh chín. Áp chảo xém mặt là ngon nhất."
+  },
+  {
+    "Tên Nguyên Liệu": "Râu bạch tuộc",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bóp muối/chanh cho hết nhớt, cấp đông sâu -18°C.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giòn dai sần sật. Chú ý nướng hay xào đều phải thật to lửa để không bị dai nhách."
+  },
+  {
+    "Tên Nguyên Liệu": "Ba rọi bò (Ba chỉ)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cấp đông -18°C. Thái mỏng lúc thịt còn hơi cứng cứng.",
+    "Cân Nặng Min (kg)": 45,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tỷ lệ nạc mỡ đan xen. Phù hợp nhất cho các món nhúng lẩu hoặc nướng."
+  },
+  {
+    "Tên Nguyên Liệu": "Bắp bò",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cấp đông -18°C hoặc bảo quản mát dùng trong 3 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Có gân xen kẽ, ăn giòn sật không ngán. Giàu kẽm và sắt."
+  },
+  {
+    "Tên Nguyên Liệu": "Gân bò",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Luộc chín mềm rồi mới bọc màng bọc cất tủ mát/đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Nhiều collagen. Cần thời gian hầm/luộc rất lâu mới mềm được."
+  },
+  {
+    "Tên Nguyên Liệu": "Gan heo",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Rửa sạch bằng sữa tươi/nước muối, cấp đông hoặc dùng ngay.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Cực kỳ giàu sắt bổ máu. Khuyến cáo ăn tối đa 1-2 lần/tuần vì chứa nhiều độc tố tồn dư."
+  },
+  {
+    "Tên Nguyên Liệu": "Cật heo (Bầu dục)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Khía moi thật sạch phần lõi trắng hôi bên trong, rửa rượu gừng.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Bổ thận. Bắt buộc phải làm sạch cực kỹ nếu không sẽ có mùi khai."
+  },
+  {
+    "Tên Nguyên Liệu": "Tim heo",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Rửa sạch máu đọng, bảo quản ngăn mát 1-2 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất lành tính, nạc, phù hợp bồi bổ cho người mới ốm dậy, trẻ nhỏ."
+  },
+  {
+    "Tên Nguyên Liệu": "Thịt ngan",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Rửa muối chanh, cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Nạc và dày thịt hơn vịt, ít hôi mỡ lông hơn."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá chạch",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Vuốt tro bếp hoặc muối hột cho sạch nhớt rồi mới cất tủ đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Xương sụn mềm. Chiên giòn nhai được cả xương rất ngon và bổ."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá nục",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch ruột, bọc hộp kín cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giá thành rẻ, kho rục xương với cà chua ăn rất đưa cơm."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá trôi",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Đánh vẩy sạch, cấp đông sâu.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Thịt chắc nhưng khá nhiều xương dăm chữ Y, cẩn thận khi cho trẻ em ăn."
+  },
+  {
+    "Tên Nguyên Liệu": "Chả cá thác lác",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Quết dai, nặn viên hoặc miếng, bọc màng nilon cất đông/mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Độ dai tự nhiên siêu ngon, nước ngọt. Nên mua loại cá tươi nguyên chất xay."
+  },
+  {
+    "Tên Nguyên Liệu": "Nem chua",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Để nhiệt độ phòng cho chín, sau đó cất tủ mát để hãm độ chua.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Tránh ăn khi bụng đói meo. Người dạ dày yếu nên hạn chế."
+  },
+  {
+    "Tên Nguyên Liệu": "Xúc xích Đức",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cất ngăn mát hoặc ngăn đông. KHÔNG chiên ngập dầu nhiệt độ cao.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Áp chảo hoặc khía luộc nhẹ ngon hơn. Lượng calo khá lớn."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau má",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Rửa sạch, để ráo nước hoàn toàn, lót giấy thấm cất ngăn mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tính hàn mát, giải nhiệt cực mạnh. Hợp xay sinh tố hoặc nấu canh thịt băm."
+  },
+  {
+    "Tên Nguyên Liệu": "Khoai môn",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Để nguyên vỏ nơi thoáng mát, không cất tủ lạnh dễ bị sượng.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Bở, thơm bùi. Đeo găng tay khi gọt vỏ để tránh bị ngứa rát da."
+  },
+  {
+    "Tên Nguyên Liệu": "Khoai sọ",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Để rổ tre nơi râm mát.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Dẻo hơn khoai môn. Luộc chấm muối mè hoặc nấu canh sườn rất hợp."
+  },
+  {
+    "Tên Nguyên Liệu": "Khoai mỡ",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Để nơi thoáng mát.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Màu tím đẹp mắt. Kết cấu nhão dẻo, cạo nhuyễn nấu canh tôm cực ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Cải ngồng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc túi nilon, cất ngăn mát tủ lạnh 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ngọt, phần thân mọng nước dòn sật. Giàu xơ, dễ tiêu hóa."
+  },
+  {
+    "Tên Nguyên Liệu": "Cải xoong",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc giấy lót ẩm, ngăn mát tủ lạnh. Cẩn thận dập nát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cực kỳ giàu canxi và sắt. Rửa thật kỹ vì mọc dưới bùn nước."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau rút (Rau nhút)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Nhặt bỏ phần xốp trắng, rửa sạch bọc kín để mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Mùi thơm đặc trưng gây nghiện, nhuận tràng. Hợp nấu canh chua."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ kiệu",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cắt rễ, phơi héo nhẹ, ngâm đường/giấm cất hũ ngoài mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc sản muối chua ngày Tết. Hỗ trợ tiêu hóa thịt mỡ ngấy."
+  },
+  {
+    "Tên Nguyên Liệu": "Hành tăm (Củ nén)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Phơi ráo, để rổ thoáng mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị cay nồng đặc trưng, khử mùi tanh cá/lươn số một."
+  },
+  {
+    "Tên Nguyên Liệu": "Lặc lè (Mướp Nhật)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc màng bọc đục lỗ, ngăn mát tủ lạnh 1 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vỏ có sọc xanh trắng. Ruột đặc, giòn ngọt, ăn nguyên quả luộc rất đã."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu ván",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Đậu hạt để hũ kín, đậu quả xanh cất tủ mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Bùi và ngậy. Hỗ trợ làm mát cơ thể, thường dùng nấu chè."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu ngự",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Đậu tươi bóc hạt để đông lạnh. Đậu khô để hũ kín.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Hạt to, xốp bở. Rất tốt cho người hay mất ngủ."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu Hà Lan",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 1-2 tuần.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giọt ngọt, màu xanh mướt. Nguồn đạm thực vật lý tưởng cho bé ăn dặm."
+  },
+  {
+    "Tên Nguyên Liệu": "Cà chua bi",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh (để hộp đục lỗ thoát hơi).",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chua ngọt đậm hơn cà chua to. Ăn salad trực tiếp là hợp nhất."
+  },
+  {
+    "Tên Nguyên Liệu": "Cà rốt baby",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cất ngăn mát tủ lạnh, không cần gọt vỏ (chỉ rửa kỹ).",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giòn, ngọt tự nhiên, rất hợp cho trẻ em cầm tay ăn vặt."
+  },
+  {
+    "Tên Nguyên Liệu": "Ớt sừng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín cất ngăn mát hoặc ngăn đông.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Gần như không cay, chỉ dùng để xào giòn và lấy màu đỏ đẹp mắt."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau răm",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 3-5 ngày. Dễ bị ủng lá nếu dính nước.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Khử tanh đỉnh cao. Hợp ăn trứng lộn, gỏi gà. Tính ấm nồng."
+  },
+  {
+    "Tên Nguyên Liệu": "Mầm đá",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín cất ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc sản Sapa. Siêu giòn ngọt, chỉ cần luộc chần nhanh, xào tỏi cực tốn cơm."
+  },
+  {
+    "Tên Nguyên Liệu": "Súp lơ ngọc bích",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc màng bọc thực phẩm, ngăn mát tủ lạnh 5 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Hình xoắn ốc tuyệt đẹp. Giòn và ngọt hơn súp lơ xanh thường, giàu vitamin."
+  },
+  {
+    "Tên Nguyên Liệu": "Nấm linh chi nâu",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hộp kín, ngăn mát tủ lạnh 1 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Kết cấu dòn sật, cuống nấm dài. Cắt bỏ gốc trước khi dùng."
+  },
+  {
+    "Tên Nguyên Liệu": "Nấm tuyết",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Nấm khô cất nơi thoáng mát. Nấm tươi cất tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giòn rộp rộp. Nấu chè dưỡng nhan cực kỳ bổ mát cho nhan sắc."
+  },
+  {
+    "Tên Nguyên Liệu": "Hồng giòn",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Rổ ráo ngoài mát hoặc tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất xốp giòn, ngọt thanh. Cẩn thận nhựa hồng dính tay lúc gọt vỏ."
+  },
+  {
+    "Tên Nguyên Liệu": "Hồng ngâm",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngâm nước muối/vôi loãng để khử chát, sau đó cất tủ mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Phải ngâm kỹ mới hết vị chát nghét. Ăn dòn tan ngọt lịm."
+  },
+  {
+    "Tên Nguyên Liệu": "Bưởi diễn",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Để gầm giường, nơi tối râm mát. Để càng héo vỏ ăn càng ngọt.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Đặc sản tiến Vua. Nước ngọt sắc, thơm lừng, không bị the đắng."
+  },
+  {
+    "Tên Nguyên Liệu": "Dưa gang",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Nhiệt độ phòng cho đến khi nứt vỏ mềm tỏa mùi thơm.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Siêu bở tơi. Trộn đá đường, rắc chút sữa đặc ăn giải khát xuất sắc."
+  },
+  {
+    "Tên Nguyên Liệu": "Dưa lê",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh 1 tuần.",
+    "Cân Nặng Min (kg)": 35,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Thơm nức mũi, ngọt nước. Vỏ mỏng có thể ăn cả vỏ."
+  },
+  {
+    "Tên Nguyên Liệu": "Quả me",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Me chua bóc vỏ cất tủ đông. Me ngọt cất tủ mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị chua gắt làm cốt lẩu Thái/canh chua vô địch. Chú ý đau bao tử."
+  },
+  {
+    "Tên Nguyên Liệu": "Chanh dây (Chanh leo)",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Để vỏ hơi nhăn ngoài mát ăn sẽ đậm vị, cất tủ lạnh sẽ tươi lâu.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Mùi thơm nồng nàn. Hỗ trợ giảm cân và làm đẹp da cực đỉnh."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột tàn mì",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ nhựa/thủy tinh, đậy chặt nắp, tránh ẩm mốc tuyệt đối.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Bột mì đã lọc bỏ gluten. Chuyên dùng làm vỏ bánh há cảo trong suốt dẻo dai."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột chiên giòn",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hộp kín, nơi khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Đã trộn sẵn gia vị. Chứa nhiều calo, cân nhắc cho người đang giảm béo."
+  },
+  {
+    "Tên Nguyên Liệu": "Mì trứng",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Túi khô cất ngoài mát. Mì tươi cất tủ lạnh dùng trong 2 ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Sợi dai, thơm mùi trứng gà. Món ăn nhanh phổ biến, giàu năng lượng."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh hỏi",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Dùng hết trong ngày, không cất tủ lạnh vì bị chai cứng.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Rất dễ tiêu hóa. Ăn kèm heo quay và mỡ hành là đặc sản miền Trung."
+  },
+  {
+    "Tên Nguyên Liệu": "Hủ tiếu dai",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Bịch kín nơi khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Sợi trong, cực kỳ dai. Hợp nấu hủ tiếu Nam Vang hoặc xào khô."
+  },
+  {
+    "Tên Nguyên Liệu": "Trứng vịt lộn",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Rổ thoáng ngoài mát. Rất nhanh hỏng, nên luộc ngay ăn nóng.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất nhiều đạm và cholesterol. Trẻ nhỏ và người huyết áp cao không nên ăn nhiều."
+  },
+  {
+    "Tên Nguyên Liệu": "Trứng gà ta",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh, xếp đầu to hướng lên trên.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nhỏ nhưng lòng đỏ to, ngậy, không tanh. Đỉnh cao để làm ốp la."
+  },
+  {
+    "Tên Nguyên Liệu": "Bơ mặn",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát hoặc ngăn đông tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Đã chứa sẵn muối. Thường dùng quết bánh mì hoặc áp chảo bò bít tết béo ngậy."
+  },
+  {
+    "Tên Nguyên Liệu": "Mỡ heo (Mỡ lợn)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Rán lấy mỡ nước tảng, cất hũ sứ đậy nắp râm mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Rất thơm. Dùng xào rau cải cực mướt. Dù là mỡ động vật nhưng thi thoảng ăn rất tốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Tương đen (Hoisin)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh sau khi mở nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ngọt, sền sệt, thoảng vị thảo mộc mặn. Phở bò miền Nam không thể thiếu tương này."
+  },
+  {
+    "Tên Nguyên Liệu": "Dầu mè (Dầu vừng)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín nắp râm mát. Không dùng để chiên rán lửa to.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất thơm. Chỉ nhỏ 1-2 giọt vào lúc món ăn vừa tắt bếp để dậy mùi."
+  },
+  {
+    "Tên Nguyên Liệu": "Giấm táo",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín, râm mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chua dịu mùi hoa quả. Tuyệt đối không uống trực tiếp (phải pha thật loãng) tránh bỏng dạ dày."
+  },
+  {
+    "Tên Nguyên Liệu": "Mật mía",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ thủy tinh/sành, không đậy nắp quá kín dễ bị trào bọt.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Đặc sản miền Trung. Ngọt gắt, màu nâu đen bóng. Kho cá kho thịt lên màu đẹp xuất sắc."
+  },
+  {
+    "Tên Nguyên Liệu": "Đường trắng",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, nơi khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Nạp nhiều gây thặng dư calo, tích mỡ. Hạn chế tối đa."
+  },
+  {
+    "Tên Nguyên Liệu": "Đường phèn",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, nơi râm mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Vị ngọt thanh mát, không gắt, nấu chè tuyệt đỉnh."
+  },
+  {
+    "Tên Nguyên Liệu": "Đường nâu",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, rất dễ đóng cục cứng ngắc nếu hở gió.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Tạo màu caramen đẹp, thơm mùi rỉ mật đặc trưng."
+  },
+  {
+    "Tên Nguyên Liệu": "Đường ăn kiêng (Stevia)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, nơi ráo mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Gần như 0 calo, đường huyết không tăng, vị ngọt the mát."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột ngọt (Mì chính)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ nhựa/thủy tinh đậy kín nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Khuyến cáo không nêm lúc nước dùng đang sôi sùng sục trên bếp."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt nêm (Thịt/xương)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Đậy chặt nắp, rất dễ bị chảy nước lấm tấm nếu ẩm.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tiện lợi, có chứa sẵn muối và mì chính, nên chú ý lượng nêm."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt nêm nấm hương",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, nơi khô ráo thoáng mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Lựa chọn tuyệt vời tạo vị ngọt umami cho người ăn chay."
+  },
+  {
+    "Tên Nguyên Liệu": "Muối tinh luyện",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, để nơi khô ráo.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Có bổ sung i-ốt. Hạn chế sử dụng nhiều với người cao huyết áp."
+  },
+  {
+    "Tên Nguyên Liệu": "Muối hột (Muối hạt)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ/túi đậy kín.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Thường dùng để vò, rửa sơ chế cá thịt, lòng heo để khử mùi."
+  },
+  {
+    "Tên Nguyên Liệu": "Muối hồng Himalaya",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, tránh ẩm.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giàu khoáng chất tự nhiên, vị mặn êm dịu hơn muối tinh trắng."
+  },
+  {
+    "Tên Nguyên Liệu": "Nghệ tươi",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Nơi râm mát, có vùi trong cát sẽ để được lâu.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Khử mùi tanh siêu tốt. Nhựa nghệ dễ làm vàng tay khi gọt."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột nghệ",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ thủy tinh tối màu đậy thật kín.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tạo màu vàng ươm cho món xào, kho, tiện lợi không cần giã."
+  },
+  {
+    "Tên Nguyên Liệu": "Tiêu đen hạt",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín. Rang sơ qua trước khi cất sẽ thơm hơn.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Khi nào ăn mới xay sẽ giữ được mùi thơm nồng nàn nhất."
+  },
+  {
+    "Tên Nguyên Liệu": "Tiêu đen xay",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, nên mua lọ nhỏ dùng nhanh tránh mất mùi.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rắc vào món ăn khi vừa tắt bếp để tiêu không bị đắng."
+  },
+  {
+    "Tên Nguyên Liệu": "Tiêu sọ (Tiêu trắng)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, nơi khô ráo.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cay xộc mũi hơn tiêu đen, màu trắng giúp món ăn đẹp mắt hơn."
+  },
+  {
+    "Tên Nguyên Liệu": "Ngũ vị hương",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Gói nilon nhỏ, bọc kín bằng thun nếu dùng không hết.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ướp thịt quay, nướng thơm nức. Chỉ dùng lượng rất nhỏ kẻo đắng."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột cà ri",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, tránh ánh sáng trực tiếp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc trưng ẩm thực Ấn Độ, màu vàng bắt mắt, vị cay nồng."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột quế",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy chặt nắp, nơi khô ráo.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Thơm nồng ấm, chuyên dùng làm bánh hoặc hầm nước phở bò."
+  },
+  {
+    "Tên Nguyên Liệu": "Quế thanh",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Túi zip hoặc hũ kín, tránh bị ẩm mốc xỉn màu.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nên rang xém sơ qua trước khi thả vào nồi nước hầm xương."
+  },
+  {
+    "Tên Nguyên Liệu": "Hoa hồi",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, tránh không khí ẩm.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Linh hồn của phở, bò kho. Rất thơm nên mỗi nồi chỉ thả 1-2 cánh."
+  },
+  {
+    "Tên Nguyên Liệu": "Thảo quả",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ kín, đập dập vỏ và nướng xém sơ trước khi dùng.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nữ hoàng gia vị Tây Bắc, mùi nồng ấm ngai ngái đặc trưng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt mắc khén",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ kín, rang thơm và giã nhỏ cất hũ đậy chặt.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị tê tê đầu lưỡi, linh hồn của các món nướng mắc khén Tây Bắc."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt dổi",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín. Khi dùng nướng trên than hồng cho nở bung rồi giã.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Gia vị làm chẩm chéo chấm thịt luộc cực kỳ thơm ngon đặc sắc."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột tỏi",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ nhỏ đậy thật kín, bột rất dễ đóng cục do hút ẩm.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ướp đồ chiên rán không sợ bị cháy khét lẹt như tỏi tươi."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột hành",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ nhỏ đậy kín nắp, tránh xa khu vực nấu có hơi nước.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tăng hương vị umami cho món xào, món súp rất nhanh và tiện."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột ớt (Việt Nam)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, để ngoài râm mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất cay gắt và xé lưỡi. Hết sức cẩn thận khi nêm nếm."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột ớt Hàn Quốc",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ kín, nên cất ngăn mát tủ lạnh để giữ màu đỏ tươi lâu.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Lên màu đỏ siêu đẹp mà lại ít cay, là thành phần chính làm kim chi."
+  },
+  {
+    "Tên Nguyên Liệu": "Ớt khô nguyên quả",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Túi zip ráo mát, thỉnh thoảng đem phơi nắng nhẹ.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Dùng hầm lẩu Tứ Xuyên hoặc phi mỡ ném vào lấy màu đỏ."
+  },
+  {
+    "Tên Nguyên Liệu": "Sa tế",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Đậy kín nắp, dùng muỗng khô sạch để múc tránh nổi váng mốc.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chứa nhiều dầu mỡ và siêu cay nồng. Ăn lẩu bò là hết sẩy."
+  },
+  {
+    "Tên Nguyên Liệu": "Tương bần",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín nắp, nơi thoáng mát râm mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nước chấm đặc sản Bắc Bộ, chấm thịt bê luộc hoặc cho vào kho cá."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm ruốc",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy nắp thật kỹ, có thể bọc nilon miệng hũ tránh bay mùi.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Xào thịt heo băm sả ớt mặn ngọt siêu tốn cơm gạo."
+  },
+  {
+    "Tên Nguyên Liệu": "Chao (Đậu phụ nhự)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Cất ngăn mát tủ lạnh sau khi đã mở nắp hũ.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Món đậu lên men trứ danh. Vị béo ngậy, bùi bùi, người ăn chay rất thích."
+  },
+  {
+    "Tên Nguyên Liệu": "Giấm trắng",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai nhựa/thủy tinh đậy kín.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị chua gắt. Đa số dùng để khử mùi tanh thịt cá hoặc rửa rau củ."
+  },
+  {
+    "Tên Nguyên Liệu": "Giấm gạo",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín nắp, nơi râm mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị chua thanh dịu, thơm mùi gạo lên men. Dùng trộn gỏi salad cực kỳ ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Rượu trắng (Nấu ăn)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Khử mùi tanh tưởi của các loại cá da trơn, hải sản rất hiệu quả."
+  },
+  {
+    "Tên Nguyên Liệu": "Rượu Mai Quế Lộ",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai thủy tinh đậy kín nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Dùng ướp lạp xưởng, ướp thịt heo quay, vị thơm mùi thảo mộc đặc trưng."
+  },
+  {
+    "Tên Nguyên Liệu": "Baking Soda (Muối nở)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ nắp kín. Tránh độ ẩm tuyệt đối kẻo bị vón cục cứng ngắc.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giúp làm mềm thịt bò nhanh, hỗ trợ làm bánh và cọ rửa vệ sinh bếp."
+  },
+  {
+    "Tên Nguyên Liệu": "Baking Powder (Bột nở)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ kín. Nếu để quá hạn sẽ mất tác dụng, bánh không nở được.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giúp kết cấu cốt bánh ngọt bông xốp, nhẹ nhàng nhờ sinh bọt khí."
+  },
+  {
+    "Tên Nguyên Liệu": "Men nở (Yeast)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh để men ngủ đông, để ngoài nóng dễ chết men.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Linh hồn của bánh mì, bánh bao. Cần kích hoạt bằng nước ấm nhẹ."
+  },
+  {
+    "Tên Nguyên Liệu": "Gelatin (Lá/Bột)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Nơi khô ráo, thoáng mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tạo độ đông dẻo xốp cho panna cotta, kẹo chíp chíp, làm thạch."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột rau câu (Agar)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Gói nilon đậy kín, kẹp chặt miệng.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chiết xuất từ tảo biển tự nhiên. Nhanh đông, giòn sật sật."
+  },
+  {
+    "Tên Nguyên Liệu": "Vani (Dạng lỏng)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai thủy tinh tối màu đậy kín nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Hương thơm ngọt ngào. Dùng khử mùi tanh của lòng đỏ trứng khi làm bánh."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột Cacao",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ nhựa/thủy tinh kín nắp, nơi thoáng mát ráo nước.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị đắng đặc trưng, màu nâu đẹp. Làm sô-cô-la hoặc pha nước uống."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột Matcha (Trà xanh)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Túi màng nhôm, bắt buộc cất ngăn mát tủ lạnh để giữ màu xanh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Sẽ nhanh chóng bị ngả màu vàng úa nếu tiếp xúc với không khí ấm ngoài trời."
+  },
+  {
+    "Tên Nguyên Liệu": "Trà đen (Hồng trà)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hộp đậy kín hoặc túi zip tránh ẩm mốc.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nước cốt màu nâu đỏ sậm, đậm vị, chuyên dùng pha nền trà sữa nướng."
+  },
+  {
+    "Tên Nguyên Liệu": "Trà Ô long",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hộp/túi đậy kín, để nơi khô ráo.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị chát nhẹ thanh tao, thơm thoảng thoảng. Được dân văn phòng cực kỳ chuộng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt điều màu (Cà ri)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Túi zip, cất nơi râm mát. Thường chưng với dầu nóng lấy màu cam.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Hoàn toàn không có vị, chỉ tạo màu cam đỏ siêu đẹp cho bún bò, bún riêu."
+  },
+  {
+    "Tên Nguyên Liệu": "Nước cốt chanh chai",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh sau khi mở nắp niêm phong.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tiện lợi, độ chua ổn định và đặc biệt đun sôi không bị đắng như chanh tươi."
+  },
+  {
+    "Tên Nguyên Liệu": "Lá chanh tươi",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh hoặc phơi khô cất hũ để dùng dần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Mùi thơm đặc trưng không thể thiếu cho món gà luộc, khô gà lá chanh."
+  },
+  {
+    "Tên Nguyên Liệu": "Lá mắc mật",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Phơi thật khô rồi cất hũ, hoặc mua lá tươi cất tủ mát 3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc sản Lạng Sơn. Vò nát ướp chung với vịt nướng hay heo quay siêu đỉnh."
+  },
+  {
+    "Tên Nguyên Liệu": "Giá đỗ",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Tránh úng nước, bọc giấy cất ngăn mát 1-2 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nhanh hỏng. Rửa thật nhẹ tay tránh gãy dập."
+  },
+  {
+    "Tên Nguyên Liệu": "Lá mơ lông",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc túi nilon, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc trưng ăn kèm thịt dạ dày, dồi sụn."
+  },
+  {
+    "Tên Nguyên Liệu": "Hoa thiên lý",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc màng bọc, ngăn mát 2-3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Xào thịt bò cực thơm và ngọt nước."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ hũ dừa",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cắt lát, ngâm nước chanh cất tủ mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc sản Bến Tre, giòn ngọt ăn sống rất ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Rau đắng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc túi đục lỗ, cất ngăn mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đắng gắt, cực hợp nhúng cháo cá lóc."
+  },
+  {
+    "Tên Nguyên Liệu": "Ngải cứu",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc túi đục lỗ, ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị nhặng đắng. Chiên trứng hoặc hầm gà ác."
+  },
+  {
+    "Tên Nguyên Liệu": "Bắp chuối bào",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Phải ngâm ngay vào nước chanh/mẻ để không bị đen.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Dùng trộn gỏi hoặc ăn kèm bún bò Huế."
+  },
+  {
+    "Tên Nguyên Liệu": "Dưa cải muối chua",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cất hũ đậy kín, để ngăn mát hãm độ chua.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nhiều natri. Xào lòng non hoặc nấu canh cá nướng."
+  },
+  {
+    "Tên Nguyên Liệu": "Cà pháo muối",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hũ thủy tinh đậy kín, cất ngăn mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giòn tan. Tránh ăn lúc bụng đang đói meo."
+  },
+  {
+    "Tên Nguyên Liệu": "Sung muối xổi",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngâm mắm tỏi ớt, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chát nhẹ, giòn sật, ăn kèm ốc luộc cực dính."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ kiệu chua ngọt",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hũ thủy tinh, cất tủ lạnh dùng dần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Món nhắm ngày Tết, ăn kèm tôm khô siêu ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Dưa giá đỗ",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cất hũ đậy kín, hãm độ chua trong tủ mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nhanh chua, giải ngấy rất tốt cho món thịt luộc."
+  },
+  {
+    "Tên Nguyên Liệu": "Măng chua",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hũ ngâm kín, để nhiệt độ phòng hoặc tủ mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nấu canh cá lăng hoặc ếch xào măng cay."
+  },
+  {
+    "Tên Nguyên Liệu": "Quả chay",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Rửa sạch, cấp đông -18°C để nấu canh quanh năm.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị chua thanh, kho cá hay nấu canh chua tuyệt đỉnh."
+  },
+  {
+    "Tên Nguyên Liệu": "Tép đồng",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Rửa sạch, cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Nhỏ xíu, rang lá chanh khô mặn mặn siêu tốn cơm."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá linh",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Làm sạch, cất đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Đặc sản mùa nước nổi miền Tây. Nấu lẩu bông điên điển."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá cơm tươi",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Rửa sạch nhẹ tay, cấp đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Kho tiêu rim mặn ngọt hoặc chiên bột giòn rụm."
+  },
+  {
+    "Tên Nguyên Liệu": "Con rươi",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Rửa sạch cát, cấp đông đá nguyên con.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Đánh chả rươi lá lốt vỏ quýt cực giàu đạm."
+  },
+  {
+    "Tên Nguyên Liệu": "Cá thác lác nạo",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Phải quết tay thật mạnh mới tạo độ dai dẻo."
+  },
+  {
+    "Tên Nguyên Liệu": "Chả cốm",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Hấp chín, bọc kín cất đông hoặc mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Đặc sản Hà Nội. Chiên giòn rụm ăn bún đậu mắm tôm."
+  },
+  {
+    "Tên Nguyên Liệu": "Nem nướng",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngăn mát 2 ngày, cất đông 1 tháng.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Ngon nhất khi cuộn bánh tráng, chấm tương đậu phộng."
+  },
+  {
+    "Tên Nguyên Liệu": "Tré",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Treo nơi thoáng mát để lên men chua.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giòn sật bì heo, chua cay đặc sản miền Trung."
+  },
+  {
+    "Tên Nguyên Liệu": "Chà bông (Ruốc heo)",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Hũ nhựa/thủy tinh, vặn chặt nắp nơi khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tiện lợi, ăn kèm cháo trắng hoặc bánh mì sáng."
+  },
+  {
+    "Tên Nguyên Liệu": "Khô gà lá chanh",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Hũ nhựa vặn chặt nắp, để nơi râm mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Đồ ăn vặt quốc dân, ít béo hơn khô heo/bò."
+  },
+  {
+    "Tên Nguyên Liệu": "Khô bò tẩm",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Hũ kín, tránh ẩm mốc.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Cay nồng, vắt thêm chanh tươi cực kỳ bắt vị."
+  },
+  {
+    "Tên Nguyên Liệu": "Khô mực",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bọc thật nhiều lớp nilon, cất đông tránh lây mùi.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Nướng cồn dập tơi thơm lừng, món nhậu quốc dân."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm nêm",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín nắp, cất nơi râm mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Mùi nồng đặc trưng, cuốn bánh tráng thịt luộc."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm tôm chua",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc sản Huế, chua cay mặn ngọt cuốn thịt ba rọi."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm cái (Mắm nêm nêm)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ/chai kín.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đậm đà, hơi mặn mòi, ăn kèm cơm trắng nóng hổi."
+  },
+  {
+    "Tên Nguyên Liệu": "Muối tôm Tây Ninh",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín nắp, tránh ẩm ướt làm chảy nước.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chấm trái cây chua hoặc trộn bánh tráng cực dính."
+  },
+  {
+    "Tên Nguyên Liệu": "Muối tiêu chanh",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Làm tươi ăn ngay hoặc hũ kín nếu là muối sấy.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nước chấm chân ái cho thịt gà luộc, hải sản."
+  },
+  {
+    "Tên Nguyên Liệu": "Chao đỏ",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Cất ngăn mát tủ lạnh sau khi mở nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị béo nồng, cực hợp làm sốt ướp thịt nướng."
+  },
+  {
+    "Tên Nguyên Liệu": "Nước cốt dừa lon",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Mở lon phải rót ra hộp cất ngăn mát dùng trong 3 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Béo ngậy, tiện lợi nấu chè hoặc làm xào lăn."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh tráng phơi sương",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Túi nilon cột thật chặt để tránh bị cứng nứt.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất dẻo mềm, chuyên cuốn thịt luộc Trảng Bàng."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh tráng cuốn chả giò",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Túi nilon kín, nơi khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Mỏng, dòn, cần thoa xíu nước trước khi cuốn."
+  },
+  {
+    "Tên Nguyên Liệu": "Vỏ ram Hà Tĩnh",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Bắt buộc cất đông lạnh, lấy ra 10 phút trước khi gói.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chiên chả giò giòn tan lâu ỉu, ít ngấm dầu."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột bánh xèo pha sẵn",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ hoặc túi kẹp chặt.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất tiện lợi, bột đã trộn sẵn tinh bột nghệ vàng."
+  },
+  {
+    "Tên Nguyên Liệu": "Sợi bánh canh bột xắt",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh dùng trong ngày.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Dẻo dai, nấu làm nước lèo sệt lại rất ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh ướt",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Dùng trong ngày, cất mát sẽ bị sượng bột.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Tráng mỏng mềm mướt, ăn kèm chả lụa mỡ hành."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh bột lọc trần",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Cất tủ mát hoặc đông lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Dai dẻo trong suốt, nhân tôm thịt rim mặn mặn."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu hũ non (Tàu hũ)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hộp kín, đậy nắp, ngăn mát tủ lạnh 1-2 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Mềm tan trong miệng, nấu canh rong biển thanh mát."
+  },
+  {
+    "Tên Nguyên Liệu": "Tào phớ",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hộp đậy kín cất ngăn mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giải nhiệt mùa hè, chan nước đường gừng nóng hổi."
+  },
+  {
+    "Tên Nguyên Liệu": "Thạch đen (Sương sáo)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hộp/tô đậy kín, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Mát lạnh, cắt hạt lựu làm topping trà sữa, chè."
+  },
+  {
+    "Tên Nguyên Liệu": "Trân châu trắng",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, nơi ráo nước.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giòn sật sật, topping quốc dân của giới trẻ."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt é",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ đậy kín, nơi khô ráo tuyệt đối.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ngâm nước nở to, pha nước uống giải khát tốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Mủ trôm",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy chặt nắp, tránh ẩm mốc.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cần ngâm nở rất lâu, thanh nhiệt giải độc cực mạnh."
+  },
+  {
+    "Tên Nguyên Liệu": "Rong biển sấy khô",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ/túi zip kéo chặt, hút chân không.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cuốn cơm kimbap hoặc ăn vặt giòn tan mằn mặn."
+  },
+  {
+    "Tên Nguyên Liệu": "Cùi dừa non",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Rửa sạch, để ráo cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Dẻo dẻo ngọt thanh, xắt nhỏ ăn kèm kem, chè."
+  },
+  {
+    "Tên Nguyên Liệu": "Nước dừa tươi",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát dùng trong ngày, hoặc cất tủ đông.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Điện giải tự nhiên. Để ngoài rất nhanh bị chua hỏng."
+  },
+  {
+    "Tên Nguyên Liệu": "Quả thanh trà",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Rổ thoáng ngoài mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chua ngọt đặc trưng miền Tây, dầm đá đường siêu ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Trái me ngào đường",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ nhựa/thủy tinh đậy nắp kín.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị chua cay ngọt tẩm ớt, món ăn vặt tuổi thơ."
+  },
+  {
+    "Tên Nguyên Liệu": "Mứt gừng",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ nhựa đậy chặt nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cay ấm ngọt gắt. Thường đãi khách mâm mứt ngày Tết."
+  },
+  {
+    "Tên Nguyên Liệu": "Cốm dẹp xanh",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Bọc lá sen hoặc túi kín cất tủ mát/đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Mùi thơm lúa non đặc trưng Hà Nội mùa thu."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột tinh bột sắn",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ nhựa kín, tránh ẩm.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Nặn trân châu hoặc tạo độ dai dẻo cho món bánh."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt thốt nốt",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Cất hộp kín, để ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giòn dẻo, mát lạnh, dầm với nước đá cốt dừa."
+  },
+  {
+    "Tên Nguyên Liệu": "Trái dừa sáp",
+    "Nhóm (Tùy chọn)": "Trái cây",
+    "Cách Bảo Quản": "Cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc sản Trà Vinh. Đặc ruột, siêu béo ngậy, xay sinh tố."
+  },
+  {
+    "Tên Nguyên Liệu": "Sấu ngâm đường",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ thủy tinh, cất tủ mát hãm lên men.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Thức uống giải khát chua ngọt đỉnh cao của Hà Nội."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh chưng / Bánh tét",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Cất ngăn mát (5-7 ngày) hoặc ngăn đông (vài tháng).",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Phải hâm vi sóng hoặc chiên áp chảo giòn mới ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Bắp bò ngâm mắm",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Hũ thủy tinh, ngập mắm, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giòn sần sật mặn mặn ngọt ngọt, món nhậu bén bia."
+  },
+  {
+    "Tên Nguyên Liệu": "Tai heo ngâm chua ngọt",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Hũ kín, cất ngăn mát để hãm độ chua.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giòn sật sật, ăn giải ngấy dịp lễ Tết cực dính."
+  },
+  {
+    "Tên Nguyên Liệu": "Nước mắm nhĩ",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai thủy tinh đậy kín, để nơi râm mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Độ đạm cao, vị mặn mòi, chắt lọc tinh túy nhất."
+  },
+  {
+    "Tên Nguyên Liệu": "Sốt mè rang",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh sau khi mở nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị béo bùi, chân ái để trộn các loại salad."
+  },
+  {
+    "Tên Nguyên Liệu": "Tương ớt xí muội",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Đậy kín nắp, để nơi râm mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chua ngọt nhẹ, cực hợp chấm đồ chiên rán."
+  },
+  {
+    "Tên Nguyên Liệu": "Sốt Teriyaki",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Cất ngăn mát tủ lạnh dùng dần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc trưng món Nhật, vị mặn ngọt làm bóng thịt nướng."
+  },
+  {
+    "Tên Nguyên Liệu": "Xì dầu ngọt (Kecap Manis)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Đậy kín nắp, không cần cất tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Sền sệt, rất ngọt. Chuyên dùng xào hủ tiếu, mì Indonesia."
+  },
+  {
+    "Tên Nguyên Liệu": "Giấm bỗng",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai/lọ đậy kín nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị chua thanh, thơm mùi rượu nếp. Chuyên nấu bún ốc."
+  },
+  {
+    "Tên Nguyên Liệu": "Cơm mẻ",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Nuôi trong hũ thủy tinh, đậy hờ nắp, cho ăn cơm nguội.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chua gắt đặc trưng, dùng nấu canh chua, lẩu trâu."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm cá lóc",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy thật kín, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đặc sản miền Tây. Chưng thịt ba rọi mặn ngọt ăn cực cuốn."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm cá sặc",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Cất hũ kín, để ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nặng mùi hơn mắm lóc, linh hồn của lẩu mắm."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm ba khía",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Trộn sẵn chanh tỏi ớt, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Mặn, giòn, chua cay mặn ngọt ăn với cơm nguội xuất sắc."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm thái",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Trộn đu đủ bào giòn sật, ăn kèm thịt luộc bánh tráng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hành phi",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ nhựa vặn chặt nắp, lót giấy thấm dầu ở đáy.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất dễ bị ỉu nếu hở gió. Rắc lên xôi, bánh cuốn."
+  },
+  {
+    "Tên Nguyên Liệu": "Tỏi phi",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, để nơi thoáng mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Thơm nức mũi. Dùng rắc lên các món cháy tỏi sên bơ."
+  },
+  {
+    "Tên Nguyên Liệu": "Sả băm",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Đựng hộp nhựa nhỏ, cấp đông -18°C dùng dần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ướp thịt nướng hoặc chiên đậu hũ sả ớt."
+  },
+  {
+    "Tên Nguyên Liệu": "Tỏi băm",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hộp nhỏ, rót một lớp dầu ăn mỏng lên mặt, cất tủ mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tiện lợi, có lớp dầu sẽ không bị thâm xanh."
+  },
+  {
+    "Tên Nguyên Liệu": "Ớt băm",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngâm giấm hoặc rót dầu ăn lên mặt, cất tủ mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Giữ màu đỏ tươi, tiện lợi khi nêm nếm pha nước chấm."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột phô mai",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ nhỏ đậy kín nắp, rất dễ bị hút ẩm vón cục.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rắc khoai tây chiên, gà rán rôm rốp vị mặn béo."
+  },
+  {
+    "Tên Nguyên Liệu": "Sốt BBQ",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh sau khi mở nắp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Sốt ướp sườn nướng kiểu Âu, thơm mùi khói đặc trưng."
+  },
+  {
+    "Tên Nguyên Liệu": "Sốt chua ngọt",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín, cất tủ lạnh dùng dần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tiện lợi, dùng xào sườn chua ngọt nhanh gọn."
+  },
+  {
+    "Tên Nguyên Liệu": "Siro bắp (Corn syrup)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín, không cất tủ lạnh vì sẽ bị đông cứng.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tạo độ dẻo, chống lại hiện tượng lại đường khi làm kẹo/sốt."
+  },
+  {
+    "Tên Nguyên Liệu": "Nước màu (Nước hàng)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ thủy tinh đậy kín.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Thắng từ đường, tạo màu nâu cánh gián cho món kho."
+  },
+  {
+    "Tên Nguyên Liệu": "Mật ong rừng",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy nắp, nơi râm mát. Tuyệt đối KHÔNG cất tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Thơm nồng mùi hoa rừng, nhiều dinh dưỡng hơn mật nuôi."
+  },
+  {
+    "Tên Nguyên Liệu": "Bột béo",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Kẹp chặt miệng túi hoặc hũ kín tránh ẩm mốc.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tăng độ ngậy cho cốt dừa chè hoặc trà sữa."
+  },
+  {
+    "Tên Nguyên Liệu": "Muối ớt xanh",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín, bắt buộc cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chân ái chấm hải sản. Chua cay mặn ngọt sánh sệt."
+  },
+  {
+    "Tên Nguyên Liệu": "Muối ớt đỏ",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai nắp kín, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cay nồng hơn muối ớt xanh, màu đỏ bắt mắt."
+  },
+  {
+    "Tên Nguyên Liệu": "Cốt lẩu Thái (Tom Yum)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh sau khi mở hũ.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Chua cay đặc trưng vị riềng sả lá chanh Thái."
+  },
+  {
+    "Tên Nguyên Liệu": "Viên gia vị phở bò",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Nơi khô ráo, thoáng mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Tiện lợi nấu phở nhanh, không cần hầm xương quá lâu."
+  },
+  {
+    "Tên Nguyên Liệu": "Viên gia vị bún bò Huế",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Gói kín, tránh ánh nắng trực tiếp.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Có sẵn mùi mắm ruốc nêm nếm tiện lợi."
+  },
+  {
+    "Tên Nguyên Liệu": "Mắm ruốc xào sả ớt",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hũ đậy kín, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Gia vị chấm bánh tráng nướng hoặc xoài non siêu dính."
+  },
+  {
+    "Tên Nguyên Liệu": "Bơ thực vật (Margarine)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Hộp nắp kín, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Thay thế dầu ăn để phi thơm tỏi hoặc xào bắp bơ."
+  },
+  {
+    "Tên Nguyên Liệu": "Mỡ hành",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Rót dầu/mỡ nóng vào hành lá. Làm lượng vừa đủ dùng.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 85,
+    "Ghi Chú Thêm": "Rắc lên cơm tấm, hàu nướng, bánh tráng nướng."
+  },
+  {
+    "Tên Nguyên Liệu": "Tương đen (Phở bò)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Chai đậy kín, cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Ngọt, hơi nồng. Chấm thịt bò hoặc nêm trực tiếp vào phở."
+  },
+  {
+    "Tên Nguyên Liệu": "Nước cốt dừa (Bột)",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Túi zip vặn kín, rất dễ chảy nước nếu hút ẩm.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Pha với nước ấm ra nước cốt dừa. Tiện lợi bảo quản lâu."
+  },
+  {
+    "Tên Nguyên Liệu": "Ớt chuông xanh",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc nilon đục lỗ, ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Hơi hăng nồng hơn ớt đỏ/vàng. Xào mực cực kỳ hợp."
+  },
+  {
+    "Tên Nguyên Liệu": "Ớt chuông đỏ",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín ngăn mát 1 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất ngọt, nhiều vitamin C nhất trong các loại ớt chuông."
+  },
+  {
+    "Tên Nguyên Liệu": "Ớt chuông vàng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Cất ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Vị ngọt thanh, xào thịt bò mảng màu rất bắt mắt."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ sâm đất",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Gọt vỏ cất tủ mát, hoặc để ngoài hiên râm mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Mọng nước, vị ngọt dịu như lê, hầm xương ngọt nước."
+  },
+  {
+    "Tên Nguyên Liệu": "Củ cải muối (Ca la thầu)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hũ kín, ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Rất mặn, phải ngâm nước bóp xả kỹ trước khi xào thịt."
+  },
+  {
+    "Tên Nguyên Liệu": "Bắp cải mini (Brussels)",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc màng bọc đục lỗ, ngăn mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đắng nhẹ tự nhiên, áp chảo hoặc đút lò bơ tỏi rất ngon."
+  },
+  {
+    "Tên Nguyên Liệu": "Cà chua Beef",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Quả to đùng, ít hạt, nhiều thịt nạc. Chuyên kẹp hamburger."
+  },
+  {
+    "Tên Nguyên Liệu": "Bí ngòi xanh",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Bọc kín ngăn mát 3-5 ngày.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Dễ chín nhừ. Áp chảo, xào bò hoặc nấu canh thanh mát."
+  },
+  {
+    "Tên Nguyên Liệu": "Bí ngòi vàng",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Màu sắc nổi bật, dinh dưỡng và cách chế biến tương đương bí xanh."
+  },
+  {
+    "Tên Nguyên Liệu": "Nấm đùi gà non",
+    "Nhóm (Tùy chọn)": "Rau củ quả",
+    "Cách Bảo Quản": "Hộp kín ngăn mát, dùng trong 1 tuần.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Cây nhỏ xíu, xào dầu hào nguyên cây dai giòn sần sật."
+  },
+  {
+    "Tên Nguyên Liệu": "Khô cá lóc",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bọc kỹ nhiều lớp nilon, cấp đông -18°C.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Chuyên làm gỏi xoài hoặc chiên giấm đường mặn ngọt."
+  },
+  {
+    "Tên Nguyên Liệu": "Khô cá dứa",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Cấp đông sâu để tránh gắt dầu.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Thịt nạc, béo, ít xương mặn vừa. Chiên ăn cơm cháy đỉnh cao."
+  },
+  {
+    "Tên Nguyên Liệu": "Khô cá sặc",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Bọc giấy báo và nilon, cấp đông.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Khá mặn. Nướng xé nhỏ trộn gỏi dưa leo lai rai mồi nhậu."
+  },
+  {
+    "Tên Nguyên Liệu": "Tôm khô",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Hũ kín hoặc hút chân không, cấp đông -18°C là tốt nhất.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Nấu canh ngọt nước, ngâm mềm xào ba rọi mặn ngọt."
+  },
+  {
+    "Tên Nguyên Liệu": "Chả bì",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Ngăn mát dùng 3 ngày, cất đông được lâu hơn.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Giòn sật nhờ có lớp da heo xắt mỏng trộn cùng."
+  },
+  {
+    "Tên Nguyên Liệu": "Lạp xưởng mai quế lộ",
+    "Nhóm (Tùy chọn)": "Thịt & Hải sản",
+    "Cách Bảo Quản": "Treo nơi thoáng mát, khô ráo hoặc cất tủ mát.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Thơm mùi rượu đặc trưng, hấp hoặc lăn nước lấp xấp tới cạn."
+  },
+  {
+    "Tên Nguyên Liệu": "Trứng bách thảo",
+    "Nhóm (Tùy chọn)": "Sữa & Trứng",
+    "Cách Bảo Quản": "Nơi khô ráo thoáng mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Lòng đỏ xám xanh dẻo quánh, lòng trắng giòn sật nâu đen."
+  },
+  {
+    "Tên Nguyên Liệu": "Sợi mì Udon tươi",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Bắt buộc bảo quản ngăn mát tủ lạnh.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Sợi to, dai trơn. Nhúng lẩu hoặc nấu nước lèo thanh đạm."
+  },
+  {
+    "Tên Nguyên Liệu": "Sợi mì Somen khô",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Kẹp chặt miệng túi, nơi khô ráo.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Sợi siêu nhỏ nhuyễn, luộc nhanh chín. Chuyên làm mỳ lạnh."
+  },
+  {
+    "Tên Nguyên Liệu": "Nui xoắn",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Hũ/túi đậy kín tránh mốc.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Hình xoắn ốc giúp ngậm sốt tốt hơn, trẻ con rất thích."
+  },
+  {
+    "Tên Nguyên Liệu": "Bánh đa nướng",
+    "Nhóm (Tùy chọn)": "Ngũ cốc & Tinh bột",
+    "Cách Bảo Quản": "Túi nilon cột kín mít, ỉu thì cho vào lò nướng/vi sóng quay lại.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rắc mè đen thơm lừng, bẻ rôm rốp ăn kèm mì quảng/hến xào."
+  },
+  {
+    "Tên Nguyên Liệu": "Đậu phộng rang muối",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ vặn chặt nắp, bỏ kèm túi hút ẩm.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Rất nhanh ỉu. Làm mồi nhắm bia hoặc nhai ăn vặt xế chiều."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt sen sấy giòn",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ vặn nắp kín, tránh gió mốc.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Bùi, giòn xốp. Bổ dưỡng an thần nhấm nháp rất cuốn miệng."
+  },
+  {
+    "Tên Nguyên Liệu": "Hạt điều rang tỏi ớt",
+    "Nhóm (Tùy chọn)": "Hạt",
+    "Cách Bảo Quản": "Hũ nắp vặn thật chặt.",
+    "Cân Nặng Min (kg)": 40,
+    "Cân Nặng Max (kg)": 90,
+    "Ghi Chú Thêm": "Mặn ngọt cay cay, nhai béo ngậy. Rất dễ cháy túi (ăn hao)."
+  },
+  {
+    "Tên Nguyên Liệu": "Trân châu đen",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Ngăn mát tủ lạnh khi chưa luộc. Đã luộc thì để ngoài hãm nước đường.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Nấu chín tới, ủ lâu để đạt độ dẻo dai bên trong lõi bột."
+  },
+  {
+    "Tên Nguyên Liệu": "Cùi bưởi sấy",
+    "Nhóm (Tùy chọn)": "Gia vị",
+    "Cách Bảo Quản": "Túi zip kín cất ngoài khô mát.",
+    "Cân Nặng Min (kg)": 30,
+    "Cân Nặng Max (kg)": 100,
+    "Ghi Chú Thêm": "Đã khử đắng, dùng nấu chè bưởi siêu dòn sật sật tại nhà."
   }
 ]

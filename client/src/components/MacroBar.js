@@ -9,12 +9,22 @@ const MacroBar = ({ label, current, target, color, unit = 'g' }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.label}>{label}</Text>
+
         <Text style={styles.values}>
-          <Text style={{ color: '#333', fontWeight: '700' }}>{current}</Text> / {target}{unit}
+          <Text style={{ color: '#333', fontWeight: '700' }}>{current}</Text>
+          <Text> / </Text>
+          <Text>{target}{unit}</Text>
         </Text>
+
       </View>
+
       <View style={styles.barBg}>
-        <View style={[styles.barFill, { width: `${percentage}%`, backgroundColor: color }]} />
+        <View 
+          style={[
+            styles.barFill, 
+            { width: `${percentage}%`, backgroundColor: color }
+          ]} 
+        />
       </View>
     </View>
   );

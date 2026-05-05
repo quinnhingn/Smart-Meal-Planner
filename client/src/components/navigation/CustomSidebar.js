@@ -9,9 +9,7 @@ import { COLORS } from '../../constants/theme';
 import { useAppStore } from '../../store/useAppStore';
 
 const DRAWER_WIDTH = 280;
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-// 1. NHÓM TÍNH NĂNG CHÍNH (Chỉ bung ra trên Web)
 const MAIN_TABS = [
   { id: 'home', icon: 'home-outline', title: 'Trang chủ', route: 'Dashboard' },
   { id: 'pantry', icon: 'fast-food-outline', title: 'Tủ lạnh', route: 'Pantry' },
@@ -19,7 +17,6 @@ const MAIN_TABS = [
   { id: 'shopping', icon: 'cart-outline', title: 'Đi chợ', route: 'Shopping' },
 ];
 
-// 2. NHÓM CÁ NHÂN (Web & Mobile đều hiện)
 const SECONDARY_TABS = [
   { id: 'saved', icon: 'bookmark-outline', title: 'Công thức đã lưu', route: 'SavedRecipes' },
   { id: 'stats', icon: 'body-outline', title: 'Báo cáo cơ thể', route: 'BodyStats' },
@@ -32,9 +29,8 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
   const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current; 
   const fadeAnim = useRef(new Animated.Value(0)).current; 
   
-  const [activeRoute, setActiveRoute] = useState('Dashboard'); // Trạng thái đang chọn
+  const [activeRoute, setActiveRoute] = useState('Dashboard');
 
-  // Xử lý Animation màng kéo Mobile
   useEffect(() => {
     if (isWebLarge) return; 
 
@@ -54,11 +50,9 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
   const handleNavigate = (route) => {
     setActiveRoute(route);
     setDrawerOpen(false); 
-    // Kích hoạt chuyển trang thực tế
     if(navigation) navigation.navigate(route); 
   };
 
-  // Hàm render dùng chung cho các item
   const renderMenuItem = (item) => {
     const isActive = activeRoute === item.route;
     return (
@@ -86,11 +80,10 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
 
   const SidebarContent = () => (
     <View style={styles.sidebarInner}>
-      
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
-        {/* ================= MOBILE HEADER ================= */}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        
         {!isWebLarge && (
-          <>
+          <View>
             <View style={styles.mobileLogoWrapper}>
               <Ionicons name="leaf" size={28} color={COLORS.primary} style={styles.logoIcon} />
               <Text style={styles.mobileLogoText}>SmartMeal</Text>
@@ -105,18 +98,22 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
               </View>
             </View>
             <View style={styles.divider} />
-          </>
+          </View>
         )}
 
         {/* ================= NÚT UPLOAD AI (CHỈ HIỆN TRÊN WEB) ================= */}
         {isWebLarge && (
-          <Pressable style={styles.uploadBtn} onPress={() => alert('Kích hoạt Camera/Upload AI')}>
+          <Pressable 
+            style={styles.uploadBtn} 
+            onPress={() => {
+              if (navigation) navigation.navigate('Scan');
+            }}
+          >
             <Ionicons name="camera" size={22} color="#FFF" />
             <Text style={styles.uploadBtnText}>Quét ảnh AI</Text>
           </Pressable>
         )}
 
-        {/* ================= NHÓM MENU CHÍNH (CHỈ HIỆN TRÊN WEB) ================= */}
         {isWebLarge && (
           <View style={styles.menuSection}>
             <Text style={styles.sectionLabel}>TÍNH NĂNG CHÍNH</Text>
@@ -124,15 +121,17 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
           </View>
         )}
 
-        {/* ================= NHÓM CÁ NHÂN ================= */}
         <View style={styles.menuSection}>
-          {isWebLarge && <Text style={styles.sectionLabel}>CÁ NHÂN</Text>}
-          {!isWebLarge && renderMenuItem(MAIN_TABS[0])} {/* Mobile vẫn cần nút Trang chủ */}
+          {isWebLarge ? (
+            <Text style={styles.sectionLabel}>CÁ NHÂN</Text>
+          ) : null}
+          
+          {!isWebLarge ? renderMenuItem(MAIN_TABS[0]) : null}
+          
           {SECONDARY_TABS.map(renderMenuItem)}
         </View>
       </ScrollView>
 
-      {/* FOOTER ĐĂNG XUẤT */}
       <Pressable 
         style={({ hovered }) => [
           styles.logoutBtn,
@@ -146,7 +145,6 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
     </View>
   );
 
-  // RETURN CHO WEB (Cố định)
   if (isWebLarge) {
     return (
       <View style={styles.webSidebarContainer}>
@@ -159,9 +157,9 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
     );
   }
 
-  // RETURN CHO MOBILE (Màng kéo Overlay)
+  // SỬA LỖI POINTER EVENTS TẠI ĐÂY
   return (
-    <View style={styles.mobileOverlayWrapper} pointerEvents={isDrawerOpen ? 'auto' : 'none'}>
+    <View style={[styles.mobileOverlayWrapper, { pointerEvents: isDrawerOpen ? 'auto' : 'none' }]}>
       <TouchableWithoutFeedback onPress={() => setDrawerOpen(false)}>
         <Animated.View style={[styles.backdrop, { opacity: fadeAnim }]} />
       </TouchableWithoutFeedback>
@@ -174,39 +172,44 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  // Web Styles
   webSidebarContainer: { width: DRAWER_WIDTH, height: '100%', backgroundColor: '#FFFFFF', borderRightWidth: 1, borderColor: 'rgba(0,0,0,0.05)', paddingTop: 32, zIndex: 10 },
   logoWrapper: { paddingHorizontal: 24, marginBottom: 32, flexDirection: 'row', alignItems: 'center' },
   logoIcon: { marginBottom: 4, transform: [{ rotate: '-15deg' }] },
   webLogo: { fontSize: 28, fontWeight: '900', color: COLORS.primary, marginLeft: 8 },
   
-  // Mobile Styles
   mobileOverlayWrapper: { ...StyleSheet.absoluteFillObject, zIndex: 9999 },
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.5)' },
-  mobileDrawer: { position: 'absolute', top: 0, bottom: 0, left: 0, width: DRAWER_WIDTH, backgroundColor: '#FFFFFF', paddingTop: Platform.OS === 'android' ? 40 : 50, shadowColor: '#000', shadowOffset: { width: 5, height: 0 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 15 },
+  
+  // SỬA LỖI SHADOW TẠI ĐÂY
+  mobileDrawer: { 
+    position: 'absolute', top: 0, bottom: 0, left: 0, width: DRAWER_WIDTH, backgroundColor: '#FFFFFF', 
+    paddingTop: Platform.OS === 'android' ? 40 : 50, 
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 5, height: 0 }, shadowOpacity: 0.1, shadowRadius: 10 },
+      android: { elevation: 15 },
+      web: { boxShadow: '5px 0px 15px rgba(0,0,0,0.1)' }
+    })
+  },
+
   mobileLogoWrapper: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, marginBottom: 24, marginTop: 8 },
   mobileLogoText: { fontSize: 24, fontWeight: '900', color: COLORS.primary, marginLeft: 8 },
   
-  // Shared Styles
   sidebarInner: { flex: 1, paddingHorizontal: 16, paddingBottom: 24 },
+  scrollContent: { paddingBottom: 20 },
   profileHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, paddingHorizontal: 8 },
   avatar: { width: 50, height: 50, borderRadius: 25, backgroundColor: 'rgba(76, 175, 80, 0.2)', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
   avatarText: { fontSize: 20, fontWeight: '800', color: COLORS.primary },
   userInfo: { flex: 1 },
   userName: { fontSize: 18, fontWeight: '800', color: '#1A1D1E' },
   userBadge: { fontSize: 12, color: '#FF9800', fontWeight: '600', marginTop: 4 },
-  
   divider: { height: 1, backgroundColor: 'rgba(0,0,0,0.05)', marginBottom: 16, marginHorizontal: 8 },
   
-  // Menu Section Styles
   menuSection: { marginBottom: 16 },
   sectionLabel: { fontSize: 12, fontWeight: '800', color: '#999', marginLeft: 12, marginBottom: 8, marginTop: 8, letterSpacing: 1 },
   
-  // Nút Upload Web
   uploadBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.primary, paddingVertical: 14, borderRadius: 12, marginBottom: 24, marginHorizontal: 4, gap: 8 },
   uploadBtnText: { color: '#FFF', fontWeight: '700', fontSize: 16 },
 
-  // Menu Item Styles
   menuItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 16, borderRadius: 12, marginBottom: 4 },
   menuItemHovered: { backgroundColor: 'rgba(0,0,0,0.02)' },
   menuItemActive: { backgroundColor: 'rgba(76, 175, 80, 0.1)' },

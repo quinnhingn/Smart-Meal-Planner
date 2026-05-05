@@ -8,7 +8,7 @@ import {
   Platform, 
   useWindowDimensions 
 } from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer, useNavigation, useNavigationState} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
@@ -21,6 +21,7 @@ import ShoppingScreen from '../screens/ShoppingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
+import ScanCameraScreen from '../screens/ScanCameraScreen';
 
 // Import Layout Components mới (Bước 1)
 import CustomSidebar from '../components/navigation/CustomSidebar';
@@ -41,9 +42,18 @@ const RecipeScreen = () => (
 // ==========================================
 // FAB CAMERA (MOBILE CHỈ ĐỊNH)
 // ==========================================
-const FloatingCameraButton = () => {
+const FloatingCameraButton = ({ currentRoute }) => {
   const insets = useSafeAreaInsets();
-  const handleCamera = () => alert('Kích hoạt Camera AI');
+  const navigation = useNavigation();
+
+  // ĐIỀU KIỆN ẨN: Kiểm tra từ Prop truyền vào
+  if (currentRoute === 'Scan') {
+    return null;
+  }
+
+  const handleCamera = () => {
+    navigation.navigate('Scan');
+  };
 
   return (
     <Pressable
@@ -57,14 +67,13 @@ const FloatingCameraButton = () => {
   );
 };
 
-
 // ==========================================
 // MAIN LAYOUT WRAPPER (Xử lý Responsive)
 // ==========================================
-const MainLayout = () => {
+const MainLayout = ({ currentRoute }) => {
   const { width } = useWindowDimensions();
   const isWebLarge = Platform.OS === 'web' && width > (BREAKPOINTS?.mobileMax || 768);
-  const navigation = useNavigation(); // Lấy hook điều hướng để truyền cho Sidebar
+  const navigation = useNavigation();
 
   // KHỐI CONTENT CỐT LÕI (CHỨA CÁC SCREEN)
   const TabContent = (
@@ -74,8 +83,8 @@ const MainLayout = () => {
           headerShown: false,
           tabBarShowLabel: true,
 
-          // Ẩn Bottom Tab trên Web, chỉ hiện trên Mobile
-          tabBarStyle: isWebLarge ? { display: 'none' } : {
+          // Ẩn Bottom Tab trên Web HOẶC khi đang ở màn hình Scan
+          tabBarStyle: (isWebLarge || route.name === 'Scan') ? { display: 'none' } : {
             position: 'absolute',
             bottom: 24,
             left: 20,
@@ -116,13 +125,13 @@ const MainLayout = () => {
       >
         <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Trang chủ' }} />
         <Tab.Screen name="Pantry" component={PantryScreen} options={{ title: 'Tủ lạnh' }} />
-        <Tab.Screen name="Scan" component={View} options={{ tabBarButton: () => null }} />
+        <Tab.Screen name="Scan" component={ScanCameraScreen} options={{ tabBarButton: () => null }} />
         <Tab.Screen name="Recipe" component={RecipeScreen} options={{ title: 'Gợi ý' }} />
         <Tab.Screen name="Shopping" component={ShoppingScreen} options={{ title: 'Đi chợ' }} />
       </Tab.Navigator>
 
-      {/* FAB Camera chỉ hiện trên Mobile */}
-      {!isWebLarge && <FloatingCameraButton />}
+      {/* Truyền Prop xuống FAB */}
+      {!isWebLarge && <FloatingCameraButton currentRoute={currentRoute} />}
     </View>
   );
 
@@ -155,6 +164,9 @@ const MainLayout = () => {
 const RootNavigator = () => {
   const { token, hasProfile } = useAppStore();
   const [authScreen, setAuthScreen] = useState('login');
+  
+  // State quản lý màn hình hiện tại
+  const [currentRoute, setCurrentRoute] = useState('Dashboard');
 
   if (!token) {
     return authScreen === 'register'
@@ -167,9 +179,16 @@ const RootNavigator = () => {
   }
 
   return (
-    <NavigationContainer>
-      {/* Gọi MainLayout ở đây để dùng được các hook của React Navigation */}
-      <MainLayout />
+    <NavigationContainer
+      // Cập nhật state mỗi khi người dùng chuyển trang
+      onStateChange={(state) => {
+        if (state) {
+          const currentName = state.routes[state.index].name;
+          setCurrentRoute(currentName);
+        }
+      }}
+    >
+      <MainLayout currentRoute={currentRoute} />
     </NavigationContainer>
   );
 };

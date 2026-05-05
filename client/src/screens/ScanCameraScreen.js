@@ -1,4 +1,5 @@
 // src/screens/ScanCameraScreen.js
+import { useAppStore } from '../store/useAppStore';
 import React, { useState, useRef } from 'react';
 import { 
   View, Text, StyleSheet, Pressable, Platform, 
@@ -44,6 +45,11 @@ const ScanCameraScreen = ({ navigation }) => {
   } = useCamera();
 
   const cameraRef = useRef(null);
+
+  // KẾT NỐI VỚI ZUSTAND STORE
+  const addDiaryItem = useAppStore(state => state.addDiaryItem);
+  const addPantryItems = useAppStore(state => state.addPantryItems);
+  const isSaving = useAppStore(state => state.isSaving);
   
   // STATE CHÍNH
   const [scanMode, setScanMode] = useState('diary'); // 'diary' | 'pantry'
@@ -82,10 +88,20 @@ const ScanCameraScreen = ({ navigation }) => {
     setAiResults(null);
   };
 
-  // MOCK LƯU DỮ LIỆU (Sẽ nối Zustand ở Bước 5)
-  const handleSave = (data) => {
-    console.log("Dữ liệu lưu:", data);
-    alert('Đã lưu thành công! (Check log console)');
+  // THỰC THI LƯU DỮ LIỆU
+  const handleSave = async (data) => {
+    // 1. Chờ Zustand xử lý xong (giả lập delay API)
+    if (scanMode === 'diary') {
+      await addDiaryItem(data);
+    } else {
+      await addPantryItems(data);
+    }
+    
+    // 2. GIẢI QUYẾT LỖI KẸT STATE: Dọn sạch data trước khi thoát
+    clearImage();
+    setAiResults(null);
+    
+    // 3. Chuyển hướng
     navigation.goBack();
   };
 
@@ -137,6 +153,13 @@ const ScanCameraScreen = ({ navigation }) => {
             </ScrollView>
           )}
         </View>
+
+        {isSaving && (
+            <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+            <Text style={styles.savingText}>Đang đồng bộ dữ liệu...</Text>
+            </View>
+        )}
       </View>
     );
   }
@@ -183,6 +206,13 @@ const ScanCameraScreen = ({ navigation }) => {
             }
           </ScrollView>
         ) : null}
+
+        {isSaving && (
+            <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+            <Text style={styles.savingText}>Đang đồng bộ dữ liệu...</Text>
+            </View>
+        )}
       </SafeAreaView>
     );
   }
@@ -192,33 +222,40 @@ const ScanCameraScreen = ({ navigation }) => {
   // ==========================================
   return (
     <View style={styles.containerBlack}>
-      <CameraView style={StyleSheet.absoluteFillObject} facing="back" ref={cameraRef} />
+        <CameraView style={StyleSheet.absoluteFillObject} facing="back" ref={cameraRef} />
 
-      {/* Overlay Khung ngắm */}
-      <View style={[StyleSheet.absoluteFillObject, styles.overlay]} pointerEvents="none">
-        <View style={styles.scanFrame} />
-        <Text style={styles.scanInstruction}>
-          {scanMode === 'diary' ? 'Đưa món ăn vào khung ngắm' : 'Đưa nguyên liệu vào khung ngắm'}
-        </Text>
-      </View>
-
-      <Pressable onPress={() => navigation.goBack()} style={styles.cameraBackBtn}>
-        <Ionicons name="close" size={32} color="#FFF" />
-      </Pressable>
-
-      <View style={styles.cameraControls}>
-        <ModeSwitcher mode={scanMode} setMode={setScanMode} />
-        
-        <View style={styles.cameraActionRow}>
-          <Pressable style={styles.galleryBtn} onPress={handlePickImage}>
-            <Ionicons name="image-outline" size={28} color="#FFF" />
-          </Pressable>
-          <Pressable style={styles.captureBtnOuter} onPress={handleTakePicture}>
-            <View style={styles.captureBtnInner} />
-          </Pressable>
-          <View style={{ width: 56 }} />
+        {/* Overlay Khung ngắm */}
+        <View style={[StyleSheet.absoluteFillObject, styles.overlay]} pointerEvents="none">
+            <View style={styles.scanFrame} />
+            <Text style={styles.scanInstruction}>
+            {scanMode === 'diary' ? 'Đưa món ăn vào khung ngắm' : 'Đưa nguyên liệu vào khung ngắm'}
+            </Text>
         </View>
-      </View>
+
+        <Pressable onPress={() => navigation.goBack()} style={styles.cameraBackBtn}>
+            <Ionicons name="close" size={32} color="#FFF" />
+        </Pressable>
+
+        <View style={styles.cameraControls}>
+            <ModeSwitcher mode={scanMode} setMode={setScanMode} />
+            
+            <View style={styles.cameraActionRow}>
+            <Pressable style={styles.galleryBtn} onPress={handlePickImage}>
+                <Ionicons name="image-outline" size={28} color="#FFF" />
+            </Pressable>
+            <Pressable style={styles.captureBtnOuter} onPress={handleTakePicture}>
+                <View style={styles.captureBtnInner} />
+            </Pressable>
+            <View style={{ width: 56 }} />
+            </View>
+        </View>
+
+        {isSaving && (
+            <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+            <Text style={styles.savingText}>Đang đồng bộ dữ liệu...</Text>
+            </View>
+        )}
     </View>
   );
 };
@@ -265,6 +302,9 @@ const styles = StyleSheet.create({
   mobileHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderColor: '#F0F0F0' },
   backBtn: { padding: 4 },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#1A1D1E' },
+
+  savingOverlay: { backgroundColor: 'rgba(255,255,255,0.85)', justifyContent: 'center', alignItems: 'center', zIndex: 100 },
+  savingText: { marginTop: 16, fontSize: 16, fontWeight: '700', color: COLORS.primary },
 });
 
 export default ScanCameraScreen;

@@ -80,7 +80,7 @@ const PantryResult = ({ imageUri, data, onSave }) => {
                 placeholderTextColor="#A0A0A0"
               />
               <Pressable onPress={() => removeItem(item.id)} style={styles.deleteBtn}>
-                <Ionicons name="trash-outline" size={20} color="#FF5252" />
+                <Ionicons name="trash-outline" size={20} color={COLORS.danger} />
               </Pressable>
             </View>
 

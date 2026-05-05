@@ -101,10 +101,10 @@ const DiaryResult = ({ imageUri, data, onSave }) => {
         </View>
 
         <View style={styles.macrosRow}>
-          <MacroBox label="CALO" value={currentMacros.calo} />
-          <MacroBox label="PROTEIN" value={`${currentMacros.protein}g`} />
-          <MacroBox label="CARBS" value={`${currentMacros.carbs}g`} />
-          <MacroBox label="FAT" value={`${currentMacros.fat}g`} />
+            <MacroBox label="CALO" value={currentMacros.calo} color={COLORS.secondary} />
+            <MacroBox label="PROTEIN" value={`${currentMacros.protein}g`} color={COLORS.macros.protein} />
+            <MacroBox label="CARBS" value={`${currentMacros.carbs}g`} color={COLORS.macros.carbs} />
+            <MacroBox label="FAT" value={`${currentMacros.fat}g`} color={COLORS.macros.fat} />
         </View>
 
         <Text style={styles.sectionTitle}>Định lượng tiêu thụ</Text>
@@ -192,9 +192,9 @@ const DiaryResult = ({ imageUri, data, onSave }) => {
   );
 };
 
-const MacroBox = ({ label, value }) => (
+const MacroBox = ({ label, value, color }) => (
   <View style={styles.macroBox}>
-    <Text style={styles.macroLabel}>{label}</Text>
+    <Text style={[styles.macroLabel, { color: color || '#888' }]}>{label}</Text>
     <Text style={styles.macroValue}>{value}</Text>
   </View>
 );

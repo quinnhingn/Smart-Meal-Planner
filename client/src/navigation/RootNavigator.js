@@ -23,9 +23,11 @@ import RegisterScreen from '../screens/RegisterScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import ScanCameraScreen from '../screens/ScanCameraScreen';
 
-// Import Layout Components mới (Bước 1)
+// Import Layout Components mới
 import CustomSidebar from '../components/navigation/CustomSidebar';
 import WebTopbar from '../components/navigation/WebTopbar';
+
+import CustomToast from '../components/common/CustomToast';
 
 const { COLORS, BREAKPOINTS } = require('../constants/theme');
 const { useAppStore } = require('../store/useAppStore');
@@ -180,7 +182,6 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer
-      // Cập nhật state mỗi khi người dùng chuyển trang
       onStateChange={(state) => {
         if (state) {
           const currentName = state.routes[state.index].name;
@@ -189,6 +190,8 @@ const RootNavigator = () => {
       }}
     >
       <MainLayout currentRoute={currentRoute} />
+      {/* THÊM TOAST VÀO ĐÂY */}
+      <CustomToast /> 
     </NavigationContainer>
   );
 };

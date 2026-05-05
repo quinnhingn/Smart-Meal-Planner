@@ -1,10 +1,11 @@
 from model.ingredients.ingredient_model import IngredientModel
 from database.db import db
 from typing import List, Optional
+from sqlalchemy.orm import joinedload
 
 class IngredientRepository:
     def get_all(self) -> List[IngredientModel]:
-        return IngredientModel.query.order_by(IngredientModel.created_at.desc()).all()
+        return IngredientModel.query.options(joinedload(IngredientModel.creator)).order_by(IngredientModel.created_at.desc()).all()
 
     def get_by_id(self, ingredient_id: int) -> Optional[IngredientModel]:
         return IngredientModel.query.get(ingredient_id)

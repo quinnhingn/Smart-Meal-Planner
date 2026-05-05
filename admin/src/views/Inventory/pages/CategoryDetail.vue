@@ -98,14 +98,23 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useIngredientStore } from '@/stores/ingredientStore';
 import meatImg from '@/stores/image/image.png';
 import meatImg2 from '@/stores/image/image2.png';
 import meatImg3 from '@/stores/image/image3.png';
 
 const route = useRoute();
 const router = useRouter();
+const ingredientStore = useIngredientStore();
+
 const searchQuery = ref('');
 const activeFilter = ref('all');
+
+// Mock data ban đầu (nếu muốn giữ lại)
+const mockIngredients = [
+  { id: 'uc-ga', name: 'Ức gà (Mock)', nameEn: 'Chicken Breast', type: 'meat', calories: 165, protein: 31, carbs: 0, fat: 3.6, completeness: 98, suitability: ['gain', 'lose', 'keto'], image: meatImg, cardColor: '#2D4A35' },
+  { id: 'thit-bo', name: 'Thịt bò (Mock)', nameEn: 'Beef', type: 'meat', calories: 250, protein: 26, carbs: 0, fat: 15, completeness: 95, suitability: ['gain'], image: meatImg2, cardColor: '#7A3535' },
+];
 
 const categoryTitle = computed(() => {
   const titles: Record<string, string> = {
@@ -144,42 +153,28 @@ const categoryFilters = computed(() => {
   ];
 });
 
-const ingredients = ref<any[]>([
-  { id: 'uc-ga', name: 'Ức gà (Mock)', nameEn: 'Chicken Breast', type: 'white-meat', calories: 165, protein: 31, carbs: 0, fat: 3.6, completeness: 98, suitability: ['gain', 'lose', 'keto'], image: meatImg, cardColor: '#2D4A35' },
-  { id: 'thit-bo', name: 'Thịt bò (Mock)', nameEn: 'Beef', type: 'red-meat', calories: 250, protein: 26, carbs: 0, fat: 15, completeness: 95, suitability: ['gain'], image: meatImg2, cardColor: '#7A3535' },
-]);
+const ingredients = computed(() => {
+  const apiItems = ingredientStore.ingredients.map((item: any) => ({
+    id: String(item.id),
+    name: item.name_vn,
+    nameEn: item.name_en || '',
+    type: item.category || 'other',
+    calories: item.calories_per_100g,
+    protein: item.protein_per_100g,
+    carbs: item.carbs_per_100g,
+    fat: item.fat_per_100g,
+    completeness: 100,
+    suitability: item.suitability || [],
+    image: item.image_url || meatImg3,
+    cardColor: '#4A3D7A'
+  }));
+  
+  return [...mockIngredients, ...apiItems];
+});
 
-onMounted(async () => {
-  try {
-    const token = localStorage.getItem('admin_token');
-    const res = await fetch('http://localhost:5000/api/ingredients', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const data = await res.json();
-    
-    if (data.success && data.data) {
-      // Map API data to the UI format
-      const apiItems = data.data.map((item: any) => ({
-        id: String(item.id),
-        name: item.name_vn,
-        nameEn: item.name_en || '',
-        type: item.category || 'other',
-        calories: item.calories_per_100g,
-        protein: item.protein_per_100g,
-        carbs: item.carbs_per_100g,
-        fat: item.fat_per_100g,
-        completeness: 100, // Data xịn từ DB là 100%
-        suitability: [], // Chưa có mapping suitability thật
-        image: item.image_url || meatImg3, // Hình fallback
-        cardColor: '#4A3D7A' // Màu nền random/fallback
-      }));
-      
-      // Merge mock data và data thật từ DB
-      ingredients.value = [...ingredients.value, ...apiItems];
-    }
-  } catch (err) {
-    console.error('Lỗi khi fetch danh sách nguyên liệu:', err);
-  }
+onMounted(() => {
+  // Store sẽ tự kiểm tra, nếu có dữ liệu rồi thì không gọi API nữa
+  ingredientStore.fetchIngredients();
 });
 
 const filteredItems = computed(() => {

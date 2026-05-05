@@ -32,3 +32,5 @@ class IngredientRequest(BaseModel):
     weight_max: Optional[float] = None
     notes: Optional[str] = None
     suitability: Optional[list] = [] # Danh sách các tag phù hợp
+    unit_conversions: Optional[list] = [] # Dữ liệu quy đổi
+    substitutions: Optional[list] = [] # Dữ liệu thay thế

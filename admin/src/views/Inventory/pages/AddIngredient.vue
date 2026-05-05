@@ -20,8 +20,18 @@
           <div class="row-group">
             <div class="lookup-group">
             <div class="input-group" style="flex:1; margin-bottom:0">
-              <label>Tên nguyên liệu <span class="required">*</span></label>
-              <input type="text" v-model="form.name" placeholder="VD: Ức gà, Cà chua bi..." @input="lookupResult = null">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label style="margin-bottom: 0;">Tên nguyên liệu <span class="required">*</span></label>
+              </div>
+              <div class="name-input-wrapper">
+                <input type="text" v-model="form.name" placeholder="VD: Ức gà, Cà chua bi..." @input="lookupResult = null" @blur="silentAIFetch">
+                <Transition name="bounce">
+                  <button v-if="hasAIAvailable" class="magic-bell-btn" @click.prevent="applyAllAIData" title="Có dữ liệu AI! Nhấn để tự động điền">
+                    <i class="fa-solid fa-bell fa-shake"></i>
+                    <span class="badge" v-if="aiFoundCount > 0">{{ aiFoundCount }}</span>
+                  </button>
+                </Transition>
+              </div>
             </div>
           </div>
 
@@ -415,57 +425,14 @@
       </Transition>
     </Teleport>
 
-    <!-- Modal Tra cứu Quy chuẩn (Teleport) -->
-    <Teleport to="body">
-      <Transition name="fade">
-        <div v-if="isStdModalOpen" class="modal-overlay" @click.self="isStdModalOpen = false">
-          <div class="modal-content standard-modal">
-            <div class="modal-header">
-              <h3><i class="fa-solid fa-book-open"></i> Thư viện Quy đổi Chuẩn</h3>
-              <button class="close-btn" @click="isStdModalOpen = false"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <div class="modal-body">
-              <div class="search-bar-std">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" v-model="stdSearchQuery" placeholder="Tìm kiếm nguyên liệu quy chuẩn...">
-              </div>
-
-              <div class="std-table-wrapper">
-                <table class="std-table">
-                  <thead>
-                    <tr>
-                      <th>Nguyên liệu</th>
-                      <th>Đơn vị</th>
-                      <th>Gram (g)</th>
-                      <th>Ghi chú</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="s in filteredStandards" :key="s.name">
-                      <td class="name">{{ s.name }}</td>
-                      <td>{{ s.unit }}</td>
-                      <td class="gram">{{ s.gram }}g</td>
-                      <td class="note">{{ s.note }}</td>
-                      <td>
-                        <button class="apply-std-btn" @click="applyStandard(s)">Chọn</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
+    <!-- Tất cả Modal Tra cứu cũ đã được xóa để chuyển sang cơ chế Tự động nạp dữ liệu AI -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useIngredientStore } from '@/stores/ingredientStore';
 import { useToast } from '@/composables/useToast';
 
 const toast = useToast();
@@ -540,6 +507,110 @@ const autoLoadSubstitutions = async () => {
     toast.error('Lỗi khi tải dữ liệu thay thế từ hệ thống');
   } finally {
     isSubstitutionsLoading.value = false;
+  }
+};
+
+// --- AUTO-FILL ALL (4 ROBOTS) ---
+const aiCachedData = ref<any>({
+  nutrition: null,
+  storage: null,
+  conversions: null,
+  substitutions: null
+});
+const hasAIAvailable = ref(false);
+let lastCheckedQuery = '';
+
+const aiFoundCount = computed(() => {
+  let count = 0;
+  if (aiCachedData.value.nutrition) count++;
+  if (aiCachedData.value.storage) count++;
+  if (aiCachedData.value.conversions && aiCachedData.value.conversions.length > 0) count++;
+  if (aiCachedData.value.substitutions && aiCachedData.value.substitutions.length > 0) count++;
+  return count;
+});
+
+const silentAIFetch = async () => {
+  const query = form.value.name?.trim();
+  if (!query || query === lastCheckedQuery) return;
+  lastCheckedQuery = query;
+  
+  hasAIAvailable.value = false;
+  aiCachedData.value = { nutrition: null, storage: null, conversions: null, substitutions: null };
+
+  const token = localStorage.getItem('admin_token');
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+  const body = JSON.stringify({ query });
+
+  // 1. Dinh dưỡng (USDA)
+  const fetchNutri = fetch('http://localhost:5000/api/ingredients/translate', { method: 'POST', headers, body })
+    .then(res => res.json())
+    .then(tRes => {
+       if (tRes.success && tRes.translated_text) {
+          return fetch('http://localhost:5000/api/ingredients/auto-fill', { 
+            method: 'POST', headers, body: JSON.stringify({ query: tRes.translated_text }) 
+          }).then(res => res.json());
+       }
+       return null;
+    })
+    .then(nRes => {
+       if (nRes && nRes.success) aiCachedData.value.nutrition = nRes.data;
+    }).catch(() => {});
+
+  // 2. Bảo quản
+  const fetchStorage = fetch('http://localhost:5000/api/ingredients/guidelines', { method: 'POST', headers, body })
+    .then(res => res.json())
+    .then(sRes => {
+       if (sRes.success) aiCachedData.value.storage = sRes.data;
+    }).catch(() => {});
+
+  // 3. Quy đổi
+  const fetchConv = fetch('http://localhost:5000/api/ingredients/auto-load-conversions', { method: 'POST', headers, body })
+    .then(res => res.json())
+    .then(cRes => {
+       if (cRes.success && cRes.data.length > 0) aiCachedData.value.conversions = cRes.data;
+    }).catch(() => {});
+
+  // 4. Thay thế
+  const fetchSub = fetch('http://localhost:5000/api/ingredients/auto-load-substitutions', { method: 'POST', headers, body })
+    .then(res => res.json())
+    .then(sbRes => {
+       if (sbRes.success && sbRes.data.length > 0) aiCachedData.value.substitutions = sbRes.data;
+    }).catch(() => {});
+
+  // Chờ 4 robot chạy xong ngầm
+  await Promise.all([fetchNutri, fetchStorage, fetchConv, fetchSub]);
+
+  if (aiFoundCount.value > 0) {
+    hasAIAvailable.value = true;
+  }
+};
+
+const applyAllAIData = () => {
+  let appliedCount = 0;
+  
+  if (aiCachedData.value.nutrition) {
+    Object.assign(form.value.nutrition, aiCachedData.value.nutrition);
+    appliedCount++;
+  }
+  if (aiCachedData.value.storage) {
+    form.value.storage = aiCachedData.value.storage.storage || '';
+    if (aiCachedData.value.storage.min_weight) form.value.weightMin = aiCachedData.value.storage.min_weight;
+    if (aiCachedData.value.storage.max_weight) form.value.weightMax = aiCachedData.value.storage.max_weight;
+    if (aiCachedData.value.storage.notes) form.value.notes = aiCachedData.value.storage.notes;
+    appliedCount++;
+  }
+  if (aiCachedData.value.conversions) {
+    unitConversions.value = aiCachedData.value.conversions;
+    appliedCount++;
+  }
+  if (aiCachedData.value.substitutions) {
+    substitutions.value = aiCachedData.value.substitutions;
+    appliedCount++;
+  }
+
+  if (appliedCount > 0) {
+    toast.success(`Ting ting! AI đã điền thành công ${appliedCount}/4 thông tin 🎉`);
+    hasAIAvailable.value = false; // Tắt chuông sau khi apply
   }
 };
 // ---------------------------------
@@ -684,9 +755,15 @@ const handleRemoveBg = async () => {
 };
 
 onMounted(async () => {
-  // Nếu có query name từ trang khác gửi qua (VD: từ Dashboard/Inventory suggestions)
   if (route.query.name) {
     form.value.name = route.query.name as string;
+  }
+
+  // Nếu có ảnh từ người dùng gửi qua (VD: từ Discovery Hub)
+  if (route.query.image) {
+    imagePreview.value = route.query.image as string;
+    imageUrlInput.value = route.query.image as string;
+    imageMode.value = 'url';
   }
 
   if (isEditMode.value) {
@@ -709,6 +786,10 @@ onMounted(async () => {
         form.value.weightMin = item.weight_min;
         form.value.weightMax = item.weight_max;
         form.value.suitability = item.suitability || [];
+        
+        // Nạp dữ liệu AI mới
+        unitConversions.value = item.unit_conversions || [];
+        substitutions.value = item.substitutions || [];
         
         // Nutrition
         form.value.nutrition.calories = item.calories_per_100g;
@@ -813,7 +894,9 @@ const saveIngredient = async () => {
       
       image_url: imageUrl,
       gram_per_unit: 1.0,
-      suitability: form.value.suitability
+      suitability: form.value.suitability,
+      unit_conversions: unitConversions.value,
+      substitutions: substitutions.value
     };
 
     const apiUrl = isEditMode.value 
@@ -832,6 +915,11 @@ const saveIngredient = async () => {
     const data = await res.json();
     if (data.success) {
       toast.success(isEditMode.value ? 'Cập nhật thành công!' : 'Thêm nguyên liệu thành công!');
+      
+      // Làm mới dữ liệu trong Pinia Store để các trang khác thấy thay đổi ngay
+      const ingredientStore = useIngredientStore();
+      ingredientStore.fetchIngredients(true);
+      
       router.back();
     } else {
       toast.error('Lỗi từ Server: ' + data.message);
@@ -1490,24 +1578,57 @@ const aiInsight = computed(() => {
 
 .ai-empty-note { font-size: 11px; color: #94a3b8; font-style: italic; }
 
-/* Standard Modal Styles */
-.standard-modal { width: 800px !important; max-height: 80vh; display: flex; flex-direction: column; }
-.search-bar-std { position: relative; margin-bottom: 20px; }
-.search-bar-std i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
-.search-bar-std input { width: 100%; padding: 14px 14px 14px 44px; border-radius: 14px; border: 1.5px solid #E2E8F0; font-size: 14px; outline: none; }
-.search-bar-std input:focus { border-color: #6366F1; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+/* AI Magic Bell */
+.name-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.name-input-wrapper input {
+  width: 100%;
+}
+.magic-bell-btn {
+  position: absolute;
+  right: 12px;
+  background: linear-gradient(135deg, #f59e0b, #eab308);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  animation: glowPulse 2s infinite alternate;
+}
+.magic-bell-btn .fa-bell {
+  font-size: 16px;
+}
+.magic-bell-btn .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid white;
+}
 
-.std-table-wrapper { flex: 1; overflow-y: auto; border: 1px solid #E2E8F0; border-radius: 16px; }
-.std-table { width: 100%; border-collapse: collapse; text-align: left; }
-.std-table th { background: #F8FAFC; padding: 14px; font-size: 12px; font-weight: 800; color: #64748B; text-transform: uppercase; position: sticky; top: 0; }
-.std-table td { padding: 14px; border-bottom: 1px solid #F1F5F9; font-size: 14px; color: #1E293B; }
-.std-table tr:hover { background: #F0FDF4; }
-.std-table .name { font-weight: 700; color: #111827; }
-.std-table .gram { font-weight: 800; color: #10B981; }
-.std-table .note { font-size: 12px; color: #64748B; }
-
-.apply-std-btn { background: #1E293B; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; }
-.apply-std-btn:hover { background: #10B981; }
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
 
 /* --- MODAL BASE STYLES --- */
 .modal-overlay {

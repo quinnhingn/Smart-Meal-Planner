@@ -78,7 +78,13 @@
               <span class="pending-pill">Thêm nguyên liệu</span>
             </div>
             <div class="row-actions">
-              <button class="mini-update-btn" @click="router.push({ name: 'ingredient-add', query: { name: item.name } })">
+              <button class="mini-update-btn" @click="router.push({ 
+                name: 'ingredient-add', 
+                query: { 
+                  name: item.name, 
+                  image: '/src/stores/image/image.png' 
+                } 
+              })">
                 Thêm mới <i class="fa-solid fa-plus"></i>
               </button>
             </div>

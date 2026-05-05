@@ -1,6 +1,17 @@
 from flask import Blueprint, request, jsonify
 from handler.ingredients.ingredient_handler import IngredientHandler
 from validation.ingredients.ingredient_validation import IngredientRequest
+import cloudinary
+import cloudinary.uploader
+import os
+
+# Cấu hình Cloudinary từ biến môi trường
+cloudinary.config(
+  cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
+  api_key = os.getenv("CLOUDINARY_API_KEY"),
+  api_secret = os.getenv("CLOUDINARY_API_SECRET"),
+  secure = True
+)
 from pydantic import ValidationError
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from functools import wraps
@@ -225,21 +236,12 @@ def upload_image():
             return jsonify({"success": False, "message": "Tên file trống"}), 400
             
         if file:
-            import uuid
-            # Tạo tên file duy nhất để tránh trùng lặp
-            filename = str(uuid.uuid4()) + "_" + file.filename
-            
-            import os
-            upload_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../uploads'))
-            if not os.path.exists(upload_path):
-                os.makedirs(upload_path)
-                
-            save_path = os.path.join(upload_path, filename)
-            file.save(save_path)
+            # Tải ảnh lên Cloudinary
+            upload_result = cloudinary.uploader.upload(file, folder="ingredients")
             
             return jsonify({
                 "success": True, 
-                "image_url": f"http://localhost:5000/uploads/{filename}"
+                "image_url": upload_result.get("secure_url")
             }), 200
             
     except Exception as e:
@@ -301,18 +303,21 @@ def remove_background():
         # 2. Xử lý tách nền bằng AI
         output_image = remove(input_image)
 
-        # 3. Lưu ảnh mới vào thư mục uploads
-        filename = f"no-bg_{uuid.uuid4()}.png"
-        upload_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../uploads'))
-        if not os.path.exists(upload_path):
-            os.makedirs(upload_path)
-            
-        save_path = os.path.join(upload_path, filename)
-        output_image.save(save_path)
+        # 3. Lưu tạm ảnh đã tách nền và đẩy lên Cloudinary
+        img_byte_arr = BytesIO()
+        output_image.save(img_byte_arr, format='PNG')
+        img_byte_arr.seek(0)
+        
+        # Tải lên Cloudinary
+        upload_result = cloudinary.uploader.upload(
+            img_byte_arr, 
+            folder="ingredients_nobg",
+            public_id=f"nobg_{uuid.uuid4()}"
+        )
 
         return jsonify({
             "success": True,
-            "image_url": f"http://localhost:5000/uploads/{filename}"
+            "image_url": upload_result.get("secure_url")
         }), 200
 
     except Exception as e:

@@ -23,9 +23,6 @@
               <label>Tên nguyên liệu <span class="required">*</span></label>
               <input type="text" v-model="form.name" placeholder="VD: Ức gà, Cà chua bi..." @input="lookupResult = null">
             </div>
-            <button class="autofill-btn" @click="llmAutoFill" :disabled="!form.name.trim()" title="Tự động điền thông tin bằng AI LLM">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> AI Tự động điền
-            </button>
           </div>
 
           <!-- Lookup result suggestions -->
@@ -114,16 +111,12 @@
           <div class="section-title-row" style="align-items: flex-start; margin-bottom: 24px;">
             <div style="flex: 1; padding-right: 16px;">
               <h3 style="margin-bottom: 6px;">Thông số dinh dưỡng</h3>
-              <p class="panel-desc" style="margin-bottom: 0;">Nhập thủ công hoặc dùng nút "Lấy dữ liệu USDA" để tra cứu tự động.</p>
             </div>
             <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap; justify-content: flex-end;">
               <button class="ai-calc-btn" @click="autoFill" :disabled="isLoading || !form.name" style="background:#F0FDF4; color:#166534; border-color:#BBF7D0; padding: 8px 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                 <i v-if="isLoading" class="fa-solid fa-spinner fa-spin"></i>
                 <i v-else class="fa-solid fa-cloud-arrow-down"></i> 
-                Lấy dữ liệu USDA
-              </button>
-              <button class="ai-calc-btn" @click="calcNutritionFromSuitability" v-if="form.suitability.length > 0 && form.nutrition.calories" style="padding: 8px 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                <i class="fa-solid fa-bullseye"></i> Tính theo mục tiêu
+                Tính theo mục tiêu
               </button>
               <span class="unit-note" style="white-space: nowrap; font-size: 13px; font-weight: 600; background: #F1F5F9; padding: 6px 12px; border-radius: 8px; color: #475569;">
                 Trên 100g
@@ -184,7 +177,12 @@
 
         <!-- Storage & Notes -->
         <div class="card-panel">
-          <h3>Bảo quản & Gợi ý sử dụng</h3>
+          <div class="section-title-row">
+            <h3>Bảo quản & Gợi ý sử dụng</h3>
+            <button class="ai-calc-btn" @click="llmAutoFill" :disabled="!form.name.trim()" style="background:#F5F3FF; color:#5B21B6; border-color:#DDD6FE; padding: 6px 12px; font-size: 12px;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Tra cứu thông tin
+            </button>
+          </div>
           <div class="input-group" style="margin-bottom: 20px;">
             <label>Cách bảo quản</label>
             <input type="text" v-model="form.storage" placeholder="VD: Bảo quản ngăn đông lạnh -18°C...">
@@ -312,6 +310,45 @@
           </div>
         </div>
 
+        <!-- AI Unit Conversion (NEW) -->
+        <div class="card-panel ai-config-card unit">
+          <div class="ai-config-header">
+            <div class="title"><i class="fa-solid fa-scale-unbalanced-flip"></i> Quy đổi đơn vị</div>
+            <div style="display:flex; gap:6px;">
+              <button class="add-mini-btn" @click="isStdModalOpen = true" title="Tra cứu quy chuẩn"><i class="fa-solid fa-book"></i></button>
+              <button class="add-mini-btn" @click="addQuickUnit" title="Thêm thủ công"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+          <div class="ai-pill-list">
+            <div class="ai-smart-pill unit-pill" v-for="(u, i) in unitConversions" :key="i">
+              <div class="pill-main">
+                <span class="p-from">{{ u.from }}</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+                <span class="p-to">{{ u.to }}</span>
+                <button class="p-del" @click="removeUnit(i)"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <div v-if="u.note" class="pill-note">{{ u.note }}</div>
+            </div>
+            <div v-if="unitConversions.length === 0" class="ai-empty-note">Chưa có quy đổi</div>
+          </div>
+        </div>
+
+        <!-- AI Substitution (NEW) -->
+        <div class="card-panel ai-config-card sub">
+          <div class="ai-config-header">
+            <div class="title"><i class="fa-solid fa-shuffle"></i> Nguyên liệu thay thế</div>
+            <button class="add-mini-btn" @click="addQuickSub"><i class="fa-solid fa-plus"></i></button>
+          </div>
+          <div class="ai-pill-list">
+            <div class="ai-smart-pill alt" v-for="(s, i) in substitutions" :key="i">
+              <i class="fa-solid fa-arrows-rotate p-icon"></i>
+              <span class="p-name">{{ s.name }}</span>
+              <button class="p-del" @click="removeSub(i)"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div v-if="substitutions.length === 0" class="ai-empty-note">Chưa có thay thế</div>
+          </div>
+        </div>
+
         <!-- AI Insight -->
         <div class="card-panel ai-card">
           <div class="ai-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Gợi ý từ AI</div>
@@ -326,13 +363,103 @@
         </button>
       </div>
     </div>
+
+    <!-- Modal Nhập liệu nhanh (Teleport) -->
+    <Teleport to="body">
+      <Transition name="fade">
+        <div v-if="isQuickAddOpen" class="modal-overlay" @click.self="isQuickAddOpen = false">
+          <div class="modal-content quick-add-modal">
+            <div class="modal-header">
+              <h3>{{ quickAddType === 'unit' ? 'Thêm quy đổi đơn vị' : 'Thêm cặp thay thế' }}</h3>
+              <button class="close-btn" @click="isQuickAddOpen = false"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body">
+              <div v-if="quickAddType === 'unit'" class="quick-fields">
+                <div class="field">
+                  <label>Đơn vị gốc (VD: 1 quả Táo)</label>
+                  <input v-model="quickAddItem.from" type="text" placeholder="Nhập đơn vị...">
+                </div>
+                <div class="field">
+                  <label>Giá trị quy đổi (VD: 150g)</label>
+                  <input v-model="quickAddItem.to" type="text" placeholder="Nhập giá trị...">
+                </div>
+                <div class="field">
+                  <label>Ghi chú (VD: Trứng cỡ vừa)</label>
+                  <input v-model="quickAddItem.note" type="text" placeholder="Nhập ghi chú (không bắt buộc)...">
+                </div>
+              </div>
+              <div v-else class="quick-fields">
+                <div class="field">
+                  <label>Tên nguyên liệu thay thế</label>
+                  <input v-model="quickAddItem.name" type="text" placeholder="Nhập tên...">
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button class="cancel-btn" @click="isQuickAddOpen = false">Hủy</button>
+              <button class="save-btn" @click="handleQuickAddSave">Thêm ngay</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <!-- Modal Tra cứu Quy chuẩn (Teleport) -->
+    <Teleport to="body">
+      <Transition name="fade">
+        <div v-if="isStdModalOpen" class="modal-overlay" @click.self="isStdModalOpen = false">
+          <div class="modal-content standard-modal">
+            <div class="modal-header">
+              <h3><i class="fa-solid fa-book-open"></i> Thư viện Quy đổi Chuẩn</h3>
+              <button class="close-btn" @click="isStdModalOpen = false"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body">
+              <div class="search-bar-std">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" v-model="stdSearchQuery" placeholder="Tìm kiếm nguyên liệu quy chuẩn...">
+              </div>
+
+              <div class="std-table-wrapper">
+                <table class="std-table">
+                  <thead>
+                    <tr>
+                      <th>Nguyên liệu</th>
+                      <th>Đơn vị</th>
+                      <th>Gram (g)</th>
+                      <th>Ghi chú</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="s in filteredStandards" :key="s.name">
+                      <td class="name">{{ s.name }}</td>
+                      <td>{{ s.unit }}</td>
+                      <td class="gram">{{ s.gram }}g</td>
+                      <td class="note">{{ s.note }}</td>
+                      <td>
+                        <button class="apply-std-btn" @click="applyStandard(s)">Chọn</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useToast } from '@/composables/useToast';
 
+const toast = useToast();
 const router = useRouter();
 const route = useRoute();
 
@@ -342,6 +469,90 @@ const isSaving = ref(false);
 const isRemovingBg = ref(false);
 const imageMode = ref<'upload' | 'url'>('upload');
 const imageUrlInput = ref('');
+
+// --- DỮ LIỆU QUY CHUẨN TỪ EXCEL ---
+const standardConversions = [
+  { name: 'Cơm trắng', unit: '1 bát (chén)', gram: 130, note: 'Bát ăn cơm tiêu chuẩn' },
+  { name: 'Phở / Bún', unit: '1 bát (tô)', gram: 200, note: 'Lượng bánh phở/bún trong 1 tô bình thường' },
+  { name: 'Trứng gà', unit: '1 quả', gram: 50, note: 'Trứng cỡ vừa, bỏ vỏ' },
+  { name: 'Trứng cút', unit: '1 quả', gram: 10, note: 'Bỏ vỏ' },
+  { name: 'Táo / Lê', unit: '1 quả', gram: 150, note: 'Cỡ vừa' },
+  { name: 'Chuối tây', unit: '1 quả', gram: 100, note: 'Bỏ vỏ' },
+  { name: 'Dầu ăn / Mỡ', unit: '1 muỗng canh', gram: 15, note: 'Khối lượng chất lỏng' },
+  { name: 'Đường / Muối', unit: '1 muỗng cà phê', gram: 5, note: 'Gia vị dạng hạt' },
+  { name: 'Thịt heo / Bò', unit: '1 lạng', gram: 100, note: 'Đơn vị chợ truyền thống' },
+  { name: 'Sữa tươi', unit: '1 hộp giấy', gram: 180, note: 'Hộp tiêu chuẩn' },
+  { name: 'Bánh mì VN', unit: '1 ổ (vừa)', gram: 90, note: 'Ổ bánh mì đặc ruột' },
+  { name: 'Bánh mì Sandwich', unit: '1 lát', gram: 30, note: 'Cắt lát tiêu chuẩn' },
+  { name: 'Bánh bao', unit: '1 cái (vừa)', gram: 150, note: 'Kích thước có nhân thịt' },
+  { name: 'Khoai lang', unit: '1 củ (vừa)', gram: 150, note: 'Kích thước vừa tay cầm' },
+  { name: 'Bắp (Ngô)', unit: '1 trái', gram: 200, note: 'Chưa luộc, tính cả lõi' },
+];
+
+const isStdModalOpen = ref(false);
+const stdSearchQuery = ref('');
+const filteredStandards = computed(() => {
+  return standardConversions.filter(s => 
+    s.name.toLowerCase().includes(stdSearchQuery.value.toLowerCase())
+  );
+});
+
+const applyStandard = (s: any) => {
+  unitConversions.value.push({ from: s.unit, to: s.gram + 'g', note: s.note });
+  isStdModalOpen.value = false;
+  toast.success(`Đã thêm quy đổi cho ${s.name}`);
+};
+// ---------------------------------
+
+// --- AI CONFIG STATE (LOCAL ONLY) ---
+interface UnitConversion {
+  from: string;
+  to: string;
+  note?: string;
+}
+
+const unitConversions = ref<UnitConversion[]>([
+  { from: '1 quả', to: '150g' }
+]);
+const substitutions = ref([
+  { name: 'Cải bó xôi' }
+]);
+
+// --- QUICK ADD MODAL STATE ---
+const isQuickAddOpen = ref(false);
+const quickAddType = ref<'unit' | 'sub'>('unit');
+const quickAddItem = ref({ from: '', to: '', name: '', note: '' });
+
+const openQuickAdd = (type: 'unit' | 'sub') => {
+  quickAddType.value = type;
+  quickAddItem.value = { from: '', to: '', name: '', note: '' };
+  isQuickAddOpen.value = true;
+};
+
+const handleQuickAddSave = () => {
+  if (quickAddType.value === 'unit') {
+    if (quickAddItem.value.from && quickAddItem.value.to) {
+      unitConversions.value.push({ 
+        from: quickAddItem.value.from, 
+        to: quickAddItem.value.to,
+        note: quickAddItem.value.note 
+      });
+    }
+  } else {
+    if (quickAddItem.value.name) {
+      substitutions.value.push({ name: quickAddItem.value.name });
+    }
+  }
+  isQuickAddOpen.value = false;
+};
+
+const removeUnit = (index: number) => unitConversions.value.splice(index, 1);
+const removeSub = (index: number) => substitutions.value.splice(index, 1);
+
+const addQuickUnit = () => openQuickAdd('unit');
+const addQuickSub = () => openQuickAdd('sub');
+// -----------------------------
+// ------------------------------------
 
 const fileInput = ref<HTMLInputElement | null>(null);
 const imagePreview = ref<string | null>(null);
@@ -420,18 +631,24 @@ const handleRemoveBg = async () => {
       imageUrlInput.value = data.image_url;
       imageMode.value = 'url'; // Chuyển sang mode URL để dùng link ảnh đã tách nền
       selectedFile.value = null;
+      toast.success("Đã tách nền ảnh thành công!");
     } else {
-      alert("Lỗi tách nền: " + data.message);
+      toast.error("Lỗi tách nền: " + data.message);
     }
   } catch (err: any) {
     console.error(err);
-    alert("Lỗi khi kết nối AI tách nền: " + err.message);
+    toast.error("Lỗi khi kết nối AI tách nền");
   } finally {
     isRemovingBg.value = false;
   }
 };
 
 onMounted(async () => {
+  // Nếu có query name từ trang khác gửi qua (VD: từ Dashboard/Inventory suggestions)
+  if (route.query.name) {
+    form.value.name = route.query.name as string;
+  }
+
   if (isEditMode.value) {
     const id = route.params.ingredientId;
     try {
@@ -451,7 +668,7 @@ onMounted(async () => {
         form.value.notes = item.notes;
         form.value.weightMin = item.weight_min;
         form.value.weightMax = item.weight_max;
-        form.value.suitability = []; // Mapping logic if needed
+        form.value.suitability = item.suitability || [];
         
         // Nutrition
         form.value.nutrition.calories = item.calories_per_100g;
@@ -494,14 +711,14 @@ onMounted(async () => {
 
 const saveIngredient = async () => {
   if (!form.value.name || form.value.nutrition.calories === null) {
-    alert('Vui lòng nhập tên nguyên liệu và lượng calo!');
+    toast.warning('Vui lòng nhập tên nguyên liệu và lượng calo!');
     return;
   }
   isSaving.value = true;
   try {
     const token = localStorage.getItem('admin_token');
     if (!token) {
-      alert('Bạn chưa đăng nhập hoặc mất Token. Vui lòng đăng nhập lại.');
+      toast.error('Bạn chưa đăng nhập hoặc mất Token.');
       router.push('/login');
       return;
     }
@@ -555,7 +772,8 @@ const saveIngredient = async () => {
       notes: form.value.notes || '',
       
       image_url: imageUrl,
-      gram_per_unit: 1.0
+      gram_per_unit: 1.0,
+      suitability: form.value.suitability
     };
 
     const apiUrl = isEditMode.value 
@@ -573,14 +791,14 @@ const saveIngredient = async () => {
     
     const data = await res.json();
     if (data.success) {
-      alert(isEditMode.value ? 'Cập nhật thành công!' : 'Thêm nguyên liệu thành công!');
+      toast.success(isEditMode.value ? 'Cập nhật thành công!' : 'Thêm nguyên liệu thành công!');
       router.back();
     } else {
-      alert('Lỗi từ Server: ' + data.message);
+      toast.error('Lỗi từ Server: ' + data.message);
     }
   } catch (err) {
     console.error(err);
-    alert('Lỗi kết nối đến Backend Server (Port 5000)');
+    toast.error('Lỗi kết nối đến Backend Server (Port 5000)');
   } finally {
     isSaving.value = false;
   }
@@ -1195,4 +1413,101 @@ const aiInsight = computed(() => {
 .ai-remove-bg-btn:disabled {
   opacity: 0.7; cursor: not-allowed; background: #94A3B8; box-shadow: none;
 }
+
+/* AI Config Sidebar Styles */
+.ai-config-card { padding: 16px !important; margin-bottom: 16px; border: 1px dashed transparent; transition: 0.3s; border-radius: 20px !important; }
+.ai-config-card.unit { background: #f0f9ff; border-color: #bae6fd; }
+.ai-config-card.sub { background: #f5f3ff; border-color: #ddd6fe; }
+
+.ai-config-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.ai-config-header .title { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+.ai-config-header .title i { font-size: 13px; color: #64748b; }
+
+.add-mini-btn { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid rgba(0,0,0,0.1); background: white; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: 0.2s; }
+.add-mini-btn:hover { background: #1e293b; color: white; border-color: #1e293b; }
+
+.ai-pill-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.ai-smart-pill { 
+  background: white; padding: 6px 12px; border-radius: 12px; 
+  display: flex; flex-direction: column; gap: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.8); 
+}
+.unit-pill { min-width: 120px; }
+.pill-main { display: flex; align-items: center; gap: 6px; }
+
+.ai-smart-pill span { font-size: 11px; font-weight: 700; color: #1e293b; }
+.ai-smart-pill i { font-size: 9px; color: #94a3b8; }
+.ai-smart-pill .p-to { color: #10b981; font-weight: 800; }
+
+.pill-note { font-size: 10px; color: #64748b; font-style: italic; border-top: 1px solid #f1f5f9; padding-top: 2px; margin-top: 2px; }
+
+.ai-smart-pill.alt { flex-direction: row; align-items: center; }
+.ai-smart-pill.alt .p-icon { color: #8b5cf6; }
+.ai-smart-pill.alt .p-name { color: #1e293b; }
+
+.p-del { background: none; border: none; padding: 0; color: #cbd5e1; cursor: pointer; font-size: 10px; transition: 0.2s; margin-left: 4px; }
+.ai-smart-pill:hover .p-del { color: #ef4444; }
+
+.ai-empty-note { font-size: 11px; color: #94a3b8; font-style: italic; }
+
+/* Standard Modal Styles */
+.standard-modal { width: 800px !important; max-height: 80vh; display: flex; flex-direction: column; }
+.search-bar-std { position: relative; margin-bottom: 20px; }
+.search-bar-std i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+.search-bar-std input { width: 100%; padding: 14px 14px 14px 44px; border-radius: 14px; border: 1.5px solid #E2E8F0; font-size: 14px; outline: none; }
+.search-bar-std input:focus { border-color: #6366F1; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+
+.std-table-wrapper { flex: 1; overflow-y: auto; border: 1px solid #E2E8F0; border-radius: 16px; }
+.std-table { width: 100%; border-collapse: collapse; text-align: left; }
+.std-table th { background: #F8FAFC; padding: 14px; font-size: 12px; font-weight: 800; color: #64748B; text-transform: uppercase; position: sticky; top: 0; }
+.std-table td { padding: 14px; border-bottom: 1px solid #F1F5F9; font-size: 14px; color: #1E293B; }
+.std-table tr:hover { background: #F0FDF4; }
+.std-table .name { font-weight: 700; color: #111827; }
+.std-table .gram { font-weight: 800; color: #10B981; }
+.std-table .note { font-size: 12px; color: #64748B; }
+
+.apply-std-btn { background: #1E293B; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; }
+.apply-std-btn:hover { background: #10B981; }
+
+/* --- MODAL BASE STYLES --- */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10000;
+}
+
+.modal-content {
+  background: white; border-radius: 30px; 
+  padding: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.modal-header h3 { font-size: 18px; font-weight: 800; color: #1e293b; margin: 0; }
+.close-btn { background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #64748b; transition: 0.2s; }
+.close-btn:hover { background: #e2e8f0; color: #1e293b; }
+
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+/* ------------------------- */
+
+/* Quick Add Modal Styles */
+.quick-add-modal { width: 400px !important; }
+.quick-fields { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+.quick-fields .field { display: flex; flex-direction: column; gap: 8px; }
+.quick-fields label { font-size: 13px; font-weight: 700; color: #64748b; }
+.quick-fields input { 
+  width: 100%; padding: 12px 16px; border-radius: 12px; 
+  border: 1.5px solid #E2E8F0; outline: none; font-size: 14px;
+  transition: 0.2s;
+}
+.quick-fields input:focus { border-color: #8b5cf6; box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
+
+.modal-footer { display: flex; gap: 12px; margin-top: 24px; }
+.modal-footer button { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.modal-footer .cancel-btn { background: #F1F5F9; border: none; color: #64748b; }
+.modal-footer .save-btn { background: #1E293B; border: none; color: white; }
+.modal-footer .save-btn:hover { background: #10B981; transform: translateY(-2px); }
 </style>

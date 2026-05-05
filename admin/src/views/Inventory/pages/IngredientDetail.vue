@@ -13,7 +13,7 @@
         <button class="btn-outline" @click="router.push({ name: 'ingredient-edit', params: { id: route.params.id, ingredientId: route.params.ingredientId } })">
           <i class="fa-solid fa-pen"></i> Chỉnh sửa
         </button>
-        <button class="btn-danger"><i class="fa-solid fa-trash"></i> Xoá</button>
+        <button class="btn-danger" @click="handleDelete"><i class="fa-solid fa-trash"></i> Xoá</button>
       </div>
     </div>
 
@@ -178,19 +178,21 @@
           </div>
         </div>
 
-        <!-- Allergens & Diet Labels -->
+        <!-- Diet Suitability Panel -->
         <div class="card-panel diet-panel">
-          <h3>Cảnh báo & Ăn kiêng</h3>
+          <h3>Phù hợp với mục tiêu</h3>
           <div class="allergen-grid">
-            <div class="allergen-item" v-for="a in allergens" :key="a.label" 
-              :class="{ active: a.active }"
+            <div class="allergen-item active" v-for="s in activeSuitability" :key="s.label" 
               :style="{ 
-                '--item-color': a.color, 
-                '--item-bg': a.bg,
-                '--item-border': a.border 
+                '--item-color': s.color, 
+                '--item-bg': s.bg,
+                '--item-border': s.border 
               }">
-              <i :class="a.icon"></i>
-              <span>{{ a.label }}</span>
+              <i :class="s.icon"></i>
+              <span>{{ s.label }}</span>
+            </div>
+            <div v-if="activeSuitability.length === 0" class="no-data-msg">
+              Chưa thiết lập mục tiêu phù hợp.
             </div>
           </div>
         </div>
@@ -347,7 +349,7 @@ onMounted(async () => {
         completeness: 100,
         weightMin: item.weight_min,
         weightMax: item.weight_max,
-        suitability: [], // Mapping logic for tags could be added here
+        suitability: item.suitability || [],
         image: item.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800',
         tips: [
           { title: 'Bảo quản', body: item.storage_method || 'Chưa có thông tin bảo quản.', icon: 'fa-solid fa-snowflake', color: '#3B82F6', bg: '#EFF6FF' },
@@ -360,6 +362,55 @@ onMounted(async () => {
   } finally {
     isLoading.value = false;
   }
+});
+
+const handleDelete = async () => {
+  const id = route.params.ingredientId;
+  
+  // Không cho xóa mock data (hoặc chỉ cảnh báo)
+  if (id === 'uc-ga' || id === 'thit-bo') {
+    alert("Đây là dữ liệu mẫu (Mock), không thể xóa từ Database.");
+    return;
+  }
+
+  if (confirm(`Bạn có chắc chắn muốn xóa nguyên liệu "${ingredient.value.name}" không? Hành động này không thể hoàn tác.`)) {
+    try {
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`http://localhost:5000/api/ingredients/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        alert("Đã xóa nguyên liệu thành công!");
+        router.push({ name: 'category-detail', params: { id: route.params.id } });
+      } else {
+        alert("Lỗi khi xóa: " + data.message);
+      }
+    } catch (err) {
+      console.error("Lỗi xóa nguyên liệu:", err);
+      alert("Không thể kết nối đến Server để xóa.");
+    }
+  }
+};
+
+const suitabilityMap: Record<string, any> = {
+  lose: { label: 'Giảm cân', icon: 'fa-solid fa-arrow-trend-down', color: '#EF4444', bg: '#FEF2F2', border: '#FCA5A5' },
+  gain: { label: 'Tăng cơ', icon: 'fa-solid fa-dumbbell', color: '#3B82F6', bg: '#EFF6FF', border: '#93C5FD' },
+  maintain: { label: 'Giữ dáng', icon: 'fa-solid fa-bullseye', color: '#10B981', bg: '#ECFDF5', border: '#6EE7B7' },
+  diabetic: { label: 'Tiểu đường', icon: 'fa-solid fa-heart-pulse', color: '#F59E0B', bg: '#FFFBEB', border: '#FCD34D' },
+  hypertension: { label: 'Huyết áp cao', icon: 'fa-solid fa-droplet', color: '#6366F1', bg: '#EEF2FF', border: '#A5B4FC' },
+  vegetarian: { label: 'Chay / Thuần chay', icon: 'fa-solid fa-leaf', color: '#059669', bg: '#ECFDF5', border: '#34D399' },
+  keto: { label: 'Keto', icon: 'fa-solid fa-bolt', color: '#7C3AED', bg: '#F5F3FF', border: '#C4B5FD' },
+  kids: { label: 'Trẻ em', icon: 'fa-solid fa-child', color: '#EC4899', bg: '#FDF2F7', border: '#F9A8D4' }
+};
+
+const activeSuitability = computed(() => {
+  const list = ingredient.value.suitability || [];
+  return list.map((s: string) => suitabilityMap[s] || { 
+    label: s, icon: 'fa-solid fa-check', color: '#64748B', bg: '#F1F5F9', border: '#CBD5E1' 
+  });
 });
 
 const macroCards = [

@@ -31,3 +31,4 @@ class IngredientRequest(BaseModel):
     weight_min: Optional[float] = None
     weight_max: Optional[float] = None
     notes: Optional[str] = None
+    suitability: Optional[list] = [] # Danh sách các tag phù hợp

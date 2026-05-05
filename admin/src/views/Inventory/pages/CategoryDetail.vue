@@ -184,12 +184,24 @@ onMounted(async () => {
 
 const filteredItems = computed(() => {
   let list = ingredients.value;
+  
+  // 1. Lọc theo danh mục của trang hiện tại (route.params.id)
+  const currentCatId = route.params.id as string;
+  list = list.filter(i => {
+    // Nếu là mock data thì id là string 'uc-ga', 'thit-bo'...
+    // Nếu là data thật thì category lấy từ DB
+    if (i.id === 'uc-ga' || i.id === 'thit-bo') return currentCatId === 'meat';
+    return i.type === currentCatId;
+  });
+
+  // 2. Lọc theo tìm kiếm
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase();
     list = list.filter(i => i.name.toLowerCase().includes(q) || i.nameEn.toLowerCase().includes(q));
   }
+
+  // 3. Lọc theo Tag (Thịt đỏ, Gia cầm...)
   if (activeFilter.value !== 'all') {
-    // Check if filter is by type or suitability
     list = list.filter(i => {
       const isType = ['red-meat', 'white-meat', 'seafood', 'fish', 'leafy', 'root', 'fruit-veg', 'mushroom'].includes(activeFilter.value);
       if (isType) return i.type === activeFilter.value;

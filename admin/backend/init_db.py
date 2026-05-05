@@ -27,15 +27,11 @@ def init_db():
         
         # Chỉ xoá và tạo lại bảng nguyên liệu để tránh mất dữ liệu User
         # Nếu muốn xoá hết sạch sành sanh thì dùng db.drop_all()
+        # CHỈ TẠO BẢNG MỚI, KHÔNG BAO GIỜ XOÁ DỮ LIỆU CŨ
         try:
-            print("🗑️  Đang xoá bảng scr_ingredients cũ (nếu có)...")
-            # IngredientModel.__table__.drop(db.engine, checkfirst=True)
-            
-            print("🏗️  Đang tạo lại các bảng với cấu trúc mới nhất...")
-            # db.drop_all() # Đã vô hiệu hóa lệnh xóa để tránh mất dữ liệu
+            print("🏗️  Đang kiểm tra và tạo các bảng mới (nếu chưa có)...")
             db.create_all()
-            
-            print("✅ Hoàn tất! Bảng scr_ingredients đã sẵn sàng với đầy đủ các chỉ số mới.")
+            print("✅ Hoàn tất! Database đã sẵn sàng.")
         except Exception as e:
             print(f"❌ Có lỗi xảy ra: {str(e)}")
 

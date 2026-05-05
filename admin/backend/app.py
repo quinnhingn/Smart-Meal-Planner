@@ -20,7 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Cấu hình JWT (Token bảo mật)
-app.config['JWT_SECRET_KEY'] = 'SmartMeal_Super_Secret_Key_2026'
+app.config['JWT_SECRET_KEY'] = 'SmartMeal_Super_Secret_Key_2026_SAFE'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24) # Tăng lên 24 tiếng để dev cho thoải mái
 jwt = JWTManager(app)
 

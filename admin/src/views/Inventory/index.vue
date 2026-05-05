@@ -5,7 +5,7 @@
     <div class="page-header">
       <div class="header-text">
         <h1>Quản lý Nguyên liệu</h1>
-        <p>Kiểm soát kho dữ liệu dinh dưỡng và tối ưu nhận diện AI.</p>
+        <p>Kiểm soát kho nguyên liệu</p>
       </div>
       <button class="add-btn" @click="router.push({ name: 'ingredient-add' })">
         <i class="fa-solid fa-plus"></i>
@@ -60,8 +60,8 @@
         <div class="hub-header">
           <div class="hub-title-compact">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <h2>Nguyên liệu mới</h2>
-            <span class="status-pill-mini"><span class="dot-blink"></span> AI Active</span>
+            <h2>Nguyên liệu từ người dùng </h2>
+            <span class="status-pill-mini"><span class="dot-blink"></span>  Active</span>
           </div>
         </div>
 
@@ -75,10 +75,16 @@
               </div>
             </div>
             <div class="row-status">
-              <span class="pending-pill">Chờ dữ liệu</span>
+              <span class="pending-pill">Thêm nguyên liệu</span>
             </div>
             <div class="row-actions">
-              <button class="mini-update-btn" @click="router.push({ name: 'ingredient-add', query: { name: item.name } })">
+              <button class="mini-update-btn" @click="router.push({ 
+                name: 'ingredient-add', 
+                query: { 
+                  name: item.name, 
+                  image: '/src/stores/image/image.png' 
+                } 
+              })">
                 Thêm mới <i class="fa-solid fa-plus"></i>
               </button>
             </div>

@@ -5,8 +5,8 @@
         <i class="fa-solid fa-arrow-left"></i>
       </button>
       <div>
-        <h1>Thêm nguyên liệu mới</h1>
-        <p class="header-desc">Bổ sung nguyên liệu và thông số dinh dưỡng vào hệ thống tư vấn công thức.</p>
+        <h1>{{ isEditMode ? 'Chỉnh sửa nguyên liệu' : 'Thêm nguyên liệu mới' }}</h1>
+        <p class="header-desc">{{ isEditMode ? 'Cập nhật lại các thông số dinh dưỡng và bảo quản.' : 'Bổ sung nguyên liệu và thông số dinh dưỡng vào hệ thống.' }}</p>
       </div>
     </div>
 
@@ -20,12 +20,19 @@
           <div class="row-group">
             <div class="lookup-group">
             <div class="input-group" style="flex:1; margin-bottom:0">
-              <label>Tên nguyên liệu <span class="required">*</span></label>
-              <input type="text" v-model="form.name" placeholder="VD: Ức gà, Cà chua bi..." @input="lookupResult = null">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label style="margin-bottom: 0;">Tên nguyên liệu <span class="required">*</span></label>
+              </div>
+              <div class="name-input-wrapper">
+                <input type="text" v-model="form.name" placeholder="VD: Ức gà, Cà chua bi..." @input="lookupResult = null" @blur="silentAIFetch">
+                <Transition name="bounce">
+                  <button v-if="hasAIAvailable" class="magic-bell-btn" @click.prevent="applyAllAIData" title="Có dữ liệu AI! Nhấn để tự động điền">
+                    <i class="fa-solid fa-bell fa-shake"></i>
+                    <span class="badge" v-if="aiFoundCount > 0">{{ aiFoundCount }}</span>
+                  </button>
+                </Transition>
+              </div>
             </div>
-            <button class="autofill-btn" @click="llmAutoFill" :disabled="!form.name.trim()" title="Tự động điền thông tin bằng AI LLM">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> AI Tự động điền
-            </button>
           </div>
 
           <!-- Lookup result suggestions -->
@@ -111,21 +118,21 @@
 
         <!-- Nutrition per 100g -->
         <div class="card-panel">
-          <div class="section-title-row">
-            <h3>Thông số dinh dưỡng</h3>
-            <div style="display:flex; gap:8px; align-items:center">
-              <button class="ai-calc-btn" @click="autoFill" :disabled="isLoading || !form.name" style="background:#F0FDF4; color:#166534; border-color:#BBF7D0;">
+          <div class="section-title-row" style="align-items: flex-start; margin-bottom: 24px;">
+            <div style="flex: 1; padding-right: 16px;">
+              <h3 style="margin-bottom: 6px;">Thông số dinh dưỡng</h3>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap; justify-content: flex-end;">
+              <button class="ai-calc-btn" @click="autoFill" :disabled="isLoading || !form.name" style="background:#F0FDF4; color:#166534; border-color:#BBF7D0; padding: 8px 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                 <i v-if="isLoading" class="fa-solid fa-spinner fa-spin"></i>
                 <i v-else class="fa-solid fa-cloud-arrow-down"></i> 
-                Lấy dữ liệu USDA
+                Tính theo mục tiêu
               </button>
-              <button class="ai-calc-btn" @click="calcNutritionFromSuitability" v-if="form.suitability.length > 0 && form.nutrition.calories">
-                <i class="fa-solid fa-bullseye"></i> Tính theo mục tiêu
-              </button>
-              <span class="unit-note">Trên <strong>100g</strong></span>
+              <span class="unit-note" style="white-space: nowrap; font-size: 13px; font-weight: 600; background: #F1F5F9; padding: 6px 12px; border-radius: 8px; color: #475569;">
+                Trên 100g
+              </span>
             </div>
           </div>
-          <p class="panel-desc">Nhập thủ công hoặc dùng nút "Lấy dữ liệu USDA" để tra cứu tự động.</p>
 
           <!-- Macro -->
           <div class="nutrition-group-label">Nhóm đa lượng (Macros)</div>
@@ -180,22 +187,15 @@
 
         <!-- Storage & Notes -->
         <div class="card-panel">
-          <h3>Bảo quản & Gợi ý sử dụng</h3>
-          <div class="row-group">
-            <div class="input-group">
-              <label>Cách bảo quản</label>
-              <input type="text" v-model="form.storage" placeholder="VD: Bảo quản ngăn mát 0–4°C...">
-            </div>
-            <div class="input-group">
-              <label>Mùa vụ / Thời điểm</label>
-              <select v-model="form.season">
-                <option value="all">Quanh năm</option>
-                <option value="spring">Xuân</option>
-                <option value="summer">Hè</option>
-                <option value="autumn">Thu</option>
-                <option value="winter">Đông</option>
-              </select>
-            </div>
+          <div class="section-title-row">
+            <h3>Bảo quản & Gợi ý sử dụng</h3>
+            <button class="ai-calc-btn" @click="llmAutoFill" :disabled="!form.name.trim()" style="background:#F5F3FF; color:#5B21B6; border-color:#DDD6FE; padding: 6px 12px; font-size: 12px;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Tra cứu thông tin
+            </button>
+          </div>
+          <div class="input-group" style="margin-bottom: 20px;">
+            <label>Cách bảo quản</label>
+            <input type="text" v-model="form.storage" placeholder="VD: Bảo quản ngăn đông lạnh -18°C...">
           </div>
 
           <!-- Weight range -->
@@ -221,12 +221,72 @@
       <div class="form-sidebar">
         <!-- Image upload -->
         <div class="card-panel">
-          <h3>Hình ảnh</h3>
-          <div class="upload-area">
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-            <p>Kéo thả ảnh vào đây hoặc <span>Tải lên</span></p>
-            <small>PNG, JPG tối đa 5MB</small>
+          <div class="panel-header-inline">
+            <h3>Hình ảnh</h3>
+            <div class="image-toggle">
+              <button :class="{ active: imageMode === 'upload' }" @click="imageMode = 'upload'">
+                <i class="fa-solid fa-upload"></i>
+              </button>
+              <button :class="{ active: imageMode === 'url' }" @click="imageMode = 'url'">
+                <i class="fa-solid fa-link"></i>
+              </button>
+            </div>
           </div>
+
+          <div v-if="imageMode === 'upload'" class="upload-area" @click="triggerFileInput" :class="{ 'has-preview': imagePreview }">
+            <template v-if="!imagePreview">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p>Kéo thả ảnh hoặc <span>Tải lên</span></p>
+              <small>PNG, JPG tối đa 5MB</small>
+            </template>
+            <template v-else>
+              <img :src="imagePreview" class="img-preview" />
+              <div class="upload-overlay">
+                <i class="fa-solid fa-camera-rotate"></i>
+                <span>Đổi ảnh khác</span>
+              </div>
+            </template>
+            <input 
+              type="file" 
+              ref="fileInput" 
+              style="display: none" 
+              accept="image/*" 
+              @change="handleFileChange"
+            >
+          </div>
+
+          <div v-else class="url-input-container">
+            <div class="input-group">
+              <input 
+                type="text" 
+                v-model="imageUrlInput" 
+                placeholder="Dán link ảnh từ Google/Web..." 
+                @input="handleUrlInput"
+              >
+            </div>
+            <div class="url-preview-box" v-if="imagePreview">
+              <img :src="imagePreview" class="img-preview">
+              <button class="remove-preview-btn" @click="clearImage">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="url-empty-preview" v-else>
+              <i class="fa-solid fa-image"></i>
+              <p>Chưa có ảnh. Hãy dán URL vào ô trên.</p>
+            </div>
+          </div>
+
+          <!-- AI Remove BG Button -->
+          <button 
+            class="ai-remove-bg-btn" 
+            v-if="imagePreview" 
+            @click="handleRemoveBg" 
+            :disabled="isRemovingBg"
+          >
+            <i v-if="isRemovingBg" class="fa-solid fa-spinner fa-spin"></i>
+            <i v-else class="fa-solid fa-wand-magic-sparkles"></i>
+            {{ isRemovingBg ? 'Đang tách nền...' : 'AI Tách nền' }}
+          </button>
         </div>
 
         <!-- Nutrition Preview -->
@@ -260,6 +320,54 @@
           </div>
         </div>
 
+        <!-- AI Unit Conversion (NEW) -->
+        <div class="card-panel ai-config-card unit">
+          <div class="ai-config-header">
+            <div class="title"><i class="fa-solid fa-scale-unbalanced-flip"></i> Quy đổi đơn vị</div>
+            <div style="display:flex; gap:6px;">
+              <button class="add-mini-btn" @click="autoLoadConversions" :disabled="isConversionsLoading" title="Tự động nạp quy đổi">
+                <i v-if="isConversionsLoading" class="fa-solid fa-spinner fa-spin"></i>
+                <i v-else class="fa-solid fa-bolt"></i>
+              </button>
+              <button class="add-mini-btn" @click="addQuickUnit" title="Thêm thủ công"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+          <div class="ai-pill-list">
+            <div class="ai-smart-pill unit-pill" v-for="(u, i) in unitConversions" :key="i">
+              <div class="pill-main">
+                <span class="p-from">{{ u.from }}</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+                <span class="p-to">{{ u.to }}</span>
+                <button class="p-del" @click="removeUnit(i)"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <div v-if="u.note" class="pill-note">{{ u.note }}</div>
+            </div>
+            <div v-if="unitConversions.length === 0" class="ai-empty-note">Chưa có quy đổi</div>
+          </div>
+        </div>
+
+        <!-- AI Substitution (NEW) -->
+        <div class="card-panel ai-config-card sub">
+          <div class="ai-config-header">
+            <div class="title"><i class="fa-solid fa-shuffle"></i> Nguyên liệu thay thế</div>
+            <div style="display:flex; gap:6px;">
+              <button class="add-mini-btn" @click="autoLoadSubstitutions" :disabled="isSubstitutionsLoading" title="Tìm nguyên liệu thay thế">
+                <i v-if="isSubstitutionsLoading" class="fa-solid fa-spinner fa-spin"></i>
+                <i v-else class="fa-solid fa-magnifying-glass-chart"></i>
+              </button>
+              <button class="add-mini-btn" @click="addQuickSub"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+          <div class="ai-pill-list">
+            <div class="ai-smart-pill alt" v-for="(s, i) in substitutions" :key="i">
+              <i class="fa-solid fa-arrows-rotate p-icon"></i>
+              <span class="p-name">{{ s.name }}</span>
+              <button class="p-del" @click="removeSub(i)"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div v-if="substitutions.length === 0" class="ai-empty-note">Chưa có thay thế</div>
+          </div>
+        </div>
+
         <!-- AI Insight -->
         <div class="card-panel ai-card">
           <div class="ai-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Gợi ý từ AI</div>
@@ -270,33 +378,489 @@
           <i v-if="isSaving" class="fa-solid fa-circle-notch fa-spin"></i>
           <i v-else class="fa-solid fa-check"></i> 
           <span v-if="isSaving">Đang lưu...</span>
-          <span v-else>Lưu nguyên liệu</span>
+          <span v-else>{{ isEditMode ? 'Lưu thay đổi' : 'Lưu nguyên liệu' }}</span>
         </button>
       </div>
     </div>
+
+    <!-- Modal Nhập liệu nhanh (Teleport) -->
+    <Teleport to="body">
+      <Transition name="fade">
+        <div v-if="isQuickAddOpen" class="modal-overlay" @click.self="isQuickAddOpen = false">
+          <div class="modal-content quick-add-modal">
+            <div class="modal-header">
+              <h3>{{ quickAddType === 'unit' ? 'Thêm quy đổi đơn vị' : 'Thêm cặp thay thế' }}</h3>
+              <button class="close-btn" @click="isQuickAddOpen = false"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body">
+              <div v-if="quickAddType === 'unit'" class="quick-fields">
+                <div class="field">
+                  <label>Đơn vị gốc (VD: 1 quả Táo)</label>
+                  <input v-model="quickAddItem.from" type="text" placeholder="Nhập đơn vị...">
+                </div>
+                <div class="field">
+                  <label>Giá trị quy đổi (VD: 150g)</label>
+                  <input v-model="quickAddItem.to" type="text" placeholder="Nhập giá trị...">
+                </div>
+                <div class="field">
+                  <label>Ghi chú (VD: Trứng cỡ vừa)</label>
+                  <input v-model="quickAddItem.note" type="text" placeholder="Nhập ghi chú (không bắt buộc)...">
+                </div>
+              </div>
+              <div v-else class="quick-fields">
+                <div class="field">
+                  <label>Tên nguyên liệu thay thế</label>
+                  <input v-model="quickAddItem.name" type="text" placeholder="Nhập tên...">
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button class="cancel-btn" @click="isQuickAddOpen = false">Hủy</button>
+              <button class="save-btn" @click="handleQuickAddSave">Thêm ngay</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <!-- Tất cả Modal Tra cứu cũ đã được xóa để chuyển sang cơ chế Tự động nạp dữ liệu AI -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useIngredientStore } from '@/stores/ingredientStore';
+import { useToast } from '@/composables/useToast';
 
+const toast = useToast();
 const router = useRouter();
+const route = useRoute();
+
+const isEditMode = computed(() => !!route.params.ingredientId);
 
 const isSaving = ref(false);
+const isRemovingBg = ref(false);
+const imageMode = ref<'upload' | 'url'>('upload');
+const imageUrlInput = ref('');
+
+// --- AI AUTO-LOAD LOGIC ---
+const isConversionsLoading = ref(false);
+const isSubstitutionsLoading = ref(false);
+
+const autoLoadConversions = async () => {
+  if (!form.value.name) {
+    toast.warning('Vui lòng nhập tên nguyên liệu để tra cứu quy đổi');
+    return;
+  }
+  isConversionsLoading.value = true;
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('http://localhost:5000/api/ingredients/auto-load-conversions', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ query: form.value.name })
+    });
+    const result = await res.json();
+    if (result.success && result.data) {
+      unitConversions.value = result.data;
+      toast.success(`Đã tự động nạp ${result.data.length} quy đổi cho "${form.value.name}"`);
+    } else {
+      toast.error(result.message || 'Không tìm thấy dữ liệu quy đổi phù hợp');
+    }
+  } catch (err) {
+    toast.error('Lỗi khi tải dữ liệu quy đổi từ hệ thống');
+  } finally {
+    isConversionsLoading.value = false;
+  }
+};
+
+const autoLoadSubstitutions = async () => {
+  if (!form.value.name) {
+    toast.warning('Vui lòng nhập tên nguyên liệu để tìm thay thế');
+    return;
+  }
+  isSubstitutionsLoading.value = true;
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('http://localhost:5000/api/ingredients/auto-load-substitutions', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ query: form.value.name })
+    });
+    const result = await res.json();
+    if (result.success && result.data) {
+      substitutions.value = result.data;
+      toast.success(`Đã tìm thấy ${result.data.length} nguyên liệu thay thế cho "${form.value.name}"`);
+    } else {
+      toast.error(result.message || 'Không tìm thấy dữ liệu thay thế phù hợp');
+    }
+  } catch (err) {
+    toast.error('Lỗi khi tải dữ liệu thay thế từ hệ thống');
+  } finally {
+    isSubstitutionsLoading.value = false;
+  }
+};
+
+// --- AUTO-FILL ALL (4 ROBOTS) ---
+const aiCachedData = ref<any>({
+  nutrition: null,
+  storage: null,
+  conversions: null,
+  substitutions: null
+});
+const hasAIAvailable = ref(false);
+let lastCheckedQuery = '';
+
+const aiFoundCount = computed(() => {
+  let count = 0;
+  if (aiCachedData.value.nutrition) count++;
+  if (aiCachedData.value.storage) count++;
+  if (aiCachedData.value.conversions && aiCachedData.value.conversions.length > 0) count++;
+  if (aiCachedData.value.substitutions && aiCachedData.value.substitutions.length > 0) count++;
+  return count;
+});
+
+const silentAIFetch = async () => {
+  const query = form.value.name?.trim();
+  if (!query || query === lastCheckedQuery) return;
+  lastCheckedQuery = query;
+  
+  hasAIAvailable.value = false;
+  aiCachedData.value = { nutrition: null, storage: null, conversions: null, substitutions: null };
+
+  const token = localStorage.getItem('admin_token');
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+  const body = JSON.stringify({ query });
+
+  // 1. Dinh dưỡng (USDA)
+  const fetchNutri = fetch('http://localhost:5000/api/ingredients/translate', { method: 'POST', headers, body })
+    .then(res => res.json())
+    .then(tRes => {
+       if (tRes.success && tRes.translated_text) {
+          return fetch('http://localhost:5000/api/ingredients/auto-fill', { 
+            method: 'POST', headers, body: JSON.stringify({ query: tRes.translated_text }) 
+          }).then(res => res.json());
+       }
+       return null;
+    })
+    .then(nRes => {
+       if (nRes && nRes.success) aiCachedData.value.nutrition = nRes.data;
+    }).catch(() => {});
+
+  // 2. Bảo quản
+  const fetchStorage = fetch('http://localhost:5000/api/ingredients/guidelines', { method: 'POST', headers, body })
+    .then(res => res.json())
+    .then(sRes => {
+       if (sRes.success) aiCachedData.value.storage = sRes.data;
+    }).catch(() => {});
+
+  // 3. Quy đổi
+  const fetchConv = fetch('http://localhost:5000/api/ingredients/auto-load-conversions', { method: 'POST', headers, body })
+    .then(res => res.json())
+    .then(cRes => {
+       if (cRes.success && cRes.data.length > 0) aiCachedData.value.conversions = cRes.data;
+    }).catch(() => {});
+
+  // 4. Thay thế
+  const fetchSub = fetch('http://localhost:5000/api/ingredients/auto-load-substitutions', { method: 'POST', headers, body })
+    .then(res => res.json())
+    .then(sbRes => {
+       if (sbRes.success && sbRes.data.length > 0) aiCachedData.value.substitutions = sbRes.data;
+    }).catch(() => {});
+
+  // Chờ 4 robot chạy xong ngầm
+  await Promise.all([fetchNutri, fetchStorage, fetchConv, fetchSub]);
+
+  if (aiFoundCount.value > 0) {
+    hasAIAvailable.value = true;
+  }
+};
+
+const applyAllAIData = () => {
+  let appliedCount = 0;
+  
+  if (aiCachedData.value.nutrition) {
+    Object.assign(form.value.nutrition, aiCachedData.value.nutrition);
+    appliedCount++;
+  }
+  if (aiCachedData.value.storage) {
+    form.value.storage = aiCachedData.value.storage.storage || '';
+    if (aiCachedData.value.storage.min_weight) form.value.weightMin = aiCachedData.value.storage.min_weight;
+    if (aiCachedData.value.storage.max_weight) form.value.weightMax = aiCachedData.value.storage.max_weight;
+    if (aiCachedData.value.storage.notes) form.value.notes = aiCachedData.value.storage.notes;
+    appliedCount++;
+  }
+  if (aiCachedData.value.conversions) {
+    unitConversions.value = aiCachedData.value.conversions;
+    appliedCount++;
+  }
+  if (aiCachedData.value.substitutions) {
+    substitutions.value = aiCachedData.value.substitutions;
+    appliedCount++;
+  }
+
+  if (appliedCount > 0) {
+    toast.success(`Ting ting! AI đã điền thành công ${appliedCount}/4 thông tin 🎉`);
+    hasAIAvailable.value = false; // Tắt chuông sau khi apply
+  }
+};
+// ---------------------------------
+
+// --- AI CONFIG STATE (LOCAL ONLY) ---
+interface UnitConversion {
+  from: string;
+  to: string;
+  note?: string;
+}
+
+const unitConversions = ref<UnitConversion[]>([
+  { from: '1 quả', to: '150g' }
+]);
+const substitutions = ref([
+  { name: 'Cải bó xôi' }
+]);
+
+// --- QUICK ADD MODAL STATE ---
+const isQuickAddOpen = ref(false);
+const quickAddType = ref<'unit' | 'sub'>('unit');
+const quickAddItem = ref({ from: '', to: '', name: '', note: '' });
+
+const openQuickAdd = (type: 'unit' | 'sub') => {
+  quickAddType.value = type;
+  quickAddItem.value = { from: '', to: '', name: '', note: '' };
+  isQuickAddOpen.value = true;
+};
+
+const handleQuickAddSave = () => {
+  if (quickAddType.value === 'unit') {
+    if (quickAddItem.value.from && quickAddItem.value.to) {
+      unitConversions.value.push({ 
+        from: quickAddItem.value.from, 
+        to: quickAddItem.value.to,
+        note: quickAddItem.value.note 
+      });
+    }
+  } else {
+    if (quickAddItem.value.name) {
+      substitutions.value.push({ name: quickAddItem.value.name });
+    }
+  }
+  isQuickAddOpen.value = false;
+};
+
+const removeUnit = (index: number) => unitConversions.value.splice(index, 1);
+const removeSub = (index: number) => substitutions.value.splice(index, 1);
+
+const addQuickUnit = () => openQuickAdd('unit');
+const addQuickSub = () => openQuickAdd('sub');
+// -----------------------------
+// ------------------------------------
+
+const fileInput = ref<HTMLInputElement | null>(null);
+const imagePreview = ref<string | null>(null);
+const selectedFile = ref<File | null>(null);
+
+const triggerFileInput = () => {
+  fileInput.value?.click();
+};
+
+const handleFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Kích thước ảnh không được vượt quá 5MB!");
+      return;
+    }
+    selectedFile.value = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreview.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const handleUrlInput = () => {
+  imagePreview.value = imageUrlInput.value;
+  selectedFile.value = null; // Clear file if URL is used
+};
+
+const clearImage = () => {
+  imagePreview.value = null;
+  selectedFile.value = null;
+  imageUrlInput.value = '';
+};
+
+const handleRemoveBg = async () => {
+  if (!imagePreview.value) return;
+  isRemovingBg.value = true;
+  
+  try {
+    const token = localStorage.getItem('admin_token');
+    let urlToProcess = imagePreview.value;
+
+    // 1. Nếu là file vừa chọn từ máy (base64), phải upload lên trước để lấy link xử lý
+    if (selectedFile.value) {
+      const formData = new FormData();
+      formData.append('image', selectedFile.value);
+      const uploadRes = await fetch('http://localhost:5000/api/ingredients/upload', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData
+      });
+      const uploadData = await uploadRes.json();
+      if (uploadData.success) {
+        urlToProcess = uploadData.image_url;
+      } else {
+        throw new Error("Không thể upload ảnh để xử lý");
+      }
+    }
+
+    // 2. Gọi API tách nền
+    const res = await fetch('http://localhost:5000/api/ingredients/remove-bg', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ image_url: urlToProcess })
+    });
+    
+    const data = await res.json();
+    if (data.success) {
+      imagePreview.value = data.image_url;
+      imageUrlInput.value = data.image_url;
+      imageMode.value = 'url'; // Chuyển sang mode URL để dùng link ảnh đã tách nền
+      selectedFile.value = null;
+      toast.success("Đã tách nền ảnh thành công!");
+    } else {
+      toast.error("Lỗi tách nền: " + data.message);
+    }
+  } catch (err: any) {
+    console.error(err);
+    toast.error("Lỗi khi kết nối AI tách nền");
+  } finally {
+    isRemovingBg.value = false;
+  }
+};
+
+onMounted(async () => {
+  if (route.query.name) {
+    form.value.name = route.query.name as string;
+  }
+
+  // Nếu có ảnh từ người dùng gửi qua (VD: từ Discovery Hub)
+  if (route.query.image) {
+    imagePreview.value = route.query.image as string;
+    imageUrlInput.value = route.query.image as string;
+    imageMode.value = 'url';
+  }
+
+  if (isEditMode.value) {
+    const id = route.params.ingredientId;
+    try {
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`http://localhost:5000/api/ingredients/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        const item = data.data;
+        form.value.name = item.name_vn;
+        form.value.nameEn = item.name_en;
+        form.value.category = item.category;
+        form.value.unit = item.default_unit;
+        form.value.description = ''; // Chưa có field này trong DB cũ
+        form.value.storage = item.storage_method;
+        form.value.notes = item.notes;
+        form.value.weightMin = item.weight_min;
+        form.value.weightMax = item.weight_max;
+        form.value.suitability = item.suitability || [];
+        
+        // Nạp dữ liệu AI mới
+        unitConversions.value = item.unit_conversions || [];
+        substitutions.value = item.substitutions || [];
+        
+        // Nutrition
+        form.value.nutrition.calories = item.calories_per_100g;
+        form.value.nutrition.protein = item.protein_per_100g;
+        form.value.nutrition.carbs = item.carbs_per_100g;
+        form.value.nutrition.fat = item.fat_per_100g;
+        form.value.nutrition.sugar = item.sugar;
+        form.value.nutrition.fiber = item.fiber;
+        form.value.nutrition.saturatedFat = item.saturated_fat;
+        form.value.nutrition.cholesterol = item.cholesterol;
+        form.value.nutrition.sodium = item.sodium;
+        form.value.nutrition.potassium = item.potassium;
+        form.value.nutrition.calcium = item.calcium;
+        form.value.nutrition.iron = item.iron;
+        form.value.nutrition.vitaminC = item.vitamin_c;
+        form.value.nutrition.vitaminA = item.vitamin_a;
+        form.value.nutrition.vitaminD = item.vitamin_d;
+
+        // Image
+        if (item.image_url) {
+          imagePreview.value = item.image_url;
+          if (item.image_url.startsWith('http')) {
+            imageMode.value = 'url';
+            imageUrlInput.value = item.image_url;
+          }
+        }
+
+        // Active Micros
+        activeMicros.value = [];
+        allMicros.forEach(m => {
+          const val = (item as any)[m.key] || (item as any)[m.key.replace(/[A-Z]/g, (l:string) => `_${l.toLowerCase()}`)];
+          if (val > 0) activeMicros.value.push(m.key);
+        });
+      }
+    } catch (e) {
+      console.error("Lỗi khi load dữ liệu chỉnh sửa:", e);
+    }
+  }
+});
 
 const saveIngredient = async () => {
   if (!form.value.name || form.value.nutrition.calories === null) {
-    alert('Vui lòng nhập tên nguyên liệu và lượng calo!');
+    toast.warning('Vui lòng nhập tên nguyên liệu và lượng calo!');
     return;
   }
   isSaving.value = true;
   try {
     const token = localStorage.getItem('admin_token');
     if (!token) {
-      alert('Bạn chưa đăng nhập hoặc mất Token. Vui lòng đăng nhập lại.');
+      toast.error('Bạn chưa đăng nhập hoặc mất Token.');
       router.push('/login');
       return;
+    }
+
+    let imageUrl = imageMode.value === 'url' ? imageUrlInput.value : null;
+    
+    if (imageMode.value === 'upload' && selectedFile.value) {
+      const formData = new FormData();
+      formData.append('image', selectedFile.value);
+      
+      const uploadRes = await fetch('http://localhost:5000/api/ingredients/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      const uploadData = await uploadRes.json();
+      if (uploadData.success) {
+        imageUrl = uploadData.image_url;
+      }
     }
 
     const payload = {
@@ -308,12 +872,39 @@ const saveIngredient = async () => {
       protein_per_100g: form.value.nutrition.protein || 0,
       fat_per_100g: form.value.nutrition.fat || 0,
       carbs_per_100g: form.value.nutrition.carbs || 0,
-      image_url: null,
-      gram_per_unit: 1.0
+      
+      // New nutrition fields
+      sugar: form.value.nutrition.sugar || 0,
+      fiber: form.value.nutrition.fiber || 0,
+      saturated_fat: form.value.nutrition.saturatedFat || 0,
+      cholesterol: form.value.nutrition.cholesterol || 0,
+      sodium: form.value.nutrition.sodium || 0,
+      potassium: form.value.nutrition.potassium || 0,
+      calcium: form.value.nutrition.calcium || 0,
+      iron: form.value.nutrition.iron || 0,
+      vitamin_c: form.value.nutrition.vitaminC || 0,
+      vitamin_a: form.value.nutrition.vitaminA || 0,
+      vitamin_d: form.value.nutrition.vitaminD || 0,
+      
+      // Storage & Usage
+      storage_method: form.value.storage || '',
+      weight_min: form.value.weightMin,
+      weight_max: form.value.weightMax,
+      notes: form.value.notes || '',
+      
+      image_url: imageUrl,
+      gram_per_unit: 1.0,
+      suitability: form.value.suitability,
+      unit_conversions: unitConversions.value,
+      substitutions: substitutions.value
     };
 
-    const res = await fetch('http://localhost:5000/api/ingredients', {
-      method: 'POST',
+    const apiUrl = isEditMode.value 
+      ? `http://localhost:5000/api/ingredients/${route.params.ingredientId}`
+      : 'http://localhost:5000/api/ingredients';
+    
+    const res = await fetch(apiUrl, {
+      method: isEditMode.value ? 'PUT' : 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -323,14 +914,19 @@ const saveIngredient = async () => {
     
     const data = await res.json();
     if (data.success) {
-      alert('Thêm nguyên liệu thành công vào Database!');
+      toast.success(isEditMode.value ? 'Cập nhật thành công!' : 'Thêm nguyên liệu thành công!');
+      
+      // Làm mới dữ liệu trong Pinia Store để các trang khác thấy thay đổi ngay
+      const ingredientStore = useIngredientStore();
+      ingredientStore.fetchIngredients(true);
+      
       router.back();
     } else {
-      alert('Lỗi từ Server: ' + data.message);
+      toast.error('Lỗi từ Server: ' + data.message);
     }
   } catch (err) {
     console.error(err);
-    alert('Lỗi kết nối đến Backend Server (Port 5000)');
+    toast.error('Lỗi kết nối đến Backend Server (Port 5000)');
   } finally {
     isSaving.value = false;
   }
@@ -399,8 +995,37 @@ const autoTranslate = async () => {
   }
 };
 
-const llmAutoFill = () => {
-  alert("Tính năng AI LLM tự động điền đang được phát triển. Vui lòng cuộn xuống mục Thông số dinh dưỡng và dùng nút 'Lấy dữ liệu USDA' nhé!");
+const llmAutoFill = async () => {
+  if (!form.value.name) {
+    alert("Vui lòng nhập Tên nguyên liệu trước!");
+    return;
+  }
+  
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('http://localhost:5000/api/ingredients/guidelines', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ query: form.value.name })
+    });
+    
+    const data = await res.json();
+    if (data.success && data.data) {
+      form.value.storage = data.data.storage;
+      form.value.weightMin = data.data.min_weight;
+      form.value.weightMax = data.data.max_weight;
+      form.value.notes = data.data.notes;
+      console.log("Đã lấy thông tin hướng dẫn bảo quản thành công!");
+    } else {
+      alert(data.message || "Không tìm thấy dữ liệu mẫu cho nguyên liệu này.");
+    }
+  } catch (e) {
+    console.error(e);
+    alert("Lỗi kết nối tới Server khi tra cứu dữ liệu mẫu!");
+  }
 };
 
 const autoFill = async () => {
@@ -486,18 +1111,27 @@ const applyLookup = (data: any) => {
 
 const form = ref({
   name: '', nameEn: '', category: '', unit: 'g',
-  description: '', storage: '', season: 'all', notes: '',
+  description: '', storage: '', notes: '',
   weightMin: null as number | null,
   weightMax: null as number | null,
   suitability: [] as string[],
   nutrition: {
-    calories: null as number | null, protein: null as number | null,
-    carbs: null as number | null, fat: null as number | null,
-    sugar: null as number | null, fiber: null as number | null,
-    saturatedFat: null as number | null, sodium: null as number | null,
-    calcium: null as number | null, iron: null as number | null,
-    vitaminC: null as number | null, vitaminA: null as number | null,
-  }
+    calories: null as number | null,
+    protein: null as number | null,
+    carbs: null as number | null,
+    fat: null as number | null,
+    sugar: null as number | null,
+    fiber: null as number | null,
+    saturatedFat: null as number | null,
+    cholesterol: null as number | null,
+    sodium: null as number | null,
+    potassium: null as number | null,
+    calcium: null as number | null,
+    iron: null as number | null,
+    vitaminC: null as number | null,
+    vitaminA: null as number | null,
+    vitaminD: null as number | null,
+  },
 });
 
 // Goal-based multipliers: adjust macros for each goal
@@ -521,7 +1155,7 @@ const calcNutritionFromSuitability = () => {
   Object.assign(form.value.nutrition, { calories: cals, protein: prot, carbs, fat, sugar });
 };
 
-type NutritionKey = 'calories' | 'protein' | 'carbs' | 'fat' | 'sugar' | 'fiber' | 'saturatedFat' | 'sodium' | 'calcium' | 'iron' | 'vitaminC' | 'vitaminA';
+type NutritionKey = 'calories' | 'protein' | 'carbs' | 'fat' | 'sugar' | 'fiber' | 'saturatedFat' | 'cholesterol' | 'sodium' | 'potassium' | 'calcium' | 'iron' | 'vitaminC' | 'vitaminA' | 'vitaminD';
 
 const macros: { key: NutritionKey, label: string, unit: string, icon: string, color: string, bg: string }[] = [
   { key: 'calories', label: 'Calories', unit: 'kcal', icon: 'fa-solid fa-fire', color: '#F59E0B', bg: '#FFFBEB' },
@@ -534,11 +1168,14 @@ const allMicros = [
   { key: 'sugar', label: 'Đường (Sugar)', unit: 'g' },
   { key: 'fiber', label: 'Chất xơ (Fiber)', unit: 'g' },
   { key: 'saturatedFat', label: 'Béo bão hòa', unit: 'g' },
+  { key: 'cholesterol', label: 'Cholesterol', unit: 'mg' },
   { key: 'sodium', label: 'Natri (Sodium)', unit: 'mg' },
+  { key: 'potassium', label: 'Kali (Potassium)', unit: 'mg' },
   { key: 'calcium', label: 'Canxi (Calcium)', unit: 'mg' },
   { key: 'iron', label: 'Sắt (Iron)', unit: 'mg' },
   { key: 'vitaminC', label: 'Vitamin C', unit: 'mg' },
   { key: 'vitaminA', label: 'Vitamin A', unit: 'mcg' },
+  { key: 'vitaminD', label: 'Vitamin D', unit: 'mcg' },
 ];
 
 const showMicroDropdown = ref(false);
@@ -807,9 +1444,25 @@ const aiInsight = computed(() => {
 /* Sidebar */
 .upload-area {
   border: 2px dashed #CBD5E1; border-radius: 16px; padding: 36px 20px;
-  text-align: center; cursor: pointer; background: #F8FAFC; transition: 0.2s;
+  text-align: center; cursor: pointer; background: #F8FAFC; transition: 0.3s;
+  position: relative; overflow: hidden; min-height: 200px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
-.upload-area:hover { border-color: #8EAE82; background: #E6EFE5; }
+.upload-area:hover { border-color: #8EAE82; background: #F3F7F2; }
+.upload-area.has-preview { border-style: solid; padding: 0; border-color: #E2E8F0; }
+
+.img-preview { width: 100%; height: 200px; object-fit: cover; display: block; }
+
+.upload-overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); color: white;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; opacity: 0; transition: 0.3s;
+}
+.upload-area:hover .upload-overlay { opacity: 1; }
+.upload-overlay i { font-size: 24px; color: white !important; margin: 0 !important; }
+.upload-overlay span { font-weight: 600; font-size: 13px; }
+
 .upload-area i { font-size: 36px; color: #94A3B8; margin-bottom: 12px; display: block; }
 .upload-area p { margin: 0 0 4px 0; color: var(--text-muted); font-size: 14px; }
 .upload-area span { color: #3B82F6; font-weight: 600; }
@@ -847,5 +1500,175 @@ const aiInsight = computed(() => {
 }
 .save-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(244,197,83,0.4); }
 
-.form-sidebar { display: flex; flex-direction: column; }
+.image-toggle {
+  display: flex; background: #F1F5F9; padding: 4px; border-radius: 10px; gap: 4px;
+}
+.image-toggle button {
+  border: none; background: transparent; width: 32px; height: 32px; border-radius: 8px;
+  cursor: pointer; color: #64748B; transition: 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.image-toggle button.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+.panel-header-inline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.panel-header-inline h3 { margin: 0; }
+
+.url-input-container { display: flex; flex-direction: column; gap: 12px; }
+.url-preview-box { 
+  position: relative; height: 180px; border-radius: 14px; overflow: hidden; border: 1px solid #E2E8F0;
+}
+.remove-preview-btn {
+  position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(0,0,0,0.5); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.url-empty-preview {
+  height: 180px; background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94A3B8; gap: 8px;
+}
+.url-empty-preview i { font-size: 32px; }
+.url-empty-preview p { font-size: 13px; margin: 0; }
+
+.ai-remove-bg-btn {
+  width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  color: white; border: none; font-weight: 700; font-size: 14px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 8px; transition: 0.3s; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+.ai-remove-bg-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+}
+.ai-remove-bg-btn:disabled {
+  opacity: 0.7; cursor: not-allowed; background: #94A3B8; box-shadow: none;
+}
+
+/* AI Config Sidebar Styles */
+.ai-config-card { padding: 16px !important; margin-bottom: 16px; border: 1px dashed transparent; transition: 0.3s; border-radius: 20px !important; }
+.ai-config-card.unit { background: #f0f9ff; border-color: #bae6fd; }
+.ai-config-card.sub { background: #f5f3ff; border-color: #ddd6fe; }
+
+.ai-config-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.ai-config-header .title { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+.ai-config-header .title i { font-size: 13px; color: #64748b; }
+
+.add-mini-btn { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid rgba(0,0,0,0.1); background: white; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: 0.2s; }
+.add-mini-btn:hover { background: #1e293b; color: white; border-color: #1e293b; }
+
+.ai-pill-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.ai-smart-pill { 
+  background: white; padding: 6px 12px; border-radius: 12px; 
+  display: flex; flex-direction: column; gap: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.8); 
+}
+.unit-pill { min-width: 120px; }
+.pill-main { display: flex; align-items: center; gap: 6px; }
+
+.ai-smart-pill span { font-size: 11px; font-weight: 700; color: #1e293b; }
+.ai-smart-pill i { font-size: 9px; color: #94a3b8; }
+.ai-smart-pill .p-to { color: #10b981; font-weight: 800; }
+
+.pill-note { font-size: 10px; color: #64748b; font-style: italic; border-top: 1px solid #f1f5f9; padding-top: 2px; margin-top: 2px; }
+
+.ai-smart-pill.alt { flex-direction: row; align-items: center; }
+.ai-smart-pill.alt .p-icon { color: #8b5cf6; }
+.ai-smart-pill.alt .p-name { color: #1e293b; }
+
+.p-del { background: none; border: none; padding: 0; color: #cbd5e1; cursor: pointer; font-size: 10px; transition: 0.2s; margin-left: 4px; }
+.ai-smart-pill:hover .p-del { color: #ef4444; }
+
+.ai-empty-note { font-size: 11px; color: #94a3b8; font-style: italic; }
+
+/* AI Magic Bell */
+.name-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.name-input-wrapper input {
+  width: 100%;
+}
+.magic-bell-btn {
+  position: absolute;
+  right: 12px;
+  background: linear-gradient(135deg, #f59e0b, #eab308);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  animation: glowPulse 2s infinite alternate;
+}
+.magic-bell-btn .fa-bell {
+  font-size: 16px;
+}
+.magic-bell-btn .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+/* --- MODAL BASE STYLES --- */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10000;
+}
+
+.modal-content {
+  background: white; border-radius: 30px; 
+  padding: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.modal-header h3 { font-size: 18px; font-weight: 800; color: #1e293b; margin: 0; }
+.close-btn { background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #64748b; transition: 0.2s; }
+.close-btn:hover { background: #e2e8f0; color: #1e293b; }
+
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+/* ------------------------- */
+
+/* Quick Add Modal Styles */
+.quick-add-modal { width: 400px !important; }
+.quick-fields { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+.quick-fields .field { display: flex; flex-direction: column; gap: 8px; }
+.quick-fields label { font-size: 13px; font-weight: 700; color: #64748b; }
+.quick-fields input { 
+  width: 100%; padding: 12px 16px; border-radius: 12px; 
+  border: 1.5px solid #E2E8F0; outline: none; font-size: 14px;
+  transition: 0.2s;
+}
+.quick-fields input:focus { border-color: #8b5cf6; box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
+
+.modal-footer { display: flex; gap: 12px; margin-top: 24px; }
+.modal-footer button { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.modal-footer .cancel-btn { background: #F1F5F9; border: none; color: #64748b; }
+.modal-footer .save-btn { background: #1E293B; border: none; color: white; }
+.modal-footer .save-btn:hover { background: #10B981; transform: translateY(-2px); }
 </style>

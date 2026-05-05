@@ -10,8 +10,10 @@
         <p class="header-desc">Chi tiết thông số dinh dưỡng nguyên liệu</p>
       </div>
       <div class="header-actions">
-        <button class="btn-outline"><i class="fa-solid fa-pen"></i> Chỉnh sửa</button>
-        <button class="btn-danger"><i class="fa-solid fa-trash"></i> Xoá</button>
+        <button class="btn-outline" @click="router.push({ name: 'ingredient-edit', params: { id: route.params.id, ingredientId: route.params.ingredientId } })">
+          <i class="fa-solid fa-pen"></i> Chỉnh sửa
+        </button>
+        <button class="btn-danger" @click="handleDelete"><i class="fa-solid fa-trash"></i> Xoá</button>
       </div>
     </div>
 
@@ -176,19 +178,21 @@
           </div>
         </div>
 
-        <!-- Allergens & Diet Labels -->
+        <!-- Diet Suitability Panel -->
         <div class="card-panel diet-panel">
-          <h3>Cảnh báo & Ăn kiêng</h3>
+          <h3>Phù hợp với mục tiêu</h3>
           <div class="allergen-grid">
-            <div class="allergen-item" v-for="a in allergens" :key="a.label" 
-              :class="{ active: a.active }"
+            <div class="allergen-item active" v-for="s in activeSuitability" :key="s.label" 
               :style="{ 
-                '--item-color': a.color, 
-                '--item-bg': a.bg,
-                '--item-border': a.border 
+                '--item-color': s.color, 
+                '--item-bg': s.bg,
+                '--item-border': s.border 
               }">
-              <i :class="a.icon"></i>
-              <span>{{ a.label }}</span>
+              <i :class="s.icon"></i>
+              <span>{{ s.label }}</span>
+            </div>
+            <div v-if="activeSuitability.length === 0" class="no-data-msg">
+              Chưa thiết lập mục tiêu phù hợp.
             </div>
           </div>
         </div>
@@ -216,44 +220,198 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import meatImg from '@/stores/image/image.png';
-
 const router = useRouter();
 const route = useRoute();
 const activeNutTab = ref('macros');
 
-// Mock data — replace with API call using route.params.ingredientId
-const ingredient = computed(() => ({
-  id: route.params.ingredientId,
-  name: 'Ức gà',
-  nameEn: 'Chicken Breast',
-  categoryLabel: 'Thịt & Hải sản',
-  calories: 165,
-  protein: 31,
-  carbs: 0,
-  fat: 3.6,
-  sugar: 0,
-  fiber: 0,
-  saturatedFat: 1,
-  sodium: 74,
-  calcium: 15,
-  iron: 1,
-  vitaminC: 0,
-  vitaminA: 9,
-  completeness: 98,
-  weightMin: 50,
-  weightMax: 90,
-  suitability: ['gain', 'lose', 'keto'],
-  image: meatImg,
-  tips: [
-    { title: 'Bảo quản', body: 'Ngăn đá tối đa 3 tháng. Ngăn mát dùng trong 2–3 ngày.', icon: 'fa-solid fa-snowflake', color: '#3B82F6', bg: '#EFF6FF' },
-    { title: 'Chế biến', body: 'Áp chảo, hấp hoặc nướng để giữ protein. Tránh chiên ngập dầu.', icon: 'fa-solid fa-fire-flame-curved', color: '#F97316', bg: '#FFF7ED' },
-    { title: 'Kết hợp tốt', body: 'Salad, cơm gạo lứt, rau luộc, quinoa.', icon: 'fa-solid fa-bowl-food', color: '#22C55E', bg: '#F0FDF4' },
-    { title: 'Lưu ý', body: 'Người bị gút nên hạn chế vì hàm lượng purine. Không dùng thịt tái.', icon: 'fa-solid fa-triangle-exclamation', color: '#F59E0B', bg: '#FFFBEB' },
-  ]
-}));
+const mockIngredients: Record<string, any> = {
+  'uc-ga': {
+    id: 'uc-ga',
+    name: 'Ức gà (Mock)',
+    nameEn: 'Chicken Breast',
+    categoryLabel: 'Thịt & Hải sản',
+    calories: 165,
+    protein: 31,
+    carbs: 0,
+    fat: 3.6,
+    sugar: 0,
+    fiber: 0,
+    saturatedFat: 1,
+    sodium: 74,
+    calcium: 15,
+    iron: 1,
+    vitaminC: 0,
+    vitaminA: 9,
+    vitaminD: 0,
+    potassium: 256,
+    cholesterol: 85,
+    completeness: 98,
+    weightMin: 50,
+    weightMax: 90,
+    suitability: ['gain', 'lose', 'keto'],
+    image: meatImg,
+    tips: [
+      { title: 'Bảo quản', body: 'Ngăn đá tối đa 3 tháng. Ngăn mát dùng trong 2–3 ngày.', icon: 'fa-solid fa-snowflake', color: '#3B82F6', bg: '#EFF6FF' },
+      { title: 'Chế biến', body: 'Áp chảo, hấp hoặc nướng để giữ protein. Tránh chiên ngập dầu.', icon: 'fa-solid fa-fire-flame-curved', color: '#F97316', bg: '#FFF7ED' },
+      { title: 'Kết hợp tốt', body: 'Salad, cơm gạo lứt, rau luộc, quinoa.', icon: 'fa-solid fa-bowl-food', color: '#22C55E', bg: '#F0FDF4' },
+      { title: 'Lưu ý', body: 'Người bị gút nên hạn chế vì hàm lượng purine. Không dùng thịt tái.', icon: 'fa-solid fa-triangle-exclamation', color: '#F59E0B', bg: '#FFFBEB' },
+    ]
+  },
+  'thit-bo': {
+    id: 'thit-bo',
+    name: 'Thịt bò (Mock)',
+    nameEn: 'Beef',
+    categoryLabel: 'Thịt & Hải sản',
+    calories: 250,
+    protein: 26,
+    carbs: 0,
+    fat: 15,
+    sugar: 0,
+    fiber: 0,
+    saturatedFat: 6,
+    sodium: 72,
+    calcium: 18,
+    iron: 2.6,
+    vitaminC: 0,
+    vitaminA: 0,
+    vitaminD: 0.1,
+    potassium: 318,
+    cholesterol: 90,
+    completeness: 95,
+    weightMin: 60,
+    weightMax: 100,
+    suitability: ['gain'],
+    image: 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=800',
+    tips: [
+      { title: 'Bảo quản', body: 'Ngăn đá 6-12 tháng. Ngăn mát 3-5 ngày.', icon: 'fa-solid fa-snowflake', color: '#3B82F6', bg: '#EFF6FF' },
+      { title: 'Lưu ý', body: 'Thịt bò giàu sắt, rất tốt cho người thiếu máu.', icon: 'fa-solid fa-lightbulb', color: '#F59E0B', bg: '#FFFBEB' },
+    ]
+  }
+};
+
+const ingredient = ref<any>({
+  name: 'Đang tải...',
+  nameEn: '',
+  calories: 0,
+  protein: 0, carbs: 0, fat: 0,
+  sugar: 0, fiber: 0, saturatedFat: 0,
+  sodium: 0, calcium: 0, iron: 0,
+  vitaminC: 0, vitaminA: 0, vitaminD: 0,
+  potassium: 0, cholesterol: 0,
+  tips: []
+});
+
+const isLoading = ref(true);
+
+onMounted(async () => {
+  const id = route.params.ingredientId as string;
+  
+  // Kiểm tra nếu là mock data
+  if (mockIngredients[id]) {
+    ingredient.value = mockIngredients[id];
+    isLoading.value = false;
+    return;
+  }
+
+  // Nếu không phải mock, fetch từ API
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch(`http://localhost:5000/api/ingredients/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    
+    if (data.success && data.data) {
+      const item = data.data;
+      ingredient.value = {
+        id: item.id,
+        name: item.name_vn,
+        nameEn: item.name_en,
+        categoryLabel: item.category || 'Chưa phân loại',
+        calories: item.calories_per_100g,
+        protein: item.protein_per_100g,
+        carbs: item.carbs_per_100g,
+        fat: item.fat_per_100g,
+        sugar: item.sugar || 0,
+        fiber: item.fiber || 0,
+        saturatedFat: item.saturated_fat || 0,
+        cholesterol: item.cholesterol || 0,
+        sodium: item.sodium || 0,
+        potassium: item.potassium || 0,
+        calcium: item.calcium || 0,
+        iron: item.iron || 0,
+        vitaminC: item.vitamin_c || 0,
+        vitaminA: item.vitamin_a || 0,
+        vitaminD: item.vitamin_d || 0,
+        completeness: 100,
+        weightMin: item.weight_min,
+        weightMax: item.weight_max,
+        suitability: item.suitability || [],
+        image: item.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800',
+        tips: [
+          { title: 'Bảo quản', body: item.storage_method || 'Chưa có thông tin bảo quản.', icon: 'fa-solid fa-snowflake', color: '#3B82F6', bg: '#EFF6FF' },
+          { title: 'Ghi chú', body: item.notes || 'Không có ghi chú thêm.', icon: 'fa-solid fa-note-sticky', color: '#F59E0B', bg: '#FFFBEB' },
+        ]
+      };
+    }
+  } catch (err) {
+    console.error('Lỗi khi fetch chi tiết nguyên liệu:', err);
+  } finally {
+    isLoading.value = false;
+  }
+});
+
+const handleDelete = async () => {
+  const id = route.params.ingredientId;
+  
+  // Không cho xóa mock data (hoặc chỉ cảnh báo)
+  if (id === 'uc-ga' || id === 'thit-bo') {
+    alert("Đây là dữ liệu mẫu (Mock), không thể xóa từ Database.");
+    return;
+  }
+
+  if (confirm(`Bạn có chắc chắn muốn xóa nguyên liệu "${ingredient.value.name}" không? Hành động này không thể hoàn tác.`)) {
+    try {
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`http://localhost:5000/api/ingredients/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        alert("Đã xóa nguyên liệu thành công!");
+        router.push({ name: 'category-detail', params: { id: route.params.id } });
+      } else {
+        alert("Lỗi khi xóa: " + data.message);
+      }
+    } catch (err) {
+      console.error("Lỗi xóa nguyên liệu:", err);
+      alert("Không thể kết nối đến Server để xóa.");
+    }
+  }
+};
+
+const suitabilityMap: Record<string, any> = {
+  lose: { label: 'Giảm cân', icon: 'fa-solid fa-arrow-trend-down', color: '#EF4444', bg: '#FEF2F2', border: '#FCA5A5' },
+  gain: { label: 'Tăng cơ', icon: 'fa-solid fa-dumbbell', color: '#3B82F6', bg: '#EFF6FF', border: '#93C5FD' },
+  maintain: { label: 'Giữ dáng', icon: 'fa-solid fa-bullseye', color: '#10B981', bg: '#ECFDF5', border: '#6EE7B7' },
+  diabetic: { label: 'Tiểu đường', icon: 'fa-solid fa-heart-pulse', color: '#F59E0B', bg: '#FFFBEB', border: '#FCD34D' },
+  hypertension: { label: 'Huyết áp cao', icon: 'fa-solid fa-droplet', color: '#6366F1', bg: '#EEF2FF', border: '#A5B4FC' },
+  vegetarian: { label: 'Chay / Thuần chay', icon: 'fa-solid fa-leaf', color: '#059669', bg: '#ECFDF5', border: '#34D399' },
+  keto: { label: 'Keto', icon: 'fa-solid fa-bolt', color: '#7C3AED', bg: '#F5F3FF', border: '#C4B5FD' },
+  kids: { label: 'Trẻ em', icon: 'fa-solid fa-child', color: '#EC4899', bg: '#FDF2F7', border: '#F9A8D4' }
+};
+
+const activeSuitability = computed(() => {
+  const list = ingredient.value.suitability || [];
+  return list.map((s: string) => suitabilityMap[s] || { 
+    label: s, icon: 'fa-solid fa-check', color: '#64748B', bg: '#F1F5F9', border: '#CBD5E1' 
+  });
+});
 
 const macroCards = [
   { key: 'calories', label: 'Calories', unit: 'kcal', icon: 'fa-solid fa-fire', color: '#F59E0B', bg: '#FFFBEB' },
@@ -277,12 +435,18 @@ const macroDetailedRows = computed(() => {
 const microDetailedRows = computed(() => {
   const ing = ingredient.value;
   return [
+    { label: 'Đường', value: ing.sugar, unit: 'g', color: '#A3E635', dv: Math.min(Math.round(ing.sugar / 25 * 100), 100) },
+    { label: 'Chất xơ', value: ing.fiber, unit: 'g', color: '#4ADE80', dv: Math.min(Math.round(ing.fiber / 30 * 100), 100) },
+    { label: 'Bão hòa', value: ing.saturatedFat, unit: 'g', color: '#F87171', dv: Math.min(Math.round(ing.saturatedFat / 20 * 100), 100) },
+    { label: 'Cholesterol', value: ing.cholesterol, unit: 'mg', color: '#EF4444', dv: Math.min(Math.round(ing.cholesterol / 300 * 100), 100) },
     { label: 'Natri', value: ing.sodium, unit: 'mg', color: '#F59E0B', dv: Math.min(Math.round(ing.sodium / 2300 * 100), 100) },
+    { label: 'Kali', value: ing.potassium, unit: 'mg', color: '#10B981', dv: Math.min(Math.round(ing.potassium / 4700 * 100), 100) },
     { label: 'Canxi', value: ing.calcium, unit: 'mg', color: '#8B5CF6', dv: Math.min(Math.round(ing.calcium / 1000 * 100), 100) },
     { label: 'Sắt', value: ing.iron, unit: 'mg', color: '#6366F1', dv: Math.min(Math.round(ing.iron / 18 * 100), 100) },
     { label: 'Vitamin C', value: ing.vitaminC, unit: 'mg', color: '#F97316', dv: Math.min(Math.round(ing.vitaminC / 90 * 100), 100) },
     { label: 'Vitamin A', value: ing.vitaminA, unit: 'mcg', color: '#EAB308', dv: Math.min(Math.round(ing.vitaminA / 900 * 100), 100) },
-  ];
+    { label: 'Vitamin D', value: ing.vitaminD, unit: 'mcg', color: '#3B82F6', dv: Math.min(Math.round(ing.vitaminD / 15 * 100), 100) },
+  ].filter(r => r.value > 0); // Chỉ hiện những cái có giá trị
 });
 
 const barData = [

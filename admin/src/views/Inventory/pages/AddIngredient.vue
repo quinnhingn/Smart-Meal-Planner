@@ -315,7 +315,10 @@
           <div class="ai-config-header">
             <div class="title"><i class="fa-solid fa-scale-unbalanced-flip"></i> Quy đổi đơn vị</div>
             <div style="display:flex; gap:6px;">
-              <button class="add-mini-btn" @click="isStdModalOpen = true" title="Tra cứu quy chuẩn"><i class="fa-solid fa-book"></i></button>
+              <button class="add-mini-btn" @click="autoLoadConversions" :disabled="isConversionsLoading" title="Tự động nạp quy đổi">
+                <i v-if="isConversionsLoading" class="fa-solid fa-spinner fa-spin"></i>
+                <i v-else class="fa-solid fa-bolt"></i>
+              </button>
               <button class="add-mini-btn" @click="addQuickUnit" title="Thêm thủ công"><i class="fa-solid fa-plus"></i></button>
             </div>
           </div>
@@ -337,7 +340,13 @@
         <div class="card-panel ai-config-card sub">
           <div class="ai-config-header">
             <div class="title"><i class="fa-solid fa-shuffle"></i> Nguyên liệu thay thế</div>
-            <button class="add-mini-btn" @click="addQuickSub"><i class="fa-solid fa-plus"></i></button>
+            <div style="display:flex; gap:6px;">
+              <button class="add-mini-btn" @click="autoLoadSubstitutions" :disabled="isSubstitutionsLoading" title="Tìm nguyên liệu thay thế">
+                <i v-if="isSubstitutionsLoading" class="fa-solid fa-spinner fa-spin"></i>
+                <i v-else class="fa-solid fa-magnifying-glass-chart"></i>
+              </button>
+              <button class="add-mini-btn" @click="addQuickSub"><i class="fa-solid fa-plus"></i></button>
+            </div>
           </div>
           <div class="ai-pill-list">
             <div class="ai-smart-pill alt" v-for="(s, i) in substitutions" :key="i">
@@ -470,37 +479,68 @@ const isRemovingBg = ref(false);
 const imageMode = ref<'upload' | 'url'>('upload');
 const imageUrlInput = ref('');
 
-// --- DỮ LIỆU QUY CHUẨN TỪ EXCEL ---
-const standardConversions = [
-  { name: 'Cơm trắng', unit: '1 bát (chén)', gram: 130, note: 'Bát ăn cơm tiêu chuẩn' },
-  { name: 'Phở / Bún', unit: '1 bát (tô)', gram: 200, note: 'Lượng bánh phở/bún trong 1 tô bình thường' },
-  { name: 'Trứng gà', unit: '1 quả', gram: 50, note: 'Trứng cỡ vừa, bỏ vỏ' },
-  { name: 'Trứng cút', unit: '1 quả', gram: 10, note: 'Bỏ vỏ' },
-  { name: 'Táo / Lê', unit: '1 quả', gram: 150, note: 'Cỡ vừa' },
-  { name: 'Chuối tây', unit: '1 quả', gram: 100, note: 'Bỏ vỏ' },
-  { name: 'Dầu ăn / Mỡ', unit: '1 muỗng canh', gram: 15, note: 'Khối lượng chất lỏng' },
-  { name: 'Đường / Muối', unit: '1 muỗng cà phê', gram: 5, note: 'Gia vị dạng hạt' },
-  { name: 'Thịt heo / Bò', unit: '1 lạng', gram: 100, note: 'Đơn vị chợ truyền thống' },
-  { name: 'Sữa tươi', unit: '1 hộp giấy', gram: 180, note: 'Hộp tiêu chuẩn' },
-  { name: 'Bánh mì VN', unit: '1 ổ (vừa)', gram: 90, note: 'Ổ bánh mì đặc ruột' },
-  { name: 'Bánh mì Sandwich', unit: '1 lát', gram: 30, note: 'Cắt lát tiêu chuẩn' },
-  { name: 'Bánh bao', unit: '1 cái (vừa)', gram: 150, note: 'Kích thước có nhân thịt' },
-  { name: 'Khoai lang', unit: '1 củ (vừa)', gram: 150, note: 'Kích thước vừa tay cầm' },
-  { name: 'Bắp (Ngô)', unit: '1 trái', gram: 200, note: 'Chưa luộc, tính cả lõi' },
-];
+// --- AI AUTO-LOAD LOGIC ---
+const isConversionsLoading = ref(false);
+const isSubstitutionsLoading = ref(false);
 
-const isStdModalOpen = ref(false);
-const stdSearchQuery = ref('');
-const filteredStandards = computed(() => {
-  return standardConversions.filter(s => 
-    s.name.toLowerCase().includes(stdSearchQuery.value.toLowerCase())
-  );
-});
+const autoLoadConversions = async () => {
+  if (!form.value.name) {
+    toast.warning('Vui lòng nhập tên nguyên liệu để tra cứu quy đổi');
+    return;
+  }
+  isConversionsLoading.value = true;
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('http://localhost:5000/api/ingredients/auto-load-conversions', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ query: form.value.name })
+    });
+    const result = await res.json();
+    if (result.success && result.data) {
+      unitConversions.value = result.data;
+      toast.success(`Đã tự động nạp ${result.data.length} quy đổi cho "${form.value.name}"`);
+    } else {
+      toast.error(result.message || 'Không tìm thấy dữ liệu quy đổi phù hợp');
+    }
+  } catch (err) {
+    toast.error('Lỗi khi tải dữ liệu quy đổi từ hệ thống');
+  } finally {
+    isConversionsLoading.value = false;
+  }
+};
 
-const applyStandard = (s: any) => {
-  unitConversions.value.push({ from: s.unit, to: s.gram + 'g', note: s.note });
-  isStdModalOpen.value = false;
-  toast.success(`Đã thêm quy đổi cho ${s.name}`);
+const autoLoadSubstitutions = async () => {
+  if (!form.value.name) {
+    toast.warning('Vui lòng nhập tên nguyên liệu để tìm thay thế');
+    return;
+  }
+  isSubstitutionsLoading.value = true;
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('http://localhost:5000/api/ingredients/auto-load-substitutions', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ query: form.value.name })
+    });
+    const result = await res.json();
+    if (result.success && result.data) {
+      substitutions.value = result.data;
+      toast.success(`Đã tìm thấy ${result.data.length} nguyên liệu thay thế cho "${form.value.name}"`);
+    } else {
+      toast.error(result.message || 'Không tìm thấy dữ liệu thay thế phù hợp');
+    }
+  } catch (err) {
+    toast.error('Lỗi khi tải dữ liệu thay thế từ hệ thống');
+  } finally {
+    isSubstitutionsLoading.value = false;
+  }
 };
 // ---------------------------------
 

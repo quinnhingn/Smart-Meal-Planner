@@ -43,6 +43,10 @@ export const useAppStore = create((set, get) => ({
     return false;
   },
 
+  // Sidebar state
+  isDrawerOpen: false,
+  setDrawerOpen: (isOpen) => set({ isDrawerOpen: isOpen }),
+
   logout: () => set({ token: null, userProfile: null, hasProfile: false, error: null }),
   clearError: () => set({ error: null })
 }));

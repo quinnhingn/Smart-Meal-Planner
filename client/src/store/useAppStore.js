@@ -1,6 +1,7 @@
 // src/store/useAppStore.js
 import { create } from 'zustand';
 import { authApi } from '../services/mockApi';
+import { calculateTDEEAndMacros } from '../utils/calculator';
 
 export const useAppStore = create((set, get) => ({
   // ==========================================
@@ -44,6 +45,21 @@ export const useAppStore = create((set, get) => ({
     }
     set({ error: "Lỗi lưu hồ sơ", isLoading: false });
     return false;
+  },
+
+  updateProfile: async (updatedData) => {
+    set({ isLoading: true, error: null });
+    
+    // Giả lập API call (1 giây)
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    set((state) => ({ 
+      userProfile: { ...state.userProfile, ...updatedData },
+      isLoading: false 
+    }));
+    
+    get().showToast('Đã cập nhật hồ sơ thành công!', 'success');
+    return true;
   },
 
   logout: () => set({ token: null, userProfile: null, hasProfile: false, error: null }),
@@ -121,5 +137,87 @@ export const useAppStore = create((set, get) => ({
   // Xóa 1 nguyên liệu khỏi Tủ lạnh
   removePantryItem: (id) => set((state) => ({
     pantryItems: state.pantryItems.filter(item => item.id !== id)
-  }))
+  })),
+
+  // ==========================================
+  // 4. GAMIFICATION & HEALTH TRACKING
+  // ==========================================
+  weightHistory: [], // Lịch sử cân nặng: [{ date, weight }]
+  currentStreak: 0,  // Chuỗi ngày kỷ luật
+  lastLogDate: null, // Ngày log bữa ăn gần nhất
+
+  // Gọi hàm này mỗi khi user thêm món ăn vào Nhật ký
+  logMeal: () => set((state) => {
+    const today = new Date().toDateString();
+    if (state.lastLogDate !== today) {
+      return { 
+        currentStreak: state.currentStreak + 1,
+        lastLogDate: today
+      };
+    }
+    return state; // Đã log hôm nay rồi thì không tăng nữa
+  }),
+
+  // Gọi hàm này khi Weekly Check-in (Cập nhật cân nặng)
+  checkInWeight: async (newWeight) => {
+    const state = get();
+    const profile = state.userProfile;
+    if (!profile) return false;
+
+    // 1. Lưu vào lịch sử
+    const newRecord = { date: new Date().toISOString(), weight: newWeight };
+    set({ weightHistory: [...state.weightHistory, newRecord] });
+
+    // 2. Tính toán lại TDEE & Macros dựa trên cân nặng mới
+    const formData = {
+      gender: profile.gender || 'female',
+      age: profile.age,
+      height: profile.height,
+      weight: newWeight,
+      activity: profile.activity || 'light',
+      goal: profile.goal || 'lose_weight'
+    };
+    const newMacros = calculateTDEEAndMacros(formData);
+
+    // 3. Cập nhật Profile
+    const newProfileData = {
+      weight: newWeight,
+      targetCalories: newMacros.tdee,
+      protein_g: newMacros.protein_g,
+      carbs_g: newMacros.carbs_g,
+      fat_g: newMacros.fat_g,
+    };
+
+    return await state.updateProfile(newProfileData);
+  },
+
+  // Gọi hàm này khi user sửa Goal hoặc Activity từ Profile
+  updateGoalOrActivity: async (field, value) => {
+    const state = get();
+    const profile = state.userProfile;
+    if (!profile) return;
+
+    // 1. Cập nhật field mới vào form ảo
+    const formData = {
+      gender: profile.gender,
+      age: profile.age,
+      height: profile.height,
+      weight: profile.weight,
+      activity: field === 'activity' ? value : profile.activity,
+      goal: field === 'goal' ? value : profile.goal
+    };
+
+    // 2. Tự động tính toán lại
+    const newMacros = calculateTDEEAndMacros(formData);
+
+    // 3. Lưu toàn bộ lên DB
+    await state.updateProfile({
+      [field]: value,
+      targetCalories: newMacros.tdee,
+      protein_g: newMacros.protein_g,
+      carbs_g: newMacros.carbs_g,
+      fat_g: newMacros.fat_g,
+    });
+  }
+
 }));

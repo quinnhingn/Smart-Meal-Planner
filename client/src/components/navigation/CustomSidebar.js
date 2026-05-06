@@ -1,7 +1,7 @@
 // src/components/navigation/CustomSidebar.js
 import React, { useEffect, useRef, useState } from 'react';
 import { 
-  View, Text, StyleSheet, Pressable, Platform, 
+  View, Text, StyleSheet, Pressable, Platform, Image,
   Animated, Dimensions, TouchableWithoutFeedback, ScrollView 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +18,7 @@ const MAIN_TABS = [
 ];
 
 const SECONDARY_TABS = [
+  { id: 'profile', icon: 'person-outline', title: 'Hồ sơ cá nhân', route: 'Profile' }, // <-- THÊM MỚI
   { id: 'saved', icon: 'bookmark-outline', title: 'Công thức đã lưu', route: 'SavedRecipes' },
   { id: 'stats', icon: 'body-outline', title: 'Báo cáo cơ thể', route: 'BodyStats' },
   { id: 'settings', icon: 'settings-outline', title: 'Cài đặt', route: 'Settings' },
@@ -25,7 +26,7 @@ const SECONDARY_TABS = [
 ];
 
 const CustomSidebar = ({ isWebLarge, navigation }) => {
-  const { isDrawerOpen, setDrawerOpen, logout } = useAppStore();
+  const { isDrawerOpen, setDrawerOpen, logout, userProfile } = useAppStore();
   const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current; 
   const fadeAnim = useRef(new Animated.Value(0)).current; 
   
@@ -88,15 +89,20 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
               <Ionicons name="leaf" size={28} color={COLORS.primary} style={styles.logoIcon} />
               <Text style={styles.mobileLogoText}>SmartMeal</Text>
             </View>
-            <View style={styles.profileHeader}>
+            {/* THAY VIEW THÀNH PRESSABLE VÀ GẮN SỰ KIỆN */}
+            <Pressable style={styles.profileHeader} onPress={() => handleNavigate('Profile')}>
               <View style={styles.avatar}>
-                <Text style={styles.avatarText}>N</Text>
+                {userProfile?.avatarUri ? (
+                  <Image source={{ uri: userProfile.avatarUri }} style={{width: 50, height: 50, borderRadius: 25}} />
+                ) : (
+                  <Text style={styles.avatarText}>N</Text>
+                )}
               </View>
               <View style={styles.userInfo}>
                 <Text style={styles.userName}>Quỳnh Nhi</Text>
                 <Text style={styles.userBadge}>🔥 Mục tiêu: Giảm cân</Text>
               </View>
-            </View>
+            </Pressable>
             <View style={styles.divider} />
           </View>
         )}

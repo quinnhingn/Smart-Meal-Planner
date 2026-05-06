@@ -22,11 +22,11 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import ScanCameraScreen from '../screens/ScanCameraScreen';
+import ProfileScreen from '../screens/ProfileScreen'; // <-- 1. THÊM IMPORT MÀN HÌNH PROFILE
 
 // Import Layout Components mới
 import CustomSidebar from '../components/navigation/CustomSidebar';
 import WebTopbar from '../components/navigation/WebTopbar';
-
 import CustomToast from '../components/common/CustomToast';
 
 const { COLORS, BREAKPOINTS } = require('../constants/theme');
@@ -48,8 +48,8 @@ const FloatingCameraButton = ({ currentRoute }) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
-  // ĐIỀU KIỆN ẨN: Kiểm tra từ Prop truyền vào
-  if (currentRoute === 'Scan') {
+  // <-- 2. ẨN NÚT CAMERA KHI ĐANG Ở MÀN HÌNH QUÉT HOẶC HỒ SƠ
+  if (currentRoute === 'Scan' || currentRoute === 'Profile') {
     return null;
   }
 
@@ -85,8 +85,8 @@ const MainLayout = ({ currentRoute }) => {
           headerShown: false,
           tabBarShowLabel: true,
 
-          // Ẩn Bottom Tab trên Web HOẶC khi đang ở màn hình Scan
-          tabBarStyle: (isWebLarge || route.name === 'Scan') ? { display: 'none' } : {
+          // <-- 3. ẨN BOTTOM TAB KHI Ở TRANG PROFILE HOẶC SCAN
+          tabBarStyle: (isWebLarge || ['Scan', 'Profile'].includes(route.name)) ? { display: 'none' } : {
             position: 'absolute',
             bottom: 24,
             left: 20,
@@ -128,6 +128,10 @@ const MainLayout = ({ currentRoute }) => {
         <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Trang chủ' }} />
         <Tab.Screen name="Pantry" component={PantryScreen} options={{ title: 'Tủ lạnh' }} />
         <Tab.Screen name="Scan" component={ScanCameraScreen} options={{ tabBarButton: () => null }} />
+        
+        {/* <-- 4. ĐĂNG KÝ TRANG PROFILE VÀO NAVIGATOR DƯỚI DẠNG TAB ẨN */}
+        <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarButton: () => null }} />
+        
         <Tab.Screen name="Recipe" component={RecipeScreen} options={{ title: 'Gợi ý' }} />
         <Tab.Screen name="Shopping" component={ShoppingScreen} options={{ title: 'Đi chợ' }} />
       </Tab.Navigator>
@@ -184,8 +188,12 @@ const RootNavigator = () => {
     <NavigationContainer
       onStateChange={(state) => {
         if (state) {
-          const currentName = state.routes[state.index].name;
-          setCurrentRoute(currentName);
+          // Lấy name của route hiện tại một cách an toàn cho các nested navigator
+          let route = state.routes[state.index];
+          while (route.state) {
+            route = route.state.routes[route.state.index];
+          }
+          setCurrentRoute(route.name);
         }
       }}
     >

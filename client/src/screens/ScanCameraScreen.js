@@ -10,7 +10,7 @@ import { CameraView } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useCamera } from '../hooks/useCamera';
-import { mockAnalyzeImage } from '../utils/mockAiApi';
+import { analyzeImageReal } from '../services/aiService';
 import DiaryResult from '../components/scan/DiaryResult';
 import PantryResult from '../components/scan/PantryResult';
 import { COLORS } from '../constants/theme';
@@ -78,9 +78,15 @@ const ScanCameraScreen = ({ navigation }) => {
 
   const processImage = async (uri, currentMode) => {
     setIsAnalyzing(true);
-    const results = await mockAnalyzeImage(uri, currentMode);
-    setAiResults(results);
-    setIsAnalyzing(false);
+    try {
+      const results = await analyzeImageReal(uri, currentMode);
+      setAiResults(results);
+    } catch (error) {
+      alert('Lỗi: ' + (error.message || 'Không thể kết nối với AI Server. Vui lòng kiểm tra IP hoặc Máy tính đang chạy AI.'));
+      setAiResults(null);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const handleRetake = () => {

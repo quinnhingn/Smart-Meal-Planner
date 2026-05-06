@@ -17,12 +17,12 @@ import SelectionChip from '../components/onboarding/SelectionChip';
 
 // Utils & Data
 import { COLORS, BREAKPOINTS } from '../constants/theme';
-import { useAppStore } from '../store/useAppStore';
+import { useAppStore } from '../store/useAppStore'; // Tạm comment nếu chưa có
 import { calculateTDEEAndMacros } from '../utils/calculator';
 import { ONBOARDING_STEPS, GOALS, ACTIVITY_LEVELS, ALLERGIES, DIETS } from '../utils/onboardingData';
 
 const OnboardingScreen = () => {
-  const { setupProfile, isLoading } = useAppStore();
+  const { setupProfile, isLoading } = useAppStore(); // Tạm comment
   const flatListRef = useRef(null);
   const { width: windowWidth } = useWindowDimensions();
   
@@ -44,8 +44,8 @@ const OnboardingScreen = () => {
   const [formData, setFormData] = useState({
     gender: 'male', 
     age: '', 
-    height: 170, // Đổi sang Number cho Slider
-    weight: 65,  // Đổi sang Number cho Slider
+    height: 170, 
+    weight: 65,  
     activity: 'sedentary', 
     goal: 'lose_weight',
     allergies: [], 
@@ -80,8 +80,15 @@ const OnboardingScreen = () => {
     }
   };
 
-  // Logic Navigation
   const handleNext = () => {
+    // Thêm Validate ở Bước 1 (index === 0)
+    if (currentIndex === 0) {
+      if (!formData.age || isNaN(formData.age) || Number(formData.age) <= 0) {
+        alert("Vui lòng nhập số tuổi hợp lệ!");
+        return; // Chặn không cho qua bước tiếp theo
+      }
+    }
+
     if (currentIndex < ONBOARDING_STEPS.length - 1) {
       if (currentIndex === 3) {
         const results = calculateTDEEAndMacros(formData);
@@ -208,7 +215,6 @@ const OnboardingScreen = () => {
               {ALLERGIES.map(item => (
                 <SelectionChip key={item.id} label={item.label} isSelected={formData.allergies.includes(item.id)} onPress={() => toggleAllergy(item.id)} />
               ))}
-              {/* Hiển thị các mục người dùng đã nhập tay */}
               {formData.allergies.filter(id => !ALLERGIES.find(a => a.id === id)).map(customId => (
                 <SelectionChip key={customId} label={customId} isSelected={true} onPress={() => toggleAllergy(customId)} />
               ))}
@@ -227,7 +233,6 @@ const OnboardingScreen = () => {
               {DIETS.map(item => (
                 <SelectionChip key={item.id} label={item.label} isSelected={formData.diet === item.id} onPress={() => updateData('diet', item.id)} />
               ))}
-              {/* Hiển thị chế độ ăn nhập tay nếu có */}
               {!DIETS.find(d => d.id === formData.diet) && formData.diet !== 'none' && (
                 <SelectionChip label={formData.diet} isSelected={true} onPress={() => {}} />
               )}
@@ -273,7 +278,8 @@ const OnboardingScreen = () => {
         <KeyboardAvoidingView style={styles.keyboardAvoid} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
             
-            <GlassCard style={[styles.card, { width: actualCardWidth, padding: 0 }]} intensity={90}>
+            {/* ĐIỂM CẬP NHẬT: Hạ intensity xuống 80 để khớp với LoginScreen, không chèn inline padding: 0 */}
+            <GlassCard style={[styles.card, { width: actualCardWidth }]} intensity={80}>
               <View style={styles.sectionPadding}>
                 <ProgressBar currentStep={currentIndex + 1} totalSteps={ONBOARDING_STEPS.length} />
                 <Text style={styles.title}>{ONBOARDING_STEPS[currentIndex].title}</Text>
@@ -323,7 +329,9 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, width: '100%', paddingTop: Platform.OS === 'android' ? 40 : 0 },
   keyboardAvoid: { flex: 1, width: '100%' },
   scrollContent: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 24 },
-  card: { minHeight: 650, alignSelf: 'center', overflow: 'hidden' },
+  
+  // ĐIỂM CẬP NHẬT: Xóa overflow: 'hidden' để không chèn ép shadow của GlassCard
+  card: { minHeight: 650, alignSelf: 'center' },
   
   sectionPadding: { paddingHorizontal: 24, paddingTop: 24, paddingBottom: 16 },
   slideItem: { paddingHorizontal: 24, width: '100%' }, 

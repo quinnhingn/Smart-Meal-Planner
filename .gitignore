@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.env
+
+# Mobile
+.expo/
+dist/
+web-build/
+
+# AI Models (Large Files)
+ai/train_data/*.h5
+ai/train_data/*.pt
+*.h5
+*.pt
+
+# OS files
+.DS_Store
+Thumbs.db
+.env
+package-lock.json
+*.docx

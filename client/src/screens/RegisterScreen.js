@@ -34,11 +34,10 @@ const RegisterScreen = ({ onNavigateToLogin }) => {
       return;
     }
     
-    // Gửi kèm displayName vào payload đăng ký
     await register({
-      email,
+      name: displayName.trim(),
+      email: email.trim(),
       password,
-      display_name: displayName // Khớp với logic xử lý profile sau này
     });
   };
 

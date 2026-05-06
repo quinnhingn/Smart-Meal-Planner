@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { 
   View, Text, StyleSheet, Pressable, Platform, 
-  Animated, Dimensions, TouchableWithoutFeedback, ScrollView 
+  Animated, Dimensions, ScrollView 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
@@ -25,7 +25,7 @@ const SECONDARY_TABS = [
 ];
 
 const CustomSidebar = ({ isWebLarge, navigation }) => {
-  const { isDrawerOpen, setDrawerOpen, logout } = useAppStore();
+  const { isDrawerOpen, setDrawerOpen, logout, userProfile } = useAppStore();
   const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current; 
   const fadeAnim = useRef(new Animated.Value(0)).current; 
   
@@ -90,11 +90,19 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
             </View>
             <View style={styles.profileHeader}>
               <View style={styles.avatar}>
-                <Text style={styles.avatarText}>N</Text>
+                <Text style={styles.avatarText}>
+                  {userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}
+                </Text>
               </View>
               <View style={styles.userInfo}>
-                <Text style={styles.userName}>Quỳnh Nhi</Text>
-                <Text style={styles.userBadge}>🔥 Mục tiêu: Giảm cân</Text>
+                <Text style={styles.userName}>{userProfile?.name || 'Người dùng'}</Text>
+                <Text style={styles.userBadge}>
+                  🔥 Mục tiêu: {
+                    userProfile?.goal === 'lose_weight' ? 'Giảm cân' :
+                    userProfile?.goal === 'maintain' ? 'Giữ dáng' :
+                    userProfile?.goal === 'gain_muscle' ? 'Tăng cơ' : 'Sức khỏe'
+                  }
+                </Text>
               </View>
             </View>
             <View style={styles.divider} />
@@ -160,9 +168,9 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
   // SỬA LỖI POINTER EVENTS TẠI ĐÂY
   return (
     <View style={[styles.mobileOverlayWrapper, { pointerEvents: isDrawerOpen ? 'auto' : 'none' }]}>
-      <TouchableWithoutFeedback onPress={() => setDrawerOpen(false)}>
+      <Pressable style={StyleSheet.absoluteFill} onPress={() => setDrawerOpen(false)}>
         <Animated.View style={[styles.backdrop, { opacity: fadeAnim }]} />
-      </TouchableWithoutFeedback>
+      </Pressable>
 
       <Animated.View style={[styles.mobileDrawer, { transform: [{ translateX: slideAnim }] }]}>
         <SidebarContent />

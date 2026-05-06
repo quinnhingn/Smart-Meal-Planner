@@ -2,7 +2,8 @@
 
 export const COLORS = {
   // 1. System Colors 
-  primary: '#4CAF50',    
+  primary: '#4CAF50',
+  success: '#4CAF50',    
   secondary: '#FF9800',  
   aiFocus: '#2196F3',    
   danger: '#F44336',     

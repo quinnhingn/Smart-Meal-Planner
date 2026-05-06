@@ -12,7 +12,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { useAppStore } from '../store/useAppStore';
 import { COLORS } from '../constants/theme';
 import { calculateTDEEAndMacros } from '../utils/calculator';
-import { GOALS, ACTIVITY_LEVELS, DIETS, ALLERGIES } from '../utils/onboardingData';
+// THÊM: BODY_TYPES, PACE_OPTIONS, DISLIKES
+import { GOALS, ACTIVITY_LEVELS, DIETS, ALLERGIES, BODY_TYPES, PACE_OPTIONS, DISLIKES } from '../utils/onboardingData';
 
 // Components
 import MacroProgressBars from '../components/profile/MacroProgressBars';
@@ -25,13 +26,18 @@ const GENDER_OPTIONS = [
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
-  const { userProfile, updateProfile, isLoading, currentStreak } = useAppStore(); // Đã bỏ hàm logout ở đây
+  const { userProfile, updateProfile, isLoading, currentStreak } = useAppStore();
   
   const [isEditing, setIsEditing] = useState(false);
   const [activeSheet, setActiveSheet] = useState(null); 
   const [showCustomAllergy, setShowCustomAllergy] = useState(false);
   const [customAllergyText, setCustomAllergyText] = useState('');
   
+  // THÊM STATE CHO DISLIKES
+  const [showCustomDislike, setShowCustomDislike] = useState(false);
+  const [customDislikeText, setCustomDislikeText] = useState('');
+  
+  // CẬP NHẬT: Thêm targetWeight, bodyType, pace, dislikes
   const [formData, setFormData] = useState({
     name: userProfile?.name || 'Nguyễn Nhã Quỳnh Nhi',
     email: userProfile?.email || 'nguyenquynhnhi@vku.udn.vn',
@@ -39,11 +45,15 @@ const ProfileScreen = () => {
     gender: userProfile?.gender || 'female',
     age: userProfile?.age?.toString() || '21',
     weight: userProfile?.weight?.toString() || '55',
+    targetWeight: userProfile?.targetWeight?.toString() || '50',
     height: userProfile?.height?.toString() || '165',
     goal: userProfile?.goal || 'lose_weight',
+    bodyType: userProfile?.bodyType || 'mesomorph',
+    pace: userProfile?.pace || 'normal',
     activity: userProfile?.activity || 'light',
     diet: userProfile?.diet || 'none', 
     allergies: userProfile?.allergies || [], 
+    dislikes: userProfile?.dislikes || [],
     targetCalories: userProfile?.tdee?.toString() || userProfile?.targetCalories?.toString() || '1800',
     protein: userProfile?.protein_g?.toString() || '135',
     carbs: userProfile?.carbs_g?.toString() || '180',
@@ -69,6 +79,24 @@ const ProfileScreen = () => {
     }
   };
 
+  // THÊM: Logic quản lý món ghét
+  const toggleDislike = (dislikeLabel) => {
+    setFormData(prev => ({
+      ...prev,
+      dislikes: prev.dislikes.includes(dislikeLabel) 
+        ? prev.dislikes.filter(item => item !== dislikeLabel) 
+        : [...prev.dislikes, dislikeLabel]
+    }));
+  };
+
+  const handleAddCustomDislike = () => {
+    if (customDislikeText.trim()) {
+      toggleDislike(customDislikeText.trim());
+      setCustomDislikeText('');
+      setShowCustomDislike(false);
+    }
+  };
+
   const handlePickAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -85,15 +113,20 @@ const ProfileScreen = () => {
   };
 
   const handleSave = async () => {
+    // Truyền đầy đủ cho Form Calculator
     const currentPhysicalData = {
       gender: formData.gender,
       age: parseInt(formData.age) || 0,
       height: parseFloat(formData.height) || 0,
       weight: parseFloat(formData.weight) || 0,
+      targetWeight: parseFloat(formData.targetWeight) || 0,
+      bodyType: formData.bodyType,
+      pace: formData.pace,
       activity: formData.activity,
       goal: formData.goal,
       diet: formData.diet,
-      allergies: formData.allergies
+      allergies: formData.allergies,
+      dislikes: formData.dislikes
     };
 
     const newMacros = calculateTDEEAndMacros(currentPhysicalData);
@@ -129,11 +162,15 @@ const ProfileScreen = () => {
       gender: userProfile?.gender || 'female',
       age: userProfile?.age?.toString() || '21',
       weight: userProfile?.weight?.toString() || '55',
+      targetWeight: userProfile?.targetWeight?.toString() || '50',
       height: userProfile?.height?.toString() || '165',
       goal: userProfile?.goal || 'lose_weight',
+      bodyType: userProfile?.bodyType || 'mesomorph',
+      pace: userProfile?.pace || 'normal',
       activity: userProfile?.activity || 'light',
       diet: userProfile?.diet || 'none', 
       allergies: userProfile?.allergies || [], 
+      dislikes: userProfile?.dislikes || [],
       targetCalories: userProfile?.tdee?.toString() || userProfile?.targetCalories?.toString() || '1800',
       protein: userProfile?.protein_g?.toString() || '135',
       carbs: userProfile?.carbs_g?.toString() || '180',
@@ -141,6 +178,7 @@ const ProfileScreen = () => {
     });
     setIsEditing(false);
     setShowCustomAllergy(false);
+    setShowCustomDislike(false);
   };
 
   const formatText = (type, value) => {
@@ -148,6 +186,8 @@ const ProfileScreen = () => {
     if (type === 'activity') return ACTIVITY_LEVELS.find(a => a.id === value)?.title || value;
     if (type === 'diet') return DIETS.find(d => d.id === value)?.label || value; 
     if (type === 'gender') return GENDER_OPTIONS.find(g => g.id === value)?.title || value; 
+    if (type === 'bodyType') return BODY_TYPES?.find(b => b.id === value)?.title || value;
+    if (type === 'pace') return PACE_OPTIONS?.find(p => p.id === value)?.title || value;
     return value;
   };
 
@@ -210,15 +250,35 @@ const ProfileScreen = () => {
           <InfoRow label="Tuổi" value={formData.age} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('age', txt.replace(/[^0-9]/g, ''))} />
           <InfoRow label="Chiều cao (cm)" value={formData.height} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('height', txt.replace(/[^0-9.]/g, ''))} />
           <InfoRow label="Cân nặng (kg)" value={formData.weight} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('weight', txt.replace(/[^0-9.]/g, ''))} />
+          
+          {/* Cân nặng mục tiêu chỉ hiện nếu mục tiêu không phải Giữ dáng */}
+          {formData.goal !== 'maintain' && (
+            <InfoRow label="Cân nặng mục tiêu" value={formData.targetWeight} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('targetWeight', txt.replace(/[^0-9.]/g, ''))} />
+          )}
+
+          <Pressable style={styles.selectorRow} onPress={() => isEditing && setActiveSheet('bodyType')}>
+            <Text style={styles.infoLabel}>Tạng người</Text>
+            <View style={styles.selectorValueGroup}>
+              <Text style={[styles.infoValue, isEditing && styles.textLink]}>{formatText('bodyType', formData.bodyType)}</Text>
+              {isEditing && <Ionicons name="chevron-down" size={16} color={COLORS.primary} style={{marginLeft: 4}} />}
+            </View>
+          </Pressable>
         </View>
 
-        {/* PHÂN TÍCH & DỊ ỨNG */}
+        {/* PHÂN TÍCH & DỊ ỨNG & DISLIKES */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Phân tích & Lộ trình</Text>
           <Pressable style={styles.selectorRow} onPress={() => isEditing && setActiveSheet('goal')}>
             <Text style={styles.infoLabel}>Mục tiêu</Text>
             <View style={styles.selectorValueGroup}>
               <Text style={[styles.infoValue, isEditing && styles.textLink]}>{formatText('goal', formData.goal)}</Text>
+              {isEditing && <Ionicons name="chevron-down" size={16} color={COLORS.primary} style={{marginLeft: 4}} />}
+            </View>
+          </Pressable>
+          <Pressable style={styles.selectorRow} onPress={() => isEditing && setActiveSheet('pace')}>
+            <Text style={styles.infoLabel}>Tốc độ thực hiện</Text>
+            <View style={styles.selectorValueGroup}>
+              <Text style={[styles.infoValue, isEditing && styles.textLink]}>{formatText('pace', formData.pace)}</Text>
               {isEditing && <Ionicons name="chevron-down" size={16} color={COLORS.primary} style={{marginLeft: 4}} />}
             </View>
           </Pressable>
@@ -237,17 +297,14 @@ const ProfileScreen = () => {
             </View>
           </Pressable>
 
+          {/* DỊ ỨNG */}
           <View style={styles.allergySection}>
             <Text style={styles.infoLabel}>Dị ứng thực phẩm</Text>
             <View style={styles.tagContainer}>
               {isEditing ? (
                 <>
                   {ALLERGIES.map(item => (
-                    <Pressable 
-                      key={item.id} 
-                      style={[styles.chip, formData.allergies.includes(item.label) && styles.chipActive]}
-                      onPress={() => toggleAllergy(item.label)}
-                    >
+                    <Pressable key={item.id} style={[styles.chip, formData.allergies.includes(item.label) && styles.chipActive]} onPress={() => toggleAllergy(item.label)}>
                       <Text style={[styles.chipText, formData.allergies.includes(item.label) && styles.chipTextActive]}>{item.label}</Text>
                     </Pressable>
                   ))}
@@ -272,16 +329,46 @@ const ProfileScreen = () => {
 
             {isEditing && showCustomAllergy && (
               <View style={styles.customInputRow}>
-                <TextInput 
-                  style={styles.customInput} 
-                  placeholder="Nhập dị ứng khác..." 
-                  value={customAllergyText} 
-                  onChangeText={setCustomAllergyText} 
-                  onSubmitEditing={handleAddCustomAllergy}
-                />
-                <Pressable style={styles.addBtnSmall} onPress={handleAddCustomAllergy}>
-                  <Text style={styles.addBtnText}>Thêm</Text>
-                </Pressable>
+                <TextInput style={styles.customInput} placeholder="Nhập dị ứng khác..." value={customAllergyText} onChangeText={setCustomAllergyText} onSubmitEditing={handleAddCustomAllergy} />
+                <Pressable style={styles.addBtnSmall} onPress={handleAddCustomAllergy}><Text style={styles.addBtnText}>Thêm</Text></Pressable>
+              </View>
+            )}
+          </View>
+
+          {/* NHỮNG MÓN GHÉT (DISLIKES) */}
+          <View style={styles.allergySection}>
+            <Text style={styles.infoLabel}>Những món không thích ăn</Text>
+            <View style={styles.tagContainer}>
+              {isEditing ? (
+                <>
+                  {DISLIKES.map(item => (
+                    <Pressable key={item.id} style={[styles.chip, formData.dislikes.includes(item.label) && styles.chipActive]} onPress={() => toggleDislike(item.label)}>
+                      <Text style={[styles.chipText, formData.dislikes.includes(item.label) && styles.chipTextActive]}>{item.label}</Text>
+                    </Pressable>
+                  ))}
+                  {formData.dislikes.filter(label => !DISLIKES.find(d => d.label === label)).map(customLabel => (
+                    <Pressable key={customLabel} style={[styles.chip, styles.chipActive]} onPress={() => toggleDislike(customLabel)}>
+                      <Text style={[styles.chipText, styles.chipTextActive]}>{customLabel}</Text>
+                    </Pressable>
+                  ))}
+                  <Pressable style={styles.chipAdd} onPress={() => setShowCustomDislike(!showCustomDislike)}>
+                    <Ionicons name="add" size={16} color={COLORS.primary} />
+                    <Text style={[styles.chipText, {color: COLORS.primary}]}>Khác</Text>
+                  </Pressable>
+                </>
+              ) : (
+                formData.dislikes.length > 0 
+                  ? formData.dislikes.map((item, idx) => (
+                      <View key={idx} style={styles.tag}><Text style={styles.tagText}>{item}</Text></View>
+                    ))
+                  : <Text style={styles.infoValue}>Không có</Text>
+              )}
+            </View>
+
+            {isEditing && showCustomDislike && (
+              <View style={styles.customInputRow}>
+                <TextInput style={styles.customInput} placeholder="Nhập món ghét..." value={customDislikeText} onChangeText={setCustomDislikeText} onSubmitEditing={handleAddCustomDislike} />
+                <Pressable style={styles.addBtnSmall} onPress={handleAddCustomDislike}><Text style={styles.addBtnText}>Thêm</Text></Pressable>
               </View>
             )}
           </View>
@@ -314,6 +401,8 @@ const ProfileScreen = () => {
       <BottomSheetSelector visible={activeSheet === 'activity'} onClose={() => setActiveSheet(null)} title="Mức Vận Động" data={ACTIVITY_LEVELS} selectedValue={formData.activity} onSelect={(val) => handleChange('activity', val)} />
       <BottomSheetSelector visible={activeSheet === 'diet'} onClose={() => setActiveSheet(null)} title="Chế độ ăn" data={DIETS} selectedValue={formData.diet} onSelect={(val) => handleChange('diet', val)} />
       <BottomSheetSelector visible={activeSheet === 'gender'} onClose={() => setActiveSheet(null)} title="Giới tính" data={GENDER_OPTIONS} selectedValue={formData.gender} onSelect={(val) => handleChange('gender', val)} />
+      <BottomSheetSelector visible={activeSheet === 'bodyType'} onClose={() => setActiveSheet(null)} title="Tạng người" data={BODY_TYPES || []} selectedValue={formData.bodyType} onSelect={(val) => handleChange('bodyType', val)} />
+      <BottomSheetSelector visible={activeSheet === 'pace'} onClose={() => setActiveSheet(null)} title="Tốc độ đạt mục tiêu" data={PACE_OPTIONS || []} selectedValue={formData.pace} onSelect={(val) => handleChange('pace', val)} />
 
       {isLoading && (
         <View style={[StyleSheet.absoluteFillObject, styles.loadingOverlay]}>

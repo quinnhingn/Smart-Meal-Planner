@@ -1,11 +1,12 @@
 // src/utils/onboardingData.js
 
 export const ONBOARDING_STEPS = [
-  { id: '1', title: 'Hãy cho chúng tôi biết về bạn', subtitle: 'Thông tin này giúp chúng tôi cá nhân hóa kế hoạch luyện tập của bạn.' },
-  { id: '2', title: 'Mục tiêu của bạn là gì?', subtitle: 'Chọn mục tiêu phù hợp nhất với thể trạng hiện tại của bạn.' },
-  { id: '3', title: 'Bạn vận động như thế nào?', subtitle: 'Điều này giúp chúng tôi tính toán lượng calo cần thiết hàng ngày của bạn.' },
-  { id: '4', title: 'Bạn có kiêng kỵ gì không?', subtitle: 'Giúp chúng tôi gợi ý món ăn chính xác hơn.' },
-  { id: '5', title: 'Kết quả của bạn', subtitle: 'Mục tiêu calo hàng ngày tối ưu để đạt được vóc dáng của bạn.' },
+  { id: '1', title: 'Thông tin cơ bản', subtitle: 'Để tính toán chỉ số cơ thể của bạn.' },
+  { id: '2', title: 'Mục tiêu', subtitle: 'Bạn muốn đạt được điều gì?' },
+  { id: '3', title: 'Thể trạng & Tốc độ', subtitle: 'Tối ưu hóa kế hoạch theo cơ địa của bạn.' },
+  { id: '4', title: 'Vận động', subtitle: 'Mức độ hoạt động hàng ngày của bạn.' },
+  { id: '5', title: 'Sở thích ăn uống', subtitle: 'Món bạn thích và thực phẩm cần tránh.' },
+  { id: '6', title: 'Kế hoạch của bạn', subtitle: 'Lộ trình tối ưu để đạt mục tiêu.' },
 ];
 
 export const GOALS = [
@@ -34,4 +35,24 @@ export const DIETS = [
   { id: 'vegetarian', label: 'Chay' },
   { id: 'vegan', label: 'Thuần chay' },
   { id: 'keto', label: 'Keto' },
+];
+
+export const DISLIKES = [
+  { id: 'cilantro', label: 'Rau mùi' },
+  { id: 'bitter_melon', label: 'Mướp đắng' },
+  { id: 'onion', label: 'Hành tây' },
+  { id: 'garlic', label: 'Tỏi' },
+  { id: 'durian', label: 'Sầu riêng' },
+];
+
+export const BODY_TYPES = [
+  { id: 'ectomorph', title: 'Gầy', description: 'Khó tăng cân, người mỏng', icon: 'body-outline' },
+  { id: 'mesomorph', title: 'Cân đối', description: 'Dễ tăng cơ, dáng người chuẩn', icon: 'man-outline' },
+  { id: 'endomorph', title: 'Tròn trịa', description: 'Dễ tích mỡ, xương to', icon: 'accessibility-outline' },
+];
+
+export const PACE_OPTIONS = [
+  { id: 'slow', title: 'Từ từ', description: 'Dễ duy trì, thoải mái' },
+  { id: 'normal', title: 'Tiêu chuẩn', description: 'Khuyến nghị bởi chuyên gia' },
+  { id: 'fast', title: 'Thần tốc', description: 'Cần kỷ luật cao' },
 ];

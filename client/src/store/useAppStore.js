@@ -1,6 +1,6 @@
 // src/store/useAppStore.js
 import { create } from 'zustand';
-import { authApi } from '../services/mockApi';
+import { authApi } from '../services/api';
 
 export const useAppStore = create((set, get) => ({
   // ==========================================
@@ -18,10 +18,30 @@ export const useAppStore = create((set, get) => ({
     
     if (response.success) {
       set({ 
-        token: response.data.access_token, 
-        hasProfile: response.data.has_profile,
-        userProfile: response.data.profile || null,
+        token: response.data.token,
+        // Gộp thông tin User (có name) và Profile (có calories) lại làm một
+        userProfile: { ...response.data.user, ...response.data.profile },
+        hasProfile: response.data.has_profile || false,
         isLoading: false 
+      });
+      return true;
+    } else {
+      set({ error: response.message, isLoading: false });
+      return false;
+    }
+  },
+
+  register: async ({ name, email, password }) => {
+    set({ isLoading: true, error: null });
+    const response = await authApi.register(name, email, password);
+
+    if (response.success) {
+      set({
+        token: response.data.token,
+        // Gộp tương tự cho lúc đăng ký
+        userProfile: { ...response.data.user, ...response.data.profile },
+        hasProfile: false, // Sau đăng ký sẽ được đưa sang Onboarding
+        isLoading: false
       });
       return true;
     } else {
@@ -35,14 +55,15 @@ export const useAppStore = create((set, get) => ({
     const response = await authApi.setupProfile(data);
     
     if (response.success) {
-      set({ 
-        userProfile: response.data,
+      set((state) => ({ 
+        userProfile: { ...state.userProfile, ...response.data.data },
         hasProfile: true,
         isLoading: false 
-      });
+      }));
+      get().showToast('Chúc mừng! Hồ sơ của bạn đã sẵn sàng.', 'success');
       return true;
     }
-    set({ error: "Lỗi lưu hồ sơ", isLoading: false });
+    set({ error: response.error || "Lỗi lưu hồ sơ", isLoading: false });
     return false;
   },
 

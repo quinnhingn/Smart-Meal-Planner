@@ -29,8 +29,8 @@ def run_migrations():
         init_migration_table()
         applied_files = get_applied_migrations()
         
-        # Tìm tất cả file .sql trong folder migration
-        migration_dir = os.path.join(os.path.dirname(__file__), 'migration')
+        # Trỏ ra thư mục migration chung ở bên ngoài
+        migration_dir = os.path.join(os.path.dirname(__file__), '../../../backend/database/migration')
         sql_files = glob.glob(os.path.join(migration_dir, "*.sql"))
         
         # Sắp xếp theo tên để chạy đúng thứ tự 001 -> 002 -> 003...

@@ -133,6 +133,63 @@ class RecipeHandler:
                 "message": f"Lỗi xử lý Handler: {str(e)}"
             }
 
+    def update_recipe(self, recipe_id, data):
+        """
+        Luồng xử lý cập nhật công thức
+        """
+        try:
+            # 1. Xử lý ảnh nếu có
+            image_url = data.get("imageUrl") or data.get("image_url")
+            if image_url and (image_url.startswith("data:") or ("http" in image_url and "cloudinary.com" not in image_url)):
+                processed_url = self.process_image_and_upload(image_url)
+                if processed_url:
+                    data["imageUrl"] = processed_url
+                    data["image_url"] = processed_url
+
+            # 2. Chuẩn bị dữ liệu để lưu vào Repo
+            recipe_data = {
+                "name_vn": data.get("name"),
+                "name_en": data.get("name_en", ""),
+                "category": data.get("category"),
+                "difficulty": data.get("difficulty"),
+                "cooking_time": data.get("cookingTime"),
+                "servings": data.get("servings"),
+                "image_url": data.get("imageUrl") or data.get("image_url"),
+                "video_url": data.get("videoUrl") or data.get("video_url"),
+                "goals": data.get("goals", []),
+                "meal_times": data.get("mealTimes", []),
+                "ingredients": data.get("ingredients", []),
+                "steps": data.get("steps", []),
+                "total_calories": data.get("total_calories", 0),
+                "total_protein": data.get("total_protein", 0),
+                "total_carbs": data.get("total_carbs", 0),
+                "total_fat": data.get("total_fat", 0),
+                "ai_insight": data.get("ai_insight", "")
+            }
+
+            # 3. Gọi Repo cập nhật DB
+            result = self.recipe_repo.update(recipe_id, recipe_data)
+            
+            if result.get("success"):
+                return {
+                    "success": True,
+                    "message": "Cập nhật công thức thành công!"
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": f"Lỗi lưu DB: {result.get('message')}"
+                }
+
+        except Exception as e:
+            import traceback
+            print(f"💥 [ERROR] Lỗi tại RecipeHandler.update_recipe: {str(e)}")
+            traceback.print_exc()
+            return {
+                "success": False,
+                "message": f"Lỗi xử lý Handler: {str(e)}"
+            }
+
     def get_recipe_by_id(self, recipe_id):
         """
         Lấy chi tiết một công thức và parse dữ liệu JSON

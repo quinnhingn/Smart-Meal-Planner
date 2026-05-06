@@ -5,12 +5,12 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from flask import Flask
-from database.db import db
+from backend.database.db import db
 from dotenv import load_dotenv
 
 # Import các model để SQLAlchemy nhận diện
-from model.auth.user_model import UserModel
-from model.ingredients.ingredient_model import IngredientModel
+from backend.model.auth.user_model import UserModel
+from backend.model.ingredients.ingredient_model import IngredientModel
 
 def init_db():
     # Load env

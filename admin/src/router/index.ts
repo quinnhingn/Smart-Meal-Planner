@@ -63,6 +63,12 @@ const router = createRouter({
           props: true
         },
         {
+          path: 'recipes/:category/:id/edit',
+          name: 'recipe-edit',
+          component: () => import('../views/Recipes/modals/AddRecipe.vue'),
+          props: true
+        },
+        {
           path: 'recipes/:category/:id',
           name: 'recipe-detail',
           component: () => import('../views/Recipes/pages/RecipeDetail.vue'),

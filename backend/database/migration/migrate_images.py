@@ -2,8 +2,8 @@ import os
 import cloudinary
 import cloudinary.uploader
 from app import app
-from database.db import db
-from model.ingredients.ingredient_model import IngredientModel
+from backend.database.db import db
+from backend.model.ingredients.ingredient_model import IngredientModel
 from dotenv import load_dotenv
 
 # Load env variables

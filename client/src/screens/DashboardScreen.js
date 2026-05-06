@@ -19,15 +19,46 @@ import {
   DASHBOARD_MOCK_MEAL_LOGS, DASHBOARD_MOCK_PANTRY_ALERTS,
   DASHBOARD_MOCK_STREAK, DASHBOARD_MOCK_WEEKLY_STATS 
 } from '../utils/mockDashboardData';
+import { useAppStore } from '../store/useAppStore';
 
 const BREAKPOINT_MOBILE_MAX = 768;
 
 const DashboardScreen = () => {
   const { width } = useWindowDimensions();
+  const { userProfile } = useAppStore();
   const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX;
 
-  const remainingKcal = Math.max(0, DASHBOARD_MOCK_TRACKING.target_kcal - DASHBOARD_MOCK_TRACKING.consumed_kcal);
-  const userName = "Quỳnh Nhi"; 
+  // Lấy dữ liệu thật từ Profile
+  const userName = userProfile?.name || "Bạn";
+  const targetKcal = userProfile?.target_calories || userProfile?.tdee || 2000;
+  
+  // Tổng hợp dữ liệu tracking thật
+  const realTracking = {
+    ...DASHBOARD_MOCK_TRACKING,
+    target_kcal: Math.round(targetKcal),
+    consumed_kcal: 0,
+    burned_kcal: 0
+  };
+
+  const realMacros = {
+    protein: { 
+      target: Math.round(userProfile?.target_protein_g || userProfile?.protein_g || 150), 
+      current: 0,
+      color: '#E53935'
+    },
+    carbs: { 
+      target: Math.round(userProfile?.target_carbs_g || userProfile?.carbs_g || 250), 
+      current: 0,
+      color: '#29B6F6'
+    },
+    fat: { 
+      target: Math.round(userProfile?.target_fat_g || userProfile?.fat_g || 60), 
+      current: 0,
+      color: '#FBC02D'
+    }
+  };
+
+  const remainingKcal = Math.max(0, realTracking.target_kcal - realTracking.consumed_kcal);
 
   return (
     <ResponsiveContainer useImageBg={false}>
@@ -47,7 +78,7 @@ const DashboardScreen = () => {
           
           {/* CỘT TRÁI */}
           <View style={[styles.column, isWebLarge && { flex: 1.5 }]}>
-            <DashboardEnergyCard tracking={DASHBOARD_MOCK_TRACKING} macros={DASHBOARD_MOCK_MACROS} />
+            <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
             <MiniMealLog logs={DASHBOARD_MOCK_MEAL_LOGS} />
           </View>
 

@@ -1,0 +1,1382 @@
+[
+  {
+    "Nguyên Liệu Gốc": "Cơm trắng",
+    "Nguyên Liệu Thay Thế": "Cơm gạo lứt",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Gạo lứt nhiều chất xơ hơn, calo tương đương."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cơm trắng",
+    "Nguyên Liệu Thay Thế": "Quinoa (Diêm mạch)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Quinoa giàu protein hơn, ít carb hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bún tươi",
+    "Nguyên Liệu Thay Thế": "Bún gạo lứt",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bún lứt chỉ số đường huyết (GI) thấp hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Phở tươi",
+    "Nguyên Liệu Thay Thế": "Bún tươi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương về lượng carb."
+  },
+  {
+    "Nguyên Liệu Gốc": "Miến dong",
+    "Nguyên Liệu Thay Thế": "Bún gạo khô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương về lượng tinh bột."
+  },
+  {
+    "Nguyên Liệu Gốc": "Khoai tây",
+    "Nguyên Liệu Thay Thế": "Khoai lang",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Khoai lang ngọt hơn, nhiều xơ hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Yến mạch",
+    "Nguyên Liệu Thay Thế": "Ngũ cốc nguyên cám",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương năng lượng, kết cấu thay đổi."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột mì đa dụng",
+    "Nguyên Liệu Thay Thế": "Bột yến mạch xay",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Không chứa gluten, bánh kém nở hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột năng",
+    "Nguyên Liệu Thay Thế": "Bột bắp (Cornstarch)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương công dụng tạo độ sánh."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bánh mì trắng",
+    "Nguyên Liệu Thay Thế": "Bánh mì nguyên cám",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Nguyên cám tốt cho tiêu hóa, no lâu."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ức gà",
+    "Nguyên Liệu Thay Thế": "Đùi gà (bỏ da)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đùi gà mềm hơn nhưng nhiều béo hơn ức."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ức gà",
+    "Nguyên Liệu Thay Thế": "Đậu hũ trắng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Tăng lượng để bù protein, hợp ăn chay."
+  },
+  {
+    "Nguyên Liệu Gốc": "Thịt bò nạc",
+    "Nguyên Liệu Thay Thế": "Thịt đà điểu",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Kết cấu giống thịt bò, ít béo hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Thịt bò nạc",
+    "Nguyên Liệu Thay Thế": "Thịt heo nạc",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Heo nạc nhạt vị hơn, cần nêm nếm thêm."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tôm sú",
+    "Nguyên Liệu Thay Thế": "Mực ống",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương protein, lưu ý dị ứng hải sản."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cá hồi",
+    "Nguyên Liệu Thay Thế": "Cá thu",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều giàu Omega-3, cá thu tanh nồng hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cá hồi",
+    "Nguyên Liệu Thay Thế": "Cá ngừ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cá ngừ nạc hơn, ít béo bão hòa."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cá lóc (Cá quả)",
+    "Nguyên Liệu Thay Thế": "Cá điêu hồng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều là cá thịt trắng, nạc, dễ tiêu."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đậu hũ trắng",
+    "Nguyên Liệu Thay Thế": "Nấm đùi gà",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Giảm protein, tăng chất xơ và độ dai."
+  },
+  {
+    "Nguyên Liệu Gốc": "Trứng gà",
+    "Nguyên Liệu Thay Thế": "Trứng vịt",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.8",
+    "Ghi chú (Dưới 10 từ)": "Trứng vịt to, giàu béo và calo hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Trứng gà",
+    "Nguyên Liệu Thay Thế": "Trứng cút",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 5",
+    "Ghi chú (Dưới 10 từ)": "1 quả trứng gà bằng 5 quả trứng cút."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sữa tươi bò",
+    "Nguyên Liệu Thay Thế": "Sữa đậu nành",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Ít béo hơn, hợp người bất dung nạp lactose."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sữa tươi bò",
+    "Nguyên Liệu Thay Thế": "Sữa hạnh nhân",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Calo cực thấp, ít protein hơn sữa bò."
+  },
+  {
+    "Nguyên Liệu Gốc": "Thịt băm (heo)",
+    "Nguyên Liệu Thay Thế": "Thịt gà băm",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Gà băm khô hơn heo, calo thấp hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Giò lụa (Chả lụa)",
+    "Nguyên Liệu Thay Thế": "Chả bò",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương dinh dưỡng, chả bò đậm mùi tiêu."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cải bó xôi (Spinach)",
+    "Nguyên Liệu Thay Thế": "Cải xoăn (Kale)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Kale cứng hơn, cần vò lá trước khi ăn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Súp lơ xanh",
+    "Nguyên Liệu Thay Thế": "Súp lơ trắng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Súp lơ trắng nhạt vị hơn, dễ mix món."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cải ngọt",
+    "Nguyên Liệu Thay Thế": "Cải thìa",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương về hương vị và lượng dinh dưỡng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Rau muống",
+    "Nguyên Liệu Thay Thế": "Rau lang",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Rau lang có độ nhớt nhẹ khi luộc."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cà chua tươi",
+    "Nguyên Liệu Thay Thế": "Tương cà (Ketchup)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "100g : 30g",
+    "Ghi chú (Dưới 10 từ)": "Tương cà nhiều đường và natri hơn cà tươi."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dưa leo",
+    "Nguyên Liệu Thay Thế": "Bí ngòi (Zucchini)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bí ngòi thường nấu chín thay vì ăn sống."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hành tây",
+    "Nguyên Liệu Thay Thế": "Hành tím",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hành tím hăng hơn, giảm lượng nếu ăn sống."
+  },
+  {
+    "Nguyên Liệu Gốc": "Táo",
+    "Nguyên Liệu Thay Thế": "Lê",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương độ giòn, vị ngọt và chất xơ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Chuối chín",
+    "Nguyên Liệu Thay Thế": "Bơ chín",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bơ giàu béo, chuối giàu carb. Kết cấu đặc."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cam tươi",
+    "Nguyên Liệu Thay Thế": "Quýt",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Cần nhiều quýt hơn để ép đủ lượng nước."
+  },
+  {
+    "Nguyên Liệu Gốc": "Chanh tươi",
+    "Nguyên Liệu Thay Thế": "Tắc (Quất)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 2",
+    "Ghi chú (Dưới 10 từ)": "Tắc thơm tinh dầu hơn, vị chua thanh hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ớt chuông",
+    "Nguyên Liệu Thay Thế": "Cà chua cứng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Thay màu sắc, cà chua chua hơn ớt chuông."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dầu thực vật",
+    "Nguyên Liệu Thay Thế": "Dầu Olive",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Olive tốt tim mạch, không chịu nhiệt chiên sâu."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bơ lạt (Butter)",
+    "Nguyên Liệu Thay Thế": "Dầu dừa",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.8",
+    "Ghi chú (Dưới 10 từ)": "Dầu dừa là 100% béo, bơ chỉ khoảng 80%."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hạt điều",
+    "Nguyên Liệu Thay Thế": "Hạt hạnh nhân",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương lượng calo, hạnh nhân nhai cứng hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hạt chia",
+    "Nguyên Liệu Thay Thế": "Hạt é",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hạt é kém Omega-3 hơn hạt chia, nở nhanh."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bơ đậu phộng",
+    "Nguyên Liệu Thay Thế": "Bơ hạnh nhân",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bơ hạnh nhân đắt hơn, hợp chế độ Keto."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nước mắm",
+    "Nguyên Liệu Thay Thế": "Nước tương (Xì dầu)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Nước tương nhạt hơn mắm, thích hợp ăn chay."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đường trắng",
+    "Nguyên Liệu Thay Thế": "Đường phèn",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.2",
+    "Ghi chú (Dưới 10 từ)": "Đường phèn ngọt thanh, viên to khó tan hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đường trắng",
+    "Nguyên Liệu Thay Thế": "Mật ong",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.8",
+    "Ghi chú (Dưới 10 từ)": "Mật ong ngọt gắt, dạng lỏng, nhiều dưỡng chất."
+  },
+  {
+    "Nguyên Liệu Gốc": "Giấm trắng",
+    "Nguyên Liệu Thay Thế": "Giấm táo",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Giấm táo thơm trái cây, chua gắt nhẹ hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột ngọt (Mì chính)",
+    "Nguyên Liệu Thay Thế": "Hạt nêm từ nấm",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Hạt nêm nấm tạo vị ngọt tự nhiên umami."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tỏi tươi",
+    "Nguyên Liệu Thay Thế": "Bột tỏi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 tép : 1/4 muỗng cafe",
+    "Ghi chú (Dưới 10 từ)": "Bột tỏi không bị cháy khét khi áp chảo."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nước cốt dừa",
+    "Nguyên Liệu Thay Thế": "Whipping Cream",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Whipping cream ít mùi dừa, hợp nấu món Âu."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sữa đặc",
+    "Nguyên Liệu Thay Thế": "Mật ong",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Mật ong ngọt keo, không béo ngậy như sữa."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bánh hỏi",
+    "Nguyên Liệu Thay Thế": "Bún tươi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương tinh bột, kết cấu khác nhau."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bánh cuốn",
+    "Nguyên Liệu Thay Thế": "Bánh ướt",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương năng lượng, bánh ướt không nhân."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bánh tráng cuốn",
+    "Nguyên Liệu Thay Thế": "Bánh đa nem",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều dùng để cuốn chả giò, gỏi."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột mì đa dụng",
+    "Nguyên Liệu Thay Thế": "Bột mì nguyên cám",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tăng chất xơ, bánh làm ra đặc hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột gạo",
+    "Nguyên Liệu Thay Thế": "Bột năng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bột năng tạo độ dẻo và dính hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đậu đen",
+    "Nguyên Liệu Thay Thế": "Đậu đỏ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương dinh dưỡng, khác màu sắc."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đậu xanh",
+    "Nguyên Liệu Thay Thế": "Đậu lăng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đậu lăng giàu xơ, nấu rất nhanh mềm."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ngô ngọt (Bắp Mỹ)",
+    "Nguyên Liệu Thay Thế": "Ngô nếp",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Ngô nếp dẻo, bùi và ít ngọt hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Khoai môn",
+    "Nguyên Liệu Thay Thế": "Khoai sọ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Khoai sọ dẻo hơn, kích thước củ nhỏ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bánh phở khô",
+    "Nguyên Liệu Thay Thế": "Hủ tiếu khô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương tinh bột, hủ tiếu dai hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sườn non heo",
+    "Nguyên Liệu Thay Thế": "Sườn sụn heo",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Sườn sụn giòn nhai được, ít mỡ hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ba chỉ heo",
+    "Nguyên Liệu Thay Thế": "Nạc dăm heo",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.8",
+    "Ghi chú (Dưới 10 từ)": "Nạc dăm mềm vừa, ít mỡ ngấy hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cánh gà",
+    "Nguyên Liệu Thay Thế": "Đùi gà tỏi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đùi nhiều thịt nạc hơn phần cánh."
+  },
+  {
+    "Nguyên Liệu Gốc": "Thịt vịt",
+    "Nguyên Liệu Thay Thế": "Thịt ngan",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Ngan nạc thịt, ít mùi hôi hơn vịt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tôm hùm",
+    "Nguyên Liệu Thay Thế": "Tôm càng xanh",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Tôm càng nhỏ hơn, thịt dai ngọt tương đương."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cua biển",
+    "Nguyên Liệu Thay Thế": "Ghẹ xanh",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.2",
+    "Ghi chú (Dưới 10 từ)": "Ghẹ ít thịt hơn cua cùng kích thước."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hàu tươi",
+    "Nguyên Liệu Thay Thế": "Nghêu (Ngao)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Nghêu nhỏ hơn, vị ngọt thanh ít béo."
+  },
+  {
+    "Nguyên Liệu Gốc": "Mực lá",
+    "Nguyên Liệu Thay Thế": "Mực ống",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Mực ống mỏng thịt, ăn mềm hơn mực lá."
+  },
+  {
+    "Nguyên Liệu Gốc": "Chả cá",
+    "Nguyên Liệu Thay Thế": "Chả mực",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Chả mực dai giòn, ngọt vị hải sản."
+  },
+  {
+    "Nguyên Liệu Gốc": "Xúc xích heo",
+    "Nguyên Liệu Thay Thế": "Xúc xích gà",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Xúc xích gà ít chất béo bão hòa hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Lạp xưởng heo",
+    "Nguyên Liệu Thay Thế": "Lạp xưởng tôm",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Vị tôm thanh nhạt, ít ngấy mỡ hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đậu hũ non",
+    "Nguyên Liệu Thay Thế": "Trứng hấp",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Kết cấu mềm mịn tan trong miệng tương đương."
+  },
+  {
+    "Nguyên Liệu Gốc": "Váng đậu (Tàu hũ ky)",
+    "Nguyên Liệu Thay Thế": "Nấm tuyết",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Nấm giòn sật, calo thấp, không đạm."
+  },
+  {
+    "Nguyên Liệu Gốc": "Măng tây",
+    "Nguyên Liệu Thay Thế": "Đậu cô ve",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đậu cô ve rẻ hơn, độ giòn tương đương."
+  },
+  {
+    "Nguyên Liệu Gốc": "Rau dền",
+    "Nguyên Liệu Thay Thế": "Rau mồng tơi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Mồng tơi nhớt hơn, nhuận tràng cực tốt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cà rốt",
+    "Nguyên Liệu Thay Thế": "Bí đỏ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cùng màu sắc, bí đỏ bở và ngọt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Củ cải trắng",
+    "Nguyên Liệu Thay Thế": "Su hào",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Su hào giòn ngọt, ít mùi hăng hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bắp cải trắng",
+    "Nguyên Liệu Thay Thế": "Bắp cải tím",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cải tím cứng hơn, giàu chất chống oxy hóa."
+  },
+  {
+    "Nguyên Liệu Gốc": "Xà lách mỡ",
+    "Nguyên Liệu Thay Thế": "Xà lách lô lô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Lô lô dòn xốp hơn, trang trí đẹp."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ngò rí (Rau mùi)",
+    "Nguyên Liệu Thay Thế": "Cần tây (cọng nhỏ)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cần tây mùi hăng đặc trưng, ít dùng sống."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ớt sừng",
+    "Nguyên Liệu Thay Thế": "Ớt chuông dài",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Ớt chuông hoàn toàn không cay, xào ngọt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Lá lốt",
+    "Nguyên Liệu Thay Thế": "Lá tía tô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều cuộn chả được, tía tô mùi gắt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đậu bắp",
+    "Nguyên Liệu Thay Thế": "Mướp hương",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cùng độ mềm nhão khi nấu chín kỹ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Khổ qua (Mướp đắng)",
+    "Nguyên Liệu Thay Thế": "Bí ngòi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bí ngòi hoàn toàn không đắng, dễ ăn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hành lá",
+    "Nguyên Liệu Thay Thế": "Lá hẹ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hẹ mùi nồng hơn hành lá thông thường."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bưởi",
+    "Nguyên Liệu Thay Thế": "Cam sành",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương vitamin C, cam nhiều nước ngọt hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dưa hấu",
+    "Nguyên Liệu Thay Thế": "Dưa lưới",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Dưa lưới giòn xốp, ít nước hơn dưa hấu."
+  },
+  {
+    "Nguyên Liệu Gốc": "Xoài chín",
+    "Nguyên Liệu Thay Thế": "Đu đủ chín",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đu đủ mềm hơn, ít chua, nhuận tràng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Vải thiều",
+    "Nguyên Liệu Thay Thế": "Nhãn",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều tính nóng, nhãn quả nhỏ ít nước hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dưa lê",
+    "Nguyên Liệu Thay Thế": "Dưa bở",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Dưa bở kết cấu bột và nhạt vị hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dâu tây",
+    "Nguyên Liệu Thay Thế": "Quả mâm xôi (Raspberry)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều vị chua, mâm xôi nhỏ mọng nước."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sầu riêng",
+    "Nguyên Liệu Thay Thế": "Mít chín",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Mít dai hơn, không có mùi nồng đặc trưng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Kiwi",
+    "Nguyên Liệu Thay Thế": "Nho xanh",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Nho xanh chua ngọt, không có lông vỏ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hạt óc chó",
+    "Nguyên Liệu Thay Thế": "Hạt hồ đào (Pecan)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hồ đào ngọt bùi và ít đắng hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đậu phộng (Lạc)",
+    "Nguyên Liệu Thay Thế": "Hạt điều",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hạt điều béo ngậy và nhai mềm hơn lạc."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hạt dưa",
+    "Nguyên Liệu Thay Thế": "Hạt bí",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hạt bí to, dễ bóc vỏ hơn hạt dưa."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dầu mè",
+    "Nguyên Liệu Thay Thế": "Dầu hào",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Dầu hào đặc sệt, đậm đà và mặn hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sốt Mayonnaise",
+    "Nguyên Liệu Thay Thế": "Sữa chua không đường",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Sữa chua chua nhẹ, cực kỳ ít béo."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hành tím tươi",
+    "Nguyên Liệu Thay Thế": "Bột hành",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 củ : 1/4 muỗng cafe",
+    "Ghi chú (Dưới 10 từ)": "Tiện lợi bảo quản, không gây cay mắt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nước hầm xương gà",
+    "Nguyên Liệu Thay Thế": "Nước hầm rau củ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Rau củ thanh hơn, phù hợp ăn thuần chay."
+  },
+  {
+    "Nguyên Liệu Gốc": "Mắm tôm",
+    "Nguyên Liệu Thay Thế": "Tương bần",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương bần thuần chay, mùi nhẹ dễ ăn hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tương ớt",
+    "Nguyên Liệu Thay Thế": "Sa tế",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.5",
+    "Ghi chú (Dưới 10 từ)": "Sa tế cay nồng và chứa nhiều dầu mỡ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Giấm gạo",
+    "Nguyên Liệu Thay Thế": "Nước cốt chanh tươi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Chanh thơm hương tự nhiên, nhiều vitamin C."
+  },
+  {
+    "Nguyên Liệu Gốc": "Muối tinh (Muối tinh luyện)",
+    "Nguyên Liệu Thay Thế": "Muối hồng Himalaya",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Muối hồng nhạt vị mặn hơn đôi chút."
+  },
+  {
+    "Nguyên Liệu Gốc": "Siro phong (Maple Syrup)",
+    "Nguyên Liệu Thay Thế": "Mật ong",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Mật ong đặc sánh và vị ngọt gắt hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cà phê phin",
+    "Nguyên Liệu Thay Thế": "Cà phê hòa tan",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 ly : 1 gói",
+    "Ghi chú (Dưới 10 từ)": "Hòa tan tiện lợi nhưng vị nhạt, kém thơm."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột sắn dây",
+    "Nguyên Liệu Thay Thế": "Bột năng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bột năng rẻ hơn, độ sánh dẻo tương đương."
+  },
+  {
+    "Nguyên Liệu Gốc": "Rượu vang nấu ăn",
+    "Nguyên Liệu Thay Thế": "Nước ép nho",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Không cồn, vị ngọt gắt hơn rượu vang."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nước cốt dừa",
+    "Nguyên Liệu Thay Thế": "Sữa tươi nguyên kem",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Giảm béo bão hòa, hoàn toàn mất mùi dừa."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bơ thực vật (Margarine)",
+    "Nguyên Liệu Thay Thế": "Bơ lạt (Butter)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bơ lạt từ động vật, thơm ngậy tự nhiên."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tương ớt",
+    "Nguyên Liệu Thay Thế": "Tương cà (Ketchup)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hoàn toàn không cay, hợp với trẻ em."
+  },
+  {
+    "Nguyên Liệu Gốc": "Mẻ (cơm mẻ)",
+    "Nguyên Liệu Thay Thế": "Sấu xanh",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Vị chua thanh, không có mùi mẻ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sấu xanh",
+    "Nguyên Liệu Thay Thế": "Me chua",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Chua gắt hơn sấu, hợp nấu canh cá."
+  },
+  {
+    "Nguyên Liệu Gốc": "Me chua",
+    "Nguyên Liệu Thay Thế": "Quả thanh trà",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Vị chua dịu, thơm mùi hoa quả tự nhiên."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đường nâu",
+    "Nguyên Liệu Thay Thế": "Đường thốt nốt",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Thơm mùi mật, vị ngọt sâu đậm đà."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột phô mai",
+    "Nguyên Liệu Thay Thế": "Men dinh dưỡng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Vị béo giống phô mai, thuần thực vật."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tiêu đen",
+    "Nguyên Liệu Thay Thế": "Tiêu sọ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cay nồng hơn, không làm lợn cợn đen nước."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tỏi băm",
+    "Nguyên Liệu Thay Thế": "Hành tăm (Củ nén)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Thơm nồng đặc trưng, hợp kho cá/thịt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Mù tạt (Mustard)",
+    "Nguyên Liệu Thay Thế": "Wasabi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.5",
+    "Ghi chú (Dưới 10 từ)": "Wasabi cay xộc mũi mạnh hơn rất nhiều."
+  },
+  {
+    "Nguyên Liệu Gốc": "Giấm đen",
+    "Nguyên Liệu Thay Thế": "Giấm tiều (Giấm đỏ)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Vị chua ngọt thanh, hợp chấm dimsum."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bánh đa cua",
+    "Nguyên Liệu Thay Thế": "Bánh canh bột gạo",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bánh canh dẻo hơn, không mùi cua."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hạt sen tươi",
+    "Nguyên Liệu Thay Thế": "Hạt sen khô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.5",
+    "Ghi chú (Dưới 10 từ)": "Sen khô nhẹ hơn, cần ngâm trước khi nấu."
+  },
+  {
+    "Nguyên Liệu Gốc": "Granola (Ngũ cốc)",
+    "Nguyên Liệu Thay Thế": "Yến mạch rang",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Yến mạch ít ngọt, giảm calo hiệu quả."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nui ống",
+    "Nguyên Liệu Thay Thế": "Mỳ Ý (Spaghetti)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cùng thành phần lúa mì, khác hình dáng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Miến dong",
+    "Nguyên Liệu Thay Thế": "Bún tàu",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bún tàu nhanh chín và dễ nát hơn miến."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột năng",
+    "Nguyên Liệu Thay Thế": "Bột khoai tây",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tạo độ sánh, ít dai dính hơn bột năng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cốm tươi",
+    "Nguyên Liệu Thay Thế": "Cốm dẹp khô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cần trộn xíu nước ấm cho cốm dẹp mềm."
+  },
+  {
+    "Nguyên Liệu Gốc": "Gạo tẻ",
+    "Nguyên Liệu Thay Thế": "Gạo tấm",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hạt vỡ nhỏ, nấu nhanh chín mềm hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Mực nang",
+    "Nguyên Liệu Thay Thế": "Bạch tuộc",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bạch tuộc dai giòn hơn, cần xào lửa lớn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cá trê",
+    "Nguyên Liệu Thay Thế": "Cá trạch",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Nhiều xương hơn, thịt béo ngậy."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cá rô đồng",
+    "Nguyên Liệu Thay Thế": "Cá diếc",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cá diếc nhiều xương dăm hơn rô đồng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bò viên",
+    "Nguyên Liệu Thay Thế": "Lợn viên (Mọc)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Mọc xốp ít dai hơn bò, nhạt vị hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Chả lụa",
+    "Nguyên Liệu Thay Thế": "Chả quế",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Chả quế có lớp vỏ thơm mùi quế nướng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cá basa",
+    "Nguyên Liệu Thay Thế": "Cá hú",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cá hú nạc hơn, bớt phần mỡ bụng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dồi trường",
+    "Nguyên Liệu Thay Thế": "Tràng lợn",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đương độ giòn sần sật."
+  },
+  {
+    "Nguyên Liệu Gốc": "Đùi ếch",
+    "Nguyên Liệu Thay Thế": "Cánh gà",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Cánh gà nhiều xương và mỡ hơn ếch."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cá mòi hộp",
+    "Nguyên Liệu Thay Thế": "Cá nục hộp",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Thịt cá nục chắc và cứng hơn cá mòi."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sườn cừu",
+    "Nguyên Liệu Thay Thế": "Sườn bò",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Sườn bò không có mùi hăng đặc trưng của cừu."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nấm rơm",
+    "Nguyên Liệu Thay Thế": "Nấm mỡ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Nấm mỡ đặc ruột, nhai dai giòn hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nấm mèo (Mộc nhĩ)",
+    "Nguyên Liệu Thay Thế": "Nấm hương khô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Nấm hương thơm hơn nhưng kém độ giòn sật."
+  },
+  {
+    "Nguyên Liệu Gốc": "Rau đay",
+    "Nguyên Liệu Thay Thế": "Rau dền",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Rau dền ngọt nước, hoàn toàn không nhớt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dưa cải bẹ chua",
+    "Nguyên Liệu Thay Thế": "Kim chi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Kim chi cay nồng và có màu đỏ cam."
+  },
+  {
+    "Nguyên Liệu Gốc": "Quả bơ chín",
+    "Nguyên Liệu Thay Thế": "Chuối tiêu chín",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Dùng thay bơ để tạo độ đặc sệt sinh tố."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dưa hấu",
+    "Nguyên Liệu Thay Thế": "Thanh long đỏ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Thanh long nhạt hơn, hạt nhỏ nhai được."
+  },
+  {
+    "Nguyên Liệu Gốc": "Múi bưởi",
+    "Nguyên Liệu Thay Thế": "Múi cam",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cam nhiều nước ép hơn, múi mềm tan."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dứa (Thơm)",
+    "Nguyên Liệu Thay Thế": "Xoài xanh",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Xoài chua gắt, không có enzym làm mềm thịt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sấu xanh",
+    "Nguyên Liệu Thay Thế": "Chanh tươi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Chanh chua thanh, đun lâu dễ bị đắng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Rau xà lách",
+    "Nguyên Liệu Thay Thế": "Cải mầm",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cải mầm ăn sống có vị hăng cay nhẹ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ngò gai (Mùi tàu)",
+    "Nguyên Liệu Thay Thế": "Rau ngổ (Ngò ôm)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Rau ngổ thơm đặc trưng, hợp nấu canh chua."
+  },
+  {
+    "Nguyên Liệu Gốc": "Húng chanh",
+    "Nguyên Liệu Thay Thế": "Húng lủi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Húng lủi mùi thanh mát, dễ ăn sống hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hoa chuối",
+    "Nguyên Liệu Thay Thế": "Thân chuối bào",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Thân chuối trắng giòn, ít vị chát hơn hoa."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bông súng",
+    "Nguyên Liệu Thay Thế": "Bắp cải bào sợi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bắp cải dòn cứng, không hút nước như súng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Mít non (nấu canh)",
+    "Nguyên Liệu Thay Thế": "Đậu hũ chiên",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đậu hũ mềm mọng, dễ thấm gia vị hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Rau tiến vua",
+    "Nguyên Liệu Thay Thế": "Củ sắn (Củ đậu)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều giòn sật, củ sắn mọng nước ngọt hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Măng khô",
+    "Nguyên Liệu Thay Thế": "Nấm hương khô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Nấm mềm xốp, măng nhai dai sần sật."
+  },
+  {
+    "Nguyên Liệu Gốc": "Táo ta (Táo xanh)",
+    "Nguyên Liệu Thay Thế": "Khế chua",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Khế chua gắt và nhiều nước hơn táo."
+  },
+  {
+    "Nguyên Liệu Gốc": "Khế ngọt",
+    "Nguyên Liệu Thay Thế": "Roi (Mận trắng)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều xốp, ngọt thanh và nhiều nước."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hồng xiêm (Sabôchê)",
+    "Nguyên Liệu Thay Thế": "Đu đủ chín",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đu đủ mềm nhão, ít ngọt gắt hơn hồng xiêm."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hạt macca",
+    "Nguyên Liệu Thay Thế": "Hạt điều",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Hạt điều nhai giòn, ít béo ngậy hơn macca."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dầu hào",
+    "Nguyên Liệu Thay Thế": "Tương đen (Hoisin)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tương đen ngọt hơn, thoảng vị thảo mộc."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sữa đặc",
+    "Nguyên Liệu Thay Thế": "Đường cát trắng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1.5 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đường ngọt gắt, không có độ ngậy béo của sữa."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sữa chua Hy Lạp",
+    "Nguyên Liệu Thay Thế": "Sữa chua không đường",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Sữa chua Hy Lạp đặc quánh và giàu đạm hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hạt dẻ cười",
+    "Nguyên Liệu Thay Thế": "Đậu phộng rang",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đậu phộng rẻ, dễ tìm mua để thay thế."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sốt ướp BBQ",
+    "Nguyên Liệu Thay Thế": "Mật ong & Xì dầu",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hỗn hợp mặn ngọt tương tự vị sốt BBQ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dầu đậu nành",
+    "Nguyên Liệu Thay Thế": "Dầu hướng dương",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều là dầu thực vật nhẹ mùi, chịu nhiệt tốt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bơ đậu phộng",
+    "Nguyên Liệu Thay Thế": "Bơ vừng (Tahini)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bơ vừng nhặng đắng nhẹ, rất thơm bùi."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột ớt Hàn Quốc",
+    "Nguyên Liệu Thay Thế": "Bột ớt Việt Nam",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.3",
+    "Ghi chú (Dưới 10 từ)": "Ớt Việt Nam cay gắt và xé lưỡi hơn rất nhiều."
+  },
+  {
+    "Nguyên Liệu Gốc": "Chả cá Hàn Quốc",
+    "Nguyên Liệu Thay Thế": "Chả cá thác lác",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Chả thác lác dai dẻo, đậm đà vị cá hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bánh phồng tôm",
+    "Nguyên Liệu Thay Thế": "Bánh đa nướng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bánh đa nướng giòn rụm, hoàn toàn không ngậm dầu."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hành tây trắng",
+    "Nguyên Liệu Thay Thế": "Hành tây tím",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hành tím ngọt hơn khi nướng, màu sắc đẹp."
+  },
+  {
+    "Nguyên Liệu Gốc": "Thịt nai",
+    "Nguyên Liệu Thay Thế": "Thịt bò",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bò dễ mua hơn, nạc tương đương nai."
+  },
+  {
+    "Nguyên Liệu Gốc": "Thịt dê",
+    "Nguyên Liệu Thay Thế": "Thịt bò",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bò không có mùi hăng đặc trưng của dê."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cá kèo",
+    "Nguyên Liệu Thay Thế": "Cá bống",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cùng cỡ nhỏ, kho tiêu đều ngon, nạc thịt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cá basa fillet",
+    "Nguyên Liệu Thay Thế": "Cá chẽm fillet",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cá chẽm nạc, ít mỡ và bớt tanh hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Lòng non heo",
+    "Nguyên Liệu Thay Thế": "Dạ dày heo",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Dạ dày giòn sật, ít mỡ bên trong hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Móng giò lợn",
+    "Nguyên Liệu Thay Thế": "Sườn non",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Sườn nhiều nạc, ít béo ngậy hơn móng giò."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tai heo",
+    "Nguyên Liệu Thay Thế": "Mũi heo",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều giòn sần sật, dùng làm gỏi ngâm chua."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tôm đất",
+    "Nguyên Liệu Thay Thế": "Tôm sú",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tôm sú to hơn, vỏ cứng hơn tôm đất."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tôm tít (Bề bề)",
+    "Nguyên Liệu Thay Thế": "Tôm sú",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tôm sú dễ bóc vỏ, thịt chắc hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ốc bươu",
+    "Nguyên Liệu Thay Thế": "Ốc nhồi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Ốc nhồi thịt giòn, ngọt và ít nhớt hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ốc mỡ",
+    "Nguyên Liệu Thay Thế": "Ốc hương",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Ốc hương thơm tự nhiên, thịt giòn dai hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Ếch đồng",
+    "Nguyên Liệu Thay Thế": "Ếch nuôi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Ếch đồng chắc thịt, xương cứng và ngọt hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột gạo lứt",
+    "Nguyên Liệu Thay Thế": "Bột yến mạch",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều giàu xơ, bột yến mạch nở tốt hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột nếp",
+    "Nguyên Liệu Thay Thế": "Bột năng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đều tạo độ dẻo, bột năng dính trong hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Miến dong",
+    "Nguyên Liệu Thay Thế": "Phở sắn",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Phở sắn dai, thơm sắn, chỉ số GI thấp."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cơm cháy",
+    "Nguyên Liệu Thay Thế": "Bánh đa nướng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bánh đa mỏng, giòn xốp, ít calo hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bánh tẻ",
+    "Nguyên Liệu Thay Thế": "Bánh giò",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bánh giò nhiều nhân mỡ, bột nhão hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bơ đậu phộng",
+    "Nguyên Liệu Thay Thế": "Bơ hạt điều",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bơ điều ngọt thanh tự nhiên, ít béo hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sữa chua uống",
+    "Nguyên Liệu Thay Thế": "Sữa tươi lên men",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Vị chua ngọt tương tự, giàu lợi khuẩn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Phô mai Mozzarella",
+    "Nguyên Liệu Thay Thế": "Phô mai Cheddar",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cheddar mặn hơn, màu vàng, không kéo sợi."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tương ớt Hàn (Gochujang)",
+    "Nguyên Liệu Thay Thế": "Tương ớt Việt Nam",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.5",
+    "Ghi chú (Dưới 10 từ)": "Ớt Việt loãng, cay gắt, ít mùi lên men."
+  },
+  {
+    "Nguyên Liệu Gốc": "Mù tạt vàng",
+    "Nguyên Liệu Thay Thế": "Mù tạt xanh (Wasabi)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.5",
+    "Ghi chú (Dưới 10 từ)": "Xanh cay xộc mũi mạnh, vàng chỉ chua nhẹ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nước màu dừa",
+    "Nguyên Liệu Thay Thế": "Nước hàng (Caramel)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tự thắng đường kém độ béo thơm của dừa."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột ngũ vị hương",
+    "Nguyên Liệu Thay Thế": "Bột quế",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 0.5",
+    "Ghi chú (Dưới 10 từ)": "Quế chỉ có một vị cay ấm đặc trưng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Trà xanh (Matcha)",
+    "Nguyên Liệu Thay Thế": "Trà ô long xay",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Ô long chát nhẹ, màu xanh ngả vàng hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nước ép táo",
+    "Nguyên Liệu Thay Thế": "Nước ép lê",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Lê thanh mát, màu nhạt và ít chua hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sữa dừa",
+    "Nguyên Liệu Thay Thế": "Nước hầm xương",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đổi béo ngậy thành vị ngọt thanh thịt thà."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bắp hạt đông lạnh",
+    "Nguyên Liệu Thay Thế": "Bắp tươi lặt hạt",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bắp tươi dòn ngọt, tốn công sơ chế hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Khoai lang tím",
+    "Nguyên Liệu Thay Thế": "Khoai lang mật",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Khoai mật bở tơi, tươm mật ngọt hơn tím."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bí sợi mì",
+    "Nguyên Liệu Thay Thế": "Đu đủ xanh bào",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đu đủ giòn, dùng làm gỏi sống thay nấu chín."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cải cúc (Tần ô)",
+    "Nguyên Liệu Thay Thế": "Cải bẹ xanh",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cải bẹ hăng, đắng nhẹ, không mùi tần ô."
+  },
+  {
+    "Nguyên Liệu Gốc": "Rau ngót",
+    "Nguyên Liệu Thay Thế": "Rau chùm ngây",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Chùm ngây rất giàu đạm, vị hơi chát nhẹ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Cần ta (Cần nước)",
+    "Nguyên Liệu Thay Thế": "Cần tây",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cần tây cọng cứng, hăng hơn, hợp món Tây."
+  },
+  {
+    "Nguyên Liệu Gốc": "Lá giang",
+    "Nguyên Liệu Thay Thế": "Lá me non",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Lá me chua gắt hơn, hợp nấu canh cá."
+  },
+  {
+    "Nguyên Liệu Gốc": "Mướp đắng rừng",
+    "Nguyên Liệu Thay Thế": "Mướp đắng nhà",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1.5",
+    "Ghi chú (Dưới 10 từ)": "Mướp rừng đắng gắt, trái nhỏ, giòn cứng hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bông điên điển",
+    "Nguyên Liệu Thay Thế": "Bông so đũa",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "So đũa to, đắng nhẹ nhụy, nhai mềm hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sả cây",
+    "Nguyên Liệu Thay Thế": "Bột sả",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 nhánh : 1/2 muỗng",
+    "Ghi chú (Dưới 10 từ)": "Bột sả tiện lợi, không lợn cợn xơ sả."
+  },
+  {
+    "Nguyên Liệu Gốc": "Gừng tươi",
+    "Nguyên Liệu Thay Thế": "Bột gừng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 củ : 1/2 muỗng",
+    "Ghi chú (Dưới 10 từ)": "Bột gừng cay nồng hơn, ướp thịt tiện lợi."
+  },
+  {
+    "Nguyên Liệu Gốc": "Củ riềng",
+    "Nguyên Liệu Thay Thế": "Gừng tươi",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Gừng cay ấm, không có mùi thơm như riềng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nghệ tươi",
+    "Nguyên Liệu Thay Thế": "Bột nghệ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 củ : 1 muỗng",
+    "Ghi chú (Dưới 10 từ)": "Bột nghệ lên màu sậm, dễ bảo quản hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Tỏi đen",
+    "Nguyên Liệu Thay Thế": "Tỏi nướng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Tỏi nướng ngọt bùi, không có vị chua nhẹ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Củ niễng",
+    "Nguyên Liệu Thay Thế": "Củ sắn (Củ đậu)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Củ sắn mọng nước, xốp ngọt, niễng bùi hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hạt dẻ rừng",
+    "Nguyên Liệu Thay Thế": "Hạt dẻ Trùng Khánh",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Trùng Khánh to bở, ngọt bùi đậm đà hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Hạt đười ươi",
+    "Nguyên Liệu Thay Thế": "Mủ trôm",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Mủ trôm nở giòn sật, giải nhiệt tốt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Kỷ tử",
+    "Nguyên Liệu Thay Thế": "Táo đỏ khô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Táo đỏ to, xốp, ngọt đậm hơn kỷ tử."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bạch quả",
+    "Nguyên Liệu Thay Thế": "Hạt sen khô",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Hạt sen bở bùi, bạch quả dẻo đắng nhẹ."
+  },
+  {
+    "Nguyên Liệu Gốc": "Lá rong biển cuộn",
+    "Nguyên Liệu Thay Thế": "Bánh tráng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bánh tráng dai, cuộn sống cần thấm nước mỏng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nấm kim châm trắng",
+    "Nguyên Liệu Thay Thế": "Nấm kim châm vàng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Vàng giòn hơn, mùi thơm nấm đậm đặc hơn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Trái bần chua",
+    "Nguyên Liệu Thay Thế": "Trái giác",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Trái giác chua chát, làm đen nước canh."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nhót xanh",
+    "Nguyên Liệu Thay Thế": "Khế chua",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Khế xốp nhiều nước, nhót chát gắt xé lưỡi."
+  },
+  {
+    "Nguyên Liệu Gốc": "Xoài bao tử",
+    "Nguyên Liệu Thay Thế": "Cóc non",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Cóc non giòn, chua nhẹ, hạt nhai rôm rốp."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bòn bon",
+    "Nguyên Liệu Thay Thế": "Dâu da đất",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Dâu da chua hơn, vỏ mỏng, kém ngọt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Thanh long trắng",
+    "Nguyên Liệu Thay Thế": "Thanh long đỏ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Đỏ ngọt nhão hơn, vương màu ra món ăn."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nho đen",
+    "Nguyên Liệu Thay Thế": "Nho đỏ",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Nho đỏ vỏ chát nhẹ, đen ngọt thịt dẻo."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dưa lưới xanh",
+    "Nguyên Liệu Thay Thế": "Dưa lê",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Dưa lê mọng nước, bở dẻo, lưới giòn rụm."
+  },
+  {
+    "Nguyên Liệu Gốc": "Sương sáo (Thạch đen)",
+    "Nguyên Liệu Thay Thế": "Sương sâm",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Sương sâm dẻo dai tự nhiên, màu xanh nhạt."
+  },
+  {
+    "Nguyên Liệu Gốc": "Bột rau câu dẻo",
+    "Nguyên Liệu Thay Thế": "Bột Gelatin",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Gelatin mềm dẻo tan chảy, rau câu giòn sật."
+  },
+  {
+    "Nguyên Liệu Gốc": "Nước mắm chay",
+    "Nguyên Liệu Thay Thế": "Nước tương (Xì dầu)",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Mắm chay thơm dứa, xì dầu thơm đậu nành."
+  },
+  {
+    "Nguyên Liệu Gốc": "Dầu mè (vừng)",
+    "Nguyên Liệu Thay Thế": "Dầu đậu phộng",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Dầu phộng béo ngậy, ít mùi thơm nồng."
+  },
+  {
+    "Nguyên Liệu Gốc": "Lòng đỏ trứng muối",
+    "Nguyên Liệu Thay Thế": "Trứng bách thảo",
+    "Tỷ lệ định lượng (Gốc : Thay thế)": "1 : 1",
+    "Ghi chú (Dưới 10 từ)": "Bách thảo dẻo dai, vị khai nhẹ đặc trưng."
+  }
+]

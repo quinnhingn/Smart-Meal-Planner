@@ -64,3 +64,21 @@ def get_recipe_detail(recipe_id):
         return jsonify(result), 404
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+
+@recipe_bp.route('/<int:recipe_id>', methods=['PUT'])
+@admin_required()
+def update_recipe(recipe_id):
+    """
+    API cập nhật công thức
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"success": False, "message": "Dữ liệu không được trống"}), 400
+            
+        result = recipe_handler.update_recipe(recipe_id, data)
+        status_code = 200 if result.get("success") else 500
+        return jsonify(result), status_code
+        
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Lỗi Controller: {str(e)}"}), 500

@@ -4,7 +4,7 @@
       <button class="back-btn" @click="router.back()">
         <i class="fa-solid fa-arrow-left"></i> Trở về
       </button>
-      <h1>Thêm công thức mới</h1>
+      <h1>{{ isEditMode ? 'Chỉnh sửa công thức' : 'Thêm công thức mới' }}</h1>
     </div>
 
     <div class="form-grid">
@@ -314,7 +314,7 @@
         <button class="save-btn" @click="handleSave" :disabled="isSaving">
           <i v-if="isSaving" class="fa-solid fa-spinner fa-spin"></i>
           <i v-else class="fa-solid fa-check"></i> 
-          {{ isSaving ? 'Đang lưu...' : 'Lưu công thức' }}
+          {{ isSaving ? 'Đang xử lý...' : (isEditMode ? 'Cập nhật công thức' : 'Lưu công thức') }}
         </button>
       </div>
     </div>
@@ -324,9 +324,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useRecipeStore } from '@/stores/recipeStore';
 
 const router = useRouter();
 const route = useRoute();
+const recipeStore = useRecipeStore();
+const isEditMode = ref(false);
 
 const form = ref({
   name: '',
@@ -383,7 +386,6 @@ const handleSave = async () => {
 
   isSaving.value = true;
   try {
-    // Thử lấy token từ cả 2 nguồn phổ biến
     const token = localStorage.getItem('admin_token') || localStorage.getItem('token');
     
     if (!token) {
@@ -392,7 +394,6 @@ const handleSave = async () => {
       return;
     }
     
-    // Gộp dữ liệu dinh dưỡng vào payload
     const payload = {
       ...form.value,
       total_calories: totalCalories.value,
@@ -401,8 +402,11 @@ const handleSave = async () => {
       total_fat: totalFat.value
     };
 
-    const res = await fetch('http://localhost:5000/api/recipes', {
-      method: 'POST',
+    const url = isEditMode.value ? `http://localhost:5000/api/recipes/${route.params.id}` : 'http://localhost:5000/api/recipes';
+    const method = isEditMode.value ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method: method,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -412,7 +416,9 @@ const handleSave = async () => {
 
     const data = await res.json();
     if (data.success) {
-      alert("🎉 Chúc mừng! Công thức đã được lưu thành công vào CSDL.");
+      alert(`🎉 Chúc mừng! Công thức đã được ${isEditMode.value ? 'cập nhật' : 'lưu'} thành công.`);
+      // Clear cache để load lại
+      recipeStore.clearCache();
       router.push('/recipes');
     } else {
       const errorMsg = data.message || data.msg || "Lỗi không xác định";
@@ -699,8 +705,38 @@ const toggleMealTime = (id: string) => {
   }
 };
 
-onMounted(() => {
-  if (route.query.name) {
+onMounted(async () => {
+  if (route.params.id) {
+    isEditMode.value = true;
+    const d = await recipeStore.fetchRecipeDetail(route.params.id as string);
+    if (d) {
+      form.value.name = d.name_vn;
+      form.value.category = d.category;
+      form.value.difficulty = d.difficulty;
+      form.value.cookingTime = d.cooking_time;
+      form.value.servings = d.servings;
+      form.value.videoUrl = d.video_url;
+      
+      // Parse JSON fields
+      form.value.goals = typeof d.goals === 'string' ? JSON.parse(d.goals) : d.goals;
+      form.value.mealTimes = typeof d.meal_times === 'string' ? JSON.parse(d.meal_times) : d.meal_times;
+      form.value.steps = typeof d.steps === 'string' ? JSON.parse(d.steps) : d.steps;
+      
+      const ingredients = typeof d.ingredients === 'string' ? JSON.parse(d.ingredients) : d.ingredients;
+      form.value.ingredients = ingredients.map((i: any) => ({
+        ...i,
+        cal: i.cal || i.calories || 0,
+        carb: i.carb || i.carbs || 0
+      }));
+
+      if (d.image_url) {
+        form.value.imageUrl = d.image_url;
+        imageMode.value = 'url';
+        imageUrlInput.value = d.image_url;
+        imagePreview.value = d.image_url;
+      }
+    }
+  } else if (route.query.name) {
     form.value.name = route.query.name as string;
   }
 });

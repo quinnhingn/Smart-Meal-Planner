@@ -65,6 +65,61 @@ class RecipeRepository:
         except Exception as e:
             return {"success": False, "message": str(e)}
 
+    def update(self, recipe_id, data):
+        """Cập nhật một công thức đã có"""
+        try:
+            sql = text("""
+                UPDATE scr_recipes SET
+                    name_vn = :name_vn,
+                    name_en = :name_en,
+                    category = :category,
+                    difficulty = :difficulty,
+                    cooking_time = :cooking_time,
+                    servings = :servings,
+                    image_url = :image_url,
+                    video_url = :video_url,
+                    goals = :goals,
+                    meal_times = :meal_times,
+                    ingredients = :ingredients,
+                    steps = :steps,
+                    total_calories = :total_calories,
+                    total_protein = :total_protein,
+                    total_carbs = :total_carbs,
+                    total_fat = :total_fat,
+                    ai_insight = :ai_insight,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = :id
+            """)
+            
+            params = {
+                "id": recipe_id,
+                "name_vn": data.get("name_vn"),
+                "name_en": data.get("name_en"),
+                "category": data.get("category"),
+                "difficulty": data.get("difficulty"),
+                "cooking_time": data.get("cooking_time"),
+                "servings": data.get("servings"),
+                "image_url": data.get("image_url"),
+                "video_url": data.get("video_url"),
+                "goals": json.dumps(data.get("goals", [])),
+                "meal_times": json.dumps(data.get("meal_times", [])),
+                "ingredients": json.dumps(data.get("ingredients", [])),
+                "steps": json.dumps(data.get("steps", [])),
+                "total_calories": data.get("total_calories", 0),
+                "total_protein": data.get("total_protein", 0),
+                "total_carbs": data.get("total_carbs", 0),
+                "total_fat": data.get("total_fat", 0),
+                "ai_insight": data.get("ai_insight")
+            }
+            
+            db.session.execute(sql, params)
+            db.session.commit()
+            
+            return {"success": True, "message": "Cập nhật thành công"}
+        except Exception as e:
+            db.session.rollback()
+            return {"success": False, "message": str(e)}
+
     def get_all(self):
         """Lấy danh sách tất cả công thức"""
         try:

@@ -10,7 +10,9 @@
         <p class="header-desc">Chi tiết công thức và thông số dinh dưỡng</p>
       </div>
       <div class="header-actions">
-        <button class="btn-outline"><i class="fa-solid fa-pen"></i> Chỉnh sửa</button>
+        <button class="btn-outline" @click="router.push({ name: 'recipe-edit', params: { category: route.params.category, id: route.params.id } })">
+          <i class="fa-solid fa-pen"></i> Chỉnh sửa
+        </button>
         <button class="btn-danger"><i class="fa-solid fa-trash"></i> Xoá</button>
       </div>
     </div>
@@ -136,12 +138,7 @@
             </div>
           </div>
 
-          <div class="extra-nutrition">
-            <div class="extra-row"><span>Chất xơ</span><strong>{{ recipe.fiber }}</strong></div>
-            <div class="extra-row"><span>Đường</span><strong>{{ recipe.sugar }}</strong></div>
-            <div class="extra-row"><span>Natri</span><strong>{{ recipe.sodium }}</strong></div>
-            <div class="extra-row"><span>Canxi</span><strong>{{ recipe.calcium }}</strong></div>
-          </div>
+
         </div>
 
         <!-- AI Insight -->
@@ -289,7 +286,7 @@ const fetchRecipeDetail = async () => {
     if (foundMock) {
       recipe.value = foundMock;
     } else {
-      recipe.value = mockRecipes['m1'];
+      recipe.value = mockRecipes['m1'] as any;
     }
     isLoading.value = false;
     return;

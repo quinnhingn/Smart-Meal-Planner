@@ -94,7 +94,7 @@
           <h3>Các bước thực hiện</h3>
           <div class="steps-list">
             <div class="step-item" v-for="(step, i) in recipe.steps" :key="i">
-              <div class="step-num">{{ i + 1 }}</div>
+              <div class="step-num">{{ Number(i) + 1 }}</div>
               <p>{{ step }}</p>
             </div>
           </div>
@@ -162,50 +162,194 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+
+import { useRecipeStore } from '@/stores/recipeStore';
 
 const router = useRouter();
 const route = useRoute();
+const recipeStore = useRecipeStore();
+interface Ingredient {
+  name: string;
+  grams: number;
+  calories: number;
+  protein: string;
+  carbs: string;
+  fat: string;
+  color: string;
+}
 
-// Mock recipe data — in real app, fetch by route.params.id
-const recipe = computed(() => ({
-  id: route.params.id,
-  title: 'Salad Quinoa Ức Gà',
+interface Recipe {
+  id?: string;
+  title: string;
+  goal: string;
+  mealTime: string;
+  protein: string;
+  carbs: string;
+  fat: string;
+  calories: number;
+  image: string;
+  videoId: string;
+  cookTime: string;
+  servings: number | string;
+  difficulty: string;
+  aiInsight: string;
+  fiber?: string;
+  sugar?: string;
+  sodium?: string;
+  calcium?: string;
+  ingredients: Ingredient[];
+  steps: string[];
+}
+
+const isLoading = ref(true);
+
+// Bộ dữ liệu mẫu chuẩn để hiển thị khi nhấn vào card mock
+const mockRecipes: Record<string, Recipe> = {
+  'm1': {
+    title: 'Salad Quinoa Ức Gà', goal: 'maintain', mealTime: 'lunch',
+    protein: '35g', carbs: '45g', fat: '12g', calories: 420,
+    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    videoId: '7V2e1-Lh1S8', cookTime: '30 phút', servings: 2, difficulty: 'Dễ',
+    aiInsight: 'Món ăn này rất phù hợp với mục tiêu giữ dáng. Hàm lượng protein cao từ ức gà giúp no lâu.',
+    fiber: '6.2g', sugar: '4.1g', sodium: '320mg', calcium: '80mg',
+    ingredients: [
+      { name: 'Ức gà', grams: 150, calories: 247, protein: '46.5', carbs: '0', fat: '5.4', color: '#BE185D' },
+      { name: 'Quinoa', grams: 80, calories: 120, protein: '4.4', carbs: '21.3', fat: '1.9', color: '#374151' }
+    ],
+    steps: ['Luộc quinoa 15 phút.', 'Áp chảo ức gà.', 'Trộn đều và thưởng thức.']
+  },
+  'm2': {
+    title: 'Mì Ý Sốt Cà Gà Viên', goal: 'gain', mealTime: 'lunch',
+    protein: '28g', carbs: '65g', fat: '15g', calories: 510,
+    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    videoId: 'MS6Vn3f4M98', cookTime: '25 phút', servings: 1, difficulty: 'Trung bình',
+    aiInsight: 'Cung cấp năng lượng dồi dào từ tinh bột mì Ý, hỗ trợ tăng cân hiệu quả.',
+    fiber: '4.5g', sugar: '8.2g', sodium: '450mg', calcium: '60mg',
+    ingredients: [
+      { name: 'Mì Ý', grams: 100, calories: 350, protein: '12', carbs: '70', fat: '2', color: '#F59E0B' },
+      { name: 'Thịt gà viên', grams: 120, calories: 160, protein: '16', carbs: '5', fat: '8', color: '#EF4444' }
+    ],
+    steps: ['Luộc mì Ý.', 'Làm sốt cà chua và gà viên.', 'Trộn mì và thưởng thức.']
+  },
+  'm5': {
+    title: 'Cơm Tấm Sườn Bì Chả', goal: 'gain', mealTime: 'breakfast',
+    protein: '32g', carbs: '85g', fat: '22g', calories: 650,
+    image: 'https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?auto=format&fit=crop&w=800&q=80',
+    videoId: 'qC8eK4pB87I', cookTime: '45 phút', servings: 1, difficulty: 'Khó',
+    aiInsight: 'Món ăn truyền thống giàu năng lượng, phù hợp cho bữa sáng đầy đủ dưỡng chất.',
+    fiber: '2.5g', sugar: '3.0g', sodium: '850mg', calcium: '45mg',
+    ingredients: [
+      { name: 'Gạo tấm', grams: 150, calories: 400, protein: '8', carbs: '80', fat: '1', color: '#CBD5E1' },
+      { name: 'Sườn nướng', grams: 120, calories: 250, protein: '24', carbs: '5', fat: '21', color: '#B91C1C' }
+    ],
+    steps: ['Nấu cơm tấm.', 'Nướng sườn.', 'Làm nước mắm và thưởng thức.']
+  }
+};
+
+const recipe = ref<Recipe>({
+  title: 'Đang tải...',
   goal: 'maintain',
   mealTime: 'lunch',
-  protein: '35g', carbs: '45g', fat: '12g',
-  calories: '420',
-  aiMatch: '98%',
-  image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  videoId: '7V2e1-Lh1S8',
-  cookTime: '30 phút',
-  servings: 2,
+  protein: '0g',
+  carbs: '0g',
+  fat: '0g',
+  calories: 0,
+  image: '',
+  videoId: '',
+  cookTime: '',
+  servings: 1,
   difficulty: 'Dễ',
-  fiber: '6.2g', sugar: '4.1g', sodium: '320mg', calcium: '80mg',
-  aiInsight: 'Món ăn này rất phù hợp với mục tiêu giữ dáng. Hàm lượng protein cao từ ức gà giúp no lâu, trong khi quinoa cung cấp carbs phức tạp giải phóng năng lượng từ từ. Gợi ý: ăn vào bữa trưa để tối ưu năng lượng.',
-  ingredients: [
-    { name: 'Ức gà', grams: 150, calories: 247, protein: '46.5', carbs: '0', fat: '5.4', color: '#BE185D' },
-    { name: 'Quinoa', grams: 80, calories: 120, protein: '4.4', carbs: '21.3', fat: '1.9', color: '#374151' },
-    { name: 'Cà chua', grams: 100, calories: 18, protein: '0.9', carbs: '3.9', fat: '0.2', color: '#B91C1C' },
-    { name: 'Bông cải xanh', grams: 100, calories: 34, protein: '2.8', carbs: '6.6', fat: '0.4', color: '#15803D' },
-    { name: 'Dầu ô liu', grams: 10, calories: 88, protein: '0', carbs: '0', fat: '10', color: '#A16207' },
-  ],
-  steps: [
-    'Luộc quinoa với nước muối nhạt trong 15 phút cho đến khi quinoa nở và nước cạn. Để nguội.',
-    'Ức gà ướp với muối, tiêu, tỏi bột 10 phút. Áp chảo trên lửa vừa mỗi mặt 6 phút. Để nguội rồi xé sợi.',
-    'Bông cải xanh cắt nhỏ, luộc sơ 2 phút trong nước sôi. Vớt ra ngâm nước đá giữ màu xanh.',
-    'Trộn đều quinoa, rau củ, thêm dầu ô liu, muối, tiêu. Cho thịt gà lên trên. Thưởng thức ngay.'
-  ]
-}));
+  aiInsight: '',
+  fiber: '0g',
+  sugar: '0g',
+  sodium: '0mg',
+  calcium: '0mg',
+  ingredients: [],
+  steps: []
+});
 
-const goalText = computed(() => ({
-  lose: 'Giảm cân', maintain: 'Giữ dáng', gain: 'Tăng cân'
-}[recipe.value.goal] || 'Giữ dáng'));
+const getYoutubeId = (url: string) => {
+  if (!url) return '';
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  if (match && match[2] && match[2].length === 11) {
+    return match[2];
+  }
+  return url;
+};
 
-const mealTimeText = computed(() => ({
-  breakfast: 'Bữa sáng', lunch: 'Bữa trưa', dinner: 'Bữa tối', snack: 'Ăn vặt'
-}[recipe.value.mealTime] || 'Bữa trưa'));
+const fetchRecipeDetail = async () => {
+  const id = route.params.id as string;
+  
+  // 1. Kiểm tra nếu là mock data
+  if (id.startsWith('m')) {
+    const foundMock = mockRecipes[id];
+    if (foundMock) {
+      recipe.value = foundMock;
+    } else {
+      recipe.value = mockRecipes['m1'];
+    }
+    isLoading.value = false;
+    return;
+  }
+
+  // 2. Nếu là data thật từ database
+  try {
+    const d = await recipeStore.fetchRecipeDetail(id);
+    if (d) {
+      recipe.value = {
+        id: d.id,
+        title: d.name_vn,
+        goal: (d.goals && d.goals[0]) || 'maintain',
+        mealTime: (d.meal_times && d.meal_times[0]) || 'lunch',
+        protein: Math.round(d.total_protein || 0) + 'g',
+        carbs: Math.round(d.total_carbs || 0) + 'g',
+        fat: Math.round(d.total_fat || 0) + 'g',
+        calories: Math.round(d.total_calories || 0),
+        image: d.image_url || 'https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=800&q=80',
+        videoId: getYoutubeId(d.video_url),
+        cookTime: d.cooking_time || '30 phút',
+        servings: d.servings || 1,
+        difficulty: d.difficulty || 'Trung bình',
+        aiInsight: d.ai_insight || 'Chưa có nhận xét từ AI.',
+        ingredients: (d.ingredients || []).map((ing: any) => ({
+          ...ing,
+          color: '#' + Math.floor(Math.random()*16777215).toString(16)
+        })) as Ingredient[],
+        steps: d.steps || []
+      };
+    }
+  } catch (err) {
+    console.error("Lỗi tải chi tiết:", err);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchRecipeDetail();
+});
+
+const goalText = computed(() => {
+  const map: Record<string, string> = {
+    lose: 'Giảm cân',
+    maintain: 'Giữ dáng',
+    gain: 'Tăng cơ'
+  };
+  return map[recipe.value.goal] || 'Giữ dáng';
+});
+
+const mealTimeText = computed(() => {
+  const map: Record<string, string> = {
+    breakfast: 'Bữa sáng',
+    lunch: 'Bữa trưa',
+    dinner: 'Bữa tối',
+    snack: 'Ăn vặt'
+  };
+  return map[recipe.value.mealTime] || 'Bữa trưa';
+});
 </script>
 
 <style scoped>

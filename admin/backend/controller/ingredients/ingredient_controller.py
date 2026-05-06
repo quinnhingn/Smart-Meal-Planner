@@ -285,13 +285,17 @@ def remove_background():
         # 3. Nếu là link từ ngoài internet
         if not input_image:
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
             }
-            response = requests.get(image_url, headers=headers, timeout=10)
-            if response.status_code == 200:
-                input_image = Image.open(BytesIO(response.content))
-            else:
-                return jsonify({"success": False, "message": f"Không thể tải ảnh từ URL (Mã lỗi: {response.status_code})"}), 400
+            try:
+                response = requests.get(image_url, headers=headers, timeout=15, verify=False) # verify=False để bỏ qua lỗi SSL nếu có
+                if response.status_code == 200:
+                    input_image = Image.open(BytesIO(response.content))
+                else:
+                    return jsonify({"success": False, "message": f"Website chặn tải ảnh (Mã lỗi: {response.status_code}). Ngân hãy thử tải ảnh về máy rồi upload lên nhé!"}), 400
+            except Exception as e:
+                 return jsonify({"success": False, "message": f"Không thể kết nối tới nguồn ảnh: {str(e)}"}), 400
 
         if not input_image:
             return jsonify({"success": False, "message": "Không thể định dạng được hình ảnh này."}), 400

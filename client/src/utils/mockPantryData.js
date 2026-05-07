@@ -90,6 +90,7 @@ export const CATEGORIES = [
   { id: 'dairy', name: 'Sữa/Trứng', icon: '🥛' },
   { id: 'grain', name: 'Ngũ cốc', icon: '🌾' },
   { id: 'condiment', name: 'Gia vị', icon: '🧂' },
+  { id: 'other', name: 'Khác', icon: '📦' },
 ];
 
 // Helper functions

@@ -12,7 +12,10 @@ import HistoryItemCard from '../components/pantry/HistoryItemCard';
 import InputField from '../components/InputField'; 
 import { useAppStore } from '../store/useAppStore';
 import { COLORS } from '../constants/theme';
-import { CATEGORIES } from '../utils/mockPantryData';
+import { CATEGORIES, getDaysUntilExpiry } from '../utils/mockPantryData';
+
+// DANH SÁCH ĐƠN VỊ ĐO LƯỜNG CHUẨN
+const UNITS = ['g', 'kg', 'ml', 'l', 'quả', 'bó', 'miếng', 'hộp'];
 
 const PantryScreen = ({ navigation }) => {
   const { width: windowWidth } = useWindowDimensions();
@@ -20,15 +23,25 @@ const PantryScreen = ({ navigation }) => {
     selectedCategory, setSelectedCategory,
     searchQuery, setSearchQuery, getFilteredItems,
     getPantryStats, pantryHistory, removePantryItemWithHistory,
-    clearPantryHistory, addPantryItems, showToast
+    clearPantryHistory, addPantryItems, updatePantryItem, showToast,
+    consumePantryItem, restorePantryItem // LẤY 2 HÀM MỚI TỪ STORE
   } = useAppStore();
 
   const [activeTab, setActiveTab] = useState('active');
   
-  // === STATE ĐIỀU KHIỂN MODAL ===
-  const [showConfirmModal, setShowConfirmModal] = useState(false); // Modal xác nhận xóa
-  const [showAddModal, setShowAddModal] = useState(false);         // Modal thêm mới
-  const [newItemForm, setNewItemForm] = useState({ name: '', quantity: '', expiryDays: '' });
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showItemModal, setShowItemModal] = useState(false); 
+  const [editingId, setEditingId] = useState(null); 
+  
+  // STATE MỚI: Modal dùng món ăn
+  const [showConsumeModal, setShowConsumeModal] = useState(false);
+  const [consumingItem, setConsumingItem] = useState(null);
+  const [consumeAmount, setConsumeAmount] = useState('');
+
+  // CẬP NHẬT STATE FORM: Thêm unit
+  const [itemForm, setItemForm] = useState({ 
+    name: '', quantity: '', expiryDays: '', category: 'vegetable', unit: 'g' 
+  });
 
   const filteredItems = getFilteredItems();
   const stats = getPantryStats();
@@ -39,82 +52,75 @@ const PantryScreen = ({ navigation }) => {
 
   const handleFindRecipe = (item) => navigation.navigate('Suggestions', { ingredientId: item.id });
 
-  // === XỬ LÝ XÓA LỊCH SỬ ===
   const handleClearHistory = () => {
     clearPantryHistory();
     setShowConfirmModal(false);
     showToast('Đã xóa toàn bộ lịch sử!', 'success');
   };
 
-  // === XỬ LÝ LƯU NGUYÊN LIỆU MỚI ===
-  const handleSaveNewItem = () => {
-    if (!newItemForm.name.trim()) {
+  // === XỬ LÝ MỞ MODAL THÊM/SỬA ===
+  const handleOpenAdd = () => {
+    setEditingId(null);
+    setItemForm({ name: '', quantity: '', expiryDays: '', category: 'vegetable', unit: 'g' }); 
+    setShowItemModal(true);
+  };
+
+  const handleOpenEdit = (item) => {
+    setEditingId(item.id);
+    const daysLeft = getDaysUntilExpiry(item);
+    setItemForm({
+      name: item.name,
+      quantity: item.quantity.toString(),
+      expiryDays: Math.max(0, daysLeft).toString(),
+      category: item.category || 'vegetable',
+      unit: item.unit || 'g' // Lấy unit hiện tại
+    });
+    setShowItemModal(true);
+  };
+
+  // === XỬ LÝ MỞ MODAL XÁC NHẬN SỐ LƯỢNG DÙNG ===
+  const handleOpenConsume = (item) => {
+    setConsumingItem(item);
+    setConsumeAmount(item.quantity.toString()); // Mặc định gán số lượng dùng = số lượng đang có (Dùng hết)
+    setShowConsumeModal(true);
+  };
+
+  const handleConfirmConsume = () => {
+    if (consumingItem) {
+      consumePantryItem(consumingItem.id, consumeAmount); // Trừ kho theo lượng đã chọn
+      setShowConsumeModal(false);
+    }
+  };
+
+  const handleSaveItem = () => {
+    if (!itemForm.name.trim()) {
       showToast('Vui lòng nhập tên nguyên liệu', 'error');
       return;
     }
-    const newItem = {
-      name: newItemForm.name,
-      quantity: parseFloat(newItemForm.quantity) || 1,
-      unit: 'g',
-      expiryDays: parseInt(newItemForm.expiryDays) || 3,
-      category: 'other',
-      icon: '📦',
+
+    const itemData = {
+      name: itemForm.name,
+      quantity: parseFloat(itemForm.quantity) || 1,
+      expiryDays: parseInt(itemForm.expiryDays) || 3,
+      category: itemForm.category,
+      unit: itemForm.unit, // Lưu unit đã chọn
     };
-    addPantryItems([newItem]);
-    setShowAddModal(false);
-    setNewItemForm({ name: '', quantity: '', expiryDays: '' });
+
+    if (editingId) {
+      updatePantryItem(editingId, {
+        ...itemData,
+        addedAt: new Date().toISOString(), 
+      });
+      showToast('Đã cập nhật nguyên liệu!', 'success');
+    } else {
+      addPantryItems([{
+        ...itemData,
+        icon: CATEGORIES.find(c => c.id === itemForm.category)?.icon || '📦',
+      }]);
+    }
+    
+    setShowItemModal(false);
   };
-
-  // ==========================================
-  // RENDER: CÁC KHỐI GIAO DIỆN PHỤ
-  // ==========================================
-  const renderActiveStats = () => (
-    <View style={styles.statsContainer}>
-      <View style={[styles.statCard, { backgroundColor: 'rgba(255,255,255,0.7)' }]}>
-        <Text style={styles.statNumber}>{stats.total}</Text>
-        <Text style={styles.statLabel}>Đang có</Text>
-      </View>
-      <View style={[styles.statCard, { backgroundColor: 'rgba(255, 193, 7, 0.12)' }]}>
-        <Text style={[styles.statNumber, { color: '#F59E0B' }]}>{stats.warning + stats.urgent + stats.expired}</Text>
-        <Text style={[styles.statLabel, { color: '#F59E0B' }]}>Cần chú ý</Text>
-      </View>
-    </View>
-  );
-
-  const renderWasteStats = () => (
-    <View style={styles.wasteWidget}>
-      <View style={styles.wasteHeaderRow}>
-        <Text style={styles.wasteWidgetTitle}>Theo dõi lãng phí</Text>
-        {pantryHistory?.length > 0 && (
-          <Pressable onPress={() => setShowConfirmModal(true)} style={styles.clearHistoryBtn}>
-            <Ionicons name="trash-outline" size={16} color="#F44336" />
-            <Text style={styles.clearHistoryText}>Xóa lịch sử</Text>
-          </Pressable>
-        )}
-      </View>
-      <View style={styles.wasteRow}>
-        <View style={styles.wasteItem}>
-          <View style={[styles.wasteIconBox, { backgroundColor: 'rgba(76, 175, 80, 0.15)' }]}>
-            <Ionicons name="restaurant" size={20} color="#4CAF50" />
-          </View>
-          <View>
-            <Text style={styles.wasteNumber}>{stats.consumed}</Text>
-            <Text style={styles.wasteLabel}>Đã nấu</Text>
-          </View>
-        </View>
-        <View style={styles.wasteDivider} />
-        <View style={styles.wasteItem}>
-          <View style={[styles.wasteIconBox, { backgroundColor: 'rgba(244, 67, 54, 0.15)' }]}>
-            <Ionicons name="trash" size={20} color="#F44336" />
-          </View>
-          <View>
-            <Text style={styles.wasteNumber}>{stats.discarded}</Text>
-            <Text style={styles.wasteLabel}>Vứt đi</Text>
-          </View>
-        </View>
-      </View>
-    </View>
-  );
 
   const renderHeaderContent = () => (
     <GlassCard style={{ width: '100%', padding: 0 }} intensity={85}>
@@ -141,9 +147,43 @@ const PantryScreen = ({ navigation }) => {
             <Text style={[styles.tabText, activeTab === 'history' && styles.tabTextActive]}>🕒 Lịch sử</Text>
           </Pressable>
         </View>
-        {activeTab === 'active' ? renderActiveStats() : renderWasteStats()}
+        {activeTab === 'active' ? (
+          <View style={styles.statsContainer}>
+            <View style={[styles.statCard, { backgroundColor: 'rgba(255,255,255,0.7)' }]}>
+              <Text style={styles.statNumber}>{stats.total}</Text>
+              <Text style={styles.statLabel}>Đang có</Text>
+            </View>
+            <View style={[styles.statCard, { backgroundColor: 'rgba(255, 193, 7, 0.12)' }]}>
+              <Text style={[styles.statNumber, { color: '#F59E0B' }]}>{stats.warning + stats.urgent + stats.expired}</Text>
+              <Text style={[styles.statLabel, { color: '#F59E0B' }]}>Cần chú ý</Text>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.wasteWidget}>
+            <View style={styles.wasteHeaderRow}>
+              <Text style={styles.wasteWidgetTitle}>Theo dõi lãng phí</Text>
+              {pantryHistory?.length > 0 && (
+                <Pressable onPress={() => setShowConfirmModal(true)} style={styles.clearHistoryBtn}>
+                  <Ionicons name="trash-outline" size={16} color="#F44336" />
+                  <Text style={styles.clearHistoryText}>Xóa lịch sử</Text>
+                </Pressable>
+              )}
+            </View>
+            <View style={styles.wasteRow}>
+              <View style={styles.wasteItem}>
+                <View style={[styles.wasteIconBox, { backgroundColor: 'rgba(76, 175, 80, 0.15)' }]}><Ionicons name="restaurant" size={20} color="#4CAF50" /></View>
+                <View><Text style={styles.wasteNumber}>{stats.consumed}</Text><Text style={styles.wasteLabel}>Đã nấu</Text></View>
+              </View>
+              <View style={styles.wasteDivider} />
+              <View style={styles.wasteItem}>
+                <View style={[styles.wasteIconBox, { backgroundColor: 'rgba(244, 67, 54, 0.15)' }]}><Ionicons name="trash" size={20} color="#F44336" /></View>
+                <View><Text style={styles.wasteNumber}>{stats.discarded}</Text><Text style={styles.wasteLabel}>Vứt đi</Text></View>
+              </View>
+            </View>
+          </View>
+        )}
         {activeTab === 'active' && (
-          <Pressable style={styles.sidebarAddBtn} onPress={() => setShowAddModal(true)}>
+          <Pressable style={styles.sidebarAddBtn} onPress={handleOpenAdd}>
             <Ionicons name="add-circle" size={20} color="#FFF" />
             <Text style={styles.sidebarAddText}>Thêm nguyên liệu thủ công</Text>
           </Pressable>
@@ -156,11 +196,7 @@ const PantryScreen = ({ navigation }) => {
     <ResponsiveContainer useImageBg={false}>
       <View style={styles.rootLayout}>
         <View style={[styles.contentWrapper, isWebLarge && styles.rowLayout]}>
-          {isWebLarge && (
-            <View style={styles.sidebar}>
-              {renderHeaderContent()}
-            </View>
-          )}
+          {isWebLarge && <View style={styles.sidebar}>{renderHeaderContent()}</View>}
           <View style={isWebLarge ? styles.mainListCol : styles.mobileListCol}>
             <FlatList
               key={`${activeTab}-${numColumns}`} 
@@ -170,12 +206,16 @@ const PantryScreen = ({ navigation }) => {
                   {activeTab === 'active' ? (
                     <PantryItemCard 
                       item={item} 
-                      onUse={(id) => removePantryItemWithHistory(id, 'consumed')}
-                      onDelete={(id) => removePantryItemWithHistory(id, 'discarded')}
-                      onFindRecipe={handleFindRecipe}
+                      onUse={() => handleOpenConsume(item)} // GỌI MODAL XÁC NHẬN KHI BẤM DÙNG
+                      onDelete={(id) => removePantryItemWithHistory(id, 'discarded')} 
+                      onEdit={handleOpenEdit} 
+                      onFindRecipe={handleFindRecipe} 
                     />
                   ) : (
-                    <HistoryItemCard item={item} />
+                    <HistoryItemCard 
+                      item={item} 
+                      onUndo={() => restorePantryItem(item.id)} // TRUYỀN PROP HOÀN TÁC
+                    />
                   )}
                 </View>
               )}
@@ -191,7 +231,7 @@ const PantryScreen = ({ navigation }) => {
                       {CATEGORIES.map((cat) => (
                         <Pressable key={cat.id} style={[styles.categoryChip, selectedCategory === cat.id && styles.categoryChipActive]} onPress={() => setSelectedCategory(cat.id)}>
                           <Text style={styles.categoryIcon}>{cat.icon}</Text>
-                          <Text style={[styles.categoryText, selectedCategory === cat.id && styles.categoryTextActive]}>{cat.name}</Text>
+                          <Text style={[styles.categoryText, selectedCategory === cat.id && styles.categoryTextActive]}>{cat.name.replace(/[^\w\s\u00C0-\u1EF9]/g, '')}</Text>
                         </Pressable>
                       ))}
                     </ScrollView>
@@ -210,24 +250,73 @@ const PantryScreen = ({ navigation }) => {
       </View>
 
       {/* ========================================== */}
-      {/* 1. MODAL XÁC NHẬN XÓA (Giao diện mới mờ nền) */}
-      {/* ========================================== */}
+      {/* 1. MODAL XÁC NHẬN XÓA LỊCH SỬ */}
       <Modal visible={showConfirmModal} transparent animationType="fade">
         <View style={styles.modalOverlay}>
-          {/* ĐỔI TỪ GlassCard SANG View BÌNH THƯỜNG ĐỂ FIX LỖI TÀNG HÌNH TRÊN MOBILE */}
           <View style={styles.confirmModalBox}>
-            <View style={styles.confirmIconCircle}>
-              <Ionicons name="trash" size={32} color="#F44336" />
-            </View>
+            <View style={styles.confirmIconCircle}><Ionicons name="trash" size={32} color="#F44336" /></View>
             <Text style={styles.modalTitle}>Xóa lịch sử?</Text>
             <Text style={styles.modalSubtitle}>Tất cả dữ liệu về các món đã dùng và đã vứt sẽ bị xóa vĩnh viễn. Bạn chắc chắn chứ?</Text>
-            
             <View style={styles.modalActionRow}>
-              <Pressable style={styles.modalBtnCancel} onPress={() => setShowConfirmModal(false)}>
-                <Text style={styles.modalBtnCancelText}>Để sau</Text>
-              </Pressable>
-              <Pressable style={[styles.modalBtnSubmit, { backgroundColor: '#F44336' }]} onPress={handleClearHistory}>
-                <Text style={styles.modalBtnSubmitText}>Đồng ý xóa</Text>
+              <Pressable style={styles.modalBtnCancel} onPress={() => setShowConfirmModal(false)}><Text style={styles.modalBtnCancelText}>Để sau</Text></Pressable>
+              <Pressable style={[styles.modalBtnSubmit, { backgroundColor: '#F44336' }]} onPress={handleClearHistory}><Text style={styles.modalBtnSubmitText}>Đồng ý xóa</Text></Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* ========================================== */}
+      {/* 2. MODAL DÙNG CHUNG: THÊM & SỬA NGUYÊN LIỆU (CÓ UNIT PICKER) */}
+      <Modal visible={showItemModal} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.addModalBox}>
+            <Text style={styles.modalTitle}>{editingId ? '✏️ Sửa nguyên liệu' : '📦 Thêm nguyên liệu'}</Text>
+            
+            <InputField label="Tên nguyên liệu *" placeholder="VD: Cà chua..." value={itemForm.name} onChangeText={(text) => setItemForm({ ...itemForm, name: text })} />
+            
+            <Text style={styles.modalLabel}>Phân loại *</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.modalCategoryScroll}>
+              {CATEGORIES.filter(c => c.id !== 'all').map(cat => (
+                <Pressable
+                  key={cat.id}
+                  style={[styles.modalCategoryChip, itemForm.category === cat.id && styles.modalCategoryChipActive]}
+                  onPress={() => setItemForm({ ...itemForm, category: cat.id })}
+                >
+                  <Text style={styles.categoryIcon}>{cat.icon}</Text>
+                  <Text style={[styles.modalCategoryText, itemForm.category === cat.id && styles.modalCategoryTextActive]}>
+                    {cat.name.replace(/[^\w\s\u00C0-\u1EF9]/g, '')}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+
+            <View style={{ flexDirection: 'row', gap: 12, marginTop: 12 }}>
+              <View style={{ flex: 1 }}>
+                <InputField label="Số lượng" placeholder="500" value={itemForm.quantity} onChangeText={(text) => setItemForm({ ...itemForm, quantity: text })} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <InputField label="Hạn (Ngày)" placeholder="3" value={itemForm.expiryDays} onChangeText={(text) => setItemForm({ ...itemForm, expiryDays: text })} />
+              </View>
+            </View>
+
+            {/* THÀNH PHẦN MỚI: BỘ CHỌN ĐƠN VỊ (UNIT PICKER) */}
+            <Text style={[styles.modalLabel, { marginTop: 4 }]}>Đơn vị đo *</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.modalCategoryScroll}>
+              {UNITS.map(u => (
+                <Pressable
+                  key={u}
+                  style={[styles.modalCategoryChip, itemForm.unit === u && styles.modalCategoryChipActive]}
+                  onPress={() => setItemForm({ ...itemForm, unit: u })}
+                >
+                  <Text style={[styles.modalCategoryText, itemForm.unit === u && styles.modalCategoryTextActive]}>{u}</Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+
+            <View style={styles.modalActionRow}>
+              <Pressable style={styles.modalBtnCancel} onPress={() => setShowItemModal(false)}><Text style={styles.modalBtnCancelText}>Hủy</Text></Pressable>
+              <Pressable style={styles.modalBtnSubmit} onPress={handleSaveItem}>
+                <Text style={styles.modalBtnSubmitText}>{editingId ? 'Cập nhật' : 'Lưu vào tủ'}</Text>
               </Pressable>
             </View>
           </View>
@@ -235,21 +324,31 @@ const PantryScreen = ({ navigation }) => {
       </Modal>
 
       {/* ========================================== */}
-      {/* 2. MODAL THÊM NGUYÊN LIỆU */}
+      {/* 3. MODAL XÁC NHẬN SỐ LƯỢNG KHI "ĐÃ DÙNG" */}
       {/* ========================================== */}
-      <Modal visible={showAddModal} transparent animationType="fade">
+      <Modal visible={showConsumeModal} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.addModalBox}>
-            <Text style={styles.modalTitle}>Thêm nguyên liệu</Text>
-            <InputField label="Tên nguyên liệu *" placeholder="VD: Cà chua..." value={newItemForm.name} onChangeText={(text) => setNewItemForm({ ...newItemForm, name: text })} />
-            <View style={{ flexDirection: 'row', gap: 12 }}>
-              <View style={{ flex: 1 }}><InputField label="Số lượng" placeholder="500" value={newItemForm.quantity} onChangeText={(text) => setNewItemForm({ ...newItemForm, quantity: text })} /></View>
-              <View style={{ flex: 1 }}><InputField label="Hạn (Ngày)" placeholder="3" value={newItemForm.expiryDays} onChangeText={(text) => setNewItemForm({ ...newItemForm, expiryDays: text })} /></View>
-            </View>
-            <View style={styles.modalActionRow}>
-              <Pressable style={styles.modalBtnCancel} onPress={() => setShowAddModal(false)}><Text style={styles.modalBtnCancelText}>Hủy</Text></Pressable>
-              <Pressable style={styles.modalBtnSubmit} onPress={handleSaveNewItem}><Text style={styles.modalBtnSubmitText}>Lưu vào tủ</Text></Pressable>
-            </View>
+             <Text style={styles.modalTitle}>🥣 Dùng bao nhiêu?</Text>
+             <Text style={styles.modalSubtitle}>
+               {consumingItem?.name} (Đang có: {consumingItem?.quantity} {consumingItem?.unit})
+             </Text>
+             
+             <InputField 
+               label={`Lượng sử dụng (${consumingItem?.unit})`}
+               placeholder="Nhập số lượng..."
+               value={consumeAmount}
+               onChangeText={setConsumeAmount}
+             />
+
+             <View style={styles.modalActionRow}>
+               <Pressable style={styles.modalBtnCancel} onPress={() => setShowConsumeModal(false)}>
+                 <Text style={styles.modalBtnCancelText}>Hủy</Text>
+               </Pressable>
+               <Pressable style={styles.modalBtnSubmit} onPress={handleConfirmConsume}>
+                 <Text style={styles.modalBtnSubmitText}>Xác nhận</Text>
+               </Pressable>
+             </View>
           </View>
         </View>
       </Modal>
@@ -274,7 +373,7 @@ const styles = StyleSheet.create({
   searchInput: { flex: 1, fontSize: 15, fontWeight: '600', color: '#1A1D1E', padding: 0 },
   tabContainer: { flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.04)', borderRadius: 12, padding: 4, marginBottom: 20 },
   tabBtn: { flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 8 },
-  tabBtnActive: { backgroundColor: '#FFF', elevation: 1 },
+  tabBtnActive: { backgroundColor: '#FFF', elevation: 1, ...Platform.select({web: {boxShadow: '0 2px 8px rgba(0,0,0,0.05)'}}) },
   tabText: { color: '#888', fontWeight: '600', fontSize: 14 },
   tabTextActive: { color: '#1A1D1E', fontWeight: '700' },
   statsContainer: { flexDirection: 'row', gap: 12 },
@@ -297,66 +396,30 @@ const styles = StyleSheet.create({
   categoryContainer: { gap: 8, paddingHorizontal: 4 },
   categoryChip: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF', paddingVertical: 10, paddingHorizontal: 16, borderRadius: 20, borderWidth: 1, borderColor: '#E0E0E0', gap: 8 },
   categoryChipActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  categoryText: { fontSize: 14, fontWeight: '600', color: '#555' },
+  categoryIcon: { fontSize: 16 },
+  categoryText: { fontSize: 13, fontWeight: '600', color: '#555' },
   categoryTextActive: { color: '#FFF', fontWeight: '700' },
   emptyContainer: { alignItems: 'center', marginTop: 40, gap: 12 },
   emptyText: { color: '#888', fontSize: 15, fontWeight: '500' },
 
-  // ================= STYLE MODAL MỚI =================
-  modalOverlay: { 
-    flex: 1, 
-    backgroundColor: 'rgba(0,0,0,0.6)', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    padding: 24,
-    // FIX LỖI WEB: Ép overlay phủ toàn màn hình, vượt qua mọi Container cha
-    ...Platform.select({
-      web: {
-        position: 'fixed',
-        top: 0, left: 0, right: 0, bottom: 0,
-        zIndex: 9999,
-      }
-    })
-  },
-  confirmModalBox: { 
-    width: '100%', 
-    maxWidth: 360, 
-    backgroundColor: '#FFF', // BẮT BUỘC CÓ MÀU NỀN ĐỂ KHÔNG BỊ TRONG SUỐT
-    borderRadius: 28, 
-    padding: 30, 
-    alignItems: 'center',
-    // Thêm bóng đổ để popup nổi bật trên nền tối
-    ...Platform.select({
-      web: { boxShadow: '0 10px 40px rgba(0,0,0,0.2)' },
-      default: { elevation: 10 }
-    })
-  },
-  confirmIconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: 'rgba(244, 67, 54, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20
-  },
-  addModalBox: { 
-    width: '100%', 
-    maxWidth: 400, 
-    backgroundColor: '#FFF', 
-    borderRadius: 28, 
-    padding: 24,
-    ...Platform.select({
-      web: { boxShadow: '0 10px 40px rgba(0,0,0,0.2)' },
-      default: { elevation: 10 }
-    })
-  },
+  // ================= STYLE MODAL =================
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 24, ...Platform.select({ web: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999 } }) },
+  confirmModalBox: { width: '100%', maxWidth: 360, backgroundColor: '#FFF', borderRadius: 28, padding: 30, alignItems: 'center', ...Platform.select({ web: { boxShadow: '0 10px 40px rgba(0,0,0,0.2)' }, default: { elevation: 10 } }) },
+  confirmIconCircle: { width: 64, height: 64, borderRadius: 32, backgroundColor: 'rgba(244, 67, 54, 0.1)', justifyContent: 'center', alignItems: 'center', marginBottom: 20 },
+  addModalBox: { width: '100%', maxWidth: 400, backgroundColor: '#FFF', borderRadius: 28, padding: 24, ...Platform.select({ web: { boxShadow: '0 10px 40px rgba(0,0,0,0.2)' }, default: { elevation: 10 } }) },
   modalTitle: { fontSize: 22, fontWeight: '900', color: '#1A1D1E', marginBottom: 12, textAlign: 'center' },
-  modalSubtitle: { fontSize: 15, color: '#666', lineHeight: 22, textAlign: 'center', marginBottom: 28 },
-  modalActionRow: { flexDirection: 'row', gap: 12, width: '100%' },
-  modalBtnCancel: { flex: 1, paddingVertical: 16, backgroundColor: '#F5F5F5', borderRadius: 14, alignItems: 'center' },
+  modalSubtitle: { fontSize: 15, color: '#666', lineHeight: 22, textAlign: 'center', marginBottom: 24 },
+  modalLabel: { color: '#1A1D1E', marginBottom: 8, fontSize: 14, fontWeight: '700' },
+  modalCategoryScroll: { marginBottom: 12 },
+  modalCategoryChip: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F8F9FA', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 12, borderWidth: 1, borderColor: '#E0E0E0', marginRight: 8, gap: 6 },
+  modalCategoryChipActive: { backgroundColor: 'rgba(76, 175, 80, 0.1)', borderColor: COLORS.primary },
+  modalCategoryText: { fontSize: 13, fontWeight: '600', color: '#666', textTransform: 'capitalize' },
+  modalCategoryTextActive: { color: COLORS.primary, fontWeight: '700' },
+  modalActionRow: { flexDirection: 'row', gap: 12, width: '100%', marginTop: 8 },
+  modalBtnCancel: { flex: 1, paddingVertical: 14, backgroundColor: '#F5F5F5', borderRadius: 12, alignItems: 'center' },
   modalBtnCancelText: { color: '#666', fontWeight: '700', fontSize: 15 },
-  modalBtnSubmit: { flex: 1, paddingVertical: 16, backgroundColor: COLORS.primary, borderRadius: 14, alignItems: 'center' },
+  modalBtnSubmit: { flex: 1, paddingVertical: 14, backgroundColor: COLORS.primary, borderRadius: 12, alignItems: 'center' },
   modalBtnSubmitText: { color: '#FFF', fontWeight: '700', fontSize: 15 },
 });
+
 export default PantryScreen;

@@ -146,6 +146,66 @@ export const useAppStore = create((set, get) => ({
   // ==========================================
   
   clearPantryHistory: () => set({ pantryHistory: [] }),
+
+  // Hoàn tác: Đưa item từ lịch sử quay lại tủ lạnh
+  restorePantryItem: (historyId) => set((state) => {
+    const histItem = state.pantryHistory.find(h => h.id === historyId);
+    if (!histItem) return state;
+
+    const restoredItem = {
+      id: histItem.itemId || `item_${Date.now()}`,
+      name: histItem.name,
+      quantity: histItem.quantity,
+      unit: histItem.unit,
+      icon: histItem.icon,
+      category: histItem.category || 'other',
+      addedAt: new Date().toISOString(), // Đặt lại ngày nhập là hôm nay để tính lại hạn
+      expiryDays: histItem.originalExpiryDays || 3,
+    };
+
+    return {
+      pantryHistory: state.pantryHistory.filter(h => h.id !== historyId),
+      pantryItems: [restoredItem, ...state.pantryItems]
+    };
+  }),
+
+  // Dùng một phần: Trừ kho và ghi lịch sử
+  consumePantryItem: (id, amount, reason = 'consumed') => {
+    const item = get().pantryItems.find(i => i.id === id);
+    if (!item) return;
+
+    const amountNum = parseFloat(amount);
+    if (isNaN(amountNum) || amountNum <= 0) return;
+
+    const historyEntry = {
+      id: `hist_${Date.now()}`,
+      itemId: item.id,
+      name: item.name,
+      quantity: amountNum, // Chỉ lưu lượng đã dùng vào lịch sử
+      unit: item.unit,
+      icon: item.icon,
+      action: reason,
+      usedAt: new Date().toISOString(),
+      originalExpiryDays: item.expiryDays,
+    };
+
+    if (amountNum >= item.quantity) {
+      // Dùng hết sạch -> Xóa item khỏi tủ
+      set((state) => ({
+        pantryItems: state.pantryItems.filter(i => i.id !== id),
+        pantryHistory: [historyEntry, ...state.pantryHistory]
+      }));
+    } else {
+      // Dùng một phần -> Trừ số lượng hiện có
+      set((state) => ({
+        pantryItems: state.pantryItems.map(i =>
+          i.id === id ? { ...i, quantity: i.quantity - amountNum } : i
+        ),
+        pantryHistory: [historyEntry, ...state.pantryHistory]
+      }));
+    }
+    get().showToast(`Đã dùng ${amountNum} ${item.unit} ${item.name}`, 'success');
+  },
   
   // Xóa nguyên liệu + ghi lịch sử
   removePantryItemWithHistory: (id, reason = 'consumed') => {

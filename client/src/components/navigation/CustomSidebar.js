@@ -112,7 +112,7 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
           <Pressable 
             style={styles.uploadBtn} 
             onPress={() => {
-              if (navigation) navigation.navigate('Scan');
+              if (navigation) navigation.navigate('Scan', { mode: 'diary' });
             }}
           >
             <Ionicons name="camera" size={22} color="#FFF" />

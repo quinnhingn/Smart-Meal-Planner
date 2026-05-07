@@ -38,7 +38,7 @@ const ModeSwitcher = ({ mode, setMode, onModeChange }) => (
 // ==========================================
 // MÀN HÌNH CHÍNH
 // ==========================================
-const ScanCameraScreen = ({ navigation }) => {
+const ScanCameraScreen = ({ navigation, route }) => {
   const { 
     hasCameraPermission, requestCameraPermission, 
     imageUri, setImageUri, pickImageFromGallery, clearImage 
@@ -52,7 +52,7 @@ const ScanCameraScreen = ({ navigation }) => {
   const isSaving = useAppStore(state => state.isSaving);
   
   // STATE CHÍNH
-  const [scanMode, setScanMode] = useState('diary'); // 'diary' | 'pantry'
+  const [scanMode, setScanMode] = useState(route?.params?.mode || 'diary');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiResults, setAiResults] = useState(null);
 

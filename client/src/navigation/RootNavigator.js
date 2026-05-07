@@ -57,7 +57,7 @@ const FloatingCameraButton = ({ currentRoute }) => {
   return (
     <Pressable
       style={[styles.fabAbsolute, { bottom: insets.bottom + 32 }]}
-      onPress={() => navigation.navigate('Scan')}
+      onPress={() => navigation.navigate('Scan', { mode: 'diary' })}
     >
       <View style={styles.fabButton}>
         <Ionicons name="camera" size={32} color="#FFFFFF" />

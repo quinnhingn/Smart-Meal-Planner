@@ -2,6 +2,7 @@
 import { create } from 'zustand';
 import { authApi } from '../services/mockApi';
 import { calculateTDEEAndMacros } from '../utils/calculator';
+import { MOCK_PANTRY_ITEMS, getDaysUntilExpiry, getUrgencyLevel } from '../utils/mockPantryData';
 
 export const useAppStore = create((set, get) => ({
   // ==========================================
@@ -50,7 +51,7 @@ export const useAppStore = create((set, get) => ({
   updateProfile: async (updatedData) => {
     set({ isLoading: true, error: null });
     
-    // Giả lập API call (1 giây)
+    // Giả lập API call
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     set((state) => ({ 
@@ -75,15 +76,15 @@ export const useAppStore = create((set, get) => ({
   // 3. DATA STATE (NHẬT KÝ & TỦ LẠNH)
   // ==========================================
   diaryItems: [],
-  pantryItems: [],
-  isSaving: false, // Trạng thái Loading khi lưu DB
+  pantryItems: MOCK_PANTRY_ITEMS,
+  pantryHistory: [],              
+  isSaving: false, 
   
   // State của Custom Toast
   toastInfo: { visible: false, message: '', type: 'success' },
 
   showToast: (message, type = 'success') => {
     set({ toastInfo: { visible: true, message, type } });
-    // Tự động ẩn sau 3 giây
     setTimeout(() => {
       set({ toastInfo: { visible: false, message: '', type: 'success' } });
     }, 3000);
@@ -91,16 +92,14 @@ export const useAppStore = create((set, get) => ({
 
   hideToast: () => set((state) => ({ toastInfo: { ...state.toastInfo, visible: false } })),
 
-  // Thêm 1 món ăn vào Nhật ký (Có giả lập API Loading)
+  // Thêm 1 món ăn vào Nhật ký
   addDiaryItem: async (item) => {
     set({ isSaving: true });
-    
-    // Giả lập thời gian Call API lên Neon DB mất 1.5s
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     set((state) => ({
       diaryItems: [
-        { ...item, id: Date.now(), createdAt: new Date().toISOString() }, 
+        { ...item, id: `diary_${Date.now()}`, createdAt: new Date().toISOString() }, 
         ...state.diaryItems
       ],
       isSaving: false
@@ -112,13 +111,21 @@ export const useAppStore = create((set, get) => ({
   // Thêm nhiều nguyên liệu vào Tủ lạnh
   addPantryItems: async (items) => {
     set({ isSaving: true });
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Giả lập thời gian Call API (nhanh hơn một chút để UX mượt hơn)
+    await new Promise(resolve => setTimeout(resolve, 800));
 
     set((state) => {
+      const now = new Date().toISOString();
       const newItems = items.map(item => ({ 
         ...item, 
-        id: item.id || Date.now() + Math.random(),
-        createdAt: new Date().toISOString() 
+        // Tạo ID chuẩn chuỗi
+        id: item.id || `item_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+        // FIX BUG: Phải có addedAt để hàm getDaysUntilExpiry tính toán đúng
+        addedAt: now, 
+        createdAt: now,
+        category: item.category || 'other',
+        icon: item.icon || '📦',
       }));
       return { 
         pantryItems: [...newItems, ...state.pantryItems],
@@ -126,7 +133,7 @@ export const useAppStore = create((set, get) => ({
       };
     });
 
-    get().showToast(`Đã nhập ${items.length} nguyên liệu vào tủ lạnh!`, 'success');
+    get().showToast(`Đã lưu ${items.length} nguyên liệu vào tủ lạnh!`, 'success');
   },
 
   // Xóa 1 món ăn khỏi Nhật ký
@@ -134,19 +141,126 @@ export const useAppStore = create((set, get) => ({
     diaryItems: state.diaryItems.filter(item => item.id !== id)
   })),
 
-  // Xóa 1 nguyên liệu khỏi Tủ lạnh
-  removePantryItem: (id) => set((state) => ({
-    pantryItems: state.pantryItems.filter(item => item.id !== id)
-  })),
+  // ==========================================
+  // 4. PANTRY MANAGEMENT
+  // ==========================================
+  
+  clearPantryHistory: () => set({ pantryHistory: [] }),
+  
+  // Xóa nguyên liệu + ghi lịch sử
+  removePantryItemWithHistory: (id, reason = 'consumed') => {
+    const item = get().pantryItems.find(i => i.id === id);
+    if (!item) return;
+    
+    const historyEntry = {
+      id: `hist_${Date.now()}`,
+      itemId: item.id,
+      name: item.name,
+      quantity: item.quantity,
+      unit: item.unit,
+      icon: item.icon,
+      action: reason, // 'consumed' | 'expired' | 'discarded'
+      usedAt: new Date().toISOString(),
+      originalExpiryDays: item.expiryDays,
+      actualDaysUsed: Math.floor((new Date() - new Date(item.addedAt || item.createdAt || new Date())) / (1000 * 60 * 60 * 24)),
+    };
+    
+    set((state) => ({
+      pantryItems: state.pantryItems.filter(i => i.id !== id),
+      pantryHistory: [historyEntry, ...state.pantryHistory]
+    }));
+    
+    const actionText = reason === 'consumed' ? 'đã dùng' : reason === 'expired' ? 'hết hạn' : 'bỏ đi';
+    get().showToast(`Đã đánh dấu "${item.name}" ${actionText}`, 'success');
+  },
+
+  // Cập nhật nguyên liệu
+  updatePantryItem: (id, updates) => {
+    set((state) => ({
+      pantryItems: state.pantryItems.map(item => 
+        item.id === id ? { ...item, ...updates } : item
+      )
+    }));
+  },
+
+  // === FILTER & SORT ===
+  selectedCategory: 'all',
+  setSelectedCategory: (category) => set({ selectedCategory: category }),
+  
+  searchQuery: '',
+  setSearchQuery: (query) => set({ searchQuery: query }),
+
+  // Lấy danh sách đã lọc & sắp xếp (ưu tiên sắp hết hạn)
+  getFilteredItems: () => {
+    const { pantryItems, selectedCategory, searchQuery } = get();
+    
+    let filtered = [...pantryItems];
+    
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(item => item.category === selectedCategory);
+    }
+    
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(item => 
+        item.name.toLowerCase().includes(q)
+      );
+    }
+    
+    return filtered.sort((a, b) => {
+      const daysA = getDaysUntilExpiry(a);
+      const daysB = getDaysUntilExpiry(b);
+      return daysA - daysB;
+    });
+  },
+
+  // Lấy thống kê tủ lạnh
+  getPantryStats: () => {
+    const items = get().pantryItems;
+    const history = get().pantryHistory;
+    
+    const total = items.length;
+    const expired = items.filter(i => getUrgencyLevel(getDaysUntilExpiry(i)) === 'expired').length;
+    const urgent = items.filter(i => getUrgencyLevel(getDaysUntilExpiry(i)) === 'urgent').length;
+    const warning = items.filter(i => getUrgencyLevel(getDaysUntilExpiry(i)) === 'warning').length;
+    
+    const consumed = history.filter(h => h.action === 'consumed').length;
+    const discarded = history.filter(h => h.action === 'discarded' || h.action === 'expired').length;
+    const totalHistory = history.length;
+    
+    return {
+      total,
+      expired,
+      urgent,
+      warning,
+      safe: total - expired - urgent - warning,
+      consumed,
+      discarded,
+      totalHistory,
+      wasteRate: totalHistory > 0 ? Math.round((discarded / totalHistory) * 100) : 0,
+    };
+  },
+
+  // Lấy danh sách cần nhắc nhở (sắp hết hạn)
+  getExpiringItems: () => {
+    const { pantryItems } = get();
+    return pantryItems
+      .map(item => ({
+        ...item,
+        daysLeft: getDaysUntilExpiry(item),
+        urgency: getUrgencyLevel(getDaysUntilExpiry(item))
+      }))
+      .filter(item => item.urgency !== 'safe')
+      .sort((a, b) => a.daysLeft - b.daysLeft);
+  },
 
   // ==========================================
-  // 4. GAMIFICATION & HEALTH TRACKING
+  // 5. GAMIFICATION & HEALTH TRACKING
   // ==========================================
-  weightHistory: [], // Lịch sử cân nặng: [{ date, weight }]
-  currentStreak: 0,  // Chuỗi ngày kỷ luật
-  lastLogDate: null, // Ngày log bữa ăn gần nhất
+  weightHistory: [], 
+  currentStreak: 0,  
+  lastLogDate: null, 
 
-  // Gọi hàm này mỗi khi user thêm món ăn vào Nhật ký
   logMeal: () => set((state) => {
     const today = new Date().toDateString();
     if (state.lastLogDate !== today) {
@@ -155,20 +269,17 @@ export const useAppStore = create((set, get) => ({
         lastLogDate: today
       };
     }
-    return state; // Đã log hôm nay rồi thì không tăng nữa
+    return state; 
   }),
 
-  // Gọi hàm này khi Weekly Check-in (Cập nhật cân nặng)
   checkInWeight: async (newWeight) => {
     const state = get();
     const profile = state.userProfile;
     if (!profile) return false;
 
-    // 1. Lưu vào lịch sử
     const newRecord = { date: new Date().toISOString(), weight: newWeight };
     set({ weightHistory: [...state.weightHistory, newRecord] });
 
-    // 2. Tính toán lại TDEE & Macros dựa trên cân nặng mới
     const formData = {
       gender: profile.gender || 'female',
       age: profile.age,
@@ -179,7 +290,6 @@ export const useAppStore = create((set, get) => ({
     };
     const newMacros = calculateTDEEAndMacros(formData);
 
-    // 3. Cập nhật Profile
     const newProfileData = {
       weight: newWeight,
       targetCalories: newMacros.tdee,
@@ -191,13 +301,11 @@ export const useAppStore = create((set, get) => ({
     return await state.updateProfile(newProfileData);
   },
 
-  // Gọi hàm này khi user sửa Goal hoặc Activity từ Profile
   updateGoalOrActivity: async (field, value) => {
     const state = get();
     const profile = state.userProfile;
     if (!profile) return;
 
-    // 1. Cập nhật field mới vào form ảo
     const formData = {
       gender: profile.gender,
       age: profile.age,
@@ -207,10 +315,8 @@ export const useAppStore = create((set, get) => ({
       goal: field === 'goal' ? value : profile.goal
     };
 
-    // 2. Tự động tính toán lại
     const newMacros = calculateTDEEAndMacros(formData);
 
-    // 3. Lưu toàn bộ lên DB
     await state.updateProfile({
       [field]: value,
       targetCalories: newMacros.tdee,

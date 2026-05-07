@@ -18,9 +18,9 @@ const MAIN_TABS = [
 ];
 
 const SECONDARY_TABS = [
-  { id: 'profile', icon: 'person-outline', title: 'Hồ sơ cá nhân', route: 'Profile' }, // <-- THÊM MỚI
+  { id: 'profile', icon: 'person-outline', title: 'Hồ sơ cá nhân', route: 'Profile' },
   { id: 'saved', icon: 'bookmark-outline', title: 'Công thức đã lưu', route: 'SavedRecipes' },
-  { id: 'stats', icon: 'body-outline', title: 'Báo cáo cơ thể', route: 'BodyStats' },
+  { id: 'stats', icon: 'trending-up-outline', title: 'Thống kê & Theo dõi', route: 'Tracking' }, 
   { id: 'settings', icon: 'settings-outline', title: 'Cài đặt', route: 'Settings' },
   { id: 'help', icon: 'help-circle-outline', title: 'Trợ giúp & Phản hồi', route: 'Help' },
 ];

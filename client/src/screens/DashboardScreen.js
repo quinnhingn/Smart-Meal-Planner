@@ -1,36 +1,53 @@
 // src/screens/DashboardScreen.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Platform, useWindowDimensions } from 'react-native';
+import { useAppStore } from '../store/useAppStore'; // Giữ lại 1 dòng import chuẩn
 
-// Components Core
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import MiniMealLog from '../components/MiniMealLog';
-
-// Components Domain (Đã refactor)
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardEnergyCard from '../components/dashboard/DashboardEnergyCard';
 import DashboardPantryAlert from '../components/dashboard/DashboardPantryAlert';
 import DashboardStreakBanner from '../components/dashboard/DashboardStreakBanner'; 
-import DashboardWeeklyChart from '../components/dashboard/DashboardWeeklyChart';
+import CheckInPopup from '../components/dashboard/CheckInPopup'; 
 
-// Mock Data (Sau này thay bằng const { tracking, macros, alerts } = useAppStore())
 import { 
-  DASHBOARD_MOCK_TRACKING, DASHBOARD_MOCK_MACROS, 
-  DASHBOARD_MOCK_MEAL_LOGS, DASHBOARD_MOCK_PANTRY_ALERTS,
-  DASHBOARD_MOCK_STREAK, DASHBOARD_MOCK_WEEKLY_STATS 
+  DASHBOARD_MOCK_TRACKING, 
+  DASHBOARD_MOCK_STREAK, 
+  DASHBOARD_MOCK_WEIGHT_HISTORY,
+  DASHBOARD_MOCK_MEAL_LOGS, 
+  DASHBOARD_MOCK_PANTRY_ALERTS 
 } from '../utils/mockDashboardData';
-import { useAppStore } from '../store/useAppStore';
 
 const BREAKPOINT_MOBILE_MAX = 768;
 
 const DashboardScreen = () => {
   const { width } = useWindowDimensions();
-  const { userProfile } = useAppStore();
   const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX;
+  
+  // Hợp nhất khai báo Store (Không bị trùng lặp nữa)
+  const { userProfile, weightHistory } = useAppStore();
+  const [showCheckInPopup, setShowCheckInPopup] = useState(false);
 
-  // Lấy dữ liệu thật từ Profile
+  useEffect(() => {
+    if (DASHBOARD_MOCK_WEIGHT_HISTORY && DASHBOARD_MOCK_WEIGHT_HISTORY.length > 0) {
+      const lastCheckIn = new Date(DASHBOARD_MOCK_WEIGHT_HISTORY[0].date);
+      const today = new Date();
+      
+      const diffTime = Math.abs(today - lastCheckIn);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+      if (diffDays >= 7) {
+        setShowCheckInPopup(true);
+      }
+    }
+  }, []);
+
+  // ==========================================
+  // MERGE LOGIC TỪ NHÁNH MAIN: Lấy dữ liệu thật
+  // ==========================================
   const userName = userProfile?.name || "Bạn";
-  const targetKcal = userProfile?.target_calories || userProfile?.tdee || 2000;
+  const targetKcal = userProfile?.targetCalories || userProfile?.tdee || 2000;
   
   // Tổng hợp dữ liệu tracking thật
   const realTracking = {
@@ -42,17 +59,17 @@ const DashboardScreen = () => {
 
   const realMacros = {
     protein: { 
-      target: Math.round(userProfile?.target_protein_g || userProfile?.protein_g || 150), 
+      target: Math.round(userProfile?.protein_g || 150), 
       current: 0,
       color: '#E53935'
     },
     carbs: { 
-      target: Math.round(userProfile?.target_carbs_g || userProfile?.carbs_g || 250), 
+      target: Math.round(userProfile?.carbs_g || 250), 
       current: 0,
       color: '#29B6F6'
     },
     fat: { 
-      target: Math.round(userProfile?.target_fat_g || userProfile?.fat_g || 60), 
+      target: Math.round(userProfile?.fat_g || 60), 
       current: 0,
       color: '#FBC02D'
     }
@@ -63,9 +80,9 @@ const DashboardScreen = () => {
   return (
     <ResponsiveContainer useImageBg={false}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        
         <DashboardHeader userName={userName} remainingKcal={remainingKcal} />
 
-        {/* --- STREAK BANNER (Nằm ngoài Grid, Full width) --- */}
         <View style={styles.fullWidthContainer}>
           <DashboardStreakBanner 
             streakDays={DASHBOARD_MOCK_STREAK.days} 
@@ -73,33 +90,55 @@ const DashboardScreen = () => {
           />
         </View>
 
-        {/* --- GRID MÀN HÌNH CHÍNH --- */}
         <View style={[styles.dashboardGrid, isWebLarge && styles.dashboardGridWeb]}>
-          
-          {/* CỘT TRÁI */}
           <View style={[styles.column, isWebLarge && { flex: 1.5 }]}>
+            {/* Truyền dữ liệu thật xuống Card */}
             <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
             <MiniMealLog logs={DASHBOARD_MOCK_MEAL_LOGS} />
           </View>
 
-          {/* CỘT PHẢI */}
           <View style={[styles.column, isWebLarge && { flex: 1 }]}>
-            <DashboardWeeklyChart data={DASHBOARD_MOCK_WEEKLY_STATS} />
             <DashboardPantryAlert alerts={DASHBOARD_MOCK_PANTRY_ALERTS} />
           </View>
-
         </View>
+
       </ScrollView>
+
+      <CheckInPopup 
+        visible={showCheckInPopup} 
+        onClose={() => setShowCheckInPopup(false)} 
+      />
     </ResponsiveContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContent: { flexGrow: 1, paddingVertical: 32, paddingHorizontal: 16, alignItems: 'center', paddingBottom: 100 },
-  fullWidthContainer: { width: '100%', maxWidth: 1000 },
-  dashboardGrid: { width: '100%', maxWidth: 1000, flexDirection: 'column', gap: 16 },
-  dashboardGridWeb: { flexDirection: 'row', alignItems: 'flex-start', gap: 24 },
-  column: { width: '100%', gap: 16 },
+  scrollContent: { 
+    flexGrow: 1, 
+    paddingVertical: 32, 
+    paddingHorizontal: 16, 
+    alignItems: 'center',
+    paddingBottom: 100 
+  },
+  fullWidthContainer: { 
+    width: '100%', 
+    maxWidth: 1000 
+  },
+  dashboardGrid: { 
+    width: '100%', 
+    maxWidth: 1000, 
+    flexDirection: 'column', 
+    gap: 16 
+  },
+  dashboardGridWeb: { 
+    flexDirection: 'row', 
+    alignItems: 'flex-start', 
+    gap: 24 
+  },
+  column: { 
+    width: '100%', 
+    gap: 16 
+  },
 });
 
 export default DashboardScreen;

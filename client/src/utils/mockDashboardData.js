@@ -36,3 +36,10 @@ export const DASHBOARD_MOCK_WEEKLY_STATS = [
   { id: '6', day: 'T7', kcal: 0, target: 1800 },
   { id: '7', day: 'CN', kcal: 0, target: 1800 },
 ];
+
+const eightDaysAgo = new Date();
+eightDaysAgo.setDate(eightDaysAgo.getDate() - 8);
+
+export const DASHBOARD_MOCK_WEIGHT_HISTORY = [
+  { date: eightDaysAgo.toISOString(), weight: 55.0 } 
+];

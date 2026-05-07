@@ -1,14 +1,19 @@
 // src/components/navigation/WebTopbar.js
 import React from 'react';
-import { View, StyleSheet, Pressable, Text } from 'react-native';
+import { View, StyleSheet, Pressable, Text, Image} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
+import { useNavigation } from '@react-navigation/native'; 
+import { useAppStore } from '../../store/useAppStore'; 
 
 const WebTopbar = () => {
+  const navigation = useNavigation(); // <-- KHỞI TẠO NAVIGATION
+  const { userProfile } = useAppStore(); // <-- KHỞI TẠO userProfile
+
   return (
     <View style={styles.topbarContainer}>
       <View style={styles.leftSection}>
-        {/* Đã xóa câu chào. Tương lai có thể thêm Title màn hình vào đây (VD: Trang chủ, Đi chợ...) */}
+        {/* Có thể thêm Title màn hình vào đây sau */}
       </View>
 
       <View style={styles.rightSection}>
@@ -17,8 +22,13 @@ const WebTopbar = () => {
           <View style={styles.badge} />
         </Pressable>
 
-        <Pressable style={styles.avatarBtn}>
-          <Text style={styles.avatarText}>N</Text>
+        {/* THÊM ONPRESS CHUYỂN HƯỚNG */}
+        <Pressable style={styles.avatarBtn} onPress={() => navigation.navigate('Profile')}>
+          {userProfile?.avatarUri ? (
+            <Image source={{ uri: userProfile.avatarUri }} style={{width: 40, height: 40, borderRadius: 20}} />
+          ) : (
+            <Text style={styles.avatarText}>N</Text>
+          )}
         </Pressable>
       </View>
     </View>

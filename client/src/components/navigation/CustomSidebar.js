@@ -1,7 +1,7 @@
 // src/components/navigation/CustomSidebar.js
 import React, { useEffect, useRef, useState } from 'react';
 import { 
-  View, Text, StyleSheet, Pressable, Platform, 
+  View, Text, StyleSheet, Pressable, Platform, Image,
   Animated, Dimensions, ScrollView 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,8 +18,9 @@ const MAIN_TABS = [
 ];
 
 const SECONDARY_TABS = [
+  { id: 'profile', icon: 'person-outline', title: 'Hồ sơ cá nhân', route: 'Profile' },
   { id: 'saved', icon: 'bookmark-outline', title: 'Công thức đã lưu', route: 'SavedRecipes' },
-  { id: 'stats', icon: 'body-outline', title: 'Báo cáo cơ thể', route: 'BodyStats' },
+  { id: 'stats', icon: 'trending-up-outline', title: 'Thống kê & Theo dõi', route: 'Tracking' }, 
   { id: 'settings', icon: 'settings-outline', title: 'Cài đặt', route: 'Settings' },
   { id: 'help', icon: 'help-circle-outline', title: 'Trợ giúp & Phản hồi', route: 'Help' },
 ];
@@ -88,11 +89,17 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
               <Ionicons name="leaf" size={28} color={COLORS.primary} style={styles.logoIcon} />
               <Text style={styles.mobileLogoText}>SmartMeal</Text>
             </View>
-            <View style={styles.profileHeader}>
+            {/* THAY VIEW THÀNH PRESSABLE VÀ GẮN SỰ KIỆN */}
+            <Pressable style={styles.profileHeader} onPress={() => handleNavigate('Profile')}>
               <View style={styles.avatar}>
-                <Text style={styles.avatarText}>
-                  {userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}
-                </Text>
+                {/* MERGE LOGIC: Ưu tiên ảnh, fallback lấy chữ cái đầu tên */}
+                {userProfile?.avatarUri ? (
+                  <Image source={{ uri: userProfile.avatarUri }} style={{width: 50, height: 50, borderRadius: 25}} />
+                ) : (
+                  <Text style={styles.avatarText}>
+                    {userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}
+                  </Text>
+                )}
               </View>
               <View style={styles.userInfo}>
                 <Text style={styles.userName}>{userProfile?.name || 'Người dùng'}</Text>
@@ -104,7 +111,7 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
                   }
                 </Text>
               </View>
-            </View>
+            </Pressable>
             <View style={styles.divider} />
           </View>
         )}
@@ -114,7 +121,7 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
           <Pressable 
             style={styles.uploadBtn} 
             onPress={() => {
-              if (navigation) navigation.navigate('Scan');
+              if (navigation) navigation.navigate('Scan', { mode: 'diary' });
             }}
           >
             <Ionicons name="camera" size={22} color="#FFF" />

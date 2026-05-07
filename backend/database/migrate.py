@@ -2,8 +2,9 @@ import os
 import sys
 import glob
 
-# Thêm đường dẫn để import được app và db
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Trỏ vào admin/backend để lấy app.py
+_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(_root, 'admin', 'backend'))
 
 from app import app
 from database.db import db
@@ -29,8 +30,8 @@ def run_migrations():
         init_migration_table()
         applied_files = get_applied_migrations()
         
-        # Trỏ ra thư mục migration chung ở bên ngoài
-        migration_dir = os.path.join(os.path.dirname(__file__), '../../../backend/database/migration')
+        # Tìm tất cả file .sql trong folder migration
+        migration_dir = os.path.join(os.path.dirname(__file__), 'migration')
         sql_files = glob.glob(os.path.join(migration_dir, "*.sql"))
         
         # Sắp xếp theo tên để chạy đúng thứ tự 001 -> 002 -> 003...

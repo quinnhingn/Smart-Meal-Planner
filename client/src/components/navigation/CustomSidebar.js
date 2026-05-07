@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { 
   View, Text, StyleSheet, Pressable, Platform, Image,
-  Animated, Dimensions, TouchableWithoutFeedback, ScrollView 
+  Animated, Dimensions, ScrollView 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
@@ -92,15 +92,24 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
             {/* THAY VIEW THÀNH PRESSABLE VÀ GẮN SỰ KIỆN */}
             <Pressable style={styles.profileHeader} onPress={() => handleNavigate('Profile')}>
               <View style={styles.avatar}>
+                {/* MERGE LOGIC: Ưu tiên ảnh, fallback lấy chữ cái đầu tên */}
                 {userProfile?.avatarUri ? (
                   <Image source={{ uri: userProfile.avatarUri }} style={{width: 50, height: 50, borderRadius: 25}} />
                 ) : (
-                  <Text style={styles.avatarText}>N</Text>
+                  <Text style={styles.avatarText}>
+                    {userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}
+                  </Text>
                 )}
               </View>
               <View style={styles.userInfo}>
-                <Text style={styles.userName}>Quỳnh Nhi</Text>
-                <Text style={styles.userBadge}>🔥 Mục tiêu: Giảm cân</Text>
+                <Text style={styles.userName}>{userProfile?.name || 'Người dùng'}</Text>
+                <Text style={styles.userBadge}>
+                  🔥 Mục tiêu: {
+                    userProfile?.goal === 'lose_weight' ? 'Giảm cân' :
+                    userProfile?.goal === 'maintain' ? 'Giữ dáng' :
+                    userProfile?.goal === 'gain_muscle' ? 'Tăng cơ' : 'Sức khỏe'
+                  }
+                </Text>
               </View>
             </Pressable>
             <View style={styles.divider} />
@@ -166,9 +175,9 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
   // SỬA LỖI POINTER EVENTS TẠI ĐÂY
   return (
     <View style={[styles.mobileOverlayWrapper, { pointerEvents: isDrawerOpen ? 'auto' : 'none' }]}>
-      <TouchableWithoutFeedback onPress={() => setDrawerOpen(false)}>
+      <Pressable style={StyleSheet.absoluteFill} onPress={() => setDrawerOpen(false)}>
         <Animated.View style={[styles.backdrop, { opacity: fadeAnim }]} />
-      </TouchableWithoutFeedback>
+      </Pressable>
 
       <Animated.View style={[styles.mobileDrawer, { transform: [{ translateX: slideAnim }] }]}>
         <SidebarContent />

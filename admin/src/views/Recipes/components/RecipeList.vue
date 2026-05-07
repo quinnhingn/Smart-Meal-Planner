@@ -42,11 +42,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+
+import { useRecipeStore } from '@/stores/recipeStore';
 
 const router = useRouter();
 const route = useRoute();
+const recipeStore = useRecipeStore();
 const goBack = () => router.back();
 
 const goToDetail = (id: string) => {
@@ -62,53 +65,87 @@ const categoryTitle = computed(() => {
     'salad': 'Salad & Đồ ăn nhẹ',
     'soup': 'Súp & Canh',
     'dessert': 'Món Tráng miệng',
-    'others': 'Các món khác'
+    'drinks': 'Đồ uống & Giải khát',
+    'snacks': 'Món ăn vặt',
+    'other': 'Các món khác'
   };
   return titles[category] || 'Danh sách Công thức';
 });
 
-const menuData = ref([
+// Dữ liệu mẫu (Mock Data) được phân loại
+const allMockData = [
   {
-    id: '1',
+    id: 'm1',
+    category: 'salad',
     title: 'Salad Quinoa Ức Gà',
-    protein: '35g',
-    carbs: '45g',
-    fat: '12g',
-    calories: '420',
-    aiMatch: '98%',
+    protein: '35g', carbs: '45g', fat: '12g', calories: '420', aiMatch: '98%',
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
   },
   {
-    id: '2',
+    id: 'm2',
+    category: 'noodles',
     title: 'Mì Ý Sốt Cà Gà Viên',
-    protein: '28g',
-    carbs: '65g',
-    fat: '15g',
-    calories: '510',
-    aiMatch: '95%',
+    protein: '28g', carbs: '65g', fat: '15g', calories: '510', aiMatch: '95%',
     image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
   },
   {
-    id: '3',
+    id: 'm3',
+    category: 'other',
     title: 'Tôm Xào Bông Cải',
-    protein: '22g',
-    carbs: '15g',
-    fat: '8g',
-    calories: '250',
-    aiMatch: '92%',
+    protein: '22g', carbs: '15g', fat: '8g', calories: '250', aiMatch: '92%',
     image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
   },
   {
-    id: '4',
+    id: 'm4',
+    category: 'other',
     title: 'Gà Nướng Chanh Thảo Mộc',
-    protein: '45g',
-    carbs: '5g',
-    fat: '18g',
-    calories: '360',
-    aiMatch: '99%',
+    protein: '45g', carbs: '5g', fat: '18g', calories: '360', aiMatch: '99%',
     image: 'https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    id: 'm5',
+    category: 'rice',
+    title: 'Cơm Tấm Sườn Bì Chả',
+    protein: '32g', carbs: '85g', fat: '22g', calories: '650', aiMatch: '97%',
+    image: 'https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?auto=format&fit=crop&w=400&q=80',
   }
-]);
+];
+
+// Lọc mock data theo danh mục hiện tại
+const currentCategory = route.params.category as string;
+const mockData = allMockData.filter(m => m.category === currentCategory);
+const menuData = ref([...mockData]);
+
+const fetchRecipes = async () => {
+  try {
+    const currentCategory = route.params.category as string;
+    await recipeStore.fetchRecipes();
+    
+    // Lọc theo danh mục hiện tại từ store
+    const filtered = recipeStore.recipes.filter((r: any) => r.category?.toLowerCase() === currentCategory);
+    
+    // Map dữ liệu DB sang giao diện
+    const realItems = filtered.map((r: any) => ({
+      id: r.id,
+      title: r.name_vn,
+      protein: Math.round(r.total_protein || 0) + 'g',
+      carbs: Math.round(r.total_carbs || 0) + 'g',
+      fat: Math.round(r.total_fat || 0) + 'g',
+      calories: Math.round(r.total_calories || 0),
+      aiMatch: '100%', // Data thật từ admin thì tin cậy 100%
+      image: r.image_url || 'https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=400&q=80'
+    }));
+    
+    // Gộp vào sau mock data
+    menuData.value = [...mockData, ...realItems];
+  } catch (err) {
+    console.error("Lỗi tải danh sách món:", err);
+  }
+};
+
+onMounted(() => {
+  fetchRecipes();
+});
 </script>
 
 <style scoped>

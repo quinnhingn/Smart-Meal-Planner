@@ -19,6 +19,10 @@ CORS(app)
 # Cấu hình kết nối tới Neon Database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 300,
+}
 
 # Cấu hình JWT (Token bảo mật)
 app.config['JWT_SECRET_KEY'] = 'SmartMeal_Super_Secret_Key_2026_SAFE'
@@ -33,11 +37,13 @@ app.register_blueprint(auth_bp)
 from controller.recipes.recipe_json_controller import recipe_json_bp
 from controller.ingredients.usda_controller import usda_bp
 from controller.recipes.video_controller import video_bp
+from controller.recipes.recipe_controller import recipe_bp
 
 app.register_blueprint(ingredient_bp, url_prefix='/api/ingredients')
 app.register_blueprint(usda_bp, url_prefix='/api/ingredients')
 app.register_blueprint(recipe_json_bp, url_prefix='/api/recipes')
 app.register_blueprint(video_bp, url_prefix='/api/recipes')
+app.register_blueprint(recipe_bp, url_prefix='/api/recipes')
 
 @app.route('/')
 def health_check():

@@ -1,7 +1,7 @@
 // src/screens/DashboardScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Platform, useWindowDimensions } from 'react-native';
-import { useAppStore } from '../store/useAppStore';
+import { useAppStore } from '../store/useAppStore'; // Giữ lại 1 dòng import chuẩn
 
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import MiniMealLog from '../components/MiniMealLog';
@@ -13,7 +13,6 @@ import CheckInPopup from '../components/dashboard/CheckInPopup';
 
 import { 
   DASHBOARD_MOCK_TRACKING, 
-  DASHBOARD_MOCK_MACROS, 
   DASHBOARD_MOCK_STREAK, 
   DASHBOARD_MOCK_WEIGHT_HISTORY,
   DASHBOARD_MOCK_MEAL_LOGS, 
@@ -26,6 +25,7 @@ const DashboardScreen = () => {
   const { width } = useWindowDimensions();
   const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX;
   
+  // Hợp nhất khai báo Store (Không bị trùng lặp nữa)
   const { userProfile, weightHistory } = useAppStore();
   const [showCheckInPopup, setShowCheckInPopup] = useState(false);
 
@@ -43,8 +43,39 @@ const DashboardScreen = () => {
     }
   }, []);
 
-  const remainingKcal = Math.max(0, DASHBOARD_MOCK_TRACKING.target_kcal - DASHBOARD_MOCK_TRACKING.consumed_kcal);
-  const userName = userProfile?.name || "Quỳnh Nhi"; 
+  // ==========================================
+  // MERGE LOGIC TỪ NHÁNH MAIN: Lấy dữ liệu thật
+  // ==========================================
+  const userName = userProfile?.name || "Bạn";
+  const targetKcal = userProfile?.targetCalories || userProfile?.tdee || 2000;
+  
+  // Tổng hợp dữ liệu tracking thật
+  const realTracking = {
+    ...DASHBOARD_MOCK_TRACKING,
+    target_kcal: Math.round(targetKcal),
+    consumed_kcal: 0,
+    burned_kcal: 0
+  };
+
+  const realMacros = {
+    protein: { 
+      target: Math.round(userProfile?.protein_g || 150), 
+      current: 0,
+      color: '#E53935'
+    },
+    carbs: { 
+      target: Math.round(userProfile?.carbs_g || 250), 
+      current: 0,
+      color: '#29B6F6'
+    },
+    fat: { 
+      target: Math.round(userProfile?.fat_g || 60), 
+      current: 0,
+      color: '#FBC02D'
+    }
+  };
+
+  const remainingKcal = Math.max(0, realTracking.target_kcal - realTracking.consumed_kcal);
 
   return (
     <ResponsiveContainer useImageBg={false}>
@@ -61,7 +92,8 @@ const DashboardScreen = () => {
 
         <View style={[styles.dashboardGrid, isWebLarge && styles.dashboardGridWeb]}>
           <View style={[styles.column, isWebLarge && { flex: 1.5 }]}>
-            <DashboardEnergyCard tracking={DASHBOARD_MOCK_TRACKING} macros={DASHBOARD_MOCK_MACROS} />
+            {/* Truyền dữ liệu thật xuống Card */}
+            <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
             <MiniMealLog logs={DASHBOARD_MOCK_MEAL_LOGS} />
           </View>
 

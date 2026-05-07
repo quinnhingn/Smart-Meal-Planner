@@ -17,7 +17,7 @@
       <div class="panel-card categories-panel">
         <div class="panel-header">
           <h2>Danh mục món ăn</h2>
-          <div class="total-badge">2,450 món</div>
+          <div class="total-badge">{{ totalDisplayCount }} món</div>
         </div>
         <div class="category-grid">
           <div v-for="cat in categories" :key="cat.id" class="category-card" @click="goToCategory(cat.id)">
@@ -111,13 +111,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useRecipeStore } from '@/stores/recipeStore';
 
 const router = useRouter();
+const recipeStore = useRecipeStore();
 const currentPage = ref(0);
 
-const categories = [
+const categories = ref([
   { id: 'rice', name: 'Cơm', count: 145, icon: 'fa-solid fa-bowl-rice', bgColor: '#fff1f0', color: '#f5222d' },
   { id: 'noodles', name: 'Mì & Phở', count: 86, icon: 'fa-solid fa-bowl-food', bgColor: '#fff7e6', color: '#fa8c16' },
   { id: 'soup', name: 'Canh & Súp', count: 124, icon: 'fa-solid fa-spoon', bgColor: '#f6ffed', color: '#52c41a' },
@@ -126,13 +128,54 @@ const categories = [
   { id: 'drinks', name: 'Đồ uống', count: 112, icon: 'fa-solid fa-mug-hot', bgColor: '#e6fffb', color: '#13c2c2' },
   { id: 'dessert', name: 'Tráng miệng', count: 45, icon: 'fa-solid fa-ice-cream', bgColor: '#fff0f6', color: '#eb2f96' },
   { id: 'other', name: 'Khác', count: 23, icon: 'fa-solid fa-utensils', bgColor: '#f8f9fa', color: '#64748B' }
-];
+]);
 
-const goalStats = [
-  { label: 'Giảm cân', percent: 45, color: '#f59e0b' },
-  { label: 'Giữ dáng', percent: 35, color: '#10b981' },
-  { label: 'Tăng cơ', percent: 20, color: '#3b82f6' },
-];
+const goalStats = ref([
+  { id: 'lose', label: 'Giảm cân', percent: 45, color: '#f59e0b' },
+  { id: 'maintain', label: 'Giữ dáng', percent: 35, color: '#10b981' },
+  { id: 'gain', label: 'Tăng cơ', percent: 20, color: '#3b82f6' },
+]);
+
+const fetchDashboardData = async () => {
+  try {
+    await recipeStore.fetchRecipes();
+    updateStats();
+  } catch (err) {
+    console.error("Lỗi lấy dữ liệu dashboard:", err);
+  }
+};
+
+const updateStats = () => {
+  // 1. Cập nhật số lượng món theo danh mục (Khớp ID trực tiếp)
+  categories.value.forEach(cat => {
+    const dbCount = recipeStore.recipes.filter(r => r.category?.toLowerCase() === cat.id).length;
+    // Cộng dồn vào mock data
+    cat.count += dbCount;
+  });
+
+  // 2. Cập nhật phân bổ mục tiêu
+  if (recipeStore.recipes.length > 0) {
+    goalStats.value.forEach(goal => {
+      const dbCount = recipeStore.recipes.filter(r => {
+        const recipeGoals = typeof r.goals === 'string' ? JSON.parse(r.goals) : r.goals;
+        return Array.isArray(recipeGoals) && recipeGoals.includes(goal.id);
+      }).length;
+      
+      if (dbCount > 0) {
+        goal.percent = Math.min(90, goal.percent + Math.ceil((dbCount / recipeStore.recipes.length) * 5));
+      }
+    });
+  }
+};
+
+const totalDisplayCount = computed(() => {
+  const sum = categories.value.reduce((s, c) => s + c.count, 0);
+  return sum.toLocaleString();
+});
+
+onMounted(() => {
+  fetchDashboardData();
+});
 
 const pendingRequests = [
   { name: 'Bún đậu mắm tôm', scans: 154, priority: 'high', region: 'Vùng: Hà Nội' },

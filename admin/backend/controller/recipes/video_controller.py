@@ -27,28 +27,41 @@ def search_video():
         query = f"youtube video công thức nấu món {recipe_name} hướng dẫn chi tiết nhiều lượt xem nhất"
         
         # Tìm kiếm trên web qua Tavily
-        search_result = tavily.search(query=query, search_depth="advanced", max_results=5)
+        search_result = tavily.search(query=query, search_depth="advanced", max_results=8)
         
-        # Lọc ra kết quả có chứa link youtube
-        video_url = ""
+        import requests
+        
+        # Lọc và KIỂM TRA từng video xem có cho nhúng không
+        valid_video_url = ""
         for result in search_result.get('results', []):
             url = result.get('url', '')
             if 'youtube.com/watch?v=' in url or 'youtu.be/' in url:
-                video_url = url
-                break
+                # Kiểm tra quyền nhúng qua YouTube oEmbed API
+                try:
+                    check_url = f"https://www.youtube.com/oembed?url={url}&format=json"
+                    response = requests.get(check_url, timeout=5)
+                    
+                    # Nếu response code là 200 thì video này OK, cho phép nhúng
+                    if response.status_code == 200:
+                        valid_video_url = url
+                        break
+                    else:
+                        print(f"⏩ Bỏ qua video {url} do bị chặn nhúng (Status: {response.status_code})")
+                except:
+                    continue
         
-        if video_url:
+        if valid_video_url:
             return jsonify({
                 "success": True,
-                "video_url": video_url,
+                "video_url": valid_video_url,
                 "query": query
             })
         else:
             return jsonify({
                 "success": False, 
-                "message": "Không tìm thấy video phù hợp trên Youtube"
+                "message": "Không tìm thấy video nào cho phép hiển thị trên ứng dụng này."
             })
 
     except Exception as e:
-        print(f"Lỗi Tavily: {e}")
+        print(f"Lỗi hệ thống: {e}")
         return jsonify({"success": False, "message": str(e)}), 500

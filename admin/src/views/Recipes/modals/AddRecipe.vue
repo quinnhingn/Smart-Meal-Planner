@@ -4,7 +4,7 @@
       <button class="back-btn" @click="router.back()">
         <i class="fa-solid fa-arrow-left"></i> Trở về
       </button>
-      <h1>Thêm công thức mới</h1>
+      <h1>{{ isEditMode ? 'Chỉnh sửa công thức' : 'Thêm công thức mới' }}</h1>
     </div>
 
     <div class="form-grid">
@@ -12,25 +12,67 @@
       <div class="form-main">
         <div class="card-panel">
           <h3>Thông tin cơ bản</h3>
-          <div class="input-group">
-            <label>Tên món ăn</label>
-            <div class="input-with-action">
+          <div class="input-group full-width">
+            <label><i class="fa-solid fa-utensils"></i> Tên món ăn</label>
+            <div class="input-with-action ai-integrated">
               <input type="text" placeholder="Nhập tên món ăn (VD: Salad ức gà)" v-model="form.name">
-              <button class="btn-ai-search" @click="handleAISearch" :disabled="!form.name || isSearchingAI" title="Tìm kiếm dữ liệu thông minh">
+              <button class="btn-ai-search-minimal" @click="handleAISearch" :disabled="!form.name || isSearchingAI">
                 <i :class="isSearchingAI ? 'fa-solid fa-spinner fa-spin' : 'fas fa-magic'"></i>
-                <span>{{ isSearchingAI ? 'Đang tìm...' : 'AI Search' }}</span>
+                <span>{{ isSearchingAI ? 'AI Tự điền' : 'AI Search' }}</span>
               </button>
             </div>
           </div>
 
           <div class="row-group">
             <div class="input-group">
-              <label>Mục tiêu dinh dưỡng</label>
-              <div class="multi-select-tags">
+              <label><i class="fa-solid fa-layer-group"></i> Loại món</label>
+              <div class="modern-pill-tags category-tags">
+                <span 
+                  v-for="cat in categoryOptions" 
+                  :key="cat.id"
+                  class="pill-tag"
+                  :class="{ active: form.category === cat.id }"
+                  @click="form.category = cat.id"
+                >
+                  {{ cat.label }}
+                </span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label><i class="fa-solid fa-gauge-high"></i> Độ khó</label>
+              <div class="modern-pill-tags difficulty-tags">
+                <span 
+                  v-for="diff in difficultyOptions" 
+                  :key="diff"
+                  class="pill-tag"
+                  :class="{ active: form.difficulty === diff }"
+                  @click="form.difficulty = diff"
+                >
+                  {{ diff }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row-group-three quick-info">
+            <div class="input-group">
+              <label><i class="fa-solid fa-clock"></i> Thời gian nấu</label>
+              <input type="text" v-model="form.cookingTime" placeholder="30 phút">
+            </div>
+            <div class="input-group">
+              <label><i class="fa-solid fa-users"></i> Khẩu phần</label>
+              <input type="text" v-model="form.servings" placeholder="1 người">
+            </div>
+          </div>
+
+          <div class="row-group">
+            <div class="input-group">
+              <label><i class="fa-solid fa-bullseye"></i> Mục tiêu dinh dưỡng</label>
+              <div class="modern-pill-tags goal-tags">
                 <span 
                   v-for="g in goalOptions" 
                   :key="g.id"
-                  class="select-tag"
+                  class="pill-tag"
                   :class="{ active: form.goals.includes(g.id) }"
                   @click="toggleGoal(g.id)"
                 >
@@ -39,12 +81,12 @@
               </div>
             </div>
             <div class="input-group">
-              <label>Bữa ăn phù hợp</label>
-              <div class="multi-select-tags">
+              <label><i class="fa-solid fa-cloud-sun"></i> Bữa ăn phù hợp</label>
+              <div class="modern-pill-tags meal-tags">
                 <span 
                   v-for="m in mealOptions" 
                   :key="m.id"
-                  class="select-tag"
+                  class="pill-tag"
                   :class="{ active: form.mealTimes.includes(m.id) }"
                   @click="toggleMealTime(m.id)"
                 >
@@ -125,10 +167,6 @@
         <div class="card-panel">
           <div class="steps-header">
             <h3>Các bước thực hiện</h3>
-            <button class="ai-search-btn" @click="handleAISearch" :disabled="isSearchingAI">
-              <i :class="isSearchingAI ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-wand-magic-sparkles'"></i>
-              AI Search
-            </button>
           </div>
 
           <div class="video-section">
@@ -273,8 +311,10 @@
           </div>
         </div>
 
-        <button class="save-btn" @click="router.back()">
-          <i class="fa-solid fa-check"></i> Lưu công thức
+        <button class="save-btn" @click="handleSave" :disabled="isSaving">
+          <i v-if="isSaving" class="fa-solid fa-spinner fa-spin"></i>
+          <i v-else class="fa-solid fa-check"></i> 
+          {{ isSaving ? 'Đang xử lý...' : (isEditMode ? 'Cập nhật công thức' : 'Lưu công thức') }}
         </button>
       </div>
     </div>
@@ -284,12 +324,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useRecipeStore } from '@/stores/recipeStore';
 
 const router = useRouter();
 const route = useRoute();
+const recipeStore = useRecipeStore();
+const isEditMode = ref(false);
 
 const form = ref({
   name: '',
+  category: 'rice',
+  difficulty: 'Trung bình',
+  cookingTime: '30 phút',
+  servings: '1 người',
   goals: ['maintain'] as string[],
   mealTimes: ['lunch'] as string[],
   ingredients: [] as any[],
@@ -297,6 +344,19 @@ const form = ref({
   videoUrl: '',
   imageUrl: ''
 });
+
+const categoryOptions = [
+  { id: 'rice', label: 'Món cơm' },
+  { id: 'noodles', label: 'Bún / Mì / Phở' },
+  { id: 'soup', label: 'Canh / Súp' },
+  { id: 'salad', label: 'Salad / Gỏi' },
+  { id: 'snacks', label: 'Món ăn vặt' },
+  { id: 'drinks', label: 'Đồ uống' },
+  { id: 'dessert', label: 'Tráng miệng' },
+  { id: 'other', label: 'Món khác' }
+];
+
+const difficultyOptions = ['Dễ', 'Trung bình', 'Khó'];
 
 const isRemovingBg = ref(false);
 const imageMode = ref<'upload' | 'url'>('upload');
@@ -311,6 +371,66 @@ const triggerFileInput = () => {
 
 const isSearchingAI = ref(false);
 const isSearchingVideo = ref(false);
+const isSaving = ref(false);
+
+const handleSave = async () => {
+  if (!form.value.name) {
+    alert("Vui lòng nhập tên món ăn!");
+    return;
+  }
+  
+  if (form.value.ingredients.length === 0) {
+    alert("Vui lòng thêm ít nhất một nguyên liệu!");
+    return;
+  }
+
+  isSaving.value = true;
+  try {
+    const token = localStorage.getItem('admin_token') || localStorage.getItem('token');
+    
+    if (!token) {
+      alert("❌ Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại!");
+      isSaving.value = false;
+      return;
+    }
+    
+    const payload = {
+      ...form.value,
+      total_calories: totalCalories.value,
+      total_protein: totalProtein.value,
+      total_carbs: totalCarbs.value,
+      total_fat: totalFat.value
+    };
+
+    const url = isEditMode.value ? `http://localhost:5000/api/recipes/${route.params.id}` : 'http://localhost:5000/api/recipes';
+    const method = isEditMode.value ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      alert(`🎉 Chúc mừng! Công thức đã được ${isEditMode.value ? 'cập nhật' : 'lưu'} thành công.`);
+      // Clear cache để load lại
+      recipeStore.clearCache();
+      router.push('/recipes');
+    } else {
+      const errorMsg = data.message || data.msg || "Lỗi không xác định";
+      alert("❌ Lỗi: " + errorMsg);
+    }
+  } catch (err) {
+    console.error("Lỗi Save Recipe:", err);
+    alert("❌ Không thể kết nối tới máy chủ. Vui lòng kiểm tra lại backend.");
+  } finally {
+    isSaving.value = false;
+  }
+};
 
 const findAIVideo = async () => {
   if (!form.value.name) {
@@ -353,6 +473,10 @@ const handleAISearch = async () => {
       
       // 1. Điền thông tin cơ bản
       form.value.name = bestMatch.name;
+      if (bestMatch.category) form.value.category = bestMatch.category;
+      if (bestMatch.difficulty) form.value.difficulty = bestMatch.difficulty;
+      if (bestMatch.cooking_time) form.value.cookingTime = bestMatch.cooking_time;
+      if (bestMatch.servings) form.value.servings = bestMatch.servings;
       
       // 2. Map Mục tiêu
       if (bestMatch.goals) {
@@ -536,7 +660,8 @@ const handleRemoveBg = async () => {
       form.value.imageUrl = data.image_url;
       selectedFile.value = null;
     } else {
-      alert("Lỗi tách nền: " + data.message);
+      const errorMsg = data.message || data.msg || "Lỗi không xác định";
+      alert("Lỗi tách nền: " + errorMsg);
     }
   } catch (err: any) {
     alert("Lỗi khi kết nối AI tách nền");
@@ -580,8 +705,38 @@ const toggleMealTime = (id: string) => {
   }
 };
 
-onMounted(() => {
-  if (route.query.name) {
+onMounted(async () => {
+  if (route.params.id) {
+    isEditMode.value = true;
+    const d = await recipeStore.fetchRecipeDetail(route.params.id as string);
+    if (d) {
+      form.value.name = d.name_vn;
+      form.value.category = d.category;
+      form.value.difficulty = d.difficulty;
+      form.value.cookingTime = d.cooking_time;
+      form.value.servings = d.servings;
+      form.value.videoUrl = d.video_url;
+      
+      // Parse JSON fields
+      form.value.goals = typeof d.goals === 'string' ? JSON.parse(d.goals) : d.goals;
+      form.value.mealTimes = typeof d.meal_times === 'string' ? JSON.parse(d.meal_times) : d.meal_times;
+      form.value.steps = typeof d.steps === 'string' ? JSON.parse(d.steps) : d.steps;
+      
+      const ingredients = typeof d.ingredients === 'string' ? JSON.parse(d.ingredients) : d.ingredients;
+      form.value.ingredients = ingredients.map((i: any) => ({
+        ...i,
+        cal: i.cal || i.calories || 0,
+        carb: i.carb || i.carbs || 0
+      }));
+
+      if (d.image_url) {
+        form.value.imageUrl = d.image_url;
+        imageMode.value = 'url';
+        imageUrlInput.value = d.image_url;
+        imagePreview.value = d.image_url;
+      }
+    }
+  } else if (route.query.name) {
     form.value.name = route.query.name as string;
   }
 });
@@ -718,101 +873,205 @@ const youtubeEmbedUrl = computed(() => {
   color: var(--text-dark);
 }
 
+.add-recipe-container {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: 'Inter', 'Outfit', sans-serif;
+  color: #1E293B;
+  background: #FDFDFF;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 850;
+  color: #0F172A;
+  letter-spacing: -1px;
+}
+
+/* Card & Grid */
 .form-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1.8fr 1.2fr;
+  gap: 32px;
 }
 
 .card-panel {
   background: white;
-  border-radius: 20px;
-  padding: 24px;
-  border: 1px solid #E2E8F0;
-  margin-bottom: 24px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  border-radius: 24px;
+  padding: 32px;
+  border: 1px solid #F1F5F9;
+  margin-bottom: 32px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .card-panel h3 {
-  margin: 0 0 20px 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-dark);
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #0F172A;
 }
 
-.panel-desc {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
+/* Unified Label & Input Styling */
 .input-group {
-  margin-bottom: 20px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.row-group {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .input-group label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-dark);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 750;
+  color: #334155;
+  margin-bottom: 2px;
+  letter-spacing: -0.2px;
 }
 
-.row-group {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+.input-group input[type="text"],
+.input-group input[type="number"],
+.input-group textarea {
+  width: 100%;
+  padding: 14px 18px;
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #1E293B;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.multi-select-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.select-tag {
-  padding: 10px 20px;
+.input-group input:focus,
+.input-group textarea:focus {
+  outline: none;
   background: white;
-  border: 1px solid #E2E8F0;
-  border-radius: 14px;
-  font-size: 13px;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.input-with-action {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn-ai-search {
+  padding: 0 24px;
+  background: #F1F5F9;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 16px;
   font-weight: 700;
+  font-size: 14px;
   color: #64748B;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.2s;
 }
 
-.select-tag:hover {
-  border-color: #8EAE82;
-  color: #4a8c54;
-  background: #F8FAFC;
-  transform: translateY(-1px);
+.btn-ai-search:hover:not(:disabled) {
+  border-color: #3B82F6;
+  color: #2563EB;
+  background: white;
 }
 
-.select-tag.active {
-  background: #E6EFE5;
-  border-color: #8EAE82;
-  color: #4a8c54;
-  box-shadow: 0 4px 12px rgba(142, 174, 130, 0.25);
-  transform: translateY(-1px);
+/* Modern Pill Design */
+.modern-pill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.input-group input, .input-group select {
-  padding: 14px 16px;
-  border: 1px solid #CBD5E1;
+.pill-tag {
+  padding: 6px 14px;
+  background: #F1F5F9;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+}
+
+.pill-tag:hover {
+  background: #E2E8F0;
+  color: #475569;
+}
+
+/* Group Themes - Selected Only */
+.category-tags .pill-tag.active {
+  background: #3B82F6; color: white;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+.difficulty-tags .pill-tag.active {
+  background: #F59E0B; color: white;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+.goal-tags .pill-tag.active {
+  background: #22C55E; color: white;
+  box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
+}
+
+.meal-tags .pill-tag.active {
+  background: #A855F7; color: white;
+  box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3);
+}
+
+/* Integrated AI Search */
+.ai-integrated {
+  position: relative;
+}
+
+.btn-ai-search-minimal {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  bottom: 6px;
+  background: #0F172A;
+  color: white;
+  border: none;
   border-radius: 12px;
-  font-family: inherit;
-  font-size: 14px;
-  color: var(--text-dark);
-  transition: all 0.2s;
-  background: #F8FAFC;
+  padding: 0 15px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
 }
+
+.btn-ai-search-minimal:hover:not(:disabled) {
+  background: #334155;
+  transform: scale(1.02);
+}
+
+.btn-ai-search-minimal:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-group label i {
+  color: #94A3B8;
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.row-group, .row-group-three {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
 
 .input-group input:focus, .input-group select:focus {
   outline: none;

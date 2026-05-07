@@ -4,9 +4,11 @@ import {
   View, Text, StyleSheet, ScrollView, Platform, 
   useWindowDimensions, Pressable, Animated 
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
+
+// BỎ SafeAreaView, THÊM ResponsiveContainer ĐỂ ĐỒNG BỘ UI
+import ResponsiveContainer from '../components/ResponsiveContainer';
 
 import { COLORS } from '../constants/theme';
 import { MOCK_180D_TRACKING, MOCK_PROFILE_STATS, MOCK_AI_INSIGHTS } from '../utils/mockTrackingData';
@@ -72,8 +74,10 @@ const TrackingScreen = ({ navigation }) => {
   const targetValue = isWeight ? MOCK_PROFILE_STATS.targetWeight : MOCK_PROFILE_STATS.targetCalories;
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* HEADER TÙY CHỈNH */}
+    // SỬ DỤNG ResponsiveContainer TƯƠNG TỰ DASHBOARD
+    <ResponsiveContainer useImageBg={false}>
+      
+      {/* HEADER TÙY CHỈNH TRONG SUỐT ĐỂ ĂN THEO NỀN CỦA CONTAINER */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Pressable 
@@ -85,7 +89,6 @@ const TrackingScreen = ({ navigation }) => {
           <Text style={styles.headerTitle}>Báo cáo Cơ thể</Text>
         </View>
 
-        {/* CẬP NHẬT: LUÔN HIỂN THỊ FILTER CONTAINER NHƯNG NỘI DUNG THAY ĐỔI THEO TAB */}
         <View style={styles.filterContainer}>
           {isWeight ? (
             WEIGHT_FILTERS.map(f => (
@@ -210,18 +213,18 @@ const TrackingScreen = ({ navigation }) => {
           </View>
         </View>
       </Animated.ScrollView>
-    </SafeAreaView>
+
+    </ResponsiveContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F4F7F6' },
   header: { 
     flexDirection: Platform.OS === 'web' ? 'row' : 'column', 
     justifyContent: 'space-between', 
     alignItems: Platform.OS === 'web' ? 'center' : 'flex-start',
     padding: 20, 
-    backgroundColor: '#FFF', 
+    backgroundColor: 'transparent',
     gap: 16 
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center' },
@@ -230,25 +233,26 @@ const styles = StyleSheet.create({
   
   filterContainer: { 
     flexDirection: 'row', 
-    backgroundColor: '#F0F2F5', 
+    backgroundColor: '#FFF', // Đổi màu khung chứa để nổi bật trên nền xám của ResponsiveContainer
     padding: 4, 
     borderRadius: 24,
     minHeight: 44,
-    alignItems: 'center'
+    alignItems: 'center',
+    ...Platform.select({ web: { boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }, default: { elevation: 1 } })
   },
   filterBtn: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20 },
-  filterBtnActive: { backgroundColor: '#FFF', elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5 },
+  filterBtnActive: { backgroundColor: '#F0F2F5' }, // Đảo ngược màu Active để dễ nhìn
   filterText: { fontSize: 13, fontWeight: '600', color: '#888' },
   filterTextActive: { color: COLORS.primary, fontWeight: '800' },
 
   metricToggleWrapper: { width: '100%', alignItems: 'center', marginBottom: 24 },
-  toggleContainer: { flexDirection: 'row', backgroundColor: '#E8F5E9', padding: 4, borderRadius: 24 },
+  toggleContainer: { flexDirection: 'row', backgroundColor: '#FFF', padding: 4, borderRadius: 24, ...Platform.select({ web: { boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }, default: { elevation: 1 } }) },
   toggleBtn: { paddingVertical: 10, paddingHorizontal: 32, borderRadius: 20 },
   toggleBtnActive: { backgroundColor: COLORS.primary, elevation: 4 },
   toggleText: { fontSize: 14, fontWeight: '700', color: '#555' },
   toggleTextActive: { color: '#FFF' },
 
-  scrollContent: { padding: 16, paddingBottom: 40 },
+  scrollContent: { padding: 16, paddingBottom: 100 },
   grid: { width: '100%', maxWidth: 1200, flexDirection: 'column', gap: 16, alignSelf: 'center' },
   gridWeb: { flexDirection: 'row', alignItems: 'flex-start', gap: 24 },
   

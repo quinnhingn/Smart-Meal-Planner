@@ -5,6 +5,7 @@ import { create } from 'zustand';
 import { authApi } from '../services/api'; 
 import { calculateTDEEAndMacros } from '../utils/calculator';
 import { MOCK_PANTRY_ITEMS, getDaysUntilExpiry, getUrgencyLevel } from '../utils/mockPantryData';
+import { MOCK_DIARY_ITEMS } from '../utils/mockDiaryData';
 
 export const useAppStore = create((set, get) => ({
   // ==========================================
@@ -23,7 +24,6 @@ export const useAppStore = create((set, get) => ({
     if (response.success) {
       set({ 
         token: response.data.token,
-        // Gộp thông tin User (có name) và Profile (có calories) lại làm một
         userProfile: { ...response.data.user, ...response.data.profile },
         hasProfile: response.data.has_profile || false,
         isLoading: false 
@@ -42,9 +42,8 @@ export const useAppStore = create((set, get) => ({
     if (response.success) {
       set({
         token: response.data.token,
-        // Gộp tương tự cho lúc đăng ký
         userProfile: { ...response.data.user, ...response.data.profile },
-        hasProfile: false, // Sau đăng ký sẽ được đưa sang Onboarding
+        hasProfile: false,
         isLoading: false
       });
       return true;
@@ -73,8 +72,6 @@ export const useAppStore = create((set, get) => ({
 
   updateProfile: async (updatedData) => {
     set({ isLoading: true, error: null });
-    
-    // Giả lập API call
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     set((state) => ({ 
@@ -90,15 +87,20 @@ export const useAppStore = create((set, get) => ({
   clearError: () => set({ error: null }),
 
   // ==========================================
-  // 2. UI STATE (SIDEBAR)
+  // 2. UI STATE (SIDEBAR & TAB BAR)
   // ==========================================
   isDrawerOpen: false,
   setDrawerOpen: (isOpen) => set({ isDrawerOpen: isOpen }),
 
+  tabBarVisible: true,
+  setTabBarVisible: (visible) => set({ tabBarVisible: visible }),
+  lastScrollY: 0,
+  setLastScrollY: (y) => set({ lastScrollY: y }),
+
   // ==========================================
   // 3. DATA STATE (NHẬT KÝ & TỦ LẠNH)
   // ==========================================
-  diaryItems: [],
+  diaryItems: MOCK_DIARY_ITEMS,
   pantryItems: MOCK_PANTRY_ITEMS,
   pantryHistory: [],              
   isSaving: false, 
@@ -115,14 +117,20 @@ export const useAppStore = create((set, get) => ({
 
   hideToast: () => set((state) => ({ toastInfo: { ...state.toastInfo, visible: false } })),
 
-  // Thêm 1 món ăn vào Nhật ký
+  // --- DIARY CRUD ---
+
+  // Thêm món ăn vào Nhật ký
   addDiaryItem: async (item) => {
     set({ isSaving: true });
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 800));
 
     set((state) => ({
       diaryItems: [
-        { ...item, id: `diary_${Date.now()}`, createdAt: new Date().toISOString() }, 
+        { 
+          ...item, 
+          id: item.id || `diary_${Date.now()}`, 
+          createdAt: new Date().toISOString() 
+        }, 
         ...state.diaryItems
       ],
       isSaving: false
@@ -131,20 +139,39 @@ export const useAppStore = create((set, get) => ({
     get().showToast('Đã thêm món ăn vào Nhật ký!', 'success');
   },
 
+  // Cập nhật món ăn trong Nhật ký
+  updateDiaryItem: (updatedItem) => {
+    set((state) => ({
+      diaryItems: state.diaryItems.map(item => 
+        item.id === updatedItem.id ? { ...item, ...updatedItem, updatedAt: new Date().toISOString() } : item
+      )
+    }));
+    get().showToast('Đã cập nhật món ăn!', 'success');
+  },
+
+  // Xóa món ăn khỏi Nhật ký
+  deleteDiaryItem: (id) => {
+    set((state) => ({
+      diaryItems: state.diaryItems.filter(item => item.id !== id)
+    }));
+    get().showToast('Đã xóa món ăn!', 'success');
+  },
+
+  // Alias backward compatible
+  removeDiaryItem: (id) => get().deleteDiaryItem(id),
+
+  // --- PANTRY CRUD ---
+
   // Thêm nhiều nguyên liệu vào Tủ lạnh
   addPantryItems: async (items) => {
     set({ isSaving: true });
-    
-    // Giả lập thời gian Call API (nhanh hơn một chút để UX mượt hơn)
     await new Promise(resolve => setTimeout(resolve, 800));
 
     set((state) => {
       const now = new Date().toISOString();
       const newItems = items.map(item => ({ 
         ...item, 
-        // Tạo ID chuẩn chuỗi
         id: item.id || `item_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-        // FIX BUG: Phải có addedAt để hàm getDaysUntilExpiry tính toán đúng
         addedAt: now, 
         createdAt: now,
         category: item.category || 'other',
@@ -159,18 +186,8 @@ export const useAppStore = create((set, get) => ({
     get().showToast(`Đã lưu ${items.length} nguyên liệu vào tủ lạnh!`, 'success');
   },
 
-  // Xóa 1 món ăn khỏi Nhật ký
-  removeDiaryItem: (id) => set((state) => ({
-    diaryItems: state.diaryItems.filter(item => item.id !== id)
-  })),
-
-  // ==========================================
-  // 4. PANTRY MANAGEMENT
-  // ==========================================
-  
   clearPantryHistory: () => set({ pantryHistory: [] }),
 
-  // Hoàn tác: Đưa item từ lịch sử quay lại tủ lạnh
   restorePantryItem: (historyId) => set((state) => {
     const histItem = state.pantryHistory.find(h => h.id === historyId);
     if (!histItem) return state;
@@ -182,7 +199,7 @@ export const useAppStore = create((set, get) => ({
       unit: histItem.unit,
       icon: histItem.icon,
       category: histItem.category || 'other',
-      addedAt: new Date().toISOString(), // Đặt lại ngày nhập là hôm nay để tính lại hạn
+      addedAt: new Date().toISOString(),
       expiryDays: histItem.originalExpiryDays || 3,
     };
 
@@ -192,7 +209,6 @@ export const useAppStore = create((set, get) => ({
     };
   }),
 
-  // Dùng một phần: Trừ kho và ghi lịch sử
   consumePantryItem: (id, amount, reason = 'consumed') => {
     const item = get().pantryItems.find(i => i.id === id);
     if (!item) return;
@@ -204,7 +220,7 @@ export const useAppStore = create((set, get) => ({
       id: `hist_${Date.now()}`,
       itemId: item.id,
       name: item.name,
-      quantity: amountNum, // Chỉ lưu lượng đã dùng vào lịch sử
+      quantity: amountNum,
       unit: item.unit,
       icon: item.icon,
       action: reason,
@@ -213,13 +229,11 @@ export const useAppStore = create((set, get) => ({
     };
 
     if (amountNum >= item.quantity) {
-      // Dùng hết sạch -> Xóa item khỏi tủ
       set((state) => ({
         pantryItems: state.pantryItems.filter(i => i.id !== id),
         pantryHistory: [historyEntry, ...state.pantryHistory]
       }));
     } else {
-      // Dùng một phần -> Trừ số lượng hiện có
       set((state) => ({
         pantryItems: state.pantryItems.map(i =>
           i.id === id ? { ...i, quantity: i.quantity - amountNum } : i
@@ -230,7 +244,6 @@ export const useAppStore = create((set, get) => ({
     get().showToast(`Đã dùng ${amountNum} ${item.unit} ${item.name}`, 'success');
   },
   
-  // Xóa nguyên liệu + ghi lịch sử
   removePantryItemWithHistory: (id, reason = 'consumed') => {
     const item = get().pantryItems.find(i => i.id === id);
     if (!item) return;
@@ -242,7 +255,7 @@ export const useAppStore = create((set, get) => ({
       quantity: item.quantity,
       unit: item.unit,
       icon: item.icon,
-      action: reason, // 'consumed' | 'expired' | 'discarded'
+      action: reason,
       usedAt: new Date().toISOString(),
       originalExpiryDays: item.expiryDays,
       actualDaysUsed: Math.floor((new Date() - new Date(item.addedAt || item.createdAt || new Date())) / (1000 * 60 * 60 * 24)),
@@ -257,7 +270,6 @@ export const useAppStore = create((set, get) => ({
     get().showToast(`Đã đánh dấu "${item.name}" ${actionText}`, 'success');
   },
 
-  // Cập nhật nguyên liệu
   updatePantryItem: (id, updates) => {
     set((state) => ({
       pantryItems: state.pantryItems.map(item => 
@@ -273,7 +285,6 @@ export const useAppStore = create((set, get) => ({
   searchQuery: '',
   setSearchQuery: (query) => set({ searchQuery: query }),
 
-  // Lấy danh sách đã lọc & sắp xếp (ưu tiên sắp hết hạn)
   getFilteredItems: () => {
     const { pantryItems, selectedCategory, searchQuery } = get();
     
@@ -297,7 +308,6 @@ export const useAppStore = create((set, get) => ({
     });
   },
 
-  // Lấy thống kê tủ lạnh
   getPantryStats: () => {
     const items = get().pantryItems;
     const history = get().pantryHistory;
@@ -324,7 +334,6 @@ export const useAppStore = create((set, get) => ({
     };
   },
 
-  // Lấy danh sách cần nhắc nhở (sắp hết hạn)
   getExpiringItems: () => {
     const { pantryItems } = get();
     return pantryItems

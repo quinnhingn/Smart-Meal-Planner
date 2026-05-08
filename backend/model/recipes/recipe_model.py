@@ -58,7 +58,7 @@ class UserPantryModel(db.Model):
             'unit': self.unit,
             'storage': self.storage_location,
             'expiry_date': self.expiry_date.isoformat() if self.expiry_date else None,
-            'added_at': self.added_at.isoformat()
+            'addedAt': self.added_at.isoformat() # Đổi thành addedAt cho App dễ đọc
         }
 
 class AIScanLogModel(db.Model):

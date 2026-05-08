@@ -98,6 +98,9 @@ export const recipeApi = {
   },
   importToPantry: async (items) => {
     return await fetchApi('POST', '/recipes/pantry/import', { items });
+  },
+  getPantryItems: async () => {
+    return await fetchApi('GET', '/recipes/pantry');
   }
 };
 

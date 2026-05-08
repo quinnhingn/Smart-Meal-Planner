@@ -103,3 +103,20 @@ def add_pantry_items():
         db.session.rollback()
         print(f"❌ [Pantry Import] Lỗi: {str(e)}")
         return jsonify({"success": False, "message": f"Lỗi nhập tủ lạnh: {str(e)}"}), 500
+
+@recipe_bp.route('/pantry', methods=['GET'])
+@jwt_required()
+def get_pantry_items():
+    try:
+        user_id = get_jwt_identity()
+        # Lấy tất cả món trong tủ lạnh của user, sắp xếp theo ngày nhập mới nhất
+        items = UserPantryModel.query.filter_by(user_id=user_id).order_by(UserPantryModel.added_at.desc()).all()
+        
+        return jsonify({
+            "success": True,
+            "data": [item.to_dict() for item in items]
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ [Get Pantry] Lỗi: {str(e)}")
+        return jsonify({"success": False, "message": f"Lỗi lấy dữ liệu tủ lạnh: {str(e)}"}), 500

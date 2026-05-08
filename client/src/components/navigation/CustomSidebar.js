@@ -14,7 +14,7 @@ const MAIN_TABS = [
   { id: 'home', icon: 'home-outline', title: 'Trang chủ', route: 'Dashboard' },
   { id: 'pantry', icon: 'fast-food-outline', title: 'Tủ lạnh', route: 'Pantry' },
   { id: 'recipe', icon: 'restaurant-outline', title: 'Gợi ý món ăn', route: 'Recipe' },
-  { id: 'shopping', icon: 'cart-outline', title: 'Đi chợ', route: 'Shopping' },
+  { id: 'diary', icon: 'book-outline', title: 'Nhật ký ăn uống', route: 'Diary' },
 ];
 
 const SECONDARY_TABS = [
@@ -48,10 +48,22 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
     }
   }, [isDrawerOpen, isWebLarge]);
 
+    // Các route nằm trong Tab Navigator (MainTabs)
+  const TAB_ROUTES = ['Dashboard', 'Diary', 'Pantry', 'Recommend'];
+
   const handleNavigate = (route) => {
     setActiveRoute(route);
-    setDrawerOpen(false); 
-    if(navigation) navigation.navigate(route); 
+    setDrawerOpen(false);
+    
+    if (!navigation) return;
+
+    // Nếu route là tab screen → navigate qua MainTabs
+    if (TAB_ROUTES.includes(route)) {
+      navigation.navigate('MainTabs', { screen: route });
+    } else {
+      // Stack screen (Profile, Tracking...) → navigate trực tiếp
+      navigation.navigate(route);
+    }
   };
 
   const renderMenuItem = (item) => {

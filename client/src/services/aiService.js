@@ -68,12 +68,14 @@ export const analyzeImageReal = async (imageUri, mode) => {
           }))
         };
       } else {
+        // Mode Pantry: Trả về danh sách nguyên liệu với metadata từ Gemini
         return data.predictions.map((p, idx) => ({
-          id: `pantry-${idx}`,
-          name: p.label,
-          quantity: 1,
-          unit: 'phần',
-          expiryDays: 3
+          id: `pantry-${idx}-${Date.now()}`,
+          name: p.label || p.name,
+          quantity: p.quantity || 1,
+          unit: p.unit || 'phần',
+          storage: p.storage || 'fridge',
+          expiryDays: p.expiry_days || 3
         }));
       }
     } else {

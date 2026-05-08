@@ -92,6 +92,12 @@ export const recipeApi = {
   },
   logMeal: async (mealData) => {
     return await fetchApi('POST', '/recipes/log', mealData);
+  },
+  getDailySummary: async () => {
+    return await fetchApi('GET', '/recipes/daily-summary');
+  },
+  importToPantry: async (items) => {
+    return await fetchApi('POST', '/recipes/pantry/import', { items });
   }
 };
 

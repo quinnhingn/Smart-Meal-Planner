@@ -35,10 +35,36 @@ class DishCaloriesModel(db.Model):
             "fat": self.fat
         }
 
+from sqlalchemy.dialects.postgresql import UUID
+
+class UserPantryModel(db.Model):
+    __tablename__ = 'scr_user_pantry'
+    id = db.Column(UUID(as_uuid=True), primary_key=True)
+    user_id = db.Column(db.String(36), nullable=False)
+    ingredient_name = db.Column(db.String(255), nullable=False)
+    ingredient_id = db.Column(db.Integer, nullable=True)
+    quantity = db.Column(db.Float, default=1.0)
+    unit = db.Column(db.String(50), default='g')
+    storage_location = db.Column(db.String(50), default='fridge')
+    expiry_date = db.Column(db.Date, nullable=True)
+    source = db.Column(db.String(50), default='ai_scan')
+    added_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.ingredient_name,
+            'quantity': self.quantity,
+            'unit': self.unit,
+            'storage': self.storage_location,
+            'expiry_date': self.expiry_date.isoformat() if self.expiry_date else None,
+            'added_at': self.added_at.isoformat()
+        }
+
 class AIScanLogModel(db.Model):
     __tablename__ = 'scr_ai_scan_logs'
 
-    id = db.Column(db.Text, primary_key=True) # Dùng UUID string
+    id = db.Column(UUID(as_uuid=True), primary_key=True)
     user_id = db.Column(db.Text, db.ForeignKey('scr_users.id'))
     scan_type = db.Column(db.String(50), nullable=False)
     image_url = db.Column(db.String(500))
@@ -50,7 +76,7 @@ class AIScanLogModel(db.Model):
 class MealLogModel(db.Model):
     __tablename__ = 'scr_meal_logs'
 
-    id = db.Column(db.Text, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True)
     user_id = db.Column(db.Text, db.ForeignKey('scr_users.id'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('scr_recipes.id'))
     meal_name = db.Column(db.String(255), nullable=False)

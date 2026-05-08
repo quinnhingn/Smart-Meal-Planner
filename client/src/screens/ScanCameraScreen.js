@@ -1,8 +1,8 @@
 // src/screens/ScanCameraScreen.js
 import { useAppStore } from '../store/useAppStore';
 import React, { useState, useRef } from 'react';
-import { 
-  View, Text, StyleSheet, Pressable, Platform, 
+import {
+  View, Text, StyleSheet, Pressable, Platform,
   Image, ActivityIndicator, ScrollView
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,14 +21,14 @@ import { COLORS } from '../constants/theme';
 // ==========================================
 const ModeSwitcher = ({ mode, setMode, onModeChange }) => (
   <View style={styles.switcherContainer}>
-    <Pressable 
-      style={[styles.switchBtn, mode === 'diary' && styles.switchBtnActive]} 
+    <Pressable
+      style={[styles.switchBtn, mode === 'diary' && styles.switchBtnActive]}
       onPress={() => { setMode('diary'); onModeChange?.(); }}
     >
       <Text style={[styles.switchText, mode === 'diary' && styles.switchTextActive]}>🥘 Nhật ký</Text>
     </Pressable>
-    <Pressable 
-      style={[styles.switchBtn, mode === 'pantry' && styles.switchBtnActive]} 
+    <Pressable
+      style={[styles.switchBtn, mode === 'pantry' && styles.switchBtnActive]}
       onPress={() => { setMode('pantry'); onModeChange?.(); }}
     >
       <Text style={[styles.switchText, mode === 'pantry' && styles.switchTextActive]}>🛒 Tủ lạnh</Text>
@@ -40,9 +40,9 @@ const ModeSwitcher = ({ mode, setMode, onModeChange }) => (
 // MÀN HÌNH CHÍNH
 // ==========================================
 const ScanCameraScreen = ({ navigation, route }) => {
-  const { 
-    hasCameraPermission, requestCameraPermission, 
-    imageUri, setImageUri, pickImageFromGallery, clearImage 
+  const {
+    hasCameraPermission, requestCameraPermission,
+    imageUri, setImageUri, pickImageFromGallery, clearImage
   } = useCamera();
 
   const cameraRef = useRef(null);
@@ -51,7 +51,7 @@ const ScanCameraScreen = ({ navigation, route }) => {
   const addDiaryItem = useAppStore(state => state.addDiaryItem);
   const addPantryItems = useAppStore(state => state.addPantryItems);
   const isSaving = useAppStore(state => state.isSaving);
-  
+
   // STATE CHÍNH
   const [scanMode, setScanMode] = useState(route?.params?.mode || 'diary');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -97,41 +97,53 @@ const ScanCameraScreen = ({ navigation, route }) => {
 
   // THỰC THI LƯU DỮ LIỆU
   const handleSave = async (data) => {
-    // 1. Chờ Zustand xử lý xong (giả lập delay API)
-    if (scanMode === 'diary') {
-      console.log('💾 [Flow] Đang lưu nhật ký vào Backend...', data);
-      
-      // GỌI API BACKEND THẬT
-      const apiResult = await recipeApi.logMeal({
-        recipe_id: data.recipe_id || null, // Dùng recipe_id thật từ Backend
-        meal_name: data.name,
-        meal_type: data.mealType === 'Sáng' ? 'breakfast' : 
-                   data.mealType === 'Trưa' ? 'lunch' : 
-                   data.mealType === 'Tối' ? 'dinner' : 'snack',
-        servings: data.value || 1.0,
-        calories: data.calo,
-        protein: data.protein,
-        fat: data.fat,
-        carbs: data.carbs
-      });
+    try {
+      setIsAnalyzing(true);
+      if (scanMode === 'diary') {
+        // Luồng lưu Nhật ký ăn uống
+        console.log("💾 [Flow] Đang lưu nhật ký vào Backend...", data);
+        const apiResult = await recipeApi.logMeal({
+          recipe_id: data.recipe_id || null,
+          meal_name: data.name,
+          meal_type: data.mealType === 'Sáng' ? 'breakfast' :
+            data.mealType === 'Trưa' ? 'lunch' :
+              data.mealType === 'Tối' ? 'dinner' : 'snack',
+          servings: data.value || 1.0,
+          calories: data.calo,
+          protein: data.protein,
+          fat: data.fat,
+          carbs: data.carbs
+        });
 
-      if (apiResult.success) {
-        console.log('✅ [Flow] Lưu Nhật ký thành công! ID:', apiResult.data.log_id);
-        await addDiaryItem(data); // Vẫn lưu vào Zustand để UI cập nhật nhanh
+        if (apiResult.success) {
+          Alert.alert("Thành công", "Đã thêm món ăn vào nhật ký!");
+          await addDiaryItem(data);
+          navigation.goBack();
+        } else {
+          Alert.alert("Lỗi", apiResult.error || "Không thể lưu nhật ký.");
+        }
       } else {
-        alert('Lỗi lưu nhật ký: ' + apiResult.error);
-        return; // Không thoát màn hình nếu lỗi
+        // Luồng lưu Tủ lạnh (Pantry)
+        console.log("🧊 [Flow] Đang nhập đồ vào tủ lạnh...", data);
+        const apiResult = await recipeApi.importToPantry(data);
+
+        if (apiResult.success) {
+          Alert.alert("Thành công", `Đã nhập món vào tủ lạnh!`);
+          await addPantryItems(data);
+          navigation.goBack();
+        } else {
+          Alert.alert("Lỗi", "Không thể lưu vào tủ lạnh.");
+        }
       }
-    } else {
-      await addPantryItems(data);
+    } catch (error) {
+      console.error("Lỗi khi lưu:", error);
+      Alert.alert("Lỗi", "Không thể kết nối tới máy chủ.");
+    } finally {
+      setIsAnalyzing(false);
+      // Dọn sạch data trước khi thoát
+      clearImage();
+      setAiResults(null);
     }
-    
-    // 2. GIẢI QUYẾT LỖI KẸT STATE: Dọn sạch data trước khi thoát
-    clearImage();
-    setAiResults(null);
-    
-    // 3. Chuyển hướng
-    navigation.goBack();
   };
 
   // ==========================================
@@ -143,7 +155,7 @@ const ScanCameraScreen = ({ navigation, route }) => {
         {/* CỘT TRÁI: INPUT (40%) */}
         <View style={styles.webLeftCol}>
           <ModeSwitcher mode={scanMode} setMode={setScanMode} onModeChange={handleModeChange} />
-          
+
           <View style={styles.webUploadCard}>
             {imageUri ? (
               <Image source={{ uri: imageUri }} style={styles.webPreviewImg} resizeMode="cover" />
@@ -154,7 +166,7 @@ const ScanCameraScreen = ({ navigation, route }) => {
                 <Text style={styles.webUploadSub}>Đang chọn chế độ: {scanMode === 'diary' ? 'Quét Bữa ăn' : 'Quét Nguyên liệu'}</Text>
               </>
             )}
-            
+
             <Pressable style={styles.webBtn} onPress={handlePickImage}>
               <Text style={styles.webBtnText}>{imageUri ? 'Chọn ảnh khác' : 'Chọn ảnh từ máy tính'}</Text>
             </Pressable>
@@ -175,7 +187,7 @@ const ScanCameraScreen = ({ navigation, route }) => {
             </View>
           ) : (
             <ScrollView showsVerticalScrollIndicator={false}>
-              {scanMode === 'diary' 
+              {scanMode === 'diary'
                 ? <DiaryResult imageUri={imageUri} data={aiResults} onSave={handleSave} />
                 : <PantryResult data={aiResults} onSave={handleSave} />
               }
@@ -184,10 +196,10 @@ const ScanCameraScreen = ({ navigation, route }) => {
         </View>
 
         {isSaving && (
-            <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
+          <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
             <ActivityIndicator size="large" color={COLORS.primary} />
             <Text style={styles.savingText}>Đang đồng bộ dữ liệu...</Text>
-            </View>
+          </View>
         )}
       </View>
     );
@@ -229,7 +241,7 @@ const ScanCameraScreen = ({ navigation, route }) => {
           </View>
         ) : aiResults ? (
           <ScrollView showsVerticalScrollIndicator={false}>
-            {scanMode === 'diary' 
+            {scanMode === 'diary'
               ? <DiaryResult imageUri={imageUri} data={aiResults} onSave={handleSave} />
               : <PantryResult imageUri={imageUri} data={aiResults} onSave={handleSave} />
             }
@@ -237,10 +249,10 @@ const ScanCameraScreen = ({ navigation, route }) => {
         ) : null}
 
         {isSaving && (
-            <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
+          <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
             <ActivityIndicator size="large" color={COLORS.primary} />
             <Text style={styles.savingText}>Đang đồng bộ dữ liệu...</Text>
-            </View>
+          </View>
         )}
       </SafeAreaView>
     );
@@ -251,40 +263,40 @@ const ScanCameraScreen = ({ navigation, route }) => {
   // ==========================================
   return (
     <View style={styles.containerBlack}>
-        <CameraView style={StyleSheet.absoluteFillObject} facing="back" ref={cameraRef} />
+      <CameraView style={StyleSheet.absoluteFillObject} facing="back" ref={cameraRef} />
 
-        {/* Overlay Khung ngắm */}
-        <View style={[StyleSheet.absoluteFillObject, styles.overlay]} pointerEvents="none">
-            <View style={styles.scanFrame} />
-            <Text style={styles.scanInstruction}>
-            {scanMode === 'diary' ? 'Đưa món ăn vào khung ngắm' : 'Đưa nguyên liệu vào khung ngắm'}
-            </Text>
+      {/* Overlay Khung ngắm */}
+      <View style={[StyleSheet.absoluteFillObject, styles.overlay]} pointerEvents="none">
+        <View style={styles.scanFrame} />
+        <Text style={styles.scanInstruction}>
+          {scanMode === 'diary' ? 'Đưa món ăn vào khung ngắm' : 'Đưa nguyên liệu vào khung ngắm'}
+        </Text>
+      </View>
+
+      <Pressable onPress={() => navigation.goBack()} style={styles.cameraBackBtn}>
+        <Ionicons name="close" size={32} color="#FFF" />
+      </Pressable>
+
+      <View style={styles.cameraControls}>
+        <ModeSwitcher mode={scanMode} setMode={setScanMode} />
+
+        <View style={styles.cameraActionRow}>
+          <Pressable style={styles.galleryBtn} onPress={handlePickImage}>
+            <Ionicons name="image-outline" size={28} color="#FFF" />
+          </Pressable>
+          <Pressable style={styles.captureBtnOuter} onPress={handleTakePicture}>
+            <View style={styles.captureBtnInner} />
+          </Pressable>
+          <View style={{ width: 56 }} />
         </View>
+      </View>
 
-        <Pressable onPress={() => navigation.goBack()} style={styles.cameraBackBtn}>
-            <Ionicons name="close" size={32} color="#FFF" />
-        </Pressable>
-
-        <View style={styles.cameraControls}>
-            <ModeSwitcher mode={scanMode} setMode={setScanMode} />
-            
-            <View style={styles.cameraActionRow}>
-            <Pressable style={styles.galleryBtn} onPress={handlePickImage}>
-                <Ionicons name="image-outline" size={28} color="#FFF" />
-            </Pressable>
-            <Pressable style={styles.captureBtnOuter} onPress={handleTakePicture}>
-                <View style={styles.captureBtnInner} />
-            </Pressable>
-            <View style={{ width: 56 }} />
-            </View>
+      {isSaving && (
+        <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+          <Text style={styles.savingText}>Đang đồng bộ dữ liệu...</Text>
         </View>
-
-        {isSaving && (
-            <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
-            <ActivityIndicator size="large" color={COLORS.primary} />
-            <Text style={styles.savingText}>Đang đồng bộ dữ liệu...</Text>
-            </View>
-        )}
+      )}
     </View>
   );
 };
@@ -294,7 +306,7 @@ const ScanCameraScreen = ({ navigation, route }) => {
 // ==========================================
 const styles = StyleSheet.create({
   centerAll: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8F9FA' },
-  
+
   // Switcher
   switcherContainer: { flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 30, padding: 4, alignSelf: 'center', marginBottom: 24 },
   switchBtn: { paddingVertical: 10, paddingHorizontal: 20, borderRadius: 26 },
@@ -318,7 +330,7 @@ const styles = StyleSheet.create({
   overlay: { backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center', zIndex: 1 },
   scanFrame: { width: 280, height: 280, borderWidth: 2, borderColor: COLORS.primary, borderRadius: 24 },
   scanInstruction: { color: '#FFF', fontSize: 16, fontWeight: '600', marginTop: 24 },
-  
+
   cameraBackBtn: { position: 'absolute', top: 50, left: 20, zIndex: 10 },
   cameraControls: { position: 'absolute', bottom: 40, left: 0, right: 0, zIndex: 10 },
   cameraActionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 40 },

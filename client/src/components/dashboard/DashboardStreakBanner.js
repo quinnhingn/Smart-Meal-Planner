@@ -27,37 +27,12 @@ const getFirstDayOfMonth = (year, month) => {
   return day === 0 ? 6 : day - 1; 
 };
 
-const DashboardStreakBanner = () => {
+const DashboardStreakBanner = ({ streakDays = 0, hasLoggedToday = false }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [viewingMonth, setViewingMonth] = useState(new Date()); 
 
-  const currentStreak = useMemo(() => {
-    const today = new Date();
-    let streak = 0;
-    let checkDate = new Date(today);
-
-    const todayStr = formatDateToYMD(today);
-    let yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = formatDateToYMD(yesterday);
-
-    if (!MOCK_LOGGED_DATES.includes(todayStr) && !MOCK_LOGGED_DATES.includes(yesterdayStr)) {
-      return 0;
-    }
-
-    while (true) {
-      const dateStr = formatDateToYMD(checkDate);
-      if (MOCK_LOGGED_DATES.includes(dateStr)) {
-        streak++;
-        checkDate.setDate(checkDate.getDate() - 1);
-      } else if (streak === 0 && dateStr === todayStr) {
-        checkDate.setDate(checkDate.getDate() - 1);
-      } else {
-        break; 
-      }
-    }
-    return streak;
-  }, []);
+  // Ưu tiên dùng streakDays từ Props truyền vào
+  const currentStreak = streakDays;
 
   const calendarGrid = useMemo(() => {
     const year = viewingMonth.getFullYear();

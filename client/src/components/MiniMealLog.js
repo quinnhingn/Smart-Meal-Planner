@@ -22,19 +22,6 @@ const MiniMealLog = ({ logs }) => {
   return (
     <GlassCard style={styles.cardWrapper} intensity={85}>
       <View style={styles.cardContent}>
-        {/* Header với nút Tạo bữa ăn chính */}
-        <View style={styles.headerRow}>
-          <Text style={styles.sectionTitle}>Nhật ký hôm nay</Text>
-          <Pressable 
-            style={({ hovered }) => [
-              styles.addMainBtn,
-              Platform.OS === 'web' && hovered && styles.btnHover
-            ]}
-          >
-            <Ionicons name="add" size={20} color="#FFF" />
-          </Pressable>
-        </View>
-
         {/* Danh sách 3 bữa chính */}
         <View style={styles.logContainer}>
           {renderMealRow('partly-sunny-outline', 'Bữa sáng', logs.breakfast)}
@@ -55,16 +42,6 @@ const MiniMealLog = ({ logs }) => {
             ))}
           </View>
         )}
-
-        {/* Nút thêm bữa phụ */}
-        <Pressable 
-          style={({ hovered }) => [
-            styles.addSnackBtn,
-            Platform.OS === 'web' && hovered && styles.snackBtnHover
-          ]}
-        >
-          <Text style={styles.addSnackText}>+ Thêm bữa phụ</Text>
-        </Pressable>
       </View>
     </GlassCard>
   );

@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { useCamera } from '../hooks/useCamera';
 import { analyzeImageReal } from '../services/aiService';
+import { recipeApi } from '../services/api';
 import DiaryResult from '../components/scan/DiaryResult';
 import PantryResult from '../components/scan/PantryResult';
 import { COLORS } from '../constants/theme';
@@ -98,7 +99,29 @@ const ScanCameraScreen = ({ navigation, route }) => {
   const handleSave = async (data) => {
     // 1. Chờ Zustand xử lý xong (giả lập delay API)
     if (scanMode === 'diary') {
-      await addDiaryItem(data);
+      console.log('💾 [Flow] Đang lưu nhật ký vào Backend...', data);
+      
+      // GỌI API BACKEND THẬT
+      const apiResult = await recipeApi.logMeal({
+        recipe_id: data.recipe_id || null, // Dùng recipe_id thật từ Backend
+        meal_name: data.name,
+        meal_type: data.mealType === 'Sáng' ? 'breakfast' : 
+                   data.mealType === 'Trưa' ? 'lunch' : 
+                   data.mealType === 'Tối' ? 'dinner' : 'snack',
+        servings: data.value || 1.0,
+        calories: data.calo,
+        protein: data.protein,
+        fat: data.fat,
+        carbs: data.carbs
+      });
+
+      if (apiResult.success) {
+        console.log('✅ [Flow] Lưu Nhật ký thành công! ID:', apiResult.data.log_id);
+        await addDiaryItem(data); // Vẫn lưu vào Zustand để UI cập nhật nhanh
+      } else {
+        alert('Lỗi lưu nhật ký: ' + apiResult.error);
+        return; // Không thoát màn hình nếu lỗi
+      }
     } else {
       await addPantryItems(data);
     }

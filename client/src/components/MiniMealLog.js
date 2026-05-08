@@ -5,16 +5,40 @@ import { Ionicons } from '@expo/vector-icons';
 import GlassCard from './GlassCard';
 import { COLORS } from '../constants/theme';
 
-const MiniMealLog = ({ logs }) => {
+const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
+  // ... (giữ nguyên logic processedLogs)
+  const processedLogs = {
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0,
+    snacks: []
+  };
+
+  if (Array.isArray(logs)) {
+    logs.forEach(meal => {
+      const type = meal.type || meal.meal_type;
+      const calories = parseFloat(meal.calories || meal.calories_consumed || 0);
+
+      if (type === 'breakfast') processedLogs.breakfast += calories;
+      else if (type === 'lunch') processedLogs.lunch += calories;
+      else if (type === 'dinner') processedLogs.dinner += calories;
+      else processedLogs.snacks.push({
+        id: meal.id,
+        name: meal.name || meal.meal_name,
+        kcal: calories
+      });
+    });
+  }
+
   // Hàm render dùng chung cho các item bữa ăn
-  const renderMealRow = (icon, title, kcal, isSnack = false) => (
+  const renderMealRow = (icon, title, kcal) => (
     <View style={styles.mealRow} key={title}>
       <View style={styles.mealLeft}>
-        <Ionicons name={icon} size={20} color={kcal ? COLORS.primary : '#888'} />
-        <Text style={[styles.mealTitle, !kcal && styles.textDisabled]}>{title}</Text>
+        <Ionicons name={icon} size={20} color={kcal > 0 ? COLORS.primary : '#888'} />
+        <Text style={[styles.mealTitle, kcal <= 0 && styles.textDisabled]}>{title}</Text>
       </View>
-      <Text style={[styles.mealKcal, !kcal && styles.textDisabled]}>
-        {kcal ? `${kcal} kcal` : 'Chưa nhập'}
+      <Text style={[styles.mealKcal, kcal <= 0 && styles.textDisabled]}>
+        {kcal > 0 ? `${Math.round(kcal)} kcal` : 'Chưa nhập'}
       </Text>
     </View>
   );
@@ -22,47 +46,37 @@ const MiniMealLog = ({ logs }) => {
   return (
     <GlassCard style={styles.cardWrapper} intensity={85}>
       <View style={styles.cardContent}>
-        {/* Header với nút Tạo bữa ăn chính */}
+        {/* Header */}
         <View style={styles.headerRow}>
           <Text style={styles.sectionTitle}>Nhật ký hôm nay</Text>
-          <Pressable 
-            style={({ hovered }) => [
-              styles.addMainBtn,
-              Platform.OS === 'web' && hovered && styles.btnHover
-            ]}
-          >
+          <Pressable style={styles.addMainBtn} onPress={onAddMain}>
             <Ionicons name="add" size={20} color="#FFF" />
           </Pressable>
         </View>
 
         {/* Danh sách 3 bữa chính */}
         <View style={styles.logContainer}>
-          {renderMealRow('partly-sunny-outline', 'Bữa sáng', logs.breakfast)}
+          {renderMealRow('partly-sunny-outline', 'Bữa sáng', processedLogs.breakfast)}
           <View style={styles.divider} />
-          {renderMealRow('sunny-outline', 'Bữa trưa', logs.lunch)}
+          {renderMealRow('sunny-outline', 'Bữa trưa', processedLogs.lunch)}
           <View style={styles.divider} />
-          {renderMealRow('moon-outline', 'Bữa tối', logs.dinner)}
+          {renderMealRow('moon-outline', 'Bữa tối', processedLogs.dinner)}
         </View>
 
         {/* Danh sách bữa phụ (Snacks) */}
-        {logs.snacks && logs.snacks.length > 0 && (
+        {processedLogs.snacks.length > 0 && (
           <View style={styles.snacksContainer}>
-            {logs.snacks.map((snack, index) => (
-              <React.Fragment key={snack.id}>
+            {processedLogs.snacks.map((snack, index) => (
+              <React.Fragment key={snack.id || index}>
                 <View style={styles.divider} />
-                {renderMealRow('fast-food-outline', snack.name || `Bữa phụ ${index + 1}`, snack.kcal, true)}
+                {renderMealRow('fast-food-outline', snack.name || `Bữa phụ ${index + 1}`, snack.kcal)}
               </React.Fragment>
             ))}
           </View>
         )}
 
         {/* Nút thêm bữa phụ */}
-        <Pressable 
-          style={({ hovered }) => [
-            styles.addSnackBtn,
-            Platform.OS === 'web' && hovered && styles.snackBtnHover
-          ]}
-        >
+        <Pressable style={styles.addSnackBtn} onPress={onAddSnack}>
           <Text style={styles.addSnackText}>+ Thêm bữa phụ</Text>
         </Pressable>
       </View>

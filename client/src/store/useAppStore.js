@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 
 // Gộp Import: Dùng API thật từ nhánh main, giữ nguyên các Ultils của nhánh bạn
-import { authApi } from '../services/api'; 
+import { authApi, recipeApi } from '../services/api'; 
 import { calculateTDEEAndMacros } from '../utils/calculator';
 import { MOCK_PANTRY_ITEMS, getDaysUntilExpiry, getUrgencyLevel } from '../utils/mockPantryData';
 
@@ -95,11 +95,10 @@ export const useAppStore = create((set, get) => ({
   isDrawerOpen: false,
   setDrawerOpen: (isOpen) => set({ isDrawerOpen: isOpen }),
 
-  // ==========================================
   // 3. DATA STATE (NHẬT KÝ & TỦ LẠNH)
   // ==========================================
   diaryItems: [],
-  pantryItems: MOCK_PANTRY_ITEMS,
+  pantryItems: [], // Bắt đầu bằng mảng rỗng để load từ DB
   pantryHistory: [],              
   isSaving: false, 
   
@@ -157,6 +156,55 @@ export const useAppStore = create((set, get) => ({
     });
 
     get().showToast(`Đã lưu ${items.length} nguyên liệu vào tủ lạnh!`, 'success');
+  },
+
+  // Lấy dữ liệu tủ lạnh từ API
+  fetchPantryItems: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await recipeApi.getPantryItems();
+      // Debug thử xem data về gì (Ngân xem ở terminal/console)
+      console.log("📦 [Pantry Sync] Dữ liệu từ DB:", response);
+
+      if (response.success && response.data && Array.isArray(response.data.data)) {
+        // Map dữ liệu từ DB (response.data.data) sang format của App
+        const items = response.data.data.map(item => {
+          const name = item.name ? item.name.toLowerCase() : '';
+          let icon = '📦';
+          let category = 'other';
+
+          // Gán Icon & Category thông minh dựa trên tên
+          if (name.includes('tôm') || name.includes('tép') || name.includes('nghêu') || name.includes('ốc') || name.includes('hải sản')) {
+            icon = '🍤'; category = 'meat';
+          } else if (name.includes('cá') || name.includes('lươn') || name.includes('philê')) {
+            icon = '🐟'; category = 'meat';
+          } else if (name.includes('thịt') || name.includes('gà') || name.includes('bò') || name.includes('heo') || name.includes('ba chỉ')) {
+            icon = '🥩'; category = 'meat';
+          } else if (name.includes('rau') || name.includes('cải') || name.includes('bắp') || name.includes('muống') || name.includes('ngót')) {
+            icon = '🥬'; category = 'vegetable';
+          } else if (name.includes('cà rốt') || name.includes('cà chua') || name.includes('bí') || name.includes('khoai')) {
+            icon = '🥕'; category = 'vegetable';
+          } else if (name.includes('gừng') || name.includes('tỏi') || name.includes('hành') || name.includes('ớt') || name.includes('chanh')) {
+            icon = '🧄'; category = 'condiment';
+          } else if (name.includes('trái') || name.includes('cam') || name.includes('quýt') || name.includes('thơm') || name.includes('long') || name.includes('táo') || name.includes('chuối')) {
+            icon = '🍎'; category = 'vegetable';
+          } else if (name.includes('sữa') || name.includes('trứng') || name.includes('phô mai')) {
+            icon = '🥛'; category = 'dairy';
+          }
+
+          return {
+            ...item,
+            icon,
+            category
+          };
+        });
+        set({ pantryItems: items });
+      }
+    } catch (error) {
+      console.error("Lỗi fetch pantry:", error);
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
   // Xóa 1 món ăn khỏi Nhật ký

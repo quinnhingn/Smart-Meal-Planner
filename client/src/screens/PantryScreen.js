@@ -1,9 +1,11 @@
 // src/screens/PantryScreen.js
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { 
   View, Text, StyleSheet, ScrollView, Platform, 
-  useWindowDimensions, Pressable, TextInput, FlatList, Modal 
+  useWindowDimensions, Pressable, TextInput, FlatList, Modal,
+  ActivityIndicator
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import GlassCard from '../components/GlassCard';
@@ -24,8 +26,15 @@ const PantryScreen = ({ navigation }) => {
     searchQuery, setSearchQuery, getFilteredItems,
     getPantryStats, pantryHistory, removePantryItemWithHistory,
     clearPantryHistory, addPantryItems, updatePantryItem, showToast,
-    consumePantryItem, restorePantryItem // LẤY 2 HÀM MỚI TỪ STORE
+    consumePantryItem, restorePantryItem, fetchPantryItems, isLoading, pantryItems // LẤY HÀM FETCH, LOADING VÀ DATA
   } = useAppStore();
+
+  // TỰ ĐỘNG LOAD DỮ LIỆU KHI MỞ TRANG
+  useFocusEffect(
+    useCallback(() => {
+      fetchPantryItems();
+    }, [])
+  );
 
   const [activeTab, setActiveTab] = useState('active');
   
@@ -198,10 +207,16 @@ const PantryScreen = ({ navigation }) => {
         <View style={[styles.contentWrapper, isWebLarge && styles.rowLayout]}>
           {isWebLarge && <View style={styles.sidebar}>{renderHeaderContent()}</View>}
           <View style={isWebLarge ? styles.mainListCol : styles.mobileListCol}>
-            <FlatList
-              key={`${activeTab}-${numColumns}`} 
-              data={activeTab === 'active' ? filteredItems : pantryHistory}
-              renderItem={({ item }) => (
+            {isLoading && pantryItems.length === 0 ? (
+              <View style={styles.centerAll}>
+                <ActivityIndicator size="large" color={COLORS.primary} />
+                <Text style={{ marginTop: 12, color: '#888' }}>Đang kiểm tra tủ lạnh...</Text>
+              </View>
+            ) : (
+              <FlatList
+                key={`${activeTab}-${numColumns}`} 
+                data={activeTab === 'active' ? filteredItems : pantryHistory}
+                renderItem={({ item }) => (
                 <View style={{ flex: 1, paddingHorizontal: 6, maxWidth: isWebLarge ? `${100 / numColumns}%` : '100%' }}>
                   {activeTab === 'active' ? (
                     <PantryItemCard 
@@ -243,8 +258,9 @@ const PantryScreen = ({ navigation }) => {
                   <Ionicons name={activeTab === 'active' ? "basket-outline" : "receipt-outline"} size={48} color="#CCC" />
                   <Text style={styles.emptyText}>{activeTab === 'active' ? 'Không có nguyên liệu nào.' : 'Chưa có lịch sử sử dụng.'}</Text>
                 </View>
-              }
-            />
+                }
+              />
+            )}
           </View>
         </View>
       </View>

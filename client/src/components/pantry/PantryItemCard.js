@@ -26,6 +26,13 @@ const PantryItemCard = ({ item, onEdit, onDelete, onUse, onFindRecipe }) => {
     return `${day}/${month}/${year}`;
   };
 
+  const storageLabels = {
+    'freezer': { label: 'Ngăn đông', icon: 'snowflake', color: '#03A9F4' },
+    'fridge': { label: 'Ngăn mát', icon: 'thermometer', color: '#4CAF50' },
+    'veggie_drawer': { label: 'Ngăn rau', icon: 'leaf', color: '#8BC34A' }
+  };
+  const storageInfo = storageLabels[item.storage] || { label: 'Kệ đồ', icon: 'cube', color: '#9E9E9E' };
+
   return (
     <Pressable 
       style={[
@@ -36,16 +43,23 @@ const PantryItemCard = ({ item, onEdit, onDelete, onUse, onFindRecipe }) => {
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
-      {/* TẦNG 1: THÔNG TIN CHÍNH (Đã loại bỏ Badge khỏi hàng này để giải phóng không gian) */}
+      {/* TẦNG 1: THÔNG TIN CHÍNH */}
       <View style={styles.headerRow}>
         <View style={[styles.iconBox, { backgroundColor: `${urgencyColor}20` }]}>
           <Text style={styles.icon}>{item.icon || '📦'}</Text>
         </View>
         
         <View style={styles.infoSection}>
-          <Text style={[styles.name, isExpired && styles.expiredText]}>
-            {item.name}
-          </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={[styles.name, isExpired && styles.expiredText]}>
+              {item.name}
+            </Text>
+            {/* BADGE NGĂN CHỨA */}
+            <View style={[styles.storageBadge, { backgroundColor: `${storageInfo.color}15` }]}>
+              <Ionicons name={storageInfo.icon} size={12} color={storageInfo.color} />
+              <Text style={[styles.storageText, { color: storageInfo.color }]}>{storageInfo.label}</Text>
+            </View>
+          </View>
           <Text style={styles.quantity}>
             {item.quantity} {item.unit} • Nhập: {formatAddedDate(item.addedAt)}
           </Text>
@@ -104,6 +118,9 @@ const styles = StyleSheet.create({
   statusBadge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 12, gap: 6 },
   statusDot: { width: 8, height: 8, borderRadius: 4 },
   statusText: { fontSize: 12, fontWeight: '700' },
+  
+  storageBadge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, gap: 4 },
+  storageText: { fontSize: 11, fontWeight: '700' },
   
   suggestionBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF3E0', padding: 10, borderRadius: 8, marginBottom: 12, gap: 6 },
   suggestionText: { color: '#FF9800', fontSize: 13, fontWeight: '700' },

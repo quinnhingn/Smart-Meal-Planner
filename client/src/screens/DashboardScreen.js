@@ -1,9 +1,9 @@
 // src/screens/DashboardScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Platform, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform, useWindowDimensions, Modal, Text, Pressable, TextInput } from 'react-native';
 import { useAppStore } from '../store/useAppStore';
 import { recipeApi } from '../services/api';
-import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import MiniMealLog from '../components/MiniMealLog';
@@ -12,6 +12,7 @@ import DashboardEnergyCard from '../components/dashboard/DashboardEnergyCard';
 import DashboardPantryAlert from '../components/dashboard/DashboardPantryAlert';
 import DashboardStreakBanner from '../components/dashboard/DashboardStreakBanner'; 
 import CheckInPopup from '../components/dashboard/CheckInPopup'; 
+import { COLORS } from '../constants/theme';
 
 import { 
   DASHBOARD_MOCK_TRACKING, 
@@ -25,16 +26,21 @@ const BREAKPOINT_MOBILE_MAX = 768;
 
 const DashboardScreen = () => {
   const { width } = useWindowDimensions();
+  const navigation = useNavigation();
   const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX;
   
-  // Hợp nhất khai báo Store (Không bị trùng lặp nữa)
-  const { userProfile, weightHistory } = useAppStore();
+  const { userProfile, getExpiringItems, fetchPantryItems } = useAppStore();
   const [showCheckInPopup, setShowCheckInPopup] = useState(false);
 
   const [dailySummary, setDailySummary] = useState({
     totals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
     meals: []
   });
+
+  // STATE CHO MODAL NHẬP TAY
+  const [showManualModal, setShowManualModal] = useState(false);
+  const [manualForm, setManualForm] = useState({ name: '', kcal: '', type: 'snack' });
+  const [isSaving, setIsSaving] = useState(false);
 
   const fetchSummary = async () => {
     try {
@@ -48,10 +54,38 @@ const DashboardScreen = () => {
     }
   };
 
+  const handleSaveManualMeal = async () => {
+    if (!manualForm.name || !manualForm.kcal) {
+      alert("Vui lòng nhập đầy đủ tên và calo");
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      const res = await recipeApi.logMeal({
+        meal_name: manualForm.name,
+        meal_type: manualForm.type,
+        calories: parseFloat(manualForm.kcal),
+        protein: 0, carbs: 0, fat: 0
+      });
+      
+      if (res.success) {
+        setShowManualModal(false);
+        setManualForm({ name: '', kcal: '', type: 'snack' });
+        fetchSummary();
+      }
+    } catch (error) {
+      console.error("Lỗi lưu món ăn:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   // Tự động load lại mỗi khi quay lại màn hình Dashboard
   useFocusEffect(
     React.useCallback(() => {
       fetchSummary();
+      fetchPantryItems(); // Load tủ lạnh để lấy cảnh báo
     }, [])
   );
 
@@ -103,6 +137,15 @@ const DashboardScreen = () => {
 
   const remainingKcal = Math.max(0, realTracking.target_kcal - realTracking.consumed_kcal);
 
+  // Lấy dữ liệu cảnh báo tủ lạnh thật
+  const expiringItems = getExpiringItems();
+  const realAlerts = expiringItems.map(item => ({
+    id: item.id,
+    name: item.name,
+    status: item.urgency === 'expired' ? 'out_of_stock' : 'warning',
+    msg: item.urgency === 'expired' ? 'Đã hết hàng' : `Hết hạn trong ${item.daysLeft} ngày`
+  }));
+
   return (
     <ResponsiveContainer useImageBg={false}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -111,20 +154,23 @@ const DashboardScreen = () => {
 
         <View style={styles.fullWidthContainer}>
           <DashboardStreakBanner 
-            streakDays={DASHBOARD_MOCK_STREAK.days} 
-            hasLoggedToday={DASHBOARD_MOCK_STREAK.hasLoggedToday} 
+            streakDays={dailySummary.streak || 0} 
+            hasLoggedToday={dailySummary.hasLoggedToday || false} 
           />
         </View>
 
         <View style={[styles.dashboardGrid, isWebLarge && styles.dashboardGridWeb]}>
           <View style={[styles.column, isWebLarge && { flex: 1.5 }]}>
-            {/* Truyền dữ liệu thật xuống Card */}
             <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
-            <MiniMealLog logs={dailySummary.meals.length > 0 ? dailySummary.meals : DASHBOARD_MOCK_MEAL_LOGS} />
+            <MiniMealLog 
+              logs={dailySummary.meals} 
+              onAddMain={() => navigation.navigate('Scan')}
+              onAddSnack={() => setShowManualModal(true)} // MỞ MODAL NHẬP TAY
+            />
           </View>
 
           <View style={[styles.column, isWebLarge && { flex: 1 }]}>
-            <DashboardPantryAlert alerts={DASHBOARD_MOCK_PANTRY_ALERTS} />
+            <DashboardPantryAlert alerts={realAlerts.length > 0 ? realAlerts : DASHBOARD_MOCK_PANTRY_ALERTS} />
           </View>
         </View>
 
@@ -134,6 +180,53 @@ const DashboardScreen = () => {
         visible={showCheckInPopup} 
         onClose={() => setShowCheckInPopup(false)} 
       />
+
+      {/* MODAL NHẬP BỮA ĂN THỦ CÔNG */}
+      <Modal visible={showManualModal} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.addModalBox}>
+            <Text style={styles.modalTitle}>🥣 Thêm bữa phụ</Text>
+            
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Tên món ăn</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput 
+                  style={styles.textInput} 
+                  placeholder="VD: Sữa chua, Trái cây..." 
+                  value={manualForm.name}
+                  onChangeText={(val) => setManualForm({...manualForm, name: val})}
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Lượng Calo (kcal)</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput 
+                  style={styles.textInput} 
+                  placeholder="VD: 150" 
+                  keyboardType="numeric"
+                  value={manualForm.kcal}
+                  onChangeText={(val) => setManualForm({...manualForm, kcal: val})}
+                />
+              </View>
+            </View>
+
+            <View style={styles.modalActionRow}>
+              <Pressable style={styles.modalBtnCancel} onPress={() => setShowManualModal(false)}>
+                <Text style={styles.modalBtnCancelText}>Hủy</Text>
+              </Pressable>
+              <Pressable 
+                style={[styles.modalBtnSubmit, isSaving && { opacity: 0.7 }]} 
+                onPress={handleSaveManualMeal}
+                disabled={isSaving}
+              >
+                <Text style={styles.modalBtnSubmitText}>{isSaving ? 'Đang lưu...' : 'Thêm ngay'}</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ResponsiveContainer>
   );
 };
@@ -165,6 +258,39 @@ const styles = StyleSheet.create({
     width: '100%', 
     gap: 16 
   },
+  
+  // ================= MODAL STYLES =================
+  modalOverlay: { 
+    flex: 1, 
+    backgroundColor: 'rgba(0,0,0,0.5)', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    padding: 20 
+  },
+  addModalBox: { 
+    width: '100%', 
+    maxWidth: 400, 
+    backgroundColor: '#FFF', 
+    borderRadius: 24, 
+    padding: 24,
+    elevation: 5
+  },
+  modalTitle: { fontSize: 20, fontWeight: '800', color: '#1A1D1E', marginBottom: 20, textAlign: 'center' },
+  inputGroup: { marginBottom: 16 },
+  inputLabel: { fontSize: 14, fontWeight: '700', color: '#444', marginBottom: 8 },
+  inputWrapper: { 
+    backgroundColor: '#F3F4F6', 
+    borderRadius: 12, 
+    paddingHorizontal: 12, 
+    height: 50, 
+    justifyContent: 'center' 
+  },
+  textInput: { fontSize: 15, color: '#1A1D1E', fontWeight: '600' },
+  modalActionRow: { flexDirection: 'row', gap: 12, marginTop: 8 },
+  modalBtnCancel: { flex: 1, height: 50, backgroundColor: '#F3F4F6', borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  modalBtnCancelText: { color: '#666', fontWeight: '700' },
+  modalBtnSubmit: { flex: 1, height: 50, backgroundColor: COLORS.primary, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  modalBtnSubmitText: { color: '#FFF', fontWeight: '700' },
 });
 
 export default DashboardScreen;

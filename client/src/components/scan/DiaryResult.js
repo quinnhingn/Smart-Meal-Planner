@@ -52,11 +52,12 @@ const DiaryResult = ({ imageUri, data, onSave }) => {
   const handleSaveToDiary = () => {
     onSave({
       id: selectedItem.id,
+      recipe_id: selectedItem.recipe_id, // <--- THÊM DÒNG NÀY ĐỂ KHÔNG BỊ NULL NÈ
       name: mealName,
       ...currentMacros,
       mode: portionMode,
       value: portionMode === 'portion' ? portionCount : parseInt(grams),
-      mealType: mealType // Gửi thêm dữ liệu bữa ăn để Backend/Zustand lưu
+      mealType: mealType 
     });
   };
 

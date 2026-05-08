@@ -1,7 +1,9 @@
 // src/screens/DashboardScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Platform, useWindowDimensions } from 'react-native';
-import { useAppStore } from '../store/useAppStore'; // Giữ lại 1 dòng import chuẩn
+import { useAppStore } from '../store/useAppStore';
+import { recipeApi } from '../services/api';
+import { useFocusEffect } from '@react-navigation/native';
 
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import MiniMealLog from '../components/MiniMealLog';
@@ -29,6 +31,30 @@ const DashboardScreen = () => {
   const { userProfile, weightHistory } = useAppStore();
   const [showCheckInPopup, setShowCheckInPopup] = useState(false);
 
+  const [dailySummary, setDailySummary] = useState({
+    totals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
+    meals: []
+  });
+
+  const fetchSummary = async () => {
+    try {
+      const res = await recipeApi.getDailySummary();
+      // Sửa ở đây: res.data là phản hồi từ fetchApi, data bên trong mới là dữ liệu thật từ Backend
+      if (res.success && res.data.data) {
+        setDailySummary(res.data.data);
+      }
+    } catch (error) {
+      console.error("Lỗi lấy summary:", error);
+    }
+  };
+
+  // Tự động load lại mỗi khi quay lại màn hình Dashboard
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchSummary();
+    }, [])
+  );
+
   useEffect(() => {
     if (DASHBOARD_MOCK_WEIGHT_HISTORY && DASHBOARD_MOCK_WEIGHT_HISTORY.length > 0) {
       const lastCheckIn = new Date(DASHBOARD_MOCK_WEIGHT_HISTORY[0].date);
@@ -53,24 +79,24 @@ const DashboardScreen = () => {
   const realTracking = {
     ...DASHBOARD_MOCK_TRACKING,
     target_kcal: Math.round(targetKcal),
-    consumed_kcal: 0,
+    consumed_kcal: Math.round(dailySummary.totals.calories),
     burned_kcal: 0
   };
 
   const realMacros = {
     protein: { 
       target: Math.round(userProfile?.protein_g || 150), 
-      current: 0,
+      current: Math.round(dailySummary.totals.protein),
       color: '#E53935'
     },
     carbs: { 
       target: Math.round(userProfile?.carbs_g || 250), 
-      current: 0,
+      current: Math.round(dailySummary.totals.carbs),
       color: '#29B6F6'
     },
     fat: { 
       target: Math.round(userProfile?.fat_g || 60), 
-      current: 0,
+      current: Math.round(dailySummary.totals.fat),
       color: '#FBC02D'
     }
   };
@@ -94,7 +120,7 @@ const DashboardScreen = () => {
           <View style={[styles.column, isWebLarge && { flex: 1.5 }]}>
             {/* Truyền dữ liệu thật xuống Card */}
             <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
-            <MiniMealLog logs={DASHBOARD_MOCK_MEAL_LOGS} />
+            <MiniMealLog logs={dailySummary.meals.length > 0 ? dailySummary.meals : DASHBOARD_MOCK_MEAL_LOGS} />
           </View>
 
           <View style={[styles.column, isWebLarge && { flex: 1 }]}>

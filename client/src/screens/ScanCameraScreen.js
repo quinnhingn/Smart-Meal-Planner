@@ -1,6 +1,6 @@
 // src/screens/ScanCameraScreen.js
 import { useAppStore } from '../store/useAppStore';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { 
   View, Text, StyleSheet, Pressable, Platform, 
   Image, ActivityIndicator, ScrollView
@@ -8,6 +8,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { useCamera } from '../hooks/useCamera';
 import { analyzeImageReal } from '../services/aiService';
@@ -50,11 +51,20 @@ const ScanCameraScreen = ({ navigation, route }) => {
   const addDiaryItem = useAppStore(state => state.addDiaryItem);
   const addPantryItems = useAppStore(state => state.addPantryItems);
   const isSaving = useAppStore(state => state.isSaving);
+  const setTabBarVisible = useAppStore(state => state.setTabBarVisible);
   
   // STATE CHÍNH
   const [scanMode, setScanMode] = useState(route?.params?.mode || 'diary');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiResults, setAiResults] = useState(null);
+
+  // ===== ẨN TAB BAR KHI VÀO SCAN =====
+  useFocusEffect(
+    useCallback(() => {
+      setTabBarVisible(false);
+      return () => setTabBarVisible(true);
+    }, [setTabBarVisible])
+  );
 
   // XÓA DỮ LIỆU KHI ĐỔI MODE
   const handleModeChange = () => {
@@ -96,18 +106,14 @@ const ScanCameraScreen = ({ navigation, route }) => {
 
   // THỰC THI LƯU DỮ LIỆU
   const handleSave = async (data) => {
-    // 1. Chờ Zustand xử lý xong (giả lập delay API)
     if (scanMode === 'diary') {
       await addDiaryItem(data);
     } else {
       await addPantryItems(data);
     }
     
-    // 2. GIẢI QUYẾT LỖI KẸT STATE: Dọn sạch data trước khi thoát
     clearImage();
     setAiResults(null);
-    
-    // 3. Chuyển hướng
     navigation.goBack();
   };
 

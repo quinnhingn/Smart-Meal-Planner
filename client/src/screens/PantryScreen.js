@@ -1,10 +1,11 @@
 // src/screens/PantryScreen.js
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { 
   View, Text, StyleSheet, ScrollView, Platform, 
   useWindowDimensions, Pressable, TextInput, FlatList, Modal,
-  KeyboardAvoidingView
+  KeyboardAvoidingView, ActivityIndicator
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import PantryItemCard from '../components/pantry/PantryItemCard';
@@ -33,8 +34,15 @@ const PantryScreen = ({ navigation }) => {
     searchQuery, setSearchQuery, getFilteredItems,
     getPantryStats, pantryHistory, removePantryItemWithHistory,
     clearPantryHistory, addPantryItems, updatePantryItem, showToast,
-    consumePantryItem, restorePantryItem
+    consumePantryItem, restorePantryItem, fetchPantryItems, isLoading, pantryItems
   } = useAppStore();
+
+  // TỰ ĐỘNG LOAD DỮ LIỆU KHI MỞ TRANG
+  useFocusEffect(
+    useCallback(() => {
+      if(fetchPantryItems) fetchPantryItems();
+    }, [])
+  );
 
   const [activeTab, setActiveTab] = useState('active');
   const [expiryFilter, setExpiryFilter] = useState('all');
@@ -295,90 +303,100 @@ const PantryScreen = ({ navigation }) => {
           
           <View style={isWebLarge ? styles.mainListCol : styles.mobileListCol}>
             
-            {/* KHU VỰC ĐÃ FIX: Bỏ flex: 0, sử dụng zIndex và bọc Category Filter với View có minHeight */}
-            <View style={{ zIndex: 10, paddingBottom: 8 }}>
-              {!isWebLarge && <View style={{ marginBottom: 12 }}>{renderHeaderContent()}</View>}
-              
-              {/* CATEGORY FILTER */}
-              {activeTab === 'active' && (
-                <View style={{ minHeight: 48, marginBottom: 8 }}>
-                  <ScrollView 
-                    horizontal 
-                    showsHorizontalScrollIndicator={false} 
-                    contentContainerStyle={styles.categoryContainer}
-                    style={{ flexGrow: 0 }}
-                  >
-                    {CATEGORIES.map((cat) => (
-                      <Pressable 
-                        key={cat.id} 
-                        style={[
-                          styles.categoryChip, 
-                          selectedCategory === cat.id && styles.categoryChipActive
-                        ]} 
-                        onPress={() => setSelectedCategory(cat.id)}
+            {isLoading && pantryItems?.length === 0 ? (
+              <View style={styles.centerAll}>
+                <ActivityIndicator size="large" color={COLORS.primary} />
+                <Text style={{ marginTop: 12, color: '#888' }}>Đang kiểm tra tủ lạnh...</Text>
+              </View>
+            ) : (
+              <View style={{ flex: 1 }}>
+                {/* KHU VỰC ĐÃ FIX: Bỏ flex: 0, sử dụng zIndex và bọc Category Filter với View có minHeight */}
+                <View style={{ zIndex: 10, paddingBottom: 8 }}>
+                  {!isWebLarge && <View style={{ marginBottom: 12 }}>{renderHeaderContent()}</View>}
+                  
+                  {/* CATEGORY FILTER */}
+                  {activeTab === 'active' && (
+                    <View style={{ minHeight: 48, marginBottom: 8 }}>
+                      <ScrollView 
+                        horizontal 
+                        showsHorizontalScrollIndicator={false} 
+                        contentContainerStyle={styles.categoryContainer}
+                        style={{ flexGrow: 0 }}
                       >
-                        <Text style={styles.categoryIcon}>{cat.icon}</Text>
-                        <Text style={[
-                          styles.categoryText, 
-                          selectedCategory === cat.id && styles.categoryTextActive
-                        ]}>
-                          {cat.name.replace(/[^\w\s\u00C0-\u1EF9]/g, '')}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </ScrollView>
+                        {CATEGORIES.map((cat) => (
+                          <Pressable 
+                            key={cat.id} 
+                            style={[
+                              styles.categoryChip, 
+                              selectedCategory === cat.id && styles.categoryChipActive
+                            ]} 
+                            onPress={() => setSelectedCategory(cat.id)}
+                          >
+                            <Text style={styles.categoryIcon}>{cat.icon}</Text>
+                            <Text style={[
+                              styles.categoryText, 
+                              selectedCategory === cat.id && styles.categoryTextActive
+                            ]}>
+                              {cat.name.replace(/[^\w\s\u00C0-\u1EF9]/g, '')}
+                            </Text>
+                          </Pressable>
+                        ))}
+                      </ScrollView>
+                    </View>
+                  )}
                 </View>
-              )}
-            </View>
 
-            {/* MAIN SCROLLABLE LIST */}
-            <View style={{ flex: 1 }}>
-              <FlatList
-                key={`${activeTab}-${numColumns}`} 
-                data={activeTab === 'active' ? filteredItems : pantryHistory}
-                renderItem={({ item }) => (
-                  <View style={{ flex: 1, paddingHorizontal: 6, maxWidth: isWebLarge ? `${100 / numColumns}%` : '100%' }}>
-                    {activeTab === 'active' ? (
-                      <PantryItemCard 
-                        item={item} 
-                        onUse={() => handleOpenConsume(item)}
-                        onDelete={(id) => removePantryItemWithHistory(id, 'discarded')} 
-                        onEdit={handleOpenEdit} 
-                        onFindRecipe={handleFindRecipe} 
-                      />
-                    ) : (
-                      <HistoryItemCard 
-                        item={item} 
-                        onUndo={() => restorePantryItem(item.id)}
-                      />
+                {/* MAIN SCROLLABLE LIST */}
+                <View style={{ flex: 1 }}>
+                  <FlatList
+                    key={`${activeTab}-${numColumns}`} 
+                    data={activeTab === 'active' ? filteredItems : pantryHistory}
+                    renderItem={({ item }) => (
+                      <View style={{ flex: 1, paddingHorizontal: 6, maxWidth: isWebLarge ? `${100 / numColumns}%` : '100%' }}>
+                        {activeTab === 'active' ? (
+                          <PantryItemCard 
+                            item={item} 
+                            onUse={() => handleOpenConsume(item)}
+                            onDelete={(id) => removePantryItemWithHistory(id, 'discarded')} 
+                            onEdit={handleOpenEdit} 
+                            onFindRecipe={handleFindRecipe} 
+                          />
+                        ) : (
+                          <HistoryItemCard 
+                            item={item} 
+                            onUndo={() => restorePantryItem(item.id)}
+                          />
+                        )}
+                      </View>
                     )}
-                  </View>
-                )}
-                keyExtractor={(item) => item.id}
-                numColumns={numColumns}
-                contentContainerStyle={styles.flatListContent}
-                showsVerticalScrollIndicator={false}
-                ListEmptyComponent={
-                  <View style={styles.emptyContainer}>
-                    <Ionicons 
-                      name={activeTab === 'active' ? "basket-outline" : "receipt-outline"} 
-                      size={48} 
-                      color="#DDD" 
-                    />
-                    <Text style={styles.emptyText}>
-                      {activeTab === 'active' 
-                        ? 'Không có nguyên liệu nào phù hợp.' 
-                        : 'Chưa có lịch sử sử dụng.'}
-                    </Text>
-                    {activeTab === 'active' && expiryFilter !== 'all' && (
-                      <Pressable onPress={() => setExpiryFilter('all')} style={styles.resetFilterBtn}>
-                        <Text style={styles.resetFilterText}>Xem tất cả</Text>
-                      </Pressable>
-                    )}
-                  </View>
-                }
-              />
-            </View>
+                    keyExtractor={(item) => item.id}
+                    numColumns={numColumns}
+                    contentContainerStyle={styles.flatListContent}
+                    showsVerticalScrollIndicator={false}
+                    ListEmptyComponent={
+                      <View style={styles.emptyContainer}>
+                        <Ionicons 
+                          name={activeTab === 'active' ? "basket-outline" : "receipt-outline"} 
+                          size={48} 
+                          color="#DDD" 
+                        />
+                        <Text style={styles.emptyText}>
+                          {activeTab === 'active' 
+                            ? 'Không có nguyên liệu nào phù hợp.' 
+                            : 'Chưa có lịch sử sử dụng.'}
+                        </Text>
+                        {activeTab === 'active' && expiryFilter !== 'all' && (
+                          <Pressable onPress={() => setExpiryFilter('all')} style={styles.resetFilterBtn}>
+                            <Text style={styles.resetFilterText}>Xem tất cả</Text>
+                          </Pressable>
+                        )}
+                      </View>
+                    }
+                  />
+                </View>
+              </View>
+            )}
+
           </View>
         </View>
       </View>
@@ -537,6 +555,13 @@ const styles = StyleSheet.create({
   mobileListCol: { flex: 1 },
   flatListContent: { paddingBottom: 130 },
 
+  centerAll: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    minHeight: 200,
+  },
+
   solidHeaderCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)', 
     borderRadius: 24,
@@ -656,7 +681,7 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: 4,
     paddingVertical: 4,
-    flexGrow: 1, // Fix phụ cho nội dung ngang
+    flexGrow: 1, 
   },
   categoryChip: {
     flexDirection: 'row',
@@ -667,7 +692,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1.5,
     borderColor: '#F0F0F0',
-    marginRight: 8, // Chống lỗi trên RN cũ thay vì chỉ dùng gap
+    marginRight: 8, 
     gap: 6,
   },
   categoryChipActive: {

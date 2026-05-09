@@ -201,3 +201,85 @@ class RecipeRepository:
         except Exception as e:
             print(f"❌ [Dashboard Error] {e}")
             return {"totals": {"calories": 0, "protein": 0, "carbs": 0, "fat": 0}, "meals": [], "streak": 0, "hasLoggedToday": False}
+
+    @staticmethod
+    def get_all_recipes():
+        """
+        Lấy danh sách tất cả món ăn, bao gồm cả thông tin dinh dưỡng từ bảng scr_dishes_calories
+        """
+        try:
+            recipes = RecipeModel.query.all()
+            result = []
+            for r in recipes:
+                # Ép kiểu JSON nếu nó đang ở dạng string (phòng hờ SQLite hoặc driver cũ)
+                ingredients = r.ingredients if isinstance(r.ingredients, list) else json.loads(r.ingredients or '[]')
+                steps = r.steps if isinstance(r.steps, list) else json.loads(r.steps or '[]')
+                
+                # Chuyển đổi sang format mà Frontend đang dùng (labels, macros)
+                labels = []
+                if r.category: labels.append(r.category)
+                
+                # Ánh xạ meal_times sang tiếng Việt cho đẹp
+                meal_map = {"breakfast": "Bữa sáng", "lunch": "Bữa trưa", "dinner": "Bữa tối", "snack": "Bữa phụ"}
+                if r.meal_times:
+                    m_times = r.meal_times if isinstance(r.meal_times, list) else json.loads(r.meal_times or '[]')
+                    for mt in m_times:
+                        if mt in meal_map: labels.append(meal_map[mt])
+                
+                # Ánh xạ goals
+                goal_map = {"lose": "Giảm cân", "gain": "Tăng cân", "keto": "Keto", "vegan": "Chay"}
+                if r.goals:
+                    g_list = r.goals if isinstance(r.goals, list) else json.loads(r.goals or '[]')
+                    for g in g_list:
+                        if g in goal_map: labels.append(goal_map[g])
+                
+                # Chuyển đổi Ingredients sang format Frontend (có trường 'amount')
+                formatted_ingredients = []
+                for ing in ingredients:
+                    formatted_ingredients.append({
+                        "name": ing.get('name', ''),
+                        "amount": f"{ing.get('grams', 0)}g" if ing.get('grams') else ing.get('amount', '100g'),
+                        "calories": round(ing.get('calories', 0), 1),
+                        "protein": round(ing.get('protein', 0), 1),
+                        "carbs": round(ing.get('carbs', 0), 1),
+                        "fat": round(ing.get('fat', 0), 1)
+                    })
+
+                # Chuyển đổi Steps sang format object {order, description}
+                formatted_steps = []
+                for i, step in enumerate(steps):
+                    if isinstance(step, str):
+                        formatted_steps.append({"order": i + 1, "description": step})
+                    else:
+                        formatted_steps.append(step)
+
+                # Làm tròn các chỉ số macros cho đẹp
+                raw_macros = r.nutrition.to_dict() if r.nutrition else {"calories": 0, "protein": 0, "carbs": 0, "fat": 0}
+                macros = {k: round(v, 1) for k, v in raw_macros.items()}
+
+                # Trích xuất số phút từ chuỗi "30 phút" để Frontend format được
+                try:
+                    cook_time_str = r.cooking_time or "25"
+                    # Lấy tất cả chữ số trong chuỗi
+                    cook_time = int(''.join(filter(str.isdigit, cook_time_str)))
+                except:
+                    cook_time = 25
+
+                result.append({
+                    "id": r.id,
+                    "title": r.name_vn,
+                    "image": r.image_url or "https://via.placeholder.com/150",
+                    "videoUrl": r.video_url,
+                    "cookTime": cook_time,
+                    "difficulty": r.difficulty or "Dễ",
+                    "author": {"name": "SmartMeal Admin", "avatar": "https://i.pravatar.cc/150?u=admin"},
+                    "labels": labels,
+                    "macros": macros,
+                    "ingredients": formatted_ingredients,
+                    "steps": formatted_steps,
+                    "reviews": {"avgRating": 5.0, "total": 0}
+                })
+            return result
+        except Exception as e:
+            print(f"❌ [Get All Recipes Error] {e}")
+            return []

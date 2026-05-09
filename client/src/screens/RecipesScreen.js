@@ -8,6 +8,7 @@ import RecipeCardGrid from '../components/recipes/RecipeCardGrid';
 import RecipeEmptyState from '../components/recipes/RecipeEmptyState';
 import AIFloatingChip from '../components/recipes/AIFloatingChip';
 import { useAppStore } from '../store/useAppStore';
+import { recipeApi } from '../services/api';
 import { mockRecipes } from '../utils/mockRecipes';
 
 const RecipesScreen = ({ navigation }) => {
@@ -15,20 +16,43 @@ const RecipesScreen = ({ navigation }) => {
   const isWebLarge = Platform.OS === 'web' && windowWidth > 768;
 
   const { pantryItems, savedRecipeIds, toggleSaveRecipe, setTabBarVisible } = useAppStore();
+  const [dbRecipes, setDbRecipes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchRecipes = async () => {
+    try {
+      setIsLoading(true);
+      console.log('🚀 [Recipes] Đang gọi API lấy danh sách món ăn...');
+      const res = await recipeApi.getAll();
+      console.log('📦 [Recipes] Kết quả từ API:', res);
+      
+      if (res.success && res.data && res.data.success) {
+        console.log('✅ [Recipes] Đã lấy được', res.data.data.length, 'món ăn');
+        setDbRecipes(res.data.data);
+      } else {
+        console.warn('⚠️ [Recipes] API trả về không thành công:', res.error || 'Unknown error');
+      }
+    } catch (err) {
+      console.error('❌ [Recipes] Lỗi khi gọi API:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
 
-  // Show tab bar when screen is focused
+  // Show tab bar and fetch data
   useFocusEffect(
     useCallback(() => {
       setTabBarVisible(true);
+      fetchRecipes();
       return () => {};
     }, [setTabBarVisible])
   );
 
   const filteredRecipes = useMemo(() => {
-    let result = [...mockRecipes];
+    let result = dbRecipes.length > 0 ? [...dbRecipes] : [...mockRecipes];
 
     // Search
     if (searchQuery.trim()) {
@@ -73,7 +97,7 @@ const RecipesScreen = ({ navigation }) => {
     }
 
     return result;
-  }, [searchQuery, activeFilter, savedRecipeIds, pantryItems]);
+  }, [dbRecipes, searchQuery, activeFilter, savedRecipeIds, pantryItems]);
 
   const handleRecipePress = (recipe) => {
     navigation.navigate('RecipeDetail', { recipe });

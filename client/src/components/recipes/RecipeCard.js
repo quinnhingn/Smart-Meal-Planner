@@ -21,7 +21,7 @@ const RecipeCard = ({ recipe, onPress, onSaveToggle, isSaved, missingCount, tota
     >
       {/* ẢNH */}
       <View style={styles.imageWrap}>
-        <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="cover" />
+        <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="contain" />
 
         <View style={[styles.availBadge, { backgroundColor: avail.bgColor }]}>
           <View style={[styles.dot, { backgroundColor: avail.color }]} />
@@ -89,13 +89,13 @@ const styles = StyleSheet.create({
   imageWrap: {
     position: 'relative',
     width: '100%',
-    aspectRatio: 1.1,
+    aspectRatio: 1.4, // Giảm chiều cao ảnh xuống cho đỡ choán chỗ
+    backgroundColor: '#F8F9FA', // Thêm màu nền nhẹ nếu ảnh bị hở
   },
   image: {
     width: '100%',
     height: '100%',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    padding: 10, // Thêm khoảng thở cho ảnh
   },
   availBadge: {
     position: 'absolute',

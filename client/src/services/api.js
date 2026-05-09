@@ -105,6 +105,9 @@ export const recipeApi = {
   },
   getSuggestions: async () => {
     return await fetchApi('GET', '/recipes/suggestions');
+  },
+  getAll: async () => {
+    return await fetchApi('GET', '/recipes');
   }
 };
 

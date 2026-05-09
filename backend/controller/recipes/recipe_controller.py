@@ -135,3 +135,15 @@ def get_recipe_suggestions():
         
     except Exception as e:
         return jsonify({"success": False, "message": f"Lỗi lấy gợi ý món ăn: {str(e)}"}), 500
+
+@recipe_bp.route('', methods=['GET'])
+@jwt_required()
+def get_all_recipes():
+    try:
+        recipes = RecipeRepository.get_all_recipes()
+        return jsonify({
+            "success": True,
+            "data": recipes
+        }), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Lỗi lấy danh sách món ăn: {str(e)}"}), 500

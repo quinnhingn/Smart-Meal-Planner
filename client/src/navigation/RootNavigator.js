@@ -1,16 +1,19 @@
 // src/navigation/RootNavigator.js
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Pressable,
   Platform,
-  useWindowDimensions
+  useWindowDimensions,
+  Animated,
+  Easing,
 } from 'react-native';
 
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,53 +21,142 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Screens
 import DashboardScreen from '../screens/DashboardScreen';
 import PantryScreen from '../screens/PantryScreen';
-import ShoppingScreen from '../screens/ShoppingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import ScanCameraScreen from '../screens/ScanCameraScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import TrackingScreen from '../screens/TrackingScreen'; // ✅ ADD
+import TrackingScreen from '../screens/TrackingScreen';
+import DiaryScreen from '../screens/DiaryScreen';
+import RecipesScreen from '../screens/RecipesScreen';
+import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 
 // Layout
 import CustomSidebar from '../components/navigation/CustomSidebar';
 import WebTopbar from '../components/navigation/WebTopbar';
+import MobileTopbar from '../components/navigation/MobileTopbar';
 import CustomToast from '../components/common/CustomToast';
 
 const { COLORS, BREAKPOINTS } = require('../constants/theme');
 const { useAppStore } = require('../store/useAppStore');
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-const RecipeScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Màn hình Gợi ý món ăn sẽ ở đây</Text>
-  </View>
+//////////////////////////////////////////////////////////
+// CUSTOM TAB BAR (MOBILE) — 5 TABS
+//////////////////////////////////////////////////////////
+const TAB_CONFIG = [
+  { name: 'Dashboard', label: 'Trang chủ', icon: 'home', iconOutline: 'home-outline' },
+  { name: 'Diary',    label: 'Nhật ký',  icon: 'book',  iconOutline: 'book-outline' },
+  { name: 'Scan',     label: null,       icon: 'camera', isCenter: true },
+  { name: 'Pantry',   label: 'Tủ lạnh',  icon: 'fast-food', iconOutline: 'fast-food-outline' },
+  { name: 'Recipes',  label: 'Công thức', icon: 'restaurant', iconOutline: 'restaurant-outline' },
+];
+
+const CustomTabBar = ({ state, navigation }) => {
+  const { tabBarVisible, setTabBarVisible } = useAppStore();
+  const insets = useSafeAreaInsets();
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    setTabBarVisible(true);
+  }, [state.index]);
+
+  useEffect(() => {
+    Animated.timing(translateY, {
+      toValue: tabBarVisible ? 0 : 120,
+      duration: 250,
+      useNativeDriver: true,
+      easing: Easing.inOut(Easing.ease),
+    }).start();
+  }, [tabBarVisible]);
+
+  // ===== FIX: ẨN TAB BAR TRÊN WEB =====
+  if (Platform.OS === 'web') return null;
+
+  const currentRoute = state.routes[state.index]?.name;
+  if (currentRoute === 'Scan') return null;
+
+  return (
+    <Animated.View
+      style={[
+        styles.tabBarContainer,
+        { paddingBottom: insets.bottom, transform: [{ translateY }] },
+      ]}
+    >
+      <BlurView intensity={90} tint="light" style={StyleSheet.absoluteFill} />
+      <View style={styles.tabBarInner}>
+        {TAB_CONFIG.map((tab) => {
+          const routeIndex = state.routes.findIndex((r) => r.name === tab.name);
+          const isFocused = state.index === routeIndex;
+
+          if (tab.isCenter) {
+            return (
+              <Pressable
+                key={tab.name}
+                style={styles.centerTab}
+                onPress={() => navigation.navigate('Scan', { mode: 'diary' })}
+              >
+                <View style={styles.scanButton}>
+                  <Ionicons name={tab.icon} size={26} color="#FFF" />
+                </View>
+              </Pressable>
+            );
+          }
+
+          return (
+            <Pressable
+              key={tab.name}
+              style={styles.tabItem}
+              onPress={() => {
+                if (!isFocused) navigation.navigate(tab.name);
+              }}
+            >
+              <Ionicons
+                name={isFocused ? tab.icon : tab.iconOutline}
+                size={22}
+                color={isFocused ? COLORS.primary : '#888'}
+              />
+              <Text style={[styles.tabLabel, isFocused && styles.tabLabelActive]}>
+                {tab.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    </Animated.View>
+  );
+};
+
+//////////////////////////////////////////////////////////
+// MAIN TABS — 5 screen
+//////////////////////////////////////////////////////////
+const MainTabs = () => (
+  <Tab.Navigator
+    screenOptions={{ headerShown: false }}
+    tabBar={(props) => <CustomTabBar {...props} />}
+  >
+    <Tab.Screen name="Dashboard" component={DashboardScreen} />
+    <Tab.Screen name="Diary"     component={DiaryScreen} />
+    <Tab.Screen name="Scan"      component={ScanCameraScreen} />
+    <Tab.Screen name="Pantry"    component={PantryScreen} />
+    <Tab.Screen name="Recipes"   component={RecipesScreen} />
+  </Tab.Navigator>
 );
 
 //////////////////////////////////////////////////////////
-// FAB CAMERA
+// ROOT STACK — chứa thêm Profile, Tracking, RecipeDetail
 //////////////////////////////////////////////////////////
-const FloatingCameraButton = ({ currentRoute }) => {
-  const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
-
-  // ✅ ADD Tracking
-  if (['Scan', 'Profile', 'Tracking'].includes(currentRoute)) {
-    return null;
-  }
-
-  return (
-    <Pressable
-      style={[styles.fabAbsolute, { bottom: insets.bottom + 32 }]}
-      onPress={() => navigation.navigate('Scan', { mode: 'diary' })}
-    >
-      <View style={styles.fabButton}>
-        <Ionicons name="camera" size={32} color="#FFFFFF" />
-      </View>
-    </Pressable>
-  );
-};
+const RootStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="MainTabs"     component={MainTabs} />
+    <Stack.Screen name="Profile"      component={ProfileScreen} />
+    <Stack.Screen name="Tracking"     component={TrackingScreen} />
+    <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />
+    {/* Thêm các screen sidebar khác vào đây nếu cần */}
+  </Stack.Navigator>
+);
 
 //////////////////////////////////////////////////////////
 // MAIN LAYOUT
@@ -77,157 +169,29 @@ const MainLayout = ({ currentRoute }) => {
 
   const navigation = useNavigation();
 
-  const TabContent = (
-    <View style={{ flex: 1, position: 'relative' }}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarShowLabel: true,
-
-          // ✅ ADD Tracking vào điều kiện hide
-          tabBarStyle:
-            isWebLarge || ['Scan', 'Profile', 'Tracking'].includes(route.name)
-              ? { display: 'none' }
-              : {
-                  position: 'absolute',
-                  bottom: 24,
-                  left: 20,
-                  right: 20,
-                  height: 65,
-                  borderRadius: 30,
-                  backgroundColor: 'transparent',
-                  borderTopWidth: 0,
-                  elevation: 0,
-                  ...Platform.select({
-                    ios: {
-                      shadowColor: '#000',
-                      shadowOffset: { width: 0, height: 10 },
-                      shadowOpacity: 0.1,
-                      shadowRadius: 20
-                    },
-                    android: { elevation: 8 }
-                  })
-                },
-
-          tabBarBackground: () =>
-            !isWebLarge ? (
-              <BlurView
-                intensity={100}
-                tint="light"
-                style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    borderRadius: 30,
-                    overflow: 'hidden',
-                    backgroundColor: 'rgba(255,255,255,0.75)'
-                  }
-                ]}
-              />
-            ) : null,
-
-          tabBarActiveTintColor: COLORS.primary,
-          tabBarInactiveTintColor: '#888',
-          tabBarLabelStyle: {
-            fontSize: 11,
-            fontWeight: '600',
-            paddingBottom: 6
-          },
-
-          tabBarIcon: ({ focused, color }) => {
-            let iconName;
-
-            if (route.name === 'Dashboard')
-              iconName = focused ? 'home' : 'home-outline';
-            if (route.name === 'Pantry')
-              iconName = focused ? 'fast-food' : 'fast-food-outline';
-            if (route.name === 'Recipe')
-              iconName = focused ? 'restaurant' : 'restaurant-outline';
-            if (route.name === 'Shopping')
-              iconName = focused ? 'cart' : 'cart-outline';
-
-            return <Ionicons name={iconName} size={22} color={color} />;
-          }
-        })}
-      >
-        <Tab.Screen
-          name="Dashboard"
-          component={DashboardScreen}
-          options={{ title: 'Trang chủ' }}
-        />
-
-        <Tab.Screen
-          name="Pantry"
-          component={PantryScreen}
-          options={{ title: 'Tủ lạnh' }}
-        />
-
-        <Tab.Screen
-          name="Scan"
-          component={ScanCameraScreen}
-          options={{ tabBarButton: () => null }}
-        />
-
-        {/* PROFILE */}
-        <Tab.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ tabBarButton: () => null }}
-        />
-
-        {/* ✅ ADD TRACKING */}
-        <Tab.Screen
-          name="Tracking"
-          component={TrackingScreen}
-          options={{ tabBarButton: () => null }}
-        />
-
-        <Tab.Screen
-          name="Recipe"
-          component={RecipeScreen}
-          options={{ title: 'Gợi ý' }}
-        />
-
-        <Tab.Screen
-          name="Shopping"
-          component={ShoppingScreen}
-          options={{ title: 'Đi chợ' }}
-        />
-      </Tab.Navigator>
-
-      {!isWebLarge && (
-        <FloatingCameraButton currentRoute={currentRoute} />
-      )}
-    </View>
-  );
-
-  if (isWebLarge) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          backgroundColor: '#F8F9FA'
-        }}
-      >
-        <CustomSidebar isWebLarge navigation={navigation} />
-        <View style={{ flex: 1, flexDirection: 'column' }}>
-          <WebTopbar />
-          {TabContent}
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
-      {TabContent}
-      <CustomSidebar isWebLarge={false} navigation={navigation} />
+      {isWebLarge ? (
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <CustomSidebar isWebLarge navigation={navigation} />
+          <View style={{ flex: 1, flexDirection: 'column' }}>
+            <WebTopbar currentRoute={currentRoute} />
+            <RootStack />
+          </View>
+        </View>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <MobileTopbar currentRoute={currentRoute} />
+          <RootStack />
+          <CustomSidebar isWebLarge={false} navigation={navigation} />
+        </View>
+      )}
     </View>
   );
 };
 
 //////////////////////////////////////////////////////////
-// ROOT
+// ROOT NAVIGATOR
 //////////////////////////////////////////////////////////
 const RootNavigator = () => {
   const { token, hasProfile } = useAppStore();
@@ -238,9 +202,7 @@ const RootNavigator = () => {
     return authScreen === 'register' ? (
       <RegisterScreen onNavigateToLogin={() => setAuthScreen('login')} />
     ) : (
-      <LoginScreen onNavigateToRegister={() =>
-        setAuthScreen('register')
-      } />
+      <LoginScreen onNavigateToRegister={() => setAuthScreen('register')} />
     );
   }
 
@@ -249,11 +211,12 @@ const RootNavigator = () => {
   return (
     <NavigationContainer
       onStateChange={(state) => {
-        let route = state.routes[state.index];
-        while (route.state) {
-          route = route.state.routes[route.state.index];
-        }
-        setCurrentRoute(route.name);
+        const getActiveRoute = (s) => {
+          const route = s.routes[s.index];
+          if (route.state) return getActiveRoute(route.state);
+          return route.name;
+        };
+        setCurrentRoute(getActiveRoute(state));
       }}
     >
       <MainLayout currentRoute={currentRoute} />
@@ -266,31 +229,65 @@ const RootNavigator = () => {
 // STYLES
 //////////////////////////////////////////////////////////
 const styles = StyleSheet.create({
-  fabAbsolute: {
+  tabBarContainer: {
     position: 'absolute',
-    left: '50%',
-    transform: [{ translateX: -33 }],
-    zIndex: 999
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 80,
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.04)',
+    overflow: 'hidden',
   },
-  fabButton: {
-    width: 66,
-    height: 66,
-    borderRadius: 33,
+  tabBarInner: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingHorizontal: 4,
+  },
+  tabItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    height: '100%',
+  },
+  tabLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#888',
+  },
+  tabLabelActive: {
+    color: COLORS.primary,
+    fontWeight: '800',
+  },
+  centerTab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+  },
+  scanButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 5,
-    borderColor: '#FFFFFF',
+    borderWidth: 4,
+    borderColor: '#FFF',
     ...Platform.select({
       ios: {
         shadowColor: COLORS.primary,
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.5,
-        shadowRadius: 8
+        shadowOpacity: 0.35,
+        shadowRadius: 8,
       },
-      android: { elevation: 6 }
-    })
-  }
+      android: { elevation: 6 },
+    }),
+  },
 });
 
 export default RootNavigator;

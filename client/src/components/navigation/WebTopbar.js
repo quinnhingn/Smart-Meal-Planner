@@ -1,19 +1,34 @@
 // src/components/navigation/WebTopbar.js
 import React from 'react';
-import { View, StyleSheet, Pressable, Text, Image} from 'react-native';
+import { View, StyleSheet, Pressable, Text, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 import { useNavigation } from '@react-navigation/native'; 
 import { useAppStore } from '../../store/useAppStore'; 
 
-const WebTopbar = () => {
-  const navigation = useNavigation(); // <-- KHỞI TẠO NAVIGATION
-  const { userProfile } = useAppStore(); // <-- KHỞI TẠO userProfile
+// Tái sử dụng bảng dịch tên từ MobileTopbar (Hoặc bạn có thể tạo 1 file utils chung)
+const ROUTE_TITLES = {
+  Dashboard: 'Trang chủ',
+  Pantry: 'Tủ lạnh',
+  Recipe: 'Gợi ý món ăn',
+  Recipes: 'Công thức',
+  Diary: 'Nhật ký dinh dưỡng',
+  Profile: 'Hồ sơ cá nhân',
+  Tracking: 'Thống kê & Theo dõi',
+  Scan: 'Quét AI',
+};
+
+const WebTopbar = ({ currentRoute }) => {
+  const navigation = useNavigation();
+  const { userProfile } = useAppStore(); 
+
+  const title = ROUTE_TITLES[currentRoute] || 'Tổng quan';
 
   return (
     <View style={styles.topbarContainer}>
       <View style={styles.leftSection}>
-        {/* Có thể thêm Title màn hình vào đây sau */}
+        {/* HIỂN THỊ TÊN MÀN HÌNH Ở ĐÂY */}
+        <Text style={styles.screenTitle}>{title}</Text>
       </View>
 
       <View style={styles.rightSection}>
@@ -22,12 +37,13 @@ const WebTopbar = () => {
           <View style={styles.badge} />
         </Pressable>
 
-        {/* THÊM ONPRESS CHUYỂN HƯỚNG */}
         <Pressable style={styles.avatarBtn} onPress={() => navigation.navigate('Profile')}>
           {userProfile?.avatarUri ? (
             <Image source={{ uri: userProfile.avatarUri }} style={{width: 40, height: 40, borderRadius: 20}} />
           ) : (
-            <Text style={styles.avatarText}>N</Text>
+            <Text style={styles.avatarText}>
+               {userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}
+            </Text>
           )}
         </Pressable>
       </View>
@@ -47,6 +63,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.05)',
   },
   leftSection: { flexDirection: 'row', alignItems: 'center' },
+  screenTitle: { fontSize: 22, fontWeight: '800', color: '#1A1D1E' }, // Style cho Title
   
   rightSection: { flexDirection: 'row', alignItems: 'center', gap: 20 },
   iconBtn: { position: 'relative', cursor: 'pointer' },

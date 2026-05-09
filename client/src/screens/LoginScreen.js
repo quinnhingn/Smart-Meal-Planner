@@ -13,8 +13,8 @@ import { COLORS } from '../constants/theme';
 import { useAppStore } from '../store/useAppStore';
 
 const LoginScreen = ({ onNavigateToRegister }) => {
-  const [email, setEmail] = useState('test@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('demo@gmail.com');
+  const [password, setPassword] = useState('18052004');
   const [showPassword, setShowPassword] = useState(false);
   
   const { login, isLoading, error } = useAppStore();

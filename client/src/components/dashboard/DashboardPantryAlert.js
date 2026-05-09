@@ -42,15 +42,7 @@ const DashboardPantryAlert = ({ alerts }) => {
         style={{ maxHeight: 400 }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.internalPadding}
-        ListHeaderComponent={
-          <View style={styles.headerWrapper}>
-            <View style={styles.alertHeaderRow}>
-              <Text style={styles.sectionTitle}>Cảnh báo Tủ lạnh</Text>
-              <Ionicons name="notifications-outline" size={22} color="#333" />
-            </View>
-            <Text style={styles.alertSubtitle}>Những thực phẩm cần lưu ý ngay!</Text>
-          </View>
-        }
+
       />
     </GlassCard>
   );

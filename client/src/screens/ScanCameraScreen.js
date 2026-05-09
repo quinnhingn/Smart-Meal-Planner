@@ -1,13 +1,14 @@
 // src/screens/ScanCameraScreen.js
 import { useAppStore } from '../store/useAppStore';
-import React, { useState, useRef } from 'react';
-import {
-  View, Text, StyleSheet, Pressable, Platform,
-  Image, ActivityIndicator, ScrollView
+import React, { useState, useRef, useCallback } from 'react';
+import { 
+  View, Text, StyleSheet, Pressable, Platform, 
+  Image, ActivityIndicator, ScrollView, Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { useCamera } from '../hooks/useCamera';
 import { analyzeImageReal } from '../services/aiService';
@@ -51,11 +52,22 @@ const ScanCameraScreen = ({ navigation, route }) => {
   const addDiaryItem = useAppStore(state => state.addDiaryItem);
   const addPantryItems = useAppStore(state => state.addPantryItems);
   const isSaving = useAppStore(state => state.isSaving);
-
+  const setTabBarVisible = useAppStore(state => state.setTabBarVisible);
+  
   // STATE CHÍNH
   const [scanMode, setScanMode] = useState(route?.params?.mode || 'diary');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiResults, setAiResults] = useState(null);
+
+  // ===== ẨN TAB BAR KHI VÀO SCAN =====
+  useFocusEffect(
+    useCallback(() => {
+      if (setTabBarVisible) setTabBarVisible(false);
+      return () => {
+        if (setTabBarVisible) setTabBarVisible(true);
+      };
+    }, [setTabBarVisible])
+  );
 
   // XÓA DỮ LIỆU KHI ĐỔI MODE
   const handleModeChange = () => {
@@ -83,7 +95,7 @@ const ScanCameraScreen = ({ navigation, route }) => {
       const results = await analyzeImageReal(uri, currentMode);
       setAiResults(results);
     } catch (error) {
-      alert('Lỗi: ' + (error.message || 'Không thể kết nối với AI Server. Vui lòng kiểm tra IP hoặc Máy tính đang chạy AI.'));
+      Alert.alert('Lỗi', error.message || 'Không thể kết nối với AI Server. Vui lòng kiểm tra IP hoặc Máy tính đang chạy AI.');
       setAiResults(null);
     } finally {
       setIsAnalyzing(false);
@@ -95,7 +107,7 @@ const ScanCameraScreen = ({ navigation, route }) => {
     setAiResults(null);
   };
 
-  // THỰC THI LƯU DỮ LIỆU
+  // THỰC THI LƯU DỮ LIỆU BẰNG API THẬT TỪ NHÁNH MAIN
   const handleSave = async (data) => {
     try {
       setIsAnalyzing(true);

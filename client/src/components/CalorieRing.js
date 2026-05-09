@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
-// Bọc Circle bằng Animated MẶC ĐỊNH của React Native (Không dùng reanimated)
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
@@ -11,26 +10,20 @@ const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   
-  // Giới hạn max là 100% vòng
   const safeConsumed = Math.min(consumed, target);
   const targetOffset = circumference - (safeConsumed / target) * circumference;
 
-  // Sử dụng Animated.Value của React Native
   const animatedStrokeOffset = useRef(new Animated.Value(circumference)).current;
-
-  // State cho hiệu ứng đếm số
   const [displayNumber, setDisplayNumber] = useState(0);
 
   useEffect(() => {
-    // 1. Kích hoạt Animation vòng quay
     Animated.timing(animatedStrokeOffset, {
       toValue: targetOffset,
       duration: 1500,
-      easing: Easing.out(Easing.cubic), // Gia tốc mượt
-      useNativeDriver: false, // Bắt buộc false khi animate thuộc tính SVG
+      easing: Easing.out(Easing.cubic), 
+      useNativeDriver: false, 
     }).start();
 
-    // 2. Kích hoạt Animation đếm số bằng JS thuần
     let startTimestamp = null;
     const duration = 1500;
     let animationFrameId;
@@ -49,7 +42,6 @@ const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
     
     animationFrameId = requestAnimationFrame(step);
 
-    // Dọn dẹp memory leak nếu component unmount
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
@@ -77,7 +69,6 @@ const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
           strokeWidth={strokeWidth}
           fill="none"
           strokeDasharray={circumference}
-          // Truyền trực tiếp Animated.Value vào thuộc tính
           strokeDashoffset={animatedStrokeOffset} 
           strokeLinecap="round"
           rotation="-90"
@@ -90,8 +81,7 @@ const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
         <Text style={[styles.consumedText, isOverKcal && { color: '#F44336' }]}>
           {displayNumber}
         </Text>
-        <Text style={styles.divider}>/</Text>
-        <Text style={styles.targetText}>{target} kcal</Text>
+        <Text style={styles.targetText}>/ {target} kcal</Text>
       </View>
     </View>
   );
@@ -99,9 +89,8 @@ const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
 
 const styles = StyleSheet.create({
   centerTextContainer: { alignItems: 'center', justifyContent: 'center' },
-  consumedText: { fontSize: 44, fontWeight: '900', color: '#1A1D1E' },
-  divider: { fontSize: 16, color: '#999', marginVertical: -4 },
-  targetText: { fontSize: 16, fontWeight: '600', color: '#666' },
+  consumedText: { fontSize: 44, fontWeight: '900', color: '#1A1D1E', lineHeight: 50 },
+  targetText: { fontSize: 16, fontWeight: '600', color: '#888', marginTop: 4 },
 });
 
 export default CalorieRing;

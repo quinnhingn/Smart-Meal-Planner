@@ -21,17 +21,6 @@ const DashboardHeader = ({ userName = "Quỳnh Nhi", remainingKcal = 550 }) => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.topRow}>
-        
-        {/* Nút Hamburger (chỉ hiển thị trên Mobile/Tablet nhỏ) */}
-        {!isWebLarge && (
-          <Pressable 
-            onPress={() => setDrawerOpen(true)} 
-            style={styles.menuBtn}
-          >
-            <Ionicons name="menu-outline" size={32} color="#1A1D1E" />
-          </Pressable>
-        )}
-
         <View style={styles.titleWrapper}>
           <Text style={styles.greeting}>{greetingText},</Text>
           <Text style={styles.userName}>{userName} 👋</Text>
@@ -56,11 +45,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 6,
   },
-  menuBtn: {
-    marginRight: 16,
-    padding: 4, 
-    marginLeft: -4, // Bù trừ padding để icon căn chuẩn lề trái
-  },
+
   titleWrapper: {
     justifyContent: 'center',
   },

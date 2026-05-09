@@ -3,10 +3,9 @@ import React, { useState } from 'react';
 import { 
   View, Text, StyleSheet, TextInput, Pressable, 
   ScrollView, ActivityIndicator, Image, Platform,
-  useWindowDimensions // <-- THÊM IMPORT NÀY
+  useWindowDimensions 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 
 import ResponsiveContainer from '../components/ResponsiveContainer';
@@ -19,7 +18,7 @@ import { GOALS, ACTIVITY_LEVELS, DIETS, ALLERGIES, BODY_TYPES, PACE_OPTIONS, DIS
 import MacroProgressBars from '../components/profile/MacroProgressBars';
 import BottomSheetSelector from '../components/profile/BottomSheetSelector';
 
-const BREAKPOINT_MOBILE_MAX = 768; // <-- THÊM BREAKPOINT
+const BREAKPOINT_MOBILE_MAX = 768; 
 
 const GENDER_OPTIONS = [
   { id: 'male', title: 'Nam', icon: '👨' },
@@ -27,9 +26,8 @@ const GENDER_OPTIONS = [
 ];
 
 const ProfileScreen = () => {
-  const navigation = useNavigation();
-  const { width } = useWindowDimensions(); // <-- LẤY WIDTH
-  const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX; // <-- KIỂM TRA WEB
+  const { width } = useWindowDimensions(); 
+  const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX; 
   
   const { userProfile, updateProfile, isLoading, currentStreak } = useAppStore();
   
@@ -194,20 +192,16 @@ const ProfileScreen = () => {
 
   return (
     <ResponsiveContainer useImageBg={false}>
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <Ionicons name="arrow-back" size={24} color="#1A1D1E" />
-          </Pressable>
-          <Text style={styles.headerTitle}>Hồ sơ cá nhân</Text>
-        </View>
-        {!isEditing && (
+      
+      {/* CHỈ HIỂN THỊ NÚT SỬA ĐƯỢC CĂN PHẢI */}
+      {!isEditing && (
+        <View style={styles.topActionRow}>
           <Pressable onPress={() => setIsEditing(true)} style={styles.editBtn}>
             <Ionicons name="pencil" size={18} color={COLORS.primary} />
             <Text style={styles.editBtnText}>Sửa</Text>
           </Pressable>
-        )}
-      </View>
+        </View>
+      )}
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
@@ -437,10 +431,8 @@ const InfoRow = ({ label, value, isEditing, onChangeText, numeric }) => (
 );
 
 const styles = StyleSheet.create({
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, backgroundColor: 'transparent' },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  backBtn: { padding: 4, marginLeft: -4 },
-  headerTitle: { fontSize: 20, fontWeight: '800', color: '#1A1D1E' },
+  // Action Row khi không edit (chứa mỗi nút Sửa ở góc phải)
+  topActionRow: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 20, paddingTop: 20, paddingBottom: 0 },
   editBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: 'rgba(76, 175, 80, 0.1)', borderRadius: 16 },
   editBtnText: { color: COLORS.primary, fontWeight: '700' },
   
@@ -450,7 +442,6 @@ const styles = StyleSheet.create({
   gridWeb: { flexDirection: 'row', alignItems: 'flex-start', gap: 24 },
   column: { width: '100%', gap: 16 },
   
-  // Tinh chỉnh khoảng cách cho các Card (Xóa marginBottom vì đã có gap ở Grid)
   avatarSection: { alignItems: 'center' },
   avatarWrapper: { position: 'relative', marginBottom: 12 },
   avatarImage: { width: 80, height: 80, borderRadius: 40 },

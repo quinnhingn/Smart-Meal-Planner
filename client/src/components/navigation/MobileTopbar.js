@@ -12,6 +12,7 @@ export const ROUTE_TITLES = {
   Dashboard: 'Trang chủ',
   Pantry: 'Tủ lạnh',
   Recipe: 'Gợi ý món ăn',
+  Recipes: 'Công thức',
   Diary: 'Nhật ký dinh dưỡng',
   Profile: 'Hồ sơ cá nhân',
   Tracking: 'Thống kê & Theo dõi',

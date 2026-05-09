@@ -19,7 +19,7 @@ export const useAppStore = create((set, get) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     const response = await authApi.login(email, password);
-    
+
     if (response.success) {
       set({ 
         token: response.data.token,
@@ -55,7 +55,7 @@ export const useAppStore = create((set, get) => ({
   setupProfile: async (data) => {
     set({ isLoading: true, error: null });
     const response = await authApi.setupProfile(data);
-    
+
     if (response.success) {
       set((state) => ({ 
         userProfile: { ...state.userProfile, ...response.data.data },
@@ -77,7 +77,7 @@ export const useAppStore = create((set, get) => ({
       userProfile: { ...state.userProfile, ...updatedData },
       isLoading: false 
     }));
-    
+
     get().showToast('Đã cập nhật hồ sơ thành công!', 'success');
     return true;
   },
@@ -100,10 +100,10 @@ export const useAppStore = create((set, get) => ({
   // 3. DATA STATE (NHẬT KÝ & TỦ LẠNH)
   // ==========================================
   diaryItems: [],
-  pantryItems: [], // Bắt đầu bằng mảng rỗng để load từ DB
+  pantryItems: [],
   pantryHistory: [],              
   isSaving: false, 
-  
+
   // State của Custom Toast
   toastInfo: { visible: false, message: '', type: 'success' },
 
@@ -133,7 +133,7 @@ export const useAppStore = create((set, get) => ({
       ],
       isSaving: false
     }));
-    
+
     get().showToast('Đã thêm món ăn vào Nhật ký!', 'success');
   },
 
@@ -194,7 +194,6 @@ export const useAppStore = create((set, get) => ({
           let icon = '📦';
           let category = 'other';
 
-          // Gán Icon & Category thông minh dựa trên tên
           if (name.includes('tôm') || name.includes('tép') || name.includes('nghêu') || name.includes('ốc') || name.includes('hải sản')) {
             icon = '🍤'; category = 'meat';
           } else if (name.includes('cá') || name.includes('lươn') || name.includes('philê')) {
@@ -213,11 +212,7 @@ export const useAppStore = create((set, get) => ({
             icon = '🥛'; category = 'dairy';
           }
 
-          return {
-            ...item,
-            icon,
-            category
-          };
+          return { ...item, icon, category };
         });
         set({ pantryItems: items });
       }
@@ -231,7 +226,7 @@ export const useAppStore = create((set, get) => ({
   // ==========================================
   // 4. PANTRY MANAGEMENT
   // ==========================================
-  
+
   clearPantryHistory: () => set({ pantryHistory: [] }),
 
   restorePantryItem: (historyId) => set((state) => {
@@ -289,11 +284,11 @@ export const useAppStore = create((set, get) => ({
     }
     get().showToast(`Đã dùng ${amountNum} ${item.unit} ${item.name}`, 'success');
   },
-  
+
   removePantryItemWithHistory: (id, reason = 'consumed') => {
     const item = get().pantryItems.find(i => i.id === id);
     if (!item) return;
-    
+
     const historyEntry = {
       id: `hist_${Date.now()}`,
       itemId: item.id,
@@ -306,12 +301,12 @@ export const useAppStore = create((set, get) => ({
       originalExpiryDays: item.expiryDays,
       actualDaysUsed: Math.floor((new Date() - new Date(item.addedAt || item.createdAt || new Date())) / (1000 * 60 * 60 * 24)),
     };
-    
+
     set((state) => ({
       pantryItems: state.pantryItems.filter(i => i.id !== id),
       pantryHistory: [historyEntry, ...state.pantryHistory]
     }));
-    
+
     const actionText = reason === 'consumed' ? 'đã dùng' : reason === 'expired' ? 'hết hạn' : 'bỏ đi';
     get().showToast(`Đã đánh dấu "${item.name}" ${actionText}`, 'success');
   },
@@ -327,26 +322,26 @@ export const useAppStore = create((set, get) => ({
   // === FILTER & SORT ===
   selectedCategory: 'all',
   setSelectedCategory: (category) => set({ selectedCategory: category }),
-  
+
   searchQuery: '',
   setSearchQuery: (query) => set({ searchQuery: query }),
 
   getFilteredItems: () => {
     const { pantryItems, selectedCategory, searchQuery } = get();
-    
+
     let filtered = [...pantryItems];
-    
+
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(item => item.category === selectedCategory);
     }
-    
+
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter(item => 
         item.name.toLowerCase().includes(q)
       );
     }
-    
+
     return filtered.sort((a, b) => {
       const daysA = getDaysUntilExpiry(a);
       const daysB = getDaysUntilExpiry(b);
@@ -357,16 +352,16 @@ export const useAppStore = create((set, get) => ({
   getPantryStats: () => {
     const items = get().pantryItems;
     const history = get().pantryHistory;
-    
+
     const total = items.length;
     const expired = items.filter(i => getUrgencyLevel(getDaysUntilExpiry(i)) === 'expired').length;
     const urgent = items.filter(i => getUrgencyLevel(getDaysUntilExpiry(i)) === 'urgent').length;
     const warning = items.filter(i => getUrgencyLevel(getDaysUntilExpiry(i)) === 'warning').length;
-    
+
     const consumed = history.filter(h => h.action === 'consumed').length;
     const discarded = history.filter(h => h.action === 'discarded' || h.action === 'expired').length;
     const totalHistory = history.length;
-    
+
     return {
       total,
       expired,
@@ -393,7 +388,48 @@ export const useAppStore = create((set, get) => ({
   },
 
   // ==========================================
-  // 5. GAMIFICATION & HEALTH TRACKING
+  // 5. RECIPES STATE
+  // ==========================================
+  savedRecipeIds: new Set(),
+  shoppingList: [],
+  recipeReviews: [],
+
+  toggleSaveRecipe: (recipeId) => set((state) => {
+    const next = new Set(state.savedRecipeIds);
+    if (next.has(recipeId)) {
+      next.delete(recipeId);
+      get().showToast('Đã bỏ lưu công thức', 'success');
+    } else {
+      next.add(recipeId);
+      get().showToast('Đã lưu công thức!', 'success');
+    }
+    return { savedRecipeIds: next };
+  }),
+
+  addToShoppingList: (items) => set((state) => {
+    const newItems = items.map(item => ({
+      ...item,
+      id: `shop_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+      checked: false,
+      addedAt: new Date().toISOString(),
+    }));
+    get().showToast(`Đã thêm ${items.length} nguyên liệu vào checklist`, 'success');
+    return { shoppingList: [...newItems, ...state.shoppingList] };
+  }),
+
+  submitReview: (recipeId, reviewData) => set((state) => {
+    const review = {
+      id: `review_${Date.now()}`,
+      recipeId,
+      ...reviewData,
+      createdAt: new Date().toISOString(),
+    };
+    get().showToast('Cảm ơn bạn đã đánh giá!', 'success');
+    return { recipeReviews: [review, ...state.recipeReviews] };
+  }),
+
+  // ==========================================
+  // 6. GAMIFICATION & HEALTH TRACKING
   // ==========================================
   weightHistory: [], 
   currentStreak: 0,  

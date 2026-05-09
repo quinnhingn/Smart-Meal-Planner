@@ -28,6 +28,8 @@ import ScanCameraScreen from '../screens/ScanCameraScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TrackingScreen from '../screens/TrackingScreen';
 import DiaryScreen from '../screens/DiaryScreen';
+import RecipesScreen from '../screens/RecipesScreen';
+import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 
 // Layout
 import CustomSidebar from '../components/navigation/CustomSidebar';
@@ -41,16 +43,6 @@ const { useAppStore } = require('../store/useAppStore');
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-// Placeholder — thay bằng import thật khi có file RecommendScreen.js
-const RecommendScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8F9FA' }}>
-    <Ionicons name="restaurant" size={48} color="#CCC" />
-    <Text style={{ marginTop: 12, fontSize: 16, color: '#888', fontWeight: '600' }}>
-      Gợi ý món ăn
-    </Text>
-  </View>
-);
-
 //////////////////////////////////////////////////////////
 // CUSTOM TAB BAR (MOBILE) — 5 TABS
 //////////////////////////////////////////////////////////
@@ -59,7 +51,7 @@ const TAB_CONFIG = [
   { name: 'Diary',    label: 'Nhật ký',  icon: 'book',  iconOutline: 'book-outline' },
   { name: 'Scan',     label: null,       icon: 'camera', isCenter: true },
   { name: 'Pantry',   label: 'Tủ lạnh',  icon: 'fast-food', iconOutline: 'fast-food-outline' },
-  { name: 'Recommend',label: 'Gợi ý',    icon: 'restaurant', iconOutline: 'restaurant-outline' },
+  { name: 'Recipes',  label: 'Công thức', icon: 'restaurant', iconOutline: 'restaurant-outline' },
 ];
 
 const CustomTabBar = ({ state, navigation }) => {
@@ -138,7 +130,7 @@ const CustomTabBar = ({ state, navigation }) => {
 };
 
 //////////////////////////////////////////////////////////
-// MAIN TABS — chỉ 5 screen
+// MAIN TABS — 5 screen
 //////////////////////////////////////////////////////////
 const MainTabs = () => (
   <Tab.Navigator
@@ -149,18 +141,19 @@ const MainTabs = () => (
     <Tab.Screen name="Diary"     component={DiaryScreen} />
     <Tab.Screen name="Scan"      component={ScanCameraScreen} />
     <Tab.Screen name="Pantry"    component={PantryScreen} />
-    <Tab.Screen name="Recommend" component={RecommendScreen} />
+    <Tab.Screen name="Recipes"   component={RecipesScreen} />
   </Tab.Navigator>
 );
 
 //////////////////////////////////////////////////////////
-// ROOT STACK — chứa thêm Profile, Tracking (và các screen sidebar khác)
+// ROOT STACK — chứa thêm Profile, Tracking, RecipeDetail
 //////////////////////////////////////////////////////////
 const RootStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="MainTabs" component={MainTabs} />
-    <Stack.Screen name="Profile"  component={ProfileScreen} />
-    <Stack.Screen name="Tracking" component={TrackingScreen} />
+    <Stack.Screen name="MainTabs"     component={MainTabs} />
+    <Stack.Screen name="Profile"      component={ProfileScreen} />
+    <Stack.Screen name="Tracking"     component={TrackingScreen} />
+    <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />
     {/* Thêm các screen sidebar khác vào đây nếu cần */}
   </Stack.Navigator>
 );

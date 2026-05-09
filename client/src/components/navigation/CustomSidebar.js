@@ -13,7 +13,7 @@ const DRAWER_WIDTH = 280;
 const MAIN_TABS = [
   { id: 'home', icon: 'home-outline', title: 'Trang chủ', route: 'Dashboard' },
   { id: 'pantry', icon: 'fast-food-outline', title: 'Tủ lạnh', route: 'Pantry' },
-  { id: 'recipe', icon: 'restaurant-outline', title: 'Gợi ý món ăn', route: 'Recipe' },
+  { id: 'recipes', icon: 'restaurant-outline', title: 'Công thức', route: 'Recipes' },
   { id: 'diary', icon: 'book-outline', title: 'Nhật ký ăn uống', route: 'Diary' },
 ];
 
@@ -29,7 +29,7 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
   const { isDrawerOpen, setDrawerOpen, logout, userProfile } = useAppStore();
   const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current; 
   const fadeAnim = useRef(new Animated.Value(0)).current; 
-  
+
   const [activeRoute, setActiveRoute] = useState('Dashboard');
 
   useEffect(() => {
@@ -48,13 +48,13 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
     }
   }, [isDrawerOpen, isWebLarge]);
 
-    // Các route nằm trong Tab Navigator (MainTabs)
-  const TAB_ROUTES = ['Dashboard', 'Diary', 'Pantry', 'Recommend'];
+  // Các route nằm trong Tab Navigator (MainTabs)
+  const TAB_ROUTES = ['Dashboard', 'Diary', 'Pantry', 'Recipes'];
 
   const handleNavigate = (route) => {
     setActiveRoute(route);
     setDrawerOpen(false);
-    
+
     if (!navigation) return;
 
     // Nếu route là tab screen → navigate qua MainTabs
@@ -94,17 +94,15 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
   const SidebarContent = () => (
     <View style={styles.sidebarInner}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
+
         {!isWebLarge && (
           <View>
             <View style={styles.mobileLogoWrapper}>
               <Ionicons name="leaf" size={28} color={COLORS.primary} style={styles.logoIcon} />
               <Text style={styles.mobileLogoText}>SmartMeal</Text>
             </View>
-            {/* THAY VIEW THÀNH PRESSABLE VÀ GẮN SỰ KIỆN */}
             <Pressable style={styles.profileHeader} onPress={() => handleNavigate('Profile')}>
               <View style={styles.avatar}>
-                {/* MERGE LOGIC: Ưu tiên ảnh, fallback lấy chữ cái đầu tên */}
                 {userProfile?.avatarUri ? (
                   <Image source={{ uri: userProfile.avatarUri }} style={{width: 50, height: 50, borderRadius: 25}} />
                 ) : (
@@ -114,7 +112,7 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
                 )}
               </View>
               <View style={styles.userInfo}>
-                <Text style={styles.userName}>{userProfile?.name || 'Người dùng'}</Text>
+                <Text style={styles.userName}>{userProfile?.name || 'Ngườii dùng'}</Text>
                 <Text style={styles.userBadge}>
                   🔥 Mục tiêu: {
                     userProfile?.goal === 'lose_weight' ? 'Giảm cân' :
@@ -128,7 +126,6 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
           </View>
         )}
 
-        {/* ================= NÚT UPLOAD AI (CHỈ HIỆN TRÊN WEB) ================= */}
         {isWebLarge && (
           <Pressable 
             style={styles.uploadBtn} 
@@ -152,9 +149,9 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
           {isWebLarge ? (
             <Text style={styles.sectionLabel}>CÁ NHÂN</Text>
           ) : null}
-          
+
           {!isWebLarge ? renderMenuItem(MAIN_TABS[0]) : null}
-          
+
           {SECONDARY_TABS.map(renderMenuItem)}
         </View>
       </ScrollView>
@@ -184,7 +181,6 @@ const CustomSidebar = ({ isWebLarge, navigation }) => {
     );
   }
 
-  // SỬA LỖI POINTER EVENTS TẠI ĐÂY
   return (
     <View style={[styles.mobileOverlayWrapper, { pointerEvents: isDrawerOpen ? 'auto' : 'none' }]}>
       <Pressable style={StyleSheet.absoluteFill} onPress={() => setDrawerOpen(false)}>
@@ -203,11 +199,10 @@ const styles = StyleSheet.create({
   logoWrapper: { paddingHorizontal: 24, marginBottom: 32, flexDirection: 'row', alignItems: 'center' },
   logoIcon: { marginBottom: 4, transform: [{ rotate: '-15deg' }] },
   webLogo: { fontSize: 28, fontWeight: '900', color: COLORS.primary, marginLeft: 8 },
-  
+
   mobileOverlayWrapper: { ...StyleSheet.absoluteFillObject, zIndex: 9999 },
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.5)' },
-  
-  // SỬA LỖI SHADOW TẠI ĐÂY
+
   mobileDrawer: { 
     position: 'absolute', top: 0, bottom: 0, left: 0, width: DRAWER_WIDTH, backgroundColor: '#FFFFFF', 
     paddingTop: Platform.OS === 'android' ? 40 : 50, 
@@ -220,7 +215,7 @@ const styles = StyleSheet.create({
 
   mobileLogoWrapper: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, marginBottom: 24, marginTop: 8 },
   mobileLogoText: { fontSize: 24, fontWeight: '900', color: COLORS.primary, marginLeft: 8 },
-  
+
   sidebarInner: { flex: 1, paddingHorizontal: 16, paddingBottom: 24 },
   scrollContent: { paddingBottom: 20 },
   profileHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, paddingHorizontal: 8 },
@@ -230,10 +225,10 @@ const styles = StyleSheet.create({
   userName: { fontSize: 18, fontWeight: '800', color: '#1A1D1E' },
   userBadge: { fontSize: 12, color: '#FF9800', fontWeight: '600', marginTop: 4 },
   divider: { height: 1, backgroundColor: 'rgba(0,0,0,0.05)', marginBottom: 16, marginHorizontal: 8 },
-  
+
   menuSection: { marginBottom: 16 },
   sectionLabel: { fontSize: 12, fontWeight: '800', color: '#999', marginLeft: 12, marginBottom: 8, marginTop: 8, letterSpacing: 1 },
-  
+
   uploadBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.primary, paddingVertical: 14, borderRadius: 12, marginBottom: 24, marginHorizontal: 4, gap: 8 },
   uploadBtnText: { color: '#FFF', fontWeight: '700', fontSize: 16 },
 
@@ -243,7 +238,7 @@ const styles = StyleSheet.create({
   menuIcon: { marginRight: 16 },
   menuTitle: { fontSize: 16, fontWeight: '600', color: '#555' },
   menuTitleActive: { color: COLORS.primary, fontWeight: '800' },
-  
+
   logoutBtn: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 16, borderRadius: 12, marginTop: 8 },
 });
 

@@ -120,3 +120,18 @@ def get_pantry_items():
     except Exception as e:
         print(f"❌ [Get Pantry] Lỗi: {str(e)}")
         return jsonify({"success": False, "message": f"Lỗi lấy dữ liệu tủ lạnh: {str(e)}"}), 500
+
+@recipe_bp.route('/suggestions', methods=['GET'])
+@jwt_required()
+def get_recipe_suggestions():
+    try:
+        user_id = get_jwt_identity()
+        suggestions = RecipeRepository.get_pantry_suggestions(user_id)
+        
+        return jsonify({
+            "success": True,
+            "data": suggestions
+        }), 200
+        
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Lỗi lấy gợi ý món ăn: {str(e)}"}), 500

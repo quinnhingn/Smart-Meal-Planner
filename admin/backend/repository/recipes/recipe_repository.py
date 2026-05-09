@@ -12,12 +12,10 @@ class RecipeRepository:
                 INSERT INTO scr_recipes (
                     name_vn, name_en, category, difficulty, cooking_time, servings,
                     image_url, video_url, goals, meal_times, ingredients, steps,
-                    total_calories, total_protein, total_carbs, total_fat,
                     ai_insight, created_by
                 ) VALUES (
                     :name_vn, :name_en, :category, :difficulty, :cooking_time, :servings,
                     :image_url, :video_url, :goals, :meal_times, :ingredients, :steps,
-                    :total_calories, :total_protein, :total_carbs, :total_fat,
                     :ai_insight, :created_by
                 ) RETURNING id
             """)
@@ -46,6 +44,21 @@ class RecipeRepository:
             
             result = db.session.execute(sql, params)
             recipe_id = result.fetchone()[0]
+            
+            # Lưu bảng calories
+            cal_sql = text("""
+                INSERT INTO scr_dishes_calories (recipe_id, calories, protein, carbs, fat)
+                VALUES (:recipe_id, :calories, :protein, :carbs, :fat)
+            """)
+            cal_params = {
+                "recipe_id": recipe_id,
+                "calories": data.get("total_calories", 0),
+                "protein": data.get("total_protein", 0),
+                "carbs": data.get("total_carbs", 0),
+                "fat": data.get("total_fat", 0)
+            }
+            db.session.execute(cal_sql, cal_params)
+            
             db.session.commit()
             
             return {"success": True, "recipe_id": recipe_id}
@@ -56,7 +69,16 @@ class RecipeRepository:
     def get_by_id(self, recipe_id):
         """Lấy chi tiết một công thức theo ID"""
         try:
-            sql = text("SELECT * FROM scr_recipes WHERE id = :id")
+            sql = text("""
+                SELECT r.*, 
+                       c.calories as total_calories, 
+                       c.protein as total_protein, 
+                       c.carbs as total_carbs, 
+                       c.fat as total_fat
+                FROM scr_recipes r
+                LEFT JOIN scr_dishes_calories c ON r.id = c.recipe_id
+                WHERE r.id = :id
+            """)
             result = db.session.execute(sql, {"id": recipe_id})
             row = result.fetchone()
             if row:
@@ -82,10 +104,6 @@ class RecipeRepository:
                     meal_times = :meal_times,
                     ingredients = :ingredients,
                     steps = :steps,
-                    total_calories = :total_calories,
-                    total_protein = :total_protein,
-                    total_carbs = :total_carbs,
-                    total_fat = :total_fat,
                     ai_insight = :ai_insight,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE id = :id
@@ -113,6 +131,27 @@ class RecipeRepository:
             }
             
             db.session.execute(sql, params)
+            
+            # Cập nhật bảng calories
+            cal_sql = text("""
+                INSERT INTO scr_dishes_calories (recipe_id, calories, protein, carbs, fat)
+                VALUES (:recipe_id, :calories, :protein, :carbs, :fat)
+                ON CONFLICT (recipe_id) DO UPDATE SET
+                    calories = EXCLUDED.calories,
+                    protein = EXCLUDED.protein,
+                    carbs = EXCLUDED.carbs,
+                    fat = EXCLUDED.fat,
+                    updated_at = CURRENT_TIMESTAMP
+            """)
+            cal_params = {
+                "recipe_id": recipe_id,
+                "calories": data.get("total_calories", 0),
+                "protein": data.get("total_protein", 0),
+                "carbs": data.get("total_carbs", 0),
+                "fat": data.get("total_fat", 0)
+            }
+            db.session.execute(cal_sql, cal_params)
+            
             db.session.commit()
             
             return {"success": True, "message": "Cập nhật thành công"}
@@ -123,7 +162,16 @@ class RecipeRepository:
     def get_all(self):
         """Lấy danh sách tất cả công thức"""
         try:
-            sql = text("SELECT * FROM scr_recipes ORDER BY created_at DESC")
+            sql = text("""
+                SELECT r.*, 
+                       c.calories as total_calories, 
+                       c.protein as total_protein, 
+                       c.carbs as total_carbs, 
+                       c.fat as total_fat
+                FROM scr_recipes r
+                LEFT JOIN scr_dishes_calories c ON r.id = c.recipe_id
+                ORDER BY r.created_at DESC
+            """)
             result = db.session.execute(sql)
             recipes = [dict(row._mapping) for row in result]
             return {"success": True, "data": recipes}

@@ -10,6 +10,7 @@ import MiniMealLog from '../components/MiniMealLog';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardEnergyCard from '../components/dashboard/DashboardEnergyCard';
 import DashboardPantryAlert from '../components/dashboard/DashboardPantryAlert';
+import DashboardRecipeSuggestion from '../components/dashboard/DashboardRecipeSuggestion';
 import DashboardStreakBanner from '../components/dashboard/DashboardStreakBanner'; 
 import CheckInPopup from '../components/dashboard/CheckInPopup'; 
 import { COLORS } from '../constants/theme';
@@ -36,6 +37,8 @@ const DashboardScreen = () => {
     totals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
     meals: []
   });
+  
+  const [recipeSuggestions, setRecipeSuggestions] = useState(null);
 
   // STATE CHO MODAL NHẬP TAY
   const [showManualModal, setShowManualModal] = useState(false);
@@ -51,6 +54,17 @@ const DashboardScreen = () => {
       }
     } catch (error) {
       console.error("Lỗi lấy summary:", error);
+    }
+  };
+
+  const fetchSuggestions = async () => {
+    try {
+      const res = await recipeApi.getSuggestions();
+      if (res.success && res.data.data) {
+        setRecipeSuggestions(res.data.data);
+      }
+    } catch (error) {
+      console.error("Lỗi lấy gợi ý món ăn:", error);
     }
   };
 
@@ -86,6 +100,7 @@ const DashboardScreen = () => {
     React.useCallback(() => {
       fetchSummary();
       fetchPantryItems(); // Load tủ lạnh để lấy cảnh báo
+      fetchSuggestions(); // Lấy gợi ý món ăn dựa vào tủ lạnh
     }, [])
   );
 
@@ -171,6 +186,7 @@ const DashboardScreen = () => {
 
           <View style={[styles.column, isWebLarge && { flex: 1 }]}>
             <DashboardPantryAlert alerts={realAlerts.length > 0 ? realAlerts : DASHBOARD_MOCK_PANTRY_ALERTS} />
+            <DashboardRecipeSuggestion suggestions={recipeSuggestions || undefined} />
           </View>
         </View>
 

@@ -39,8 +39,8 @@ const DashboardPantryAlert = ({ alerts }) => {
         data={alerts}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        scrollEnabled={false} // Tắt cuộn trên mobile nếu list ngắn
-        // INTERNAL PADDING ÁP DỤNG TẠI ĐÂY
+        style={{ maxHeight: 400 }}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.internalPadding}
         ListHeaderComponent={
           <View style={styles.headerWrapper}>

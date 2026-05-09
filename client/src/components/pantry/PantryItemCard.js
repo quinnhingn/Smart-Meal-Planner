@@ -27,7 +27,7 @@ const PantryItemCard = ({ item, onEdit, onDelete, onUse, onFindRecipe }) => {
   };
 
   const storageLabels = {
-    'freezer': { label: 'Ngăn đông', icon: 'snowflake', color: '#03A9F4' },
+    'freezer': { label: 'Ngăn đông', icon: 'snow', color: '#03A9F4' },
     'fridge': { label: 'Ngăn mát', icon: 'thermometer', color: '#4CAF50' },
     'veggie_drawer': { label: 'Ngăn rau', icon: 'leaf', color: '#8BC34A' }
   };

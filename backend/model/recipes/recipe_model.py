@@ -8,10 +8,15 @@ class RecipeModel(db.Model):
     name_vn = db.Column(db.String(255), nullable=False)
     name_en = db.Column(db.String(255))
     image_url = db.Column(db.String(500))
+    video_url = db.Column(db.String(500))
     category = db.Column(db.String(100))
+    difficulty = db.Column(db.String(50))
+    cooking_time = db.Column(db.String(100))
     ingredients = db.Column(db.JSON)  # Lưu danh sách nguyên liệu JSON
     steps = db.Column(db.JSON)        # Lưu các bước nấu JSON
     servings = db.Column(db.String(100))
+    goals = db.Column(db.JSON)         # VD: ["lose", "keto"]
+    meal_times = db.Column(db.JSON)    # VD: ["breakfast", "lunch"]
     
     # Relationship sang bảng calo
     nutrition = db.relationship('DishCaloriesModel', backref='recipe', uselist=False)

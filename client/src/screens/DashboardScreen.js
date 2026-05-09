@@ -1,34 +1,120 @@
 // src/screens/DashboardScreen.js
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Platform, useWindowDimensions, Modal, Text, Pressable, TextInput } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Platform,
+  useWindowDimensions,
+  Text,
+  Pressable,
+  Animated,
+  Easing,
+  Modal,
+  TextInput
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useAppStore } from '../store/useAppStore';
 import { recipeApi } from '../services/api';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import MiniMealLog from '../components/MiniMealLog';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardEnergyCard from '../components/dashboard/DashboardEnergyCard';
 import DashboardPantryAlert from '../components/dashboard/DashboardPantryAlert';
-import DashboardStreakBanner from '../components/dashboard/DashboardStreakBanner'; 
-import CheckInPopup from '../components/dashboard/CheckInPopup'; 
+import DashboardStreakBanner from '../components/dashboard/DashboardStreakBanner';
+import CheckInPopup from '../components/dashboard/CheckInPopup';
 import { COLORS } from '../constants/theme';
 
-import { 
-  DASHBOARD_MOCK_TRACKING, 
-  DASHBOARD_MOCK_STREAK, 
+import {
+  DASHBOARD_MOCK_TRACKING,
   DASHBOARD_MOCK_WEIGHT_HISTORY,
-  DASHBOARD_MOCK_MEAL_LOGS, 
-  DASHBOARD_MOCK_PANTRY_ALERTS 
+  DASHBOARD_MOCK_PANTRY_ALERTS,
 } from '../utils/mockDashboardData';
 
 const BREAKPOINT_MOBILE_MAX = 768;
+const ACCENT = '#AAEF65';
+const ACCENT_DARK = '#0F1410';
 
+// ─── Animated Wrapper ──────────────────────────────────────────────────────
+const FadeInView = ({ children, delay = 0, style }) => {
+  const anim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(anim, {
+      toValue: 1,
+      duration: 500,
+      delay,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.cubic),
+    }).start();
+  }, []);
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        {
+          opacity: anim,
+          transform: [
+            {
+              translateY: anim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [16, 0],
+              }),
+            },
+          ],
+        },
+      ]}
+    >
+      {children}
+    </Animated.View>
+  );
+};
+
+// ─── Section Header ────────────────────────────────────────────────────────
+const SectionHeader = ({ title, subtitle, actionLabel, onAction }) => (
+  <View style={styles.sectionHeader}>
+    <View>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      {subtitle && <Text style={styles.sectionSubtitle}>{subtitle}</Text>}
+    </View>
+    {actionLabel && (
+      <Pressable onPress={onAction} style={({ pressed }) => pressed && { opacity: 0.7 }}>
+        <Text style={styles.sectionAction}>{actionLabel}</Text>
+      </Pressable>
+    )}
+  </View>
+);
+
+// ─── Stat Pill ─────────────────────────────────────────────────────────────
+const StatPill = ({ icon, label, value, unit, color }) => {
+  const { width } = useWindowDimensions();
+  const isMobile = width <= BREAKPOINT_MOBILE_MAX;
+
+  return (
+    <View style={[styles.statPill, isMobile && styles.statPillMobile]}>
+      <View style={[styles.statIconWrap, { backgroundColor: color + '15' }]}>
+        <Ionicons name={icon} size={isMobile ? 20 : 16} color={color} />
+      </View>
+      <View style={[styles.statTextWrap, isMobile && styles.statTextWrapMobile]}>
+        <Text style={styles.statValue}>
+          {value}
+          <Text style={styles.statUnit}> {unit}</Text>
+        </Text>
+        <Text style={styles.statLabel}>{label}</Text>
+      </View>
+    </View>
+  );
+};
+
+// ─── Main Screen ───────────────────────────────────────────────────────────
 const DashboardScreen = () => {
   const { width } = useWindowDimensions();
   const navigation = useNavigation();
   const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX;
-  
+
   const { userProfile, getExpiringItems, fetchPantryItems } = useAppStore();
   const [showCheckInPopup, setShowCheckInPopup] = useState(false);
 
@@ -45,7 +131,6 @@ const DashboardScreen = () => {
   const fetchSummary = async () => {
     try {
       const res = await recipeApi.getDailySummary();
-      // Sửa ở đây: res.data là phản hồi từ fetchApi, data bên trong mới là dữ liệu thật từ Backend
       if (res.success && res.data.data) {
         setDailySummary(res.data.data);
       }
@@ -85,31 +170,23 @@ const DashboardScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       fetchSummary();
-      fetchPantryItems(); // Load tủ lạnh để lấy cảnh báo
+      if(fetchPantryItems) fetchPantryItems(); // Load tủ lạnh để lấy cảnh báo
     }, [])
   );
 
   useEffect(() => {
-    if (DASHBOARD_MOCK_WEIGHT_HISTORY && DASHBOARD_MOCK_WEIGHT_HISTORY.length > 0) {
+    if (DASHBOARD_MOCK_WEIGHT_HISTORY?.length > 0) {
       const lastCheckIn = new Date(DASHBOARD_MOCK_WEIGHT_HISTORY[0].date);
-      const today = new Date();
-      
-      const diffTime = Math.abs(today - lastCheckIn);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
-      if (diffDays >= 7) {
-        setShowCheckInPopup(true);
-      }
+      const diffDays = Math.ceil(
+        Math.abs(new Date() - lastCheckIn) / (1000 * 60 * 60 * 24)
+      );
+      if (diffDays >= 7) setShowCheckInPopup(true);
     }
   }, []);
 
-  // ==========================================
-  // MERGE LOGIC TỪ NHÁNH MAIN: Lấy dữ liệu thật
-  // ==========================================
-  const userName = userProfile?.name || "Bạn";
+  const userName = userProfile?.name || 'Bạn';
   const targetKcal = userProfile?.targetCalories || userProfile?.tdee || 2000;
-  
-  // Tổng hợp dữ liệu tracking thật
+
   const realTracking = {
     ...DASHBOARD_MOCK_TRACKING,
     target_kcal: Math.round(targetKcal),
@@ -135,10 +212,13 @@ const DashboardScreen = () => {
     }
   };
 
-  const remainingKcal = Math.max(0, realTracking.target_kcal - realTracking.consumed_kcal);
+  const remainingKcal = Math.max(
+    0,
+    realTracking.target_kcal - realTracking.consumed_kcal
+  );
 
   // Lấy dữ liệu cảnh báo tủ lạnh thật
-  const expiringItems = getExpiringItems();
+  const expiringItems = getExpiringItems ? getExpiringItems() : [];
   const realAlerts = expiringItems.map(item => ({
     id: item.id,
     name: item.name,
@@ -148,37 +228,104 @@ const DashboardScreen = () => {
 
   return (
     <ResponsiveContainer useImageBg={false}>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
-        <DashboardHeader userName={userName} remainingKcal={remainingKcal} />
+      
+      {/* ── HEADER (Giữ nguyên suốt) ── */}
+      <View style={styles.fixedHeaderWrapper}>
+        <DashboardHeader 
+          userName={userName} 
+          remainingKcal={remainingKcal} 
+          showMenu={false} 
+        />
+      </View>
 
-        <View style={styles.fullWidthContainer}>
-          <DashboardStreakBanner 
-            streakDays={dailySummary.streak || 0} 
-            hasLoggedToday={dailySummary.hasLoggedToday || false} 
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ── STREAK ── */}
+        <FadeInView delay={0} style={styles.streakWrapper}>
+          <DashboardStreakBanner
+            streakDays={dailySummary.streak || 0}
+            hasLoggedToday={dailySummary.hasLoggedToday || false}
           />
-        </View>
+        </FadeInView>
 
+        {/* ── STATS ── */}
+        <FadeInView delay={80} style={styles.statsOuter}>
+          <View style={[styles.statsRow, !isWebLarge && styles.statsRowMobile]}>
+            <StatPill icon="nutrition" label="Protein" value={realMacros.protein.target} unit="g" color="#E53935" />
+            <View style={[styles.statsDivider, !isWebLarge && styles.statsDividerMobile]} />
+            <StatPill icon="cube" label="Carbs" value={realMacros.carbs.target} unit="g" color="#29B6F6" />
+            <View style={[styles.statsDivider, !isWebLarge && styles.statsDividerMobile]} />
+            <StatPill icon="water" label="Chất béo" value={realMacros.fat.target} unit="g" color="#FBC02D" />
+            <View style={[styles.statsDivider, !isWebLarge && styles.statsDividerMobile]} />
+            <StatPill icon="flame" label="Mục tiêu" value={realTracking.target_kcal} unit="kcal" color={ACCENT_DARK} />
+          </View>
+        </FadeInView>
+
+        {/* ── MAIN GRID ── */}
         <View style={[styles.dashboardGrid, isWebLarge && styles.dashboardGridWeb]}>
+          
+          {/* LEFT COLUMN */}
           <View style={[styles.column, isWebLarge && { flex: 1.5 }]}>
-            <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
-            <MiniMealLog 
-              logs={dailySummary.meals} 
-              onAddMain={() => navigation.navigate('Scan')}
-              onAddSnack={() => setShowManualModal(true)} // MỞ MODAL NHẬP TAY
-            />
+            <FadeInView delay={160}>
+              <View style={styles.card}>
+                <SectionHeader 
+                  title="Năng lượng hôm nay" 
+                  subtitle="Cập nhật theo thời gian thực" 
+                />
+                <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
+              </View>
+            </FadeInView>
+
+            <FadeInView delay={240}>
+              <View style={styles.card}>
+                <SectionHeader 
+                  title="Nhật ký hôm nay" 
+                  actionLabel="Xem chi tiết →" 
+                  onAction={() => navigation.navigate('Diary')} // Gợi ý điều hướng sang Diary
+                />
+                <MiniMealLog 
+                  logs={dailySummary.meals} 
+                  onAddMain={() => navigation.navigate('Scan')}
+                  onAddSnack={() => setShowManualModal(true)} 
+                />
+              </View>
+            </FadeInView>
           </View>
 
+          {/* RIGHT COLUMN */}
           <View style={[styles.column, isWebLarge && { flex: 1 }]}>
-            <DashboardPantryAlert alerts={realAlerts.length > 0 ? realAlerts : DASHBOARD_MOCK_PANTRY_ALERTS} />
+            <FadeInView delay={200}>
+              <View style={styles.card}>
+                <SectionHeader 
+                  title="Tủ lạnh" 
+                  subtitle="Cảnh báo sắp hết hạn" 
+                  actionLabel="Quản lý →" 
+                  onAction={() => navigation.navigate('Pantry')} // Điều hướng
+                />
+                <DashboardPantryAlert alerts={realAlerts.length > 0 ? realAlerts : DASHBOARD_MOCK_PANTRY_ALERTS} />
+              </View>
+            </FadeInView>
+
+            <FadeInView delay={280}>
+              <View style={styles.tipsCard}>
+                <View style={styles.tipsAccentBar} />
+                <View style={styles.tipsContent}>
+                  <Text style={styles.tipsLabel}>💡 Mẹo hôm nay</Text>
+                  <Text style={styles.tipsText}>
+                    Uống 1 ly nước ấm trước bữa sáng giúp kích hoạt trao đổi chất và cải thiện tiêu hoá.
+                  </Text>
+                </View>
+              </View>
+            </FadeInView>
           </View>
         </View>
-
       </ScrollView>
 
-      <CheckInPopup 
-        visible={showCheckInPopup} 
-        onClose={() => setShowCheckInPopup(false)} 
+      <CheckInPopup
+        visible={showCheckInPopup}
+        onClose={() => setShowCheckInPopup(false)}
       />
 
       {/* MODAL NHẬP BỮA ĂN THỦ CÔNG */}
@@ -231,33 +378,129 @@ const DashboardScreen = () => {
   );
 };
 
+// ─── Styles ────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
-  scrollContent: { 
-    flexGrow: 1, 
-    paddingVertical: 32, 
-    paddingHorizontal: 16, 
+  fixedHeaderWrapper: {
+    width: '100%',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 4,
+    zIndex: 10,
+    backgroundColor: 'transparent', 
+  },
+
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: Platform.OS === 'web' ? 48 : 100,
     alignItems: 'center',
-    paddingBottom: 100 
+    gap: 20,
   },
-  fullWidthContainer: { 
-    width: '100%', 
-    maxWidth: 1000 
+
+  streakWrapper: { width: '100%', maxWidth: 1200 },
+
+  statsOuter: {
+    width: '100%',
+    maxWidth: 1200,
   },
-  dashboardGrid: { 
-    width: '100%', 
-    maxWidth: 1000, 
-    flexDirection: 'column', 
-    gap: 16 
+  statsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 12 },
+      android: { elevation: 2 },
+      web: { boxShadow: '0 2px 16px rgba(0,0,0,0.05)' },
+    }),
   },
-  dashboardGridWeb: { 
+  statsRowMobile: {
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    borderRadius: 24,
+  },
+  statPill: { 
+    flex: 1, 
     flexDirection: 'row', 
-    alignItems: 'flex-start', 
-    gap: 24 
+    alignItems: 'center', 
+    gap: 10, 
+    paddingHorizontal: 4 
   },
-  column: { 
-    width: '100%', 
-    gap: 16 
+  statPillMobile: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 2,
   },
+  statIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statTextWrap: {
+    justifyContent: 'center',
+  },
+  statTextWrapMobile: {
+    alignItems: 'center',
+  },
+  statValue: { fontSize: 15, fontWeight: '900', color: '#1A1D1E', lineHeight: 18 },
+  statUnit: { fontSize: 11, fontWeight: '600', color: '#999' },
+  statLabel: { fontSize: 11, color: '#999', fontWeight: '600', marginTop: 2 },
+  statsDivider: { width: 1, height: 32, backgroundColor: '#F0F0F0' },
+  statsDividerMobile: { 
+    width: 1, 
+    height: 40, 
+    backgroundColor: '#F0F0F0',
+    marginHorizontal: 2,
+  },
+
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 12 },
+  sectionTitle: { fontSize: 16, fontWeight: '900', color: '#1A1D1E', letterSpacing: -0.3 },
+  sectionSubtitle: { fontSize: 12, color: '#AAA', fontWeight: '500', marginTop: 2 },
+  sectionAction: { fontSize: 13, fontWeight: '800', color: '#3D9B2A' },
+
+  dashboardGrid: { width: '100%', maxWidth: 1200, flexDirection: 'column', gap: 20 },
+  dashboardGridWeb: { flexDirection: 'row', alignItems: 'flex-start', gap: 28 },
+  column: { width: '100%', gap: 20 },
+
+  card: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 12 },
+      android: { elevation: 2 },
+      web: { boxShadow: '0 2px 16px rgba(0,0,0,0.05)' },
+    }),
+  },
+
+  tipsCard: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 12 },
+      android: { elevation: 2 },
+      web: { boxShadow: '0 2px 16px rgba(0,0,0,0.05)' },
+    }),
+  },
+  tipsAccentBar: { width: 4, backgroundColor: ACCENT },
+  tipsContent: { flex: 1, padding: 20, gap: 6 },
+  tipsLabel: { fontSize: 13, fontWeight: '900', color: '#1A1D1E' },
+  tipsText: { fontSize: 13, color: '#666', fontWeight: '500', lineHeight: 20 },
   
   // ================= MODAL STYLES =================
   modalOverlay: { 

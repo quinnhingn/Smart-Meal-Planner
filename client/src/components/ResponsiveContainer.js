@@ -1,8 +1,8 @@
 // src/components/ResponsiveContainer.js
 import React from 'react';
-import { StyleSheet, View, ImageBackground } from 'react-native'; // Đã xóa SafeAreaView ở đây
+import { StyleSheet, View, ImageBackground } from 'react-native'; 
 import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context'; // FIX: Import từ thư viện chuyên dụng
+import { SafeAreaView } from 'react-native-safe-area-context'; 
 
 const ResponsiveContainer = ({ children, style, useImageBg = false }) => {
   return (
@@ -30,13 +30,13 @@ const ResponsiveContainer = ({ children, style, useImageBg = false }) => {
         </>
       )}
 
-      {/* Lớp 3: Nội dung chính bọc trong SafeAreaView mới */}
+      {/* Lớp 3: Nội dung chính. FIX: Bỏ 'top' vì MobileTopbar đã lo phần Status Bar */}
       <SafeAreaView 
         style={[
           styles.safeArea, 
           style
         ]} 
-        edges={['top', 'left', 'right']}
+        edges={['left', 'right']}
       >
         {children}
       </SafeAreaView>

@@ -6,7 +6,6 @@ import GlassCard from './GlassCard';
 import { COLORS } from '../constants/theme';
 
 const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
-  // ... (giữ nguyên logic processedLogs)
   const processedLogs = {
     breakfast: 0,
     lunch: 0,
@@ -30,7 +29,6 @@ const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
     });
   }
 
-  // Hàm render dùng chung cho các item bữa ăn
   const renderMealRow = (icon, title, kcal) => (
     <View style={styles.mealRow} key={title}>
       <View style={styles.mealLeft}>
@@ -46,13 +44,15 @@ const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
   return (
     <GlassCard style={styles.cardWrapper} intensity={85}>
       <View style={styles.cardContent}>
-        {/* Header */}
-        <View style={styles.headerRow}>
-          <Text style={styles.sectionTitle}>Nhật ký hôm nay</Text>
-          <Pressable style={styles.addMainBtn} onPress={onAddMain}>
-            <Ionicons name="add" size={20} color="#FFF" />
-          </Pressable>
-        </View>
+        {/* MERGE: Header từ main — chỉ hiển thị nếu có handler */}
+        {onAddMain && (
+          <View style={styles.headerRow}>
+            <Text style={styles.sectionTitle}>Nhật ký hôm nay</Text>
+            <Pressable style={styles.addMainBtn} onPress={onAddMain}>
+              <Ionicons name="add" size={20} color="#FFF" />
+            </Pressable>
+          </View>
+        )}
 
         {/* Danh sách 3 bữa chính */}
         <View style={styles.logContainer}>
@@ -63,7 +63,7 @@ const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
           {renderMealRow('moon-outline', 'Bữa tối', processedLogs.dinner)}
         </View>
 
-        {/* Danh sách bữa phụ (Snacks) */}
+        {/* Danh sách bữa phụ */}
         {processedLogs.snacks.length > 0 && (
           <View style={styles.snacksContainer}>
             {processedLogs.snacks.map((snack, index) => (
@@ -75,10 +75,12 @@ const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
           </View>
         )}
 
-        {/* Nút thêm bữa phụ */}
-        <Pressable style={styles.addSnackBtn} onPress={onAddSnack}>
-          <Text style={styles.addSnackText}>+ Thêm bữa phụ</Text>
-        </Pressable>
+        {/* MERGE: Footer từ main — chỉ hiển thị nếu có handler */}
+        {onAddSnack && (
+          <Pressable style={styles.addSnackBtn} onPress={onAddSnack}>
+            <Text style={styles.addSnackText}>+ Thêm bữa phụ</Text>
+          </Pressable>
+        )}
       </View>
     </GlassCard>
   );
@@ -87,16 +89,16 @@ const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
 const styles = StyleSheet.create({
   cardWrapper: { width: '100%' },
   cardContent: { padding: 24, backgroundColor: 'transparent' },
+  
+  // MERGE: Styles từ main
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
   sectionTitle: { fontSize: 18, fontWeight: '800', color: '#1A1D1E' },
-  
   addMainBtn: {
     backgroundColor: COLORS.primary,
     width: 32, height: 32, borderRadius: 16,
     justifyContent: 'center', alignItems: 'center',
     ...(Platform.OS === 'web' && { cursor: 'pointer' }),
   },
-  btnHover: { opacity: 0.8 },
   
   logContainer: { width: '100%' },
   snacksContainer: { width: '100%' },
@@ -109,6 +111,7 @@ const styles = StyleSheet.create({
   
   divider: { height: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%', marginVertical: 4 },
   
+  // MERGE: Styles từ main
   addSnackBtn: {
     marginTop: 16, paddingVertical: 10,
     borderWidth: 1, borderColor: '#D1D5DB', borderStyle: 'dashed', borderRadius: 8,
@@ -116,7 +119,6 @@ const styles = StyleSheet.create({
     ...(Platform.OS === 'web' && { cursor: 'pointer' }),
   },
   addSnackText: { color: '#666', fontWeight: '600', fontSize: 14 },
-  snackBtnHover: { backgroundColor: 'rgba(0,0,0,0.02)' }
 });
 
 export default MiniMealLog;

@@ -1,0 +1,114 @@
+import React from 'react';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+const MacroSummary = ({ stats, targetCalo }) => {
+  const isGoalMet = stats.calo <= targetCalo;
+  const percent = Math.min(100, Math.round((stats.calo / targetCalo) * 100));
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.topRow}>
+        <View>
+          <Text style={styles.label}>Tổng năng lượng</Text>
+          <View style={styles.caloRow}>
+            <Text style={styles.bigCalo}>{stats.calo.toLocaleString()}</Text>
+            <Text style={styles.unit}> kcal</Text>
+          </View>
+        </View>
+        <View style={[styles.badge, !isGoalMet && styles.badgeOver]}>
+          <Ionicons 
+            name={isGoalMet ? "checkmark-circle" : "warning"} 
+            size={14} 
+            color={isGoalMet ? "#2E7D32" : "#C62828"} 
+          />
+          <Text style={[styles.badgeText, !isGoalMet && styles.badgeTextOver]}>
+            {isGoalMet ? "Đạt mục tiêu" : "Vượt mục tiêu"}
+          </Text>
+        </View>
+      </View>
+
+      {/* Progress bar */}
+      <View style={styles.progressTrack}>
+        <View style={[
+          styles.progressFill, 
+          { width: `${percent}%` }, 
+          !isGoalMet && styles.progressFillOver
+        ]} />
+      </View>
+      <Text style={styles.targetText}>Mục tiêu: {targetCalo.toLocaleString()} kcal</Text>
+
+      {/* Macro pills */}
+      <View style={styles.pillsRow}>
+        <MacroPill icon="nutrition" label="Protein" value={stats.protein} color="#E53935" />
+        <MacroPill icon="cube" label="Carbs" value={stats.carbs} color="#29B6F6" />
+        <MacroPill icon="water" label="Fat" value={stats.fat} color="#FBC02D" />
+      </View>
+    </View>
+  );
+};
+
+const MacroPill = ({ icon, label, value, color }) => (
+  <View style={styles.pill}>
+    <View style={[styles.pillIcon, { backgroundColor: color + '15' }]}>
+      <Ionicons name={icon} size={16} color={color} />
+    </View>
+    <View>
+      <Text style={styles.pillValue}>{value}g</Text>
+      <Text style={styles.pillLabel}>{label}</Text>
+    </View>
+  </View>
+);
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#FFF',
+    borderRadius: 24,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
+    ...Platform.select({ web: { boxShadow: '0 4px 24px rgba(0,0,0,0.04)' }, default: { elevation: 2 } })
+  },
+  topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
+  label: { fontSize: 13, fontWeight: '700', color: '#888', marginBottom: 4 },
+  caloRow: { flexDirection: 'row', alignItems: 'baseline' },
+  bigCalo: { fontSize: 36, fontWeight: '900', color: '#1A1D1E', letterSpacing: -1 },
+  unit: { fontSize: 16, fontWeight: '700', color: '#888' },
+  badge: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    backgroundColor: '#E8F5E9', 
+    paddingHorizontal: 10, 
+    paddingVertical: 6, 
+    borderRadius: 20, 
+    gap: 4 
+  },
+  badgeOver: { backgroundColor: '#FFEBEE' },
+  badgeText: { fontSize: 12, fontWeight: '800', color: '#2E7D32' },
+  badgeTextOver: { color: '#C62828' },
+  progressTrack: { 
+    height: 8, 
+    backgroundColor: '#F0F0F0', 
+    borderRadius: 4, 
+    marginBottom: 6, 
+    overflow: 'hidden' 
+  },
+  progressFill: { height: '100%', backgroundColor: '#4CAF50', borderRadius: 4 },
+  progressFillOver: { backgroundColor: '#FF6B6B' },
+  targetText: { fontSize: 12, color: '#AAA', fontWeight: '600', marginBottom: 16 },
+  pillsRow: { flexDirection: 'row', gap: 10 },
+  pill: { 
+    flex: 1, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    gap: 10, 
+    backgroundColor: '#F8F9FA', 
+    padding: 12, 
+    borderRadius: 16 
+  },
+  pillIcon: { width: 32, height: 32, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  pillValue: { fontSize: 15, fontWeight: '900', color: '#1A1D1E' },
+  pillLabel: { fontSize: 11, color: '#888', fontWeight: '600', marginTop: 2 },
+});
+
+export default MacroSummary;

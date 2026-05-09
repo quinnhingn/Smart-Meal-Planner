@@ -42,15 +42,7 @@ const DashboardPantryAlert = ({ alerts }) => {
         scrollEnabled={false} // Tắt cuộn trên mobile nếu list ngắn
         // INTERNAL PADDING ÁP DỤNG TẠI ĐÂY
         contentContainerStyle={styles.internalPadding}
-        ListHeaderComponent={
-          <View style={styles.headerWrapper}>
-            <View style={styles.alertHeaderRow}>
-              <Text style={styles.sectionTitle}>Cảnh báo Tủ lạnh</Text>
-              <Ionicons name="notifications-outline" size={22} color="#333" />
-            </View>
-            <Text style={styles.alertSubtitle}>Những thực phẩm cần lưu ý ngay!</Text>
-          </View>
-        }
+
       />
     </GlassCard>
   );

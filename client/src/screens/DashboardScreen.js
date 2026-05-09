@@ -23,6 +23,7 @@ import MiniMealLog from '../components/MiniMealLog';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardEnergyCard from '../components/dashboard/DashboardEnergyCard';
 import DashboardPantryAlert from '../components/dashboard/DashboardPantryAlert';
+import DashboardRecipeSuggestion from '../components/dashboard/DashboardRecipeSuggestion';
 import DashboardStreakBanner from '../components/dashboard/DashboardStreakBanner';
 import CheckInPopup from '../components/dashboard/CheckInPopup';
 import { COLORS } from '../constants/theme';
@@ -122,6 +123,8 @@ const DashboardScreen = () => {
     totals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
     meals: []
   });
+  
+  const [recipeSuggestions, setRecipeSuggestions] = useState(null);
 
   // STATE CHO MODAL NHẬP TAY
   const [showManualModal, setShowManualModal] = useState(false);
@@ -136,6 +139,17 @@ const DashboardScreen = () => {
       }
     } catch (error) {
       console.error("Lỗi lấy summary:", error);
+    }
+  };
+
+  const fetchSuggestions = async () => {
+    try {
+      const res = await recipeApi.getSuggestions();
+      if (res.success && res.data.data) {
+        setRecipeSuggestions(res.data.data);
+      }
+    } catch (error) {
+      console.error("Lỗi lấy gợi ý món ăn:", error);
     }
   };
 
@@ -171,6 +185,7 @@ const DashboardScreen = () => {
     React.useCallback(() => {
       fetchSummary();
       if(fetchPantryItems) fetchPantryItems(); // Load tủ lạnh để lấy cảnh báo
+      fetchSuggestions(); // Lấy gợi ý món ăn dựa vào tủ lạnh
     }, [])
   );
 
@@ -263,6 +278,8 @@ const DashboardScreen = () => {
           </View>
         </FadeInView>
 
+
+
         {/* ── MAIN GRID ── */}
         <View style={[styles.dashboardGrid, isWebLarge && styles.dashboardGridWeb]}>
           
@@ -292,6 +309,7 @@ const DashboardScreen = () => {
                 />
               </View>
             </FadeInView>
+
           </View>
 
           {/* RIGHT COLUMN */}
@@ -308,15 +326,17 @@ const DashboardScreen = () => {
               </View>
             </FadeInView>
 
+            <FadeInView delay={240}>
+              <DashboardRecipeSuggestion suggestions={recipeSuggestions || undefined} />
+            </FadeInView>
+
             <FadeInView delay={280}>
-              <View style={styles.tipsCard}>
-                <View style={styles.tipsAccentBar} />
-                <View style={styles.tipsContent}>
-                  <Text style={styles.tipsLabel}>💡 Mẹo hôm nay</Text>
-                  <Text style={styles.tipsText}>
-                    Uống 1 ly nước ấm trước bữa sáng giúp kích hoạt trao đổi chất và cải thiện tiêu hoá.
-                  </Text>
-                </View>
+              <View style={styles.miniTipsCard}>
+                <Ionicons name="bulb-outline" size={18} color="#F59E0B" />
+                <Text style={styles.miniTipsText}>
+                  <Text style={{fontWeight: '700'}}>Mẹo: </Text>
+                  Uống 1 ly nước ấm trước bữa sáng giúp tiêu hoá tốt hơn.
+                </Text>
               </View>
             </FadeInView>
           </View>
@@ -399,6 +419,7 @@ const styles = StyleSheet.create({
   },
 
   streakWrapper: { width: '100%', maxWidth: 1200 },
+  fullWidthWrapper: { width: '100%', maxWidth: 1200 },
 
   statsOuter: {
     width: '100%',
@@ -484,23 +505,22 @@ const styles = StyleSheet.create({
     }),
   },
 
-  tipsCard: {
+  miniTipsCard: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    overflow: 'hidden',
+    borderRadius: 16,
+    padding: 12,
+    alignItems: 'center',
+    gap: 8,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.04)',
     ...Platform.select({
-      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 12 },
-      android: { elevation: 2 },
-      web: { boxShadow: '0 2px 16px rgba(0,0,0,0.05)' },
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8 },
+      android: { elevation: 1 },
+      web: { boxShadow: '0 2px 10px rgba(0,0,0,0.03)' },
     }),
   },
-  tipsAccentBar: { width: 4, backgroundColor: ACCENT },
-  tipsContent: { flex: 1, padding: 20, gap: 6 },
-  tipsLabel: { fontSize: 13, fontWeight: '900', color: '#1A1D1E' },
-  tipsText: { fontSize: 13, color: '#666', fontWeight: '500', lineHeight: 20 },
+  miniTipsText: { flex: 1, fontSize: 13, color: '#555', lineHeight: 18 },
   
   // ================= MODAL STYLES =================
   modalOverlay: { 

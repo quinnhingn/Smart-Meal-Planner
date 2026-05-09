@@ -236,10 +236,10 @@ onMounted(() => {
     new Chart(warehouseChartCanvas.value, {
       type: 'doughnut',
       data: {
-        labels: ['Thịt', 'Rau củ', 'Sữa', 'Ngũ cốc', 'Trái cây'],
+        labels: ['Thịt', 'Rau củ', 'Sữa', 'Ngũ cốc', 'Trái cây', 'Gia vị'],
         datasets: [{
-          data: [68, 95, 34, 42, 51],
-          backgroundColor: ['#F87171', '#4ADE80', '#60A5FA', '#FBBF24', '#FB923C'],
+          data: [68, 95, 34, 42, 51, 12],
+          backgroundColor: ['#F87171', '#4ADE80', '#60A5FA', '#FBBF24', '#FB923C', '#C084FC'],
           borderWidth: 2,
           borderColor: '#fff',
           hoverOffset: 8

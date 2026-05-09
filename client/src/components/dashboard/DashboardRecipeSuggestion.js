@@ -2,7 +2,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable, Platform, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import GlassCard from '../GlassCard';
 import { COLORS } from '../../constants/theme';
 import { useNavigation } from '@react-navigation/native';
 
@@ -42,7 +41,7 @@ const DashboardRecipeSuggestion = ({ suggestions = MOCK_SUGGESTIONS }) => {
   };
 
   return (
-    <GlassCard style={{ padding: 0 }} intensity={60}>
+    <View style={{ padding: 0 }}>
       <FlatList
         data={suggestions}
         keyExtractor={(item) => item.id}
@@ -60,7 +59,7 @@ const DashboardRecipeSuggestion = ({ suggestions = MOCK_SUGGESTIONS }) => {
           </View>
         }
       />
-    </GlassCard>
+    </View>
   );
 };
 

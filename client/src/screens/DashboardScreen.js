@@ -278,6 +278,8 @@ const DashboardScreen = () => {
           </View>
         </FadeInView>
 
+
+
         {/* ── MAIN GRID ── */}
         <View style={[styles.dashboardGrid, isWebLarge && styles.dashboardGridWeb]}>
           
@@ -307,6 +309,7 @@ const DashboardScreen = () => {
                 />
               </View>
             </FadeInView>
+
           </View>
 
           {/* RIGHT COLUMN */}
@@ -328,14 +331,12 @@ const DashboardScreen = () => {
             </FadeInView>
 
             <FadeInView delay={280}>
-              <View style={styles.tipsCard}>
-                <View style={styles.tipsAccentBar} />
-                <View style={styles.tipsContent}>
-                  <Text style={styles.tipsLabel}>💡 Mẹo hôm nay</Text>
-                  <Text style={styles.tipsText}>
-                    Uống 1 ly nước ấm trước bữa sáng giúp kích hoạt trao đổi chất và cải thiện tiêu hoá.
-                  </Text>
-                </View>
+              <View style={styles.miniTipsCard}>
+                <Ionicons name="bulb-outline" size={18} color="#F59E0B" />
+                <Text style={styles.miniTipsText}>
+                  <Text style={{fontWeight: '700'}}>Mẹo: </Text>
+                  Uống 1 ly nước ấm trước bữa sáng giúp tiêu hoá tốt hơn.
+                </Text>
               </View>
             </FadeInView>
           </View>
@@ -418,6 +419,7 @@ const styles = StyleSheet.create({
   },
 
   streakWrapper: { width: '100%', maxWidth: 1200 },
+  fullWidthWrapper: { width: '100%', maxWidth: 1200 },
 
   statsOuter: {
     width: '100%',
@@ -503,23 +505,22 @@ const styles = StyleSheet.create({
     }),
   },
 
-  tipsCard: {
+  miniTipsCard: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    overflow: 'hidden',
+    borderRadius: 16,
+    padding: 12,
+    alignItems: 'center',
+    gap: 8,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.04)',
     ...Platform.select({
-      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 12 },
-      android: { elevation: 2 },
-      web: { boxShadow: '0 2px 16px rgba(0,0,0,0.05)' },
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8 },
+      android: { elevation: 1 },
+      web: { boxShadow: '0 2px 10px rgba(0,0,0,0.03)' },
     }),
   },
-  tipsAccentBar: { width: 4, backgroundColor: ACCENT },
-  tipsContent: { flex: 1, padding: 20, gap: 6 },
-  tipsLabel: { fontSize: 13, fontWeight: '900', color: '#1A1D1E' },
-  tipsText: { fontSize: 13, color: '#666', fontWeight: '500', lineHeight: 20 },
+  miniTipsText: { flex: 1, fontSize: 13, color: '#555', lineHeight: 18 },
   
   // ================= MODAL STYLES =================
   modalOverlay: { 

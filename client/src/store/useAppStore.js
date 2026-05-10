@@ -430,6 +430,57 @@ export const useAppStore = create((set, get) => ({
 
   // ==========================================
   // 6. GAMIFICATION & HEALTH TRACKING
+
+  // ==========================================
+  // 7. MY RECIPES & DRAFTS
+  // ==========================================
+  myRecipes: [],
+  draftRecipes: [],
+
+  addMyRecipe: (recipe) => set((state) => {
+    const newRecipe = {
+      ...recipe,
+      id: recipe.id || `my_${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      reviews: { avgRating: 0, total: 0 },
+      isSaved: false,
+    };
+    get().showToast('Đã đăng công thức!', 'success');
+    return { myRecipes: [newRecipe, ...state.myRecipes] };
+  }),
+
+  updateMyRecipe: (id, updates) => set((state) => {
+    get().showToast('Đã cập nhật công thức!', 'success');
+    return {
+      myRecipes: state.myRecipes.map(r =>
+        r.id === id ? { ...r, ...updates, updatedAt: new Date().toISOString() } : r
+      ),
+    };
+  }),
+
+  deleteMyRecipe: (id) => set((state) => {
+    get().showToast('Đã xóa công thức!', 'success');
+    return { myRecipes: state.myRecipes.filter(r => r.id !== id) };
+  }),
+
+  saveDraft: (draft) => set((state) => {
+    const existing = state.draftRecipes.find(d => d.id === draft.id);
+    let nextDrafts;
+    if (existing) {
+      nextDrafts = state.draftRecipes.map(d =>
+        d.id === draft.id ? { ...draft, updatedAt: new Date().toISOString() } : d
+      );
+    } else {
+      nextDrafts = [{ ...draft, createdAt: new Date().toISOString() }, ...state.draftRecipes];
+    }
+    get().showToast('Đã lưu nháp!', 'success');
+    return { draftRecipes: nextDrafts };
+  }),
+
+  deleteDraft: (id) => set((state) => ({
+    draftRecipes: state.draftRecipes.filter(d => d.id !== id),
+  })),
+
   // ==========================================
   weightHistory: [], 
   currentStreak: 0,  

@@ -4,7 +4,7 @@ import axios from 'axios';
 // Port 5001 dành riêng cho Client Backend (Admin dùng port 5000)
 // Dùng IP LAN thay vì localhost để Expo trên điện thoại kết nối được
 // const BASE_URL = 'http://192.168.1.84:5001/api';
-const BASE_URL = 'http://192.168.1.13:5001/api';
+const BASE_URL = 'http://192.168.1.233:5001/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,

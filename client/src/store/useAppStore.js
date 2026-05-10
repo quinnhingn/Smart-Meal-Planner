@@ -53,9 +53,9 @@ export const useAppStore = create((set, get) => ({
 
   logout: () => set({ token: null, userProfile: null, hasProfile: false }),
 
-  // 2. RECIPE & FAVORITES STATE
+  // 2. RECIPE & FAVORITES STATE (Backend API)
   // ==========================================
-  favoriteIds: [], 
+  savedRecipeIds: new Set(), 
 
   fetchFavoriteIds: async () => {
     try {
@@ -63,28 +63,32 @@ export const useAppStore = create((set, get) => ({
       // FIX: Đảm bảo data là array trước khi map
       const data = response.data?.success ? response.data.data : response.data;
       const ids = Array.isArray(data) ? data.map(id => parseInt(id)) : [];
-      set({ favoriteIds: ids });
+      set({ savedRecipeIds: new Set(ids) });
     } catch (error) {
       console.error("Lỗi fetch favorite IDs:", error);
     }
   },
 
-  toggleFavorite: async (recipeId) => {
-    const isFav = get().favoriteIds.includes(recipeId);
-    set((state) => ({
-      favoriteIds: isFav 
-        ? state.favoriteIds.filter(id => id !== recipeId)
-        : [...state.favoriteIds, recipeId]
-    }));
+  toggleSaveRecipe: async (recipeId) => {
+    const id = parseInt(recipeId);
+    const isSaved = get().savedRecipeIds.has(id);
+    set((state) => {
+      const next = new Set(state.savedRecipeIds);
+      if (isSaved) next.delete(id);
+      else next.add(id);
+      return { savedRecipeIds: next };
+    });
 
     try {
       await recipeApi.toggleFavorite(recipeId);
     } catch (error) {
-      set((state) => ({
-        favoriteIds: isFav 
-          ? [...state.favoriteIds, recipeId]
-          : state.favoriteIds.filter(id => id !== recipeId)
-      }));
+      // Rollback nếu API lỗi
+      set((state) => {
+        const next = new Set(state.savedRecipeIds);
+        if (isSaved) next.add(id);
+        else next.delete(id);
+        return { savedRecipeIds: next };
+      });
     }
   },
 
@@ -94,7 +98,7 @@ export const useAppStore = create((set, get) => ({
   setDrawerOpen: (isOpen) => set({ isDrawerOpen: isOpen }),
   tabBarVisible: true,
   setTabBarVisible: (visible) => set({ tabBarVisible: visible }),
-  
+
   // FIX: Đổi 'toast' thành 'toastInfo' để khớp với CustomToast.js
   toastInfo: { visible: false, message: '', type: 'info' },
   showToast: (message, type = 'info') => {
@@ -406,7 +410,9 @@ export const useAppStore = create((set, get) => ({
     }
     return false;
   },
-  
+
+  // 7. REVIEWS (Backend API)
+  // ==========================================
   recipeReviews: [],
   fetchRecipeReviews: async (recipeId) => {
     try {
@@ -426,7 +432,7 @@ export const useAppStore = create((set, get) => ({
 
   submitReview: async (recipeId, reviewData) => {
     try {
-      const response = await recipeApi.addReview(recipeId, reviewData);
+      const response = await recipeApi.addReview({ recipeId, ...reviewData });
       if (response.success) {
         get().showToast("Cảm ơn bạn đã đánh giá!", 'success');
         get().fetchRecipeReviews(recipeId);
@@ -434,5 +440,99 @@ export const useAppStore = create((set, get) => ({
     } catch (error) {
       console.error("Lỗi submit review:", error);
     }
+  },
+
+  // 8. MY RECIPES & DRAFTS (Local state — chưa có API backend)
+  // ==========================================
+  myRecipes: [],
+  draftRecipes: [],
+
+  addMyRecipe: (recipe) => set((state) => {
+    const newRecipe = {
+      ...recipe,
+      id: recipe.id || `my_${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      reviews: { avgRating: 0, total: 0 },
+      isSaved: false,
+    };
+    get().showToast('Đã đăng công thức!', 'success');
+    return { myRecipes: [newRecipe, ...state.myRecipes] };
+  }),
+
+  updateMyRecipe: (id, updates) => set((state) => {
+    get().showToast('Đã cập nhật công thức!', 'success');
+    return {
+      myRecipes: state.myRecipes.map(r =>
+        r.id === id ? { ...r, ...updates, updatedAt: new Date().toISOString() } : r
+      ),
+    };
+  }),
+
+  deleteMyRecipe: (id) => set((state) => {
+    get().showToast('Đã xóa công thức!', 'success');
+    return { myRecipes: state.myRecipes.filter(r => r.id !== id) };
+  }),
+
+  saveDraft: (draft) => set((state) => {
+    const existing = state.draftRecipes.find(d => d.id === draft.id);
+    let nextDrafts;
+    if (existing) {
+      nextDrafts = state.draftRecipes.map(d =>
+        d.id === draft.id ? { ...draft, updatedAt: new Date().toISOString() } : d
+      );
+    } else {
+      nextDrafts = [{ ...draft, createdAt: new Date().toISOString() }, ...state.draftRecipes];
+    }
+    get().showToast('Đã lưu nháp!', 'success');
+    return { draftRecipes: nextDrafts };
+  }),
+
+  deleteDraft: (id) => set((state) => ({
+    draftRecipes: state.draftRecipes.filter(d => d.id !== id),
+  })),
+
+  // 9. GAMIFICATION & HEALTH TRACKING (Local state)
+  // ==========================================
+  weightHistory: [], 
+  lastLogDate: null, 
+
+  logMeal: () => set((state) => {
+    const today = new Date().toDateString();
+    if (state.lastLogDate !== today) {
+      return { 
+        currentStreak: state.currentStreak + 1,
+        lastLogDate: today
+      };
+    }
+    return state; 
+  }),
+
+  checkInWeight: async (newWeight) => {
+    const state = get();
+    const profile = state.userProfile;
+    if (!profile) return false;
+
+    const newRecord = { date: new Date().toISOString(), weight: newWeight };
+    set({ weightHistory: [...state.weightHistory, newRecord] });
+
+    const formData = {
+      gender: profile.gender || 'female',
+      age: profile.age,
+      height: profile.height,
+      weight: newWeight,
+      activity: profile.activity || 'light',
+      goal: profile.goal || 'lose_weight'
+    };
+    const newMacros = calculateTDEEAndMacros(formData);
+
+    const newProfileData = {
+      weight: newWeight,
+      targetCalories: newMacros.tdee,
+      protein_g: newMacros.protein_g,
+      carbs_g: newMacros.carbs_g,
+      fat_g: newMacros.fat_g,
+    };
+
+    return await state.updateProfile(newProfileData);
   },
 }));

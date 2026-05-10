@@ -27,7 +27,7 @@ cloudinary.config(
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 gemini_model = genai.GenerativeModel('gemini-2.5-flash')
 
-AI_SERVER_URL = os.getenv("AI_SERVER_URL", "http://192.168.1.84:8001")
+AI_SERVER_URL = os.getenv("AI_SERVER_URL", "http://localhost:8001")
 
 @ai_bp.route('/predict', methods=['POST'])
 @jwt_required()
@@ -53,12 +53,13 @@ def predict_and_log():
         # 2. Xử lý nhận diện dựa trên Mode
         if mode == 'pantry':
             # --- LUỒNG GEMINI (Cho Tủ lạnh - Nhiều món) ---
+            print("🤖 [AI Flow] Đang gọi Gemini phân tích tủ lạnh...")
             file.seek(0)
-            img = Image.open(io.BytesIO(file.read()))
+            img_data = file.read()
+            img = Image.open(io.BytesIO(img_data))
             
             prompt = """Bạn là trợ lý quản lý tủ lạnh thông minh. 
             Phân tích ảnh và liệt kê các nguyên liệu thực phẩm.
-            Với mỗi nguyên liệu, hãy ước tính khối lượng và gợi ý cách bảo quản.
             Trả về JSON format:
             {
               "ingredients": [
@@ -74,20 +75,19 @@ def predict_and_log():
             }
             Chỉ trả về JSON thuần túy, không thêm văn bản khác."""
             
-            response = gemini_model.generate_content([prompt, img])
-            raw_text = response.text.replace("```json", "").replace("```", "").strip()
-            
             try:
+                response = gemini_model.generate_content([prompt, img])
+                raw_text = response.text.replace("```json", "").replace("```", "").strip()
+                print(f"📩 [AI Flow] Gemini Response: {raw_text}")
+                
                 result = json.loads(raw_text)
-                # Map dữ liệu sang format chung của predictions
                 predictions = result.get("ingredients", [])
-                # Giữ nguyên label cho thống nhất logic cũ
                 for p in predictions:
                     p['label'] = p['name']
                 ai_data_for_log = result
-            except:
-                print(f"❌ [AI Flow] Gemini trả về format sai: {raw_text}")
-                return jsonify({"success": False, "message": "Lỗi định dạng phản hồi từ Gemini"}), 500
+            except Exception as gemini_err:
+                print(f"❌ [AI Flow] Lỗi Gemini: {str(gemini_err)}")
+                return jsonify({"success": False, "message": f"Lỗi Gemini: {str(gemini_err)}"}), 500
         else:
             # --- LUỒNG YOLO (Cho Nhật ký - 1 món ăn) ---
             print(f"📡 [AI Flow] Đang gửi ảnh sang AI Server...")
@@ -135,6 +135,7 @@ def predict_and_log():
         print(f"✅ [AI Flow] Đã lưu Log thành công! (Mode: {mode})")
         
         # 5. Trả về kết quả
+        print("📤 [AI Flow] Đang trả kết quả về cho App...")
         return jsonify({
             "success": True,
             "data": {
@@ -143,16 +144,15 @@ def predict_and_log():
                 "nutrition": nutrition_info,
                 "recipe_id": confirmed_dish_id if mode == 'diary' else None,
                 "image_url": image_url,
-                "log_id": scan_log.id,
-                "predictions": predictions # Trả về toàn bộ danh sách (Gemini có nhiều món)
+                "log_id": str(scan_log.id), # Ép kiểu String để tránh lỗi 500 khi jsonify
+                "predictions": predictions
             }
         }), 200
 
     except Exception as e:
         db.session.rollback()
         import traceback
-        traceback.print_exc()
-        print(f"❌ [AI Flow] Lỗi: {str(e)}")
+        print(f"❌ [AI Flow ERROR] Chi tiết lỗi:\n{traceback.format_exc()}")
         return jsonify({"success": False, "message": f"Lỗi xử lý AI: {str(e)}"}), 500
 
 @ai_bp.route('/nutrition-insight', methods=['GET'])

@@ -239,9 +239,9 @@ class RecipeRepository:
                     formatted_ingredients.append({
                         "name": ing.get('name', ''),
                         "amount": f"{ing.get('grams', 0)}g" if ing.get('grams') else ing.get('amount', '100g'),
-                        "calories": round(ing.get('calories', 0), 1),
+                        "calories": round(ing.get('calories') or ing.get('cal') or 0, 1),
                         "protein": round(ing.get('protein', 0), 1),
-                        "carbs": round(ing.get('carbs', 0), 1),
+                        "carbs": round(ing.get('carbs') or ing.get('carb') or 0, 1),
                         "fat": round(ing.get('fat', 0), 1)
                     })
 
@@ -278,7 +278,8 @@ class RecipeRepository:
                     "macros": macros,
                     "ingredients": formatted_ingredients,
                     "steps": formatted_steps,
-                    "reviews": {"avgRating": 5.0, "total": 0}
+                    "reviews": {"avgRating": 5.0, "total": 0},
+                    "createdBy": r.created_by # Thêm trường này để Frontend lọc
                 })
             return result
         except Exception as e:

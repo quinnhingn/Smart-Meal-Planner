@@ -7,6 +7,17 @@ from model.recipes.recipe_model import MealLogModel, UserPantryModel
 from database.db import db
 from datetime import datetime, timedelta
 import uuid
+import cloudinary
+import cloudinary.uploader
+import os
+
+# Cấu hình Cloudinary
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True
+)
 
 recipe_bp = Blueprint('recipes', __name__, url_prefix='/api/recipes')
 
@@ -316,3 +327,131 @@ def update_meal_log(log_id):
     data = request.get_json()
     result = RecipeRepository.update_meal_log(user_id, log_id, data)
     return jsonify(result), 200
+
+@recipe_bp.route('/create', methods=['POST'])
+@jwt_required()
+def create_user_recipe():
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        
+        from model.recipes.recipe_model import RecipeModel, DishCaloriesModel
+        
+        # 1. Tạo bản ghi Recipe mới
+        new_recipe = RecipeModel(
+            name_vn=data.get('name_vn'),
+            name_en=data.get('name_en'),
+            image_url=data.get('image_url'),
+            video_url=data.get('video_url'),
+            category=data.get('category', 'Do bạn tạo'),
+            difficulty=data.get('difficulty', 'Dễ'),
+            cooking_time=str(data.get('cooking_time', '30')),
+            servings=str(data.get('servings', '1')),
+            ingredients=data.get('ingredients', []),
+            steps=data.get('steps', []),
+            goals=data.get('goals', []),
+            meal_times=data.get('meal_times', []),
+            created_by=user_id # Ghi danh Ngân là người tạo
+        )
+        
+        db.session.add(new_recipe)
+        db.session.flush() # Lấy ID để lưu bảng calo
+        
+        # 2. Tạo bản ghi Calo tương ứng
+        nutrition = DishCaloriesModel(
+            recipe_id=new_recipe.id,
+            calories=float(data.get('calories', 0)),
+            protein=float(data.get('protein', 0)),
+            carbs=float(data.get('carbs', 0)),
+            fat=float(data.get('fat', 0))
+        )
+        db.session.add(nutrition)
+        db.session.commit()
+        
+        return jsonify({
+            "success": True, 
+            "message": "🎉 Chúc mừng! Công thức mới đã được lưu thành công.",
+            "data": {
+                "id": new_recipe.id,
+                "name": new_recipe.name_vn
+            }
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ [Create Recipe Error]: {str(e)}")
+        return jsonify({"success": False, "message": f"Lỗi tạo công thức: {str(e)}"}), 500
+
+@recipe_bp.route('/update/<recipe_id>', methods=['PUT'])
+@jwt_required()
+def update_user_recipe(recipe_id):
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        
+        from model.recipes.recipe_model import RecipeModel, DishCaloriesModel
+        
+        # 1. Tìm recipe gốc
+        recipe = RecipeModel.query.get(recipe_id)
+        if not recipe:
+            return jsonify({"success": False, "message": "Không tìm thấy công thức"}), 404
+            
+        # Kiểm tra quyền (chỉ người tạo mới được sửa)
+        if str(recipe.created_by) != str(user_id):
+            return jsonify({"success": False, "message": "Bạn không có quyền sửa công thức này"}), 403
+            
+        # 2. Cập nhật thông tin Recipe
+        recipe.name_vn = data.get('name_vn', recipe.name_vn)
+        recipe.image_url = data.get('image_url', recipe.image_url)
+        recipe.category = data.get('category', recipe.category)
+        recipe.difficulty = data.get('difficulty', recipe.difficulty)
+        recipe.cooking_time = str(data.get('cooking_time', recipe.cooking_time))
+        recipe.servings = str(data.get('servings', recipe.servings))
+        recipe.ingredients = data.get('ingredients', recipe.ingredients)
+        recipe.steps = data.get('steps', recipe.steps)
+        
+        # 3. Cập nhật Calo
+        nutrition = DishCaloriesModel.query.filter_by(recipe_id=recipe.id).first()
+        if nutrition:
+            nutrition.calories = float(data.get('calories', nutrition.calories))
+            nutrition.protein = float(data.get('protein', nutrition.protein))
+            nutrition.carbs = float(data.get('carbs', nutrition.carbs))
+            nutrition.fat = float(data.get('fat', nutrition.fat))
+        
+        db.session.commit()
+        
+        return jsonify({
+            "success": True, 
+            "message": "✅ Công thức đã được cập nhật thành công!",
+            "data": {"id": recipe.id}
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ [Update Recipe Error]: {str(e)}")
+        return jsonify({"success": False, "message": f"Lỗi cập nhật công thức: {str(e)}"}), 500
+
+@recipe_bp.route('/upload-image', methods=['POST'])
+@jwt_required()
+def upload_recipe_image():
+    if 'file' not in request.files:
+        return jsonify({"success": False, "message": "Không tìm thấy file ảnh"}), 400
+        
+    file = request.files['file']
+    try:
+        # Upload lên Cloudinary vào thư mục recipes_user cho gọn
+        upload_result = cloudinary.uploader.upload(
+            file, 
+            folder="recipes_user",
+            resource_type="auto"
+        )
+        return jsonify({
+            "success": True, 
+            "data": {
+                "url": upload_result['secure_url'],
+                "public_id": upload_result['public_id']
+            }
+        }), 200
+    except Exception as e:
+        print(f"❌ [Upload Error] {e}")
+        return jsonify({"success": False, "message": "Lỗi khi tải ảnh lên Cloudinary"}), 500

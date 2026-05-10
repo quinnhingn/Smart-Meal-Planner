@@ -116,12 +116,16 @@ const DashboardScreen = () => {
   const navigation = useNavigation();
   const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX;
 
-  const { userProfile, getExpiringItems, fetchPantryItems } = useAppStore();
+  const { 
+    userProfile, getExpiringItems, fetchPantryItems, 
+    fetchShoppingList, fetchFavoriteIds, setCurrentStreak
+  } = useAppStore();
   const [showCheckInPopup, setShowCheckInPopup] = useState(false);
 
   const [dailySummary, setDailySummary] = useState({
     totals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
-    meals: []
+    meals: [],
+    streak: 0
   });
   
   const [recipeSuggestions, setRecipeSuggestions] = useState(null);
@@ -136,6 +140,10 @@ const DashboardScreen = () => {
       const res = await recipeApi.getDailySummary();
       if (res.success && res.data.data) {
         setDailySummary(res.data.data);
+        // Cập nhật streak vào store để ProfileScreen cũng thấy
+        if (res.data.data.streak !== undefined) {
+          setCurrentStreak(res.data.data.streak);
+        }
       }
     } catch (error) {
       console.error("Lỗi lấy summary:", error);
@@ -185,6 +193,8 @@ const DashboardScreen = () => {
     React.useCallback(() => {
       fetchSummary();
       if(fetchPantryItems) fetchPantryItems(); // Load tủ lạnh để lấy cảnh báo
+      if(fetchShoppingList) fetchShoppingList();
+      if(fetchFavoriteIds) fetchFavoriteIds();
       fetchSuggestions(); // Lấy gợi ý món ăn dựa vào tủ lạnh
     }, [])
   );

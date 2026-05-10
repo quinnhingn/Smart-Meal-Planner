@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const MacroSummary = ({ stats, targetCalo }) => {
-  const isGoalMet = stats.calo <= targetCalo;
+  const isGoalMet = stats.calo >= targetCalo;
+  const isProgressing = stats.calo > 0 && stats.calo < targetCalo;
   const percent = Math.min(100, Math.round((stats.calo / targetCalo) * 100));
 
   return (
@@ -12,18 +13,24 @@ const MacroSummary = ({ stats, targetCalo }) => {
         <View>
           <Text style={styles.label}>Tổng năng lượng</Text>
           <View style={styles.caloRow}>
-            <Text style={styles.bigCalo}>{stats.calo.toLocaleString()}</Text>
+            <Text style={styles.bigCalo}>{stats.calo.toFixed(1)}</Text>
             <Text style={styles.unit}> kcal</Text>
           </View>
         </View>
-        <View style={[styles.badge, !isGoalMet && styles.badgeOver]}>
+        <View style={[
+          styles.badge, 
+          isGoalMet ? styles.badgeSuccess : (isProgressing ? styles.badgeWarning : styles.badgeDefault)
+        ]}>
           <Ionicons 
-            name={isGoalMet ? "checkmark-circle" : "warning"} 
+            name={isGoalMet ? "checkmark-circle" : (isProgressing ? "time" : "ellipse-outline")} 
             size={14} 
-            color={isGoalMet ? "#2E7D32" : "#C62828"} 
+            color={isGoalMet ? "#2E7D32" : (isProgressing ? "#E65100" : "#888")} 
           />
-          <Text style={[styles.badgeText, !isGoalMet && styles.badgeTextOver]}>
-            {isGoalMet ? "Đạt mục tiêu" : "Vượt mục tiêu"}
+          <Text style={[
+            styles.badgeText, 
+            isGoalMet ? styles.textSuccess : (isProgressing ? styles.textWarning : styles.textDefault)
+          ]}>
+            {isGoalMet ? "Đạt mục tiêu" : (isProgressing ? "Chưa đủ" : "Chưa có dữ liệu")}
           </Text>
         </View>
       </View>
@@ -54,7 +61,7 @@ const MacroPill = ({ icon, label, value, color }) => (
       <Ionicons name={icon} size={16} color={color} />
     </View>
     <View>
-      <Text style={styles.pillValue}>{value}g</Text>
+      <Text style={styles.pillValue}>{value.toFixed(1)}g</Text>
       <Text style={styles.pillLabel}>{label}</Text>
     </View>
   </View>
@@ -77,15 +84,18 @@ const styles = StyleSheet.create({
   badge: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    backgroundColor: '#E8F5E9', 
     paddingHorizontal: 10, 
     paddingVertical: 6, 
     borderRadius: 20, 
     gap: 4 
   },
-  badgeOver: { backgroundColor: '#FFEBEE' },
-  badgeText: { fontSize: 12, fontWeight: '800', color: '#2E7D32' },
-  badgeTextOver: { color: '#C62828' },
+  badgeSuccess: { backgroundColor: '#E8F5E9' },
+  badgeWarning: { backgroundColor: '#FFF3E0' },
+  badgeDefault: { backgroundColor: '#F5F5F5' },
+  badgeText: { fontSize: 12, fontWeight: '800' },
+  textSuccess: { color: '#2E7D32' },
+  textWarning: { color: '#E65100' },
+  textDefault: { color: '#888' },
   progressTrack: { 
     height: 8, 
     backgroundColor: '#F0F0F0', 

@@ -20,12 +20,13 @@ export const ROUTE_TITLES = {
   SavedRecipes: 'Công thức đã lưu',
   Settings: 'Cài đặt',
   Help: 'Trợ giúp',
+  ShoppingList: 'Danh sách đi chợ',
 };
 
 const MobileTopbar = ({ currentRoute }) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
-  const { userProfile, setDrawerOpen } = useAppStore();
+  const { userProfile, setDrawerOpen, shoppingList } = useAppStore();
 
   const title = ROUTE_TITLES[currentRoute] || 'SmartMeal';
 
@@ -40,15 +41,29 @@ const MobileTopbar = ({ currentRoute }) => {
       <Text style={styles.title} numberOfLines={1}>{title}</Text>
 
       {/* Avatar chuyển đến Profile */}
-      <Pressable style={styles.avatarBtn} onPress={() => navigation.navigate('Profile')}>
-        {userProfile?.avatarUri ? (
-          <Image source={{ uri: userProfile.avatarUri }} style={styles.avatarImage} />
-        ) : (
-          <Text style={styles.avatarText}>
-            {userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}
-          </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {shoppingList?.length > 0 && (
+          <Pressable 
+            style={[styles.iconBtn, { marginRight: 12 }]} 
+            onPress={() => navigation.navigate('ShoppingList')}
+          >
+            <Ionicons name="cart-outline" size={26} color={COLORS.primary} />
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{shoppingList.length}</Text>
+            </View>
+          </Pressable>
         )}
-      </Pressable>
+        
+        <Pressable style={styles.avatarBtn} onPress={() => navigation.navigate('Profile')}>
+          {userProfile?.avatarUri ? (
+            <Image source={{ uri: userProfile.avatarUri }} style={styles.avatarImage} />
+          ) : (
+            <Text style={styles.avatarText}>
+              {userProfile?.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}
+            </Text>
+          )}
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -69,7 +84,24 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: '800', color: '#1A1D1E', flex: 1, textAlign: 'center', marginHorizontal: 12 },
   avatarBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(76, 175, 80, 0.2)', justifyContent: 'center', alignItems: 'center' },
   avatarImage: { width: '100%', height: '100%', borderRadius: 18 },
-  avatarText: { fontSize: 15, fontWeight: '800', color: COLORS.primary }
+  avatarText: { fontSize: 15, fontWeight: '800', color: COLORS.primary },
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: '#FF5252',
+    borderRadius: 8,
+    minWidth: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 2,
+  },
+  badgeText: {
+    color: '#FFF',
+    fontSize: 10,
+    fontWeight: 'bold',
+  }
 });
 
 export default MobileTopbar;

@@ -1,8 +1,10 @@
 // src/screens/RecipeDetailScreen.js
 import React, { useState, useMemo, useCallback } from 'react';
 import {
-  View, ScrollView, Text, StyleSheet, Platform, useWindowDimensions,
+  View, ScrollView, Text, StyleSheet, Platform, useWindowDimensions, Alert,
+  Modal, TouchableOpacity, Pressable
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import RecipeHeroSection from '../components/recipe-detail/RecipeHeroSection';
@@ -14,8 +16,10 @@ import RecipeActionBar from '../components/recipe-detail/RecipeActionBar';
 import ReviewBottomSheet from '../components/recipe-detail/ReviewBottomSheet';
 import ShoppingChecklist from '../components/recipe-detail/ShoppingChecklist';
 import RecipeVideo from '../components/recipe-detail/RecipeVideo';
+import ReviewItem from '../components/recipe-detail/ReviewItem';
 import { useAppStore } from '../store/useAppStore';
 import { compareWithPantry } from '../utils/recipeHelpers';
+import { COLORS } from '../constants/theme';
 
 const RecipeDetailScreen = ({ route, navigation }) => {
   const { recipe } = route.params;
@@ -25,17 +29,28 @@ const RecipeDetailScreen = ({ route, navigation }) => {
   const {
     pantryItems, savedRecipeIds, toggleSaveRecipe,
     addToShoppingList, submitReview, setTabBarVisible,
+    recipeReviews, fetchRecipeReviews, userProfile,
+    logRecipeMeal,
   } = useAppStore();
 
   const [showReview, setShowReview] = useState(false);
-  const [showShopping, setShowShopping] = useState(false);
+  const [showServingsModal, setShowServingsModal] = useState(false);
+  const [modalMode, setModalMode] = useState('log'); // 'log' hoặc 'shopping'
+  const [currentStats, setCurrentStats] = useState(recipe.reviews);
 
-  // Hide tab bar when entering detail
+  // Hide tab bar when entering detail & Fetch reviews
   useFocusEffect(
     useCallback(() => {
       setTabBarVisible(false);
+      
+      const loadData = async () => {
+        const stats = await fetchRecipeReviews(recipe.id);
+        if (stats) setCurrentStats(stats);
+      };
+      loadData();
+
       return () => setTabBarVisible(true);
-    }, [setTabBarVisible])
+    }, [setTabBarVisible, recipe.id, fetchRecipeReviews])
   );
 
   const isSaved = savedRecipeIds?.has(recipe.id);
@@ -53,13 +68,42 @@ const RecipeDetailScreen = ({ route, navigation }) => {
     submitReview?.(recipe.id, reviewData);
   };
 
-  const handleShoppingAdd = (items) => {
-    addToShoppingList?.(items.map(i => ({ ...i, recipeId: recipe.id, recipeName: recipe.title })));
+  const handleShoppingAdd = () => {
+    if (Platform.OS === 'web') {
+      setModalMode('shopping');
+      setShowServingsModal(true);
+    } else {
+      const servings = parseInt(recipe.servings) || 2;
+      Alert.alert(
+        "Lên kế hoạch đi chợ",
+        `Bạn muốn tính toán nguyên liệu thiếu cho mấy người ăn?`,
+        [
+          { text: "Hủy", style: "cancel" },
+          { text: `1 người`, onPress: () => addToShoppingList(recipe.id, 1) },
+          { text: `${servings} người`, onPress: () => addToShoppingList(recipe.id, servings) },
+          { text: `${servings * 2} người`, onPress: () => addToShoppingList(recipe.id, servings * 2) },
+        ]
+      );
+    }
   };
 
   const handleLog = () => {
-    // Placeholder: navigate to diary or show toast
-    // navigation.navigate('MainTabs', { screen: 'Diary' });
+    if (Platform.OS === 'web') {
+      setModalMode('log');
+      setShowServingsModal(true);
+    } else {
+      const servings = parseInt(recipe.servings) || 2;
+      Alert.alert(
+        "Ghi nhận bữa ăn",
+        `Bạn nấu món này cho mấy người ăn?`,
+        [
+          { text: "Hủy", style: "cancel" },
+          { text: `1 người`, onPress: () => logRecipeMeal(recipe.id, 1) },
+          { text: `${servings} người (Chuẩn)`, onPress: () => logRecipeMeal(recipe.id, servings) },
+          { text: `${servings * 2} người`, onPress: () => logRecipeMeal(recipe.id, servings * 2) },
+        ]
+      );
+    }
   };
 
   return (
@@ -90,12 +134,32 @@ const RecipeDetailScreen = ({ route, navigation }) => {
             <IngredientTable ingredients={recipe.ingredients} pantryItems={pantryItems} />
             <CookingSteps steps={recipe.steps} />
 
-            {/* Reviews summary */}
+            {/* Reviews summary & List */}
             <View style={styles.reviewSummary}>
               <Text style={styles.sectionTitle}>💬 Đánh giá</Text>
               <View style={styles.ratingRow}>
-                <Text style={styles.bigRating}>{recipe.reviews.avgRating}</Text>
-                <Text style={styles.ratingCount}>· {recipe.reviews.total} đánh giá</Text>
+                <Text style={styles.bigRating}>{currentStats.avgRating}</Text>
+                <View>
+                  <Text style={styles.ratingCount}>{currentStats.total} đánh giá từ cộng đồng</Text>
+                </View>
+              </View>
+
+              <View style={styles.reviewList}>
+                {recipeReviews.filter(r => String(r.recipeId) === String(recipe.id)).length > 0 ? (
+                  recipeReviews.filter(r => String(r.recipeId) === String(recipe.id)).map(review => (
+                    <ReviewItem 
+                      key={review.id} 
+                      review={review} 
+                      currentUserId={userProfile?.id}
+                    />
+                  ))
+                ) : (
+                  <View style={styles.emptyReviews}>
+                    <Ionicons name="chatbubble-ellipses-outline" size={32} color="#DDD" />
+                    <Text style={styles.emptyReviewText}>Chưa có nhận xét nào cho món này.</Text>
+                    <Text style={styles.emptyReviewSubText}>Hãy là người đầu tiên đánh giá!</Text>
+                  </View>
+                )}
               </View>
             </View>
 
@@ -106,7 +170,7 @@ const RecipeDetailScreen = ({ route, navigation }) => {
 
         <RecipeActionBar
           onReview={() => setShowReview(true)}
-          onShopping={() => setShowShopping(true)}
+          onShopping={handleShoppingAdd}
           onLog={handleLog}
           onSave={handleSave}
           isSaved={isSaved}
@@ -120,13 +184,57 @@ const RecipeDetailScreen = ({ route, navigation }) => {
           recipeTitle={recipe.title}
         />
 
-        <ShoppingChecklist
-          visible={showShopping}
-          onClose={() => setShowShopping(false)}
-          onAdd={handleShoppingAdd}
-          ingredients={recipe.ingredients}
-          pantryItems={pantryItems}
-        />
+
+
+        {/* Modal chọn số người ăn (Cho Web) */}
+        <Modal
+          visible={showServingsModal}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setShowServingsModal(false)}
+        >
+          <Pressable 
+            style={styles.modalOverlay} 
+            onPress={() => setShowServingsModal(false)}
+          >
+            <View style={styles.servingsModal}>
+              <Text style={styles.modalTitle}>
+                {modalMode === 'log' ? 'Ghi nhận bữa ăn' : 'Lên kế hoạch đi chợ'}
+              </Text>
+              <Text style={styles.modalSubTitle}>
+                {modalMode === 'log' 
+                  ? 'Bạn nấu cho mấy người ăn?' 
+                  : 'Tính toán nguyên liệu cho mấy người?'}
+              </Text>
+              
+              <View style={styles.servingOptions}>
+                {[1, parseInt(recipe.servings) || 2, (parseInt(recipe.servings) || 2) * 2].map((s, idx) => (
+                  <TouchableOpacity 
+                    key={idx} 
+                    style={styles.servingBtn}
+                    onPress={() => {
+                      if (modalMode === 'log') {
+                        logRecipeMeal(recipe.id, s);
+                      } else {
+                        addToShoppingList(recipe.id, s);
+                      }
+                      setShowServingsModal(false);
+                    }}
+                  >
+                    <Text style={styles.servingBtnText}>{s} người</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <TouchableOpacity 
+                style={styles.cancelBtn}
+                onPress={() => setShowServingsModal(false)}
+              >
+                <Text style={styles.cancelBtnText}>Đóng</Text>
+              </TouchableOpacity>
+            </View>
+          </Pressable>
+        </Modal>
       </View>
     </ResponsiveContainer>
   );
@@ -155,6 +263,19 @@ const styles = StyleSheet.create({
   ratingRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
   bigRating: { fontSize: 32, fontWeight: '900', color: '#1A1D1E' },
   ratingCount: { fontSize: 14, fontWeight: '700', color: '#999' },
+  reviewList: { marginTop: 16 },
+  emptyReviews: { alignItems: 'center', paddingVertical: 32, gap: 8 },
+  emptyReviewText: { fontSize: 14, fontWeight: '800', color: '#CCC', marginTop: 8 },
+  emptyReviewSubText: { fontSize: 12, fontWeight: '600', color: '#DDD' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  servingsModal: { backgroundColor: '#FFF', borderRadius: 24, padding: 24, width: '90%', maxWidth: 400, alignItems: 'center' },
+  modalTitle: { fontSize: 20, fontWeight: '900', color: '#1A1D1E', marginBottom: 8 },
+  modalSubTitle: { fontSize: 14, fontWeight: '600', color: '#666', marginBottom: 24 },
+  servingOptions: { width: '100%', gap: 12, marginBottom: 20 },
+  servingBtn: { backgroundColor: '#F5F5F5', paddingVertical: 16, borderRadius: 16, alignItems: 'center' },
+  servingBtnText: { fontSize: 16, fontWeight: '800', color: '#1A1D1E' },
+  cancelBtn: { paddingVertical: 8 },
+  cancelBtnText: { fontSize: 14, fontWeight: '700', color: COLORS.primary },
 });
 
 export default RecipeDetailScreen;

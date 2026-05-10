@@ -34,14 +34,17 @@ const PantryScreen = ({ navigation }) => {
     searchQuery, setSearchQuery, getFilteredItems,
     getPantryStats, pantryHistory, removePantryItemWithHistory,
     clearPantryHistory, addPantryItems, updatePantryItem, showToast,
-    consumePantryItem, restorePantryItem, fetchPantryItems, isLoading, pantryItems
+    consumePantryItem, restorePantryItem, fetchPantryItems, fetchPantryHistory,
+    fetchShoppingList, isLoading, pantryItems
   } = useAppStore();
 
   // TỰ ĐỘNG LOAD DỮ LIỆU KHI MỞ TRANG
   useFocusEffect(
     useCallback(() => {
       if(fetchPantryItems) fetchPantryItems();
-    }, [])
+      if(fetchPantryHistory) fetchPantryHistory();
+      if(fetchShoppingList) fetchShoppingList();
+    }, [fetchPantryItems, fetchPantryHistory, fetchShoppingList])
   );
 
   const [activeTab, setActiveTab] = useState('active');

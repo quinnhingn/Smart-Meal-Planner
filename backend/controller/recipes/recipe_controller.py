@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from repository.recipes.recipe_repository import RecipeRepository
 from repository.recipes.favorite_repository import FavoriteRepository
+from repository.recipes.review_repository import ReviewRepository
 from model.recipes.recipe_model import MealLogModel, UserPantryModel
 from database.db import db
 from datetime import datetime, timedelta
@@ -167,3 +168,37 @@ def get_favorite_ids():
     user_id = get_jwt_identity()
     fav_ids = FavoriteRepository.get_user_favorite_ids(user_id)
     return jsonify({"success": True, "data": fav_ids}), 200
+
+@recipe_bp.route('/reviews', methods=['POST'])
+@jwt_required()
+def add_review():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    recipe_id = data.get('recipeId')
+    rating = data.get('rating')
+    comment = data.get('text')
+    tags = data.get('tags', [])
+    images = data.get('images', [])
+    
+    if not recipe_id or not rating:
+        return jsonify({"success": False, "message": "Thiếu thông tin đánh giá"}), 400
+        
+    result = ReviewRepository.add_review(user_id, recipe_id, rating, comment, tags, images)
+    return jsonify(result), 200
+
+@recipe_bp.route('/<recipe_id>/reviews', methods=['GET'])
+def get_recipe_reviews(recipe_id):
+    # Thử chuyển sang int nếu có thể, nếu không để nguyên string (cho mock data)
+    try:
+        rid = int(recipe_id)
+    except:
+        rid = recipe_id
+        
+    reviews = ReviewRepository.get_reviews_for_recipe(rid)
+    stats = ReviewRepository.get_recipe_stats(rid)
+    return jsonify({
+        "success": True, 
+        "data": reviews,
+        "stats": stats
+    }), 200
+

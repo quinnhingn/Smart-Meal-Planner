@@ -3,6 +3,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import {
   View, ScrollView, Text, StyleSheet, Platform, useWindowDimensions,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import RecipeHeroSection from '../components/recipe-detail/RecipeHeroSection';
@@ -14,6 +15,7 @@ import RecipeActionBar from '../components/recipe-detail/RecipeActionBar';
 import ReviewBottomSheet from '../components/recipe-detail/ReviewBottomSheet';
 import ShoppingChecklist from '../components/recipe-detail/ShoppingChecklist';
 import RecipeVideo from '../components/recipe-detail/RecipeVideo';
+import ReviewItem from '../components/recipe-detail/ReviewItem';
 import { useAppStore } from '../store/useAppStore';
 import { compareWithPantry } from '../utils/recipeHelpers';
 
@@ -25,17 +27,26 @@ const RecipeDetailScreen = ({ route, navigation }) => {
   const {
     pantryItems, savedRecipeIds, toggleSaveRecipe,
     addToShoppingList, submitReview, setTabBarVisible,
+    recipeReviews, fetchRecipeReviews, userProfile,
   } = useAppStore();
 
   const [showReview, setShowReview] = useState(false);
   const [showShopping, setShowShopping] = useState(false);
+  const [currentStats, setCurrentStats] = useState(recipe.reviews);
 
-  // Hide tab bar when entering detail
+  // Hide tab bar when entering detail & Fetch reviews
   useFocusEffect(
     useCallback(() => {
       setTabBarVisible(false);
+      
+      const loadData = async () => {
+        const stats = await fetchRecipeReviews(recipe.id);
+        if (stats) setCurrentStats(stats);
+      };
+      loadData();
+
       return () => setTabBarVisible(true);
-    }, [setTabBarVisible])
+    }, [setTabBarVisible, recipe.id, fetchRecipeReviews])
   );
 
   const isSaved = savedRecipeIds?.has(recipe.id);
@@ -90,12 +101,32 @@ const RecipeDetailScreen = ({ route, navigation }) => {
             <IngredientTable ingredients={recipe.ingredients} pantryItems={pantryItems} />
             <CookingSteps steps={recipe.steps} />
 
-            {/* Reviews summary */}
+            {/* Reviews summary & List */}
             <View style={styles.reviewSummary}>
               <Text style={styles.sectionTitle}>💬 Đánh giá</Text>
               <View style={styles.ratingRow}>
-                <Text style={styles.bigRating}>{recipe.reviews.avgRating}</Text>
-                <Text style={styles.ratingCount}>· {recipe.reviews.total} đánh giá</Text>
+                <Text style={styles.bigRating}>{currentStats.avgRating}</Text>
+                <View>
+                  <Text style={styles.ratingCount}>{currentStats.total} đánh giá từ cộng đồng</Text>
+                </View>
+              </View>
+
+              <View style={styles.reviewList}>
+                {recipeReviews.filter(r => String(r.recipeId) === String(recipe.id)).length > 0 ? (
+                  recipeReviews.filter(r => String(r.recipeId) === String(recipe.id)).map(review => (
+                    <ReviewItem 
+                      key={review.id} 
+                      review={review} 
+                      currentUserId={userProfile?.id}
+                    />
+                  ))
+                ) : (
+                  <View style={styles.emptyReviews}>
+                    <Ionicons name="chatbubble-ellipses-outline" size={32} color="#DDD" />
+                    <Text style={styles.emptyReviewText}>Chưa có nhận xét nào cho món này.</Text>
+                    <Text style={styles.emptyReviewSubText}>Hãy là người đầu tiên đánh giá!</Text>
+                  </View>
+                )}
               </View>
             </View>
 
@@ -155,6 +186,10 @@ const styles = StyleSheet.create({
   ratingRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
   bigRating: { fontSize: 32, fontWeight: '900', color: '#1A1D1E' },
   ratingCount: { fontSize: 14, fontWeight: '700', color: '#999' },
+  reviewList: { marginTop: 16 },
+  emptyReviews: { alignItems: 'center', paddingVertical: 32, gap: 8 },
+  emptyReviewText: { fontSize: 14, fontWeight: '800', color: '#CCC', marginTop: 8 },
+  emptyReviewSubText: { fontSize: 12, fontWeight: '600', color: '#DDD' },
 });
 
 export default RecipeDetailScreen;

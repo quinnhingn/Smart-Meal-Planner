@@ -111,6 +111,8 @@ export const recipeApi = {
   },
   toggleFavorite: (recipeId) => fetchApi('POST', '/recipes/favorites/toggle', { recipeId }),
   getFavoriteIds: () => fetchApi('GET', '/recipes/favorites/ids'),
+  submitReview: (reviewData) => fetchApi('POST', '/recipes/reviews', reviewData),
+  getReviews: (recipeId) => fetchApi('GET', `/recipes/${recipeId}/reviews`),
 };
 
 export default apiClient;

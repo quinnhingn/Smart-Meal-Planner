@@ -27,6 +27,7 @@ export const useAppStore = create((set, get) => ({
         hasProfile: response.data.has_profile || false,
         isLoading: false 
       });
+      console.log('👤 [Auth] UserProfile loaded:', get().userProfile);
       get().fetchFavoriteIds(); // Lấy danh sách yêu thích ngay khi đăng nhập
       return true;
     } else {
@@ -430,16 +431,25 @@ export const useAppStore = create((set, get) => ({
     return { shoppingList: [...newItems, ...state.shoppingList] };
   }),
 
-  submitReview: (recipeId, reviewData) => set((state) => {
-    const review = {
-      id: `review_${Date.now()}`,
-      recipeId,
-      ...reviewData,
-      createdAt: new Date().toISOString(),
-    };
-    get().showToast('Cảm ơn bạn đã đánh giá!', 'success');
-    return { recipeReviews: [review, ...state.recipeReviews] };
-  }),
+  fetchRecipeReviews: async (recipeId) => {
+    const response = await recipeApi.getReviews(recipeId);
+    // Lưu ý: response.data là cái cục JSON từ Flask gửi về {success, data, stats}
+    if (response.success && response.data.success) {
+      set({ recipeReviews: response.data.data || [] });
+      return response.data.stats;
+    }
+    return null;
+  },
+
+  submitReview: async (recipeId, reviewData) => {
+    const response = await recipeApi.submitReview({ recipeId, ...reviewData });
+    if (response.success) {
+      get().showToast('Cảm ơn bạn đã đánh giá!', 'success');
+      get().fetchRecipeReviews(recipeId); // Refresh danh sách
+      return true;
+    }
+    return false;
+  },
 
   // ==========================================
   // 6. GAMIFICATION & HEALTH TRACKING

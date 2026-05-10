@@ -140,7 +140,7 @@ class RecipeRepository:
                 # Lấy danh sách các ngày có log (đã chuyển sang múi giờ VN)
                 distinct_days = db.session.query(
                     func.date(func.timezone('Asia/Ho_Chi_Minh', MealLogModel.eaten_at)).label('log_date')
-                ).filter(MealLogModel.user_id == user_id).distinct().order_by(func.desc('log_date')).all()
+                ).filter(MealLogModel.user_id == user_id).distinct().order_by(db.text('log_date DESC')).all()
                 
                 # Ngày hôm nay theo múi giờ VN
                 today_vn = db.session.query(func.date(func.timezone('Asia/Ho_Chi_Minh', func.now()))).scalar()

@@ -85,6 +85,24 @@ export const authApi = {
 };
 
 // ===========================================
+// AI API — Tích hợp AI
+// ===========================================
+export const aiApi = {
+  predict: async (formData) => {
+    return await fetchApi('POST', '/ai/predict', formData, true);
+  },
+  getNutritionInsight: async () => {
+    return await fetchApi('GET', '/ai/nutrition-insight');
+  },
+  suggestRecipesByPantry: async () => {
+    return await fetchApi('GET', '/ai/suggest-recipes-pantry');
+  },
+  logExternalRecipe: async (recipeData) => {
+    return await fetchApi('POST', '/ai/log-external-recipe', recipeData);
+  }
+};
+
+// ===========================================
 // RECIPE API — Tra cứu dinh dưỡng & công thức
 // ===========================================
 export const recipeApi = {

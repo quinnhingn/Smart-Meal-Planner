@@ -25,6 +25,7 @@ import DashboardEnergyCard from '../components/dashboard/DashboardEnergyCard';
 import DashboardPantryAlert from '../components/dashboard/DashboardPantryAlert';
 import DashboardRecipeSuggestion from '../components/dashboard/DashboardRecipeSuggestion';
 import DashboardStreakBanner from '../components/dashboard/DashboardStreakBanner';
+import NutritionInsight from '../components/diary/NutritionInsight';
 import CheckInPopup from '../components/dashboard/CheckInPopup';
 import { COLORS } from '../constants/theme';
 
@@ -302,6 +303,11 @@ const DashboardScreen = () => {
                   subtitle="Cập nhật theo thời gian thực" 
                 />
                 <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
+
+            {/* AI Insight Section */}
+            <FadeInView delay={300}>
+              <NutritionInsight />
+            </FadeInView>
               </View>
             </FadeInView>
 

@@ -17,6 +17,25 @@ export const useAppStore = create((set, get) => ({
   error: null,
   currentStreak: 0,
   setCurrentStreak: (streak) => set({ currentStreak: streak }),
+  aiInsight: null,
+  
+  fetchAIInsight: async (force = false) => {
+    const { aiInsight, isLoading } = get();
+    if (!force && aiInsight) return; // Nếu đã có rồi thì không gọi lại
+    
+    set({ isLoading: true });
+    try {
+      const { aiApi } = await import('../services/api');
+      const res = await aiApi.getNutritionInsight();
+      if (res.success && res.data.data) {
+        set({ aiInsight: res.data.data });
+      }
+    } catch (error) {
+      console.error("Lỗi lấy AI Insight:", error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 
   login: async (email, password) => {
     set({ isLoading: true, error: null });

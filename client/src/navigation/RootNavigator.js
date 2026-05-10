@@ -30,6 +30,7 @@ import TrackingScreen from '../screens/TrackingScreen';
 import DiaryScreen from '../screens/DiaryScreen';
 import RecipesScreen from '../screens/RecipesScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
+import AISuggestedRecipeDetailScreen from '../screens/AISuggestedRecipeDetailScreen';
 import ShoppingListScreen from '../screens/ShoppingListScreen';
 
 // Layout
@@ -155,6 +156,7 @@ const RootStack = () => (
     <Stack.Screen name="Profile"      component={ProfileScreen} />
     <Stack.Screen name="Tracking"     component={TrackingScreen} />
     <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />
+    <Stack.Screen name="AISuggestedRecipeDetail" component={AISuggestedRecipeDetailScreen} />
     <Stack.Screen name="ShoppingList" component={ShoppingListScreen} />
     {/* Thêm các screen sidebar khác vào đây nếu cần */}
   </Stack.Navigator>

@@ -95,21 +95,26 @@ export const CATEGORIES = [
 
 // Helper functions
 export const getDaysUntilExpiry = (item) => {
+  if (!item) return 999;
+
   let expiryDate;
 
   // Nếu có expiry_date từ DB thì dùng luôn
   if (item.expiry_date) {
     expiryDate = new Date(item.expiry_date);
   } else {
-    // Nếu không thì tính theo expiryDays như cũ
-    const addedDate = new Date(item.addedAt);
+    // Nếu không thì tính theo expiryDays như cũ (mặc định 7 ngày cho đồ mới đi chợ)
+    const addedDate = item.addedAt ? new Date(item.addedAt) : new Date();
     expiryDate = new Date(addedDate);
-    expiryDate.setDate(addedDate.getDate() + parseInt(item.expiryDays || 3));
+    expiryDate.setDate(addedDate.getDate() + parseInt(item.expiryDays || 7));
   }
   
   const today = new Date();
   // Đặt về 0h để tính ngày cho chuẩn
   today.setHours(0,0,0,0);
+
+  if (isNaN(expiryDate.getTime())) return 7;
+
   const diffTime = expiryDate - today;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   

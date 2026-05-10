@@ -7,44 +7,76 @@ import { COLORS } from '../constants/theme';
 
 const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
   const processedLogs = {
-    breakfast: 0,
-    lunch: 0,
-    dinner: 0,
-    snacks: []
+    breakfast: { total: 0, items: [] },
+    lunch: { total: 0, items: [] },
+    dinner: { total: 0, items: [] },
+    snacks: { total: 0, items: [] }
   };
 
   if (Array.isArray(logs)) {
     logs.forEach(meal => {
-      const type = meal.type || meal.meal_type;
+      const type = (meal.type || meal.meal_type || '').toLowerCase();
       const calories = parseFloat(meal.calories || meal.calories_consumed || 0);
-
-      if (type === 'breakfast') processedLogs.breakfast += calories;
-      else if (type === 'lunch') processedLogs.lunch += calories;
-      else if (type === 'dinner') processedLogs.dinner += calories;
-      else processedLogs.snacks.push({
+      const itemData = {
         id: meal.id,
         name: meal.name || meal.meal_name,
         kcal: calories
-      });
+      };
+
+      if (type === 'breakfast' || type === 'sáng' || type === 'bữa sáng') {
+        processedLogs.breakfast.total += calories;
+        processedLogs.breakfast.items.push(itemData);
+      } else if (type === 'lunch' || type === 'trưa' || type === 'bữa trưa') {
+        processedLogs.lunch.total += calories;
+        processedLogs.lunch.items.push(itemData);
+      } else if (type === 'dinner' || type === 'tối' || type === 'bữa tối') {
+        processedLogs.dinner.total += calories;
+        processedLogs.dinner.items.push(itemData);
+      } else {
+        processedLogs.snacks.total += calories;
+        processedLogs.snacks.items.push(itemData);
+      }
     });
   }
 
-  const renderMealRow = (icon, title, kcal) => (
-    <View style={styles.mealRow} key={title}>
-      <View style={styles.mealLeft}>
-        <Ionicons name={icon} size={20} color={kcal > 0 ? COLORS.primary : '#888'} />
-        <Text style={[styles.mealTitle, kcal <= 0 && styles.textDisabled]}>{title}</Text>
+  const renderMealSection = (icon, title, data, isLast = false) => {
+    const hasItems = data.items.length > 0;
+    
+    return (
+      <View key={title}>
+        <View style={styles.mealRow}>
+          <View style={styles.mealLeft}>
+            <View style={[styles.iconCircle, { backgroundColor: hasItems ? COLORS.primary + '15' : '#F5F5F5' }]}>
+              <Ionicons name={icon} size={18} color={hasItems ? COLORS.primary : '#AAA'} />
+            </View>
+            <Text style={[styles.mealTitle, !hasItems && styles.textDisabled]}>{title}</Text>
+          </View>
+          <Text style={[styles.mealKcal, !hasItems && styles.textDisabled]}>
+            {hasItems ? `${Math.round(data.total)} kcal` : 'Chưa nhập'}
+          </Text>
+        </View>
+
+        {/* Danh sách món ăn trong bữa */}
+        {hasItems && (
+          <View style={styles.itemsList}>
+            {data.items.map((item, idx) => (
+              <View key={item.id || idx} style={styles.itemRow}>
+                <View style={styles.itemDot} />
+                <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
+                <Text style={styles.itemKcal}>{Math.round(item.kcal)} kcal</Text>
+              </View>
+            ))}
+          </View>
+        )}
+        
+        {!isLast && <View style={styles.divider} />}
       </View>
-      <Text style={[styles.mealKcal, kcal <= 0 && styles.textDisabled]}>
-        {kcal > 0 ? `${Math.round(kcal)} kcal` : 'Chưa nhập'}
-      </Text>
-    </View>
-  );
+    );
+  };
 
   return (
     <GlassCard style={styles.cardWrapper} intensity={85}>
       <View style={styles.cardContent}>
-        {/* MERGE: Header từ main — chỉ hiển thị nếu có handler */}
         {onAddMain && (
           <View style={styles.headerRow}>
             <Text style={styles.sectionTitle}>Nhật ký hôm nay</Text>
@@ -54,28 +86,17 @@ const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
           </View>
         )}
 
-        {/* Danh sách 3 bữa chính */}
         <View style={styles.logContainer}>
-          {renderMealRow('partly-sunny-outline', 'Bữa sáng', processedLogs.breakfast)}
-          <View style={styles.divider} />
-          {renderMealRow('sunny-outline', 'Bữa trưa', processedLogs.lunch)}
-          <View style={styles.divider} />
-          {renderMealRow('moon-outline', 'Bữa tối', processedLogs.dinner)}
+          {renderMealSection('partly-sunny-outline', 'Bữa sáng', processedLogs.breakfast)}
+          {renderMealSection('sunny-outline', 'Bữa trưa', processedLogs.lunch)}
+          {renderMealSection('moon-outline', 'Bữa tối', processedLogs.dinner)}
+          
+          {/* Bữa phụ */}
+          {processedLogs.snacks.items.length > 0 && 
+            renderMealSection('fast-food-outline', 'Bữa phụ', processedLogs.snacks, true)
+          }
         </View>
 
-        {/* Danh sách bữa phụ */}
-        {processedLogs.snacks.length > 0 && (
-          <View style={styles.snacksContainer}>
-            {processedLogs.snacks.map((snack, index) => (
-              <React.Fragment key={snack.id || index}>
-                <View style={styles.divider} />
-                {renderMealRow('fast-food-outline', snack.name || `Bữa phụ ${index + 1}`, snack.kcal)}
-              </React.Fragment>
-            ))}
-          </View>
-        )}
-
-        {/* MERGE: Footer từ main — chỉ hiển thị nếu có handler */}
         {onAddSnack && (
           <Pressable style={styles.addSnackBtn} onPress={onAddSnack}>
             <Text style={styles.addSnackText}>+ Thêm bữa phụ</Text>
@@ -88,37 +109,39 @@ const MiniMealLog = ({ logs = [], onAddMain, onAddSnack }) => {
 
 const styles = StyleSheet.create({
   cardWrapper: { width: '100%' },
-  cardContent: { padding: 24, backgroundColor: 'transparent' },
-  
-  // MERGE: Styles từ main
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  sectionTitle: { fontSize: 18, fontWeight: '800', color: '#1A1D1E' },
+  cardContent: { padding: 20, backgroundColor: 'transparent' },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  sectionTitle: { fontSize: 18, fontWeight: '900', color: '#1A1D1E' },
   addMainBtn: {
     backgroundColor: COLORS.primary,
-    width: 32, height: 32, borderRadius: 16,
+    width: 34, height: 34, borderRadius: 17,
     justifyContent: 'center', alignItems: 'center',
-    ...(Platform.OS === 'web' && { cursor: 'pointer' }),
+    ...Platform.select({ web: { cursor: 'pointer' } }),
   },
   
   logContainer: { width: '100%' },
-  snacksContainer: { width: '100%' },
-  
-  mealRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8 },
+  mealRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 },
   mealLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  mealTitle: { fontSize: 15, fontWeight: '600', color: '#333' },
-  mealKcal: { fontSize: 15, fontWeight: '700', color: '#1A1D1E' },
-  textDisabled: { color: '#999', fontStyle: 'italic', fontWeight: '400' },
+  iconCircle: { width: 36, height: 36, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  mealTitle: { fontSize: 15, fontWeight: '700', color: '#1A1D1E' },
+  mealKcal: { fontSize: 14, fontWeight: '800', color: COLORS.primary },
+  textDisabled: { color: '#AAA', fontWeight: '500' },
   
-  divider: { height: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%', marginVertical: 4 },
+  itemsList: { paddingLeft: 48, paddingBottom: 8 },
+  itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
+  itemDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: '#DDD', marginRight: 8 },
+  itemName: { flex: 1, fontSize: 13, color: '#666', fontWeight: '600' },
+  itemKcal: { fontSize: 12, color: '#999', fontWeight: '700' },
   
-  // MERGE: Styles từ main
+  divider: { height: 1, backgroundColor: 'rgba(0,0,0,0.04)', width: '100%', marginVertical: 4 },
+  
   addSnackBtn: {
-    marginTop: 16, paddingVertical: 10,
-    borderWidth: 1, borderColor: '#D1D5DB', borderStyle: 'dashed', borderRadius: 8,
+    marginTop: 16, paddingVertical: 12,
+    borderWidth: 1.5, borderColor: '#EEE', borderStyle: 'dashed', borderRadius: 14,
     alignItems: 'center',
-    ...(Platform.OS === 'web' && { cursor: 'pointer' }),
+    ...Platform.select({ web: { cursor: 'pointer' } }),
   },
-  addSnackText: { color: '#666', fontWeight: '600', fontSize: 14 },
+  addSnackText: { color: '#888', fontWeight: '700', fontSize: 14 },
 });
 
 export default MiniMealLog;

@@ -35,7 +35,7 @@ const PantryScreen = ({ navigation }) => {
     getPantryStats, pantryHistory, removePantryItemWithHistory,
     clearPantryHistory, addPantryItems, updatePantryItem, showToast,
     consumePantryItem, restorePantryItem, fetchPantryItems, fetchPantryHistory,
-    isLoading, pantryItems
+    fetchShoppingList, isLoading, pantryItems
   } = useAppStore();
 
   // TỰ ĐỘNG LOAD DỮ LIỆU KHI MỞ TRANG
@@ -43,7 +43,8 @@ const PantryScreen = ({ navigation }) => {
     useCallback(() => {
       if(fetchPantryItems) fetchPantryItems();
       if(fetchPantryHistory) fetchPantryHistory();
-    }, [])
+      if(fetchShoppingList) fetchShoppingList();
+    }, [fetchPantryItems, fetchPantryHistory, fetchShoppingList])
   );
 
   const [activeTab, setActiveTab] = useState('active');

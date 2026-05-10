@@ -34,8 +34,8 @@ const RecipeDetailScreen = ({ route, navigation }) => {
   } = useAppStore();
 
   const [showReview, setShowReview] = useState(false);
-  const [showShopping, setShowShopping] = useState(false);
-  const [showLogModal, setShowLogModal] = useState(false);
+  const [showServingsModal, setShowServingsModal] = useState(false);
+  const [modalMode, setModalMode] = useState('log'); // 'log' hoặc 'shopping'
   const [currentStats, setCurrentStats] = useState(recipe.reviews);
 
   // Hide tab bar when entering detail & Fetch reviews
@@ -68,13 +68,29 @@ const RecipeDetailScreen = ({ route, navigation }) => {
     submitReview?.(recipe.id, reviewData);
   };
 
-  const handleShoppingAdd = (items) => {
-    addToShoppingList?.(items.map(i => ({ ...i, recipeId: recipe.id, recipeName: recipe.title })));
+  const handleShoppingAdd = () => {
+    if (Platform.OS === 'web') {
+      setModalMode('shopping');
+      setShowServingsModal(true);
+    } else {
+      const servings = parseInt(recipe.servings) || 2;
+      Alert.alert(
+        "Lên kế hoạch đi chợ",
+        `Bạn muốn tính toán nguyên liệu thiếu cho mấy người ăn?`,
+        [
+          { text: "Hủy", style: "cancel" },
+          { text: `1 người`, onPress: () => addToShoppingList(recipe.id, 1) },
+          { text: `${servings} người`, onPress: () => addToShoppingList(recipe.id, servings) },
+          { text: `${servings * 2} người`, onPress: () => addToShoppingList(recipe.id, servings * 2) },
+        ]
+      );
+    }
   };
 
   const handleLog = () => {
     if (Platform.OS === 'web') {
-      setShowLogModal(true);
+      setModalMode('log');
+      setShowServingsModal(true);
     } else {
       const servings = parseInt(recipe.servings) || 2;
       Alert.alert(
@@ -154,7 +170,7 @@ const RecipeDetailScreen = ({ route, navigation }) => {
 
         <RecipeActionBar
           onReview={() => setShowReview(true)}
-          onShopping={() => setShowShopping(true)}
+          onShopping={handleShoppingAdd}
           onLog={handleLog}
           onSave={handleSave}
           isSaved={isSaved}
@@ -168,28 +184,28 @@ const RecipeDetailScreen = ({ route, navigation }) => {
           recipeTitle={recipe.title}
         />
 
-        <ShoppingChecklist
-          visible={showShopping}
-          onClose={() => setShowShopping(false)}
-          onAdd={handleShoppingAdd}
-          ingredients={recipe.ingredients}
-          pantryItems={pantryItems}
-        />
+
 
         {/* Modal chọn số người ăn (Cho Web) */}
         <Modal
-          visible={showLogModal}
+          visible={showServingsModal}
           transparent={true}
           animationType="fade"
-          onRequestClose={() => setShowLogModal(false)}
+          onRequestClose={() => setShowServingsModal(false)}
         >
           <Pressable 
             style={styles.modalOverlay} 
-            onPress={() => setShowLogModal(false)}
+            onPress={() => setShowServingsModal(false)}
           >
             <View style={styles.servingsModal}>
-              <Text style={styles.modalTitle}>Ghi nhận bữa ăn</Text>
-              <Text style={styles.modalSubTitle}>Bạn nấu cho mấy người ăn?</Text>
+              <Text style={styles.modalTitle}>
+                {modalMode === 'log' ? 'Ghi nhận bữa ăn' : 'Lên kế hoạch đi chợ'}
+              </Text>
+              <Text style={styles.modalSubTitle}>
+                {modalMode === 'log' 
+                  ? 'Bạn nấu cho mấy người ăn?' 
+                  : 'Tính toán nguyên liệu cho mấy người?'}
+              </Text>
               
               <View style={styles.servingOptions}>
                 {[1, parseInt(recipe.servings) || 2, (parseInt(recipe.servings) || 2) * 2].map((s, idx) => (
@@ -197,8 +213,12 @@ const RecipeDetailScreen = ({ route, navigation }) => {
                     key={idx} 
                     style={styles.servingBtn}
                     onPress={() => {
-                      logRecipeMeal(recipe.id, s);
-                      setShowLogModal(false);
+                      if (modalMode === 'log') {
+                        logRecipeMeal(recipe.id, s);
+                      } else {
+                        addToShoppingList(recipe.id, s);
+                      }
+                      setShowServingsModal(false);
                     }}
                   >
                     <Text style={styles.servingBtnText}>{s} người</Text>
@@ -208,7 +228,7 @@ const RecipeDetailScreen = ({ route, navigation }) => {
 
               <TouchableOpacity 
                 style={styles.cancelBtn}
-                onPress={() => setShowLogModal(false)}
+                onPress={() => setShowServingsModal(false)}
               >
                 <Text style={styles.cancelBtnText}>Đóng</Text>
               </TouchableOpacity>

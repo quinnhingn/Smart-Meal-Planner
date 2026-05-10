@@ -100,7 +100,7 @@ export const recipeApi = {
   importToPantry: async (items) => {
     return await fetchApi('POST', '/recipes/pantry/import', { items });
   },
-  getPantryItems: async () => {
+  getPantry: async () => {
     return await fetchApi('GET', '/recipes/pantry');
   },
   getSuggestions: async () => {
@@ -111,10 +111,24 @@ export const recipeApi = {
   },
   toggleFavorite: (recipeId) => fetchApi('POST', '/recipes/favorites/toggle', { recipeId }),
   getFavoriteIds: () => fetchApi('GET', '/recipes/favorites/ids'),
-  submitReview: (reviewData) => fetchApi('POST', '/recipes/reviews', reviewData),
+  addReview: (reviewData) => fetchApi('POST', '/recipes/reviews', reviewData),
   getReviews: (recipeId) => fetchApi('GET', `/recipes/${recipeId}/reviews`),
   logRecipeMeal: (recipeId, servings) => fetchApi('POST', '/recipes/log-recipe', { recipeId, servings }),
   getPantryHistory: () => fetchApi('GET', '/recipes/pantry/history'),
+  
+  // Shopping List
+  getShoppingList: () => fetchApi('GET', '/recipes/shopping-list'),
+  addToShoppingList: (recipeId, servings) => fetchApi('POST', '/recipes/shopping-list/add', { recipeId, servings }),
+  updateShoppingItem: (itemId, updates) => fetchApi('PUT', `/recipes/shopping-list/${itemId}`, updates),
+  saveShoppingToPantry: () => fetchApi('POST', '/recipes/shopping-list/save'),
+  clearShoppingList: () => fetchApi('DELETE', '/recipes/shopping-list'),
+  addManualShoppingItem: (name, quantity, unit) => fetchApi('POST', '/recipes/shopping-list/manual', { name, quantity, unit }),
+  toggleAllShoppingItems: (isBought) => fetchApi('PUT', '/recipes/shopping-list/toggle-all', { isBought }),
+
+  // Diary
+  getDiary: () => fetchApi('GET', '/recipes/diary'),
+  deleteDiaryItem: (logId) => fetchApi('DELETE', `/recipes/diary/${logId}`),
+  updateDiaryItem: (logId, updates) => fetchApi('PUT', `/recipes/diary/${logId}`, updates),
 };
 
 export default apiClient;

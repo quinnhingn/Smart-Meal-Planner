@@ -116,3 +116,25 @@ class PantryHistoryModel(db.Model):
             'recipeName': self.recipe_name,
             'usedAt': self.action_at.isoformat()
         }
+
+class ShoppingListModel(db.Model):
+    __tablename__ = 'scr_shopping_list'
+    id = db.Column(UUID(as_uuid=True), primary_key=True)
+    user_id = db.Column(db.String(36), nullable=False)
+    ingredient_name = db.Column(db.String(255), nullable=False)
+    quantity = db.Column(db.Float, nullable=False)
+    unit = db.Column(db.String(50))
+    recipe_id = db.Column(db.Integer, nullable=True)
+    is_bought = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'name': self.ingredient_name,
+            'quantity': self.quantity,
+            'unit': self.unit,
+            'recipeId': self.recipe_id,
+            'isBought': self.is_bought,
+            'createdAt': self.created_at.isoformat()
+        }

@@ -225,3 +225,94 @@ def get_pantry_history():
     user_id = get_jwt_identity()
     result = RecipeRepository.get_pantry_history(user_id)
     return jsonify({"success": True, "data": result}), 200
+
+# ==========================================
+# SHOPPING LIST ENDPOINTS
+# ==========================================
+
+@recipe_bp.route('/shopping-list', methods=['GET'])
+@jwt_required()
+def get_shopping_list():
+    user_id = get_jwt_identity()
+    result = RecipeRepository.get_shopping_list(user_id)
+    return jsonify({"success": True, "data": result}), 200
+
+@recipe_bp.route('/shopping-list/add', methods=['POST'])
+@jwt_required()
+def add_to_shopping_list():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    recipe_id = data.get('recipeId')
+    servings = data.get('servings', 1)
+    
+    if not recipe_id:
+        return jsonify({"success": False, "message": "Thiếu recipeId"}), 400
+        
+    result = RecipeRepository.add_to_shopping_list(user_id, recipe_id, servings)
+    return jsonify(result), 200
+
+@recipe_bp.route('/shopping-list/<item_id>', methods=['PUT'])
+@jwt_required()
+def update_shopping_item(item_id):
+    data = request.get_json()
+    success = RecipeRepository.update_shopping_item(item_id, data)
+    return jsonify({"success": success}), 200 if success else 400
+
+@recipe_bp.route('/shopping-list/save', methods=['POST'])
+@jwt_required()
+def save_shopping_to_pantry():
+    user_id = get_jwt_identity()
+    result = RecipeRepository.save_shopping_to_pantry(user_id)
+    return jsonify(result), 200
+
+@recipe_bp.route('/shopping-list', methods=['DELETE'])
+@jwt_required()
+def clear_shopping_list():
+    user_id = get_jwt_identity()
+    success = RecipeRepository.clear_shopping_list(user_id)
+    return jsonify({"success": success}), 200 if success else 400
+
+@recipe_bp.route('/shopping-list/manual', methods=['POST'])
+@jwt_required()
+def add_manual_shopping_item():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    name = data.get('name')
+    quantity = data.get('quantity', 1)
+    unit = data.get('unit', 'g')
+    
+    if not name:
+        return jsonify({"success": False, "message": "Thiếu tên nguyên liệu"}), 400
+        
+    result = RecipeRepository.add_custom_item_to_shopping_list(user_id, name, quantity, unit)
+    return jsonify(result), 200
+
+@recipe_bp.route('/shopping-list/toggle-all', methods=['PUT'])
+@jwt_required()
+def toggle_all_shopping_items():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    is_bought = data.get('isBought', True)
+    success = RecipeRepository.toggle_all_shopping_items(user_id, is_bought)
+    return jsonify({"success": success}), 200 if success else 400
+@recipe_bp.route('/diary', methods=['GET'])
+@jwt_required()
+def get_meal_history():
+    user_id = get_jwt_identity()
+    logs = RecipeRepository.get_meal_history(user_id)
+    return jsonify({"success": True, "data": logs}), 200
+
+@recipe_bp.route('/diary/<log_id>', methods=['DELETE'])
+@jwt_required()
+def delete_meal_log(log_id):
+    user_id = get_jwt_identity()
+    result = RecipeRepository.delete_meal_log(user_id, log_id)
+    return jsonify(result), 200
+
+@recipe_bp.route('/diary/<log_id>', methods=['PUT'])
+@jwt_required()
+def update_meal_log(log_id):
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    result = RecipeRepository.update_meal_log(user_id, log_id, data)
+    return jsonify(result), 200

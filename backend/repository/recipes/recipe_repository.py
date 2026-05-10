@@ -407,3 +407,258 @@ class RecipeRepository:
         except Exception as e:
             print(f"❌ [Get Pantry History Error] {e}")
             return []
+
+    # ==========================================
+    # SHOPPING LIST LOGIC
+    # ==========================================
+    
+    @staticmethod
+    def get_shopping_list(user_id):
+        try:
+            from model.recipes.recipe_model import ShoppingListModel
+            items = ShoppingListModel.query.filter_by(user_id=str(user_id)).order_by(ShoppingListModel.created_at.desc()).all()
+            return [i.to_dict() for i in items]
+        except Exception as e:
+            print(f"❌ [Get Shopping List Error] {e}")
+            return []
+
+    @staticmethod
+    def add_to_shopping_list(user_id, recipe_id, servings):
+        """
+        Tính toán đồ thiếu và đẩy vào giỏ hàng
+        """
+        try:
+            from model.recipes.recipe_model import RecipeModel, UserPantryModel, ShoppingListModel
+            import uuid
+            
+            recipe = RecipeModel.query.get(recipe_id)
+            if not recipe: return {"success": False, "message": "Món ăn không tồn tại"}
+
+            # Tỷ lệ phục vụ
+            import re
+            serv_match = re.search(r'\d+', str(recipe.servings))
+            recipe_servings = float(serv_match.group()) if serv_match else 2.0
+            ratio = float(servings) / recipe_servings
+            
+            ingredients = recipe.ingredients if isinstance(recipe.ingredients, list) else json.loads(recipe.ingredients or '[]')
+            added_count = 0
+            
+            for ing in ingredients:
+                name = ing.get('name', '').strip()
+                needed_g = float(ing.get('grams', 100)) * ratio
+                
+                # Check tủ lạnh xem có chưa
+                pantry_item = UserPantryModel.query.filter(
+                    UserPantryModel.user_id == str(user_id),
+                    func.lower(UserPantryModel.ingredient_name).contains(name.lower())
+                ).first()
+                
+                have_g = 0
+                if pantry_item:
+                    p_unit = (pantry_item.unit or 'g').lower()
+                    have_g = (pantry_item.quantity * 1000) if p_unit == 'kg' else pantry_item.quantity
+                
+                # Nếu thiếu thì cho vào giỏ
+                missing_g = max(0, needed_g - have_g)
+                if missing_g > 0:
+                    # Check xem trong giỏ đã có chưa để cộng dồn (Hoặc thêm mới)
+                    cart_item = ShoppingListModel.query.filter_by(
+                        user_id=str(user_id), 
+                        ingredient_name=name
+                    ).first()
+                    
+                    if cart_item:
+                        cart_item.quantity += missing_g
+                    else:
+                        new_item = ShoppingListModel(
+                            id=uuid.uuid4(),
+                            user_id=str(user_id),
+                            ingredient_name=name,
+                            quantity=missing_g,
+                            unit='g',
+                            recipe_id=recipe_id
+                        )
+                        db.session.add(new_item)
+                    added_count += 1
+            
+            db.session.commit()
+            return {"success": True, "message": f"Đã thêm {added_count} nguyên liệu thiếu vào giỏ hàng"}
+        except Exception as e:
+            db.session.rollback()
+            return {"success": False, "message": str(e)}
+
+    @staticmethod
+    def update_shopping_item(item_id, updates):
+        try:
+            from model.recipes.recipe_model import ShoppingListModel
+            item = ShoppingListModel.query.get(item_id)
+            if not item: return False
+            
+            if 'isBought' in updates: item.is_bought = updates['isBought']
+            if 'quantity' in updates: item.quantity = updates['quantity']
+            
+            db.session.commit()
+            return True
+        except:
+            db.session.rollback()
+            return False
+
+    @staticmethod
+    def save_shopping_to_pantry(user_id):
+        """
+        Chuyển đồ từ giỏ hàng sang tủ lạnh (Pantry)
+        """
+        try:
+            from model.recipes.recipe_model import ShoppingListModel, UserPantryModel, PantryHistoryModel
+            import uuid
+            from datetime import datetime
+            
+            print(f"DEBUG: Bắt đầu lưu giỏ hàng cho User: {user_id}")
+            
+            # Chỉ lấy những món đã được tick 'is_bought'
+            bought_items = ShoppingListModel.query.filter_by(user_id=str(user_id), is_bought=True).all()
+            
+            if not bought_items:
+                print("DEBUG: Không có món nào được tick chọn.")
+                return {"success": False, "message": "Không có món nào được chọn để lưu."}
+
+            for item in bought_items:
+                print(f"DEBUG: Đang xử lý món: {item.ingredient_name} ({item.quantity} {item.unit})")
+                
+                # 1. Thêm/Cập nhật vào Pantry (So sánh không phân biệt hoa thường)
+                pantry_item = UserPantryModel.query.filter(
+                    UserPantryModel.user_id == str(user_id),
+                    db.func.lower(UserPantryModel.ingredient_name) == item.ingredient_name.lower()
+                ).first()
+                
+                if pantry_item:
+                    print(f"DEBUG: Đã có trong tủ lạnh. Cộng dồn: {pantry_item.quantity} + {item.quantity}")
+                    pantry_item.quantity += item.quantity
+                else:
+                    print(f"DEBUG: Món mới. Thêm vào tủ lạnh.")
+                    new_pantry = UserPantryModel(
+                        id=uuid.uuid4(),
+                        user_id=str(user_id),
+                        ingredient_name=item.ingredient_name,
+                        quantity=item.quantity,
+                        unit=item.unit,
+                        storage_location='fridge', # Mặc định cho vào ngăn mát
+                        source='shopping_list',    # Ghi chú nguồn từ danh sách đi chợ
+                        added_at=datetime.utcnow()
+                    )
+                    db.session.add(new_pantry)
+                
+                # 2. Xóa khỏi Shopping List (KHÔNG ghi vào history ở đây vì chưa nấu)
+                db.session.delete(item)
+            
+            db.session.commit()
+            print("DEBUG: Đã Commit thành công vào Database!")
+            return {"success": True, "message": "Đã cập nhật tủ lạnh từ giỏ hàng thành công"}
+        except Exception as e:
+            print(f"DEBUG: LỖI KHI LƯU: {str(e)}")
+            db.session.rollback()
+            return {"success": False, "message": str(e)}
+
+    @staticmethod
+    def add_custom_item_to_shopping_list(user_id, name, quantity, unit):
+        try:
+            from model.recipes.recipe_model import ShoppingListModel
+            import uuid
+            
+            # Kiểm tra xem đã có món này chưa để cộng dồn
+            item = ShoppingListModel.query.filter_by(user_id=str(user_id), ingredient_name=name).first()
+            if item:
+                item.quantity += float(quantity)
+            else:
+                new_item = ShoppingListModel(
+                    id=uuid.uuid4(),
+                    user_id=str(user_id),
+                    ingredient_name=name,
+                    quantity=float(quantity),
+                    unit=unit
+                )
+                db.session.add(new_item)
+            
+            db.session.commit()
+            return {"success": True, "message": f"Đã thêm {name} vào danh sách"}
+        except Exception as e:
+            db.session.rollback()
+            return {"success": False, "message": str(e)}
+
+    @staticmethod
+    def toggle_all_shopping_items(user_id, is_bought):
+        try:
+            from model.recipes.recipe_model import ShoppingListModel
+            ShoppingListModel.query.filter_by(user_id=str(user_id)).update({"is_bought": is_bought})
+            db.session.commit()
+            return True
+        except Exception as e:
+            db.session.rollback()
+            return False
+
+    @staticmethod
+    def clear_shopping_list(user_id):
+        try:
+            from model.recipes.recipe_model import ShoppingListModel
+            ShoppingListModel.query.filter_by(user_id=str(user_id)).delete()
+            db.session.commit()
+            return True
+        except:
+            db.session.rollback()
+            return False
+    @staticmethod
+    def get_meal_history(user_id):
+        try:
+            from model.recipes.recipe_model import MealLogModel
+            logs = MealLogModel.query.filter_by(user_id=str(user_id)).order_by(MealLogModel.eaten_at.desc()).all()
+            
+            result = []
+            for log in logs:
+                result.append({
+                    "id": str(log.id),
+                    "name": log.meal_name,
+                    "mealType": log.meal_type,
+                    "calo": log.calories_consumed,
+                    "protein": log.protein_g,
+                    "carbs": log.carbs_g,
+                    "fat": log.fat_g,
+                    "date": log.eaten_at.isoformat(),
+                    "servings": log.servings
+                })
+            return result
+        except Exception as e:
+            print(f"❌ [Get Meal History Error] {e}")
+            return []
+
+    @staticmethod
+    def delete_meal_log(user_id, log_id):
+        try:
+            from model.recipes.recipe_model import MealLogModel
+            log = MealLogModel.query.filter_by(user_id=str(user_id), id=log_id).first()
+            if not log:
+                return {"success": False, "message": "Không tìm thấy nhật ký"}
+            
+            db.session.delete(log)
+            db.session.commit()
+            return {"success": True, "message": "Đã xóa nhật ký ăn uống thành công"}
+        except Exception as e:
+            db.session.rollback()
+            return {"success": False, "message": str(e)}
+
+    @staticmethod
+    def update_meal_log(user_id, log_id, updates):
+        try:
+            from model.recipes.recipe_model import MealLogModel
+            log = MealLogModel.query.filter_by(user_id=str(user_id), id=log_id).first()
+            if not log:
+                return {"success": False, "message": "Không tìm thấy nhật ký"}
+            
+            if 'mealType' in updates: log.meal_type = updates['mealType']
+            if 'name' in updates: log.meal_name = updates['name']
+            if 'calo' in updates: log.calories_consumed = float(updates['calo'])
+            
+            db.session.commit()
+            return {"success": True, "message": "Đã cập nhật nhật ký thành công"}
+        except Exception as e:
+            db.session.rollback()
+            return {"success": False, "message": str(e)}

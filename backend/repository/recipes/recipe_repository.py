@@ -271,6 +271,7 @@ class RecipeRepository:
                     "image": r.image_url or "https://via.placeholder.com/150",
                     "videoUrl": r.video_url,
                     "cookTime": cook_time,
+                    "servings": r.servings or "2",
                     "difficulty": r.difficulty or "Dễ",
                     "author": {"name": "SmartMeal Admin", "avatar": "https://i.pravatar.cc/150?u=admin"},
                     "labels": labels,

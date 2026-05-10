@@ -13,6 +13,7 @@ import CookingSteps from '../components/recipe-detail/CookingSteps';
 import RecipeActionBar from '../components/recipe-detail/RecipeActionBar';
 import ReviewBottomSheet from '../components/recipe-detail/ReviewBottomSheet';
 import ShoppingChecklist from '../components/recipe-detail/ShoppingChecklist';
+import RecipeVideo from '../components/recipe-detail/RecipeVideo';
 import { useAppStore } from '../store/useAppStore';
 import { compareWithPantry } from '../utils/recipeHelpers';
 
@@ -84,17 +85,7 @@ const RecipeDetailScreen = ({ route, navigation }) => {
               author={recipe.author}
             />
 
-            {/* Video placeholder if exists */}
-            {recipe.videoUrl ? (
-              <View style={styles.videoPlaceholder}>
-                <Text style={styles.videoLabel}>▶ Video hướng dẫn</Text>
-                <Text style={styles.videoNote}>(Trình phát video sẽ được tích hợp ở đây)</Text>
-              </View>
-            ) : (
-              <View style={styles.noVideoBox}>
-                <Text style={styles.noVideoText}>Chưa có video hướng dẫn cho món này</Text>
-              </View>
-            )}
+            <RecipeVideo videoUrl={recipe.videoUrl} />
 
             <IngredientTable ingredients={recipe.ingredients} pantryItems={pantryItems} />
             <CookingSteps steps={recipe.steps} />

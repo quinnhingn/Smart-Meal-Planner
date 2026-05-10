@@ -1,49 +1,30 @@
+# Node modules
+node_modules/
+dist/
+.expo/
+*.log
+
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual Environments
+*.pyc
 venv/
-ENV/
+.venv/
 ai/venv/
 backend/venv/
 
-# AI Models & Data (Thường rất nặng, không nên đẩy lên Git)
-ai/train_data/
+# AI Models & Data
+# Chặn toàn bộ thư mục train_data
+ai/train_data/*
 
-*.tflite
-*.pb
+# Nhưng ngoại lệ cho phép file này (vì nó dưới 100MB)
+!ai/train_data/base_model_best.h5
 
-# Logs & OS files
-*.log
-.DS_Store
-Thumbs.db
+# Vẫn chặn các file nặng khác cho chắc
+ai/train_data/fine_tune_model_best.h5
+ai/train_data/fine_tune_model_trained.h5
+ai/train_data/best.pt
 
-# Environment variables
+# Environment
 .env
-
-# Node.js
-node_modules/
-client/node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+.env.local
+.DS_Store

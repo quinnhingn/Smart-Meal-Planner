@@ -1,7 +1,8 @@
 // src/screens/RecipeDetailScreen.js
 import React, { useState, useMemo, useCallback } from 'react';
 import {
-  View, ScrollView, Text, StyleSheet, Platform, useWindowDimensions,
+  View, ScrollView, Text, StyleSheet, Platform, useWindowDimensions, Alert,
+  Modal, TouchableOpacity, Pressable
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -18,6 +19,7 @@ import RecipeVideo from '../components/recipe-detail/RecipeVideo';
 import ReviewItem from '../components/recipe-detail/ReviewItem';
 import { useAppStore } from '../store/useAppStore';
 import { compareWithPantry } from '../utils/recipeHelpers';
+import { COLORS } from '../constants/theme';
 
 const RecipeDetailScreen = ({ route, navigation }) => {
   const { recipe } = route.params;
@@ -28,10 +30,12 @@ const RecipeDetailScreen = ({ route, navigation }) => {
     pantryItems, savedRecipeIds, toggleSaveRecipe,
     addToShoppingList, submitReview, setTabBarVisible,
     recipeReviews, fetchRecipeReviews, userProfile,
+    logRecipeMeal,
   } = useAppStore();
 
   const [showReview, setShowReview] = useState(false);
   const [showShopping, setShowShopping] = useState(false);
+  const [showLogModal, setShowLogModal] = useState(false);
   const [currentStats, setCurrentStats] = useState(recipe.reviews);
 
   // Hide tab bar when entering detail & Fetch reviews
@@ -69,8 +73,21 @@ const RecipeDetailScreen = ({ route, navigation }) => {
   };
 
   const handleLog = () => {
-    // Placeholder: navigate to diary or show toast
-    // navigation.navigate('MainTabs', { screen: 'Diary' });
+    if (Platform.OS === 'web') {
+      setShowLogModal(true);
+    } else {
+      const servings = parseInt(recipe.servings) || 2;
+      Alert.alert(
+        "Ghi nhận bữa ăn",
+        `Bạn nấu món này cho mấy người ăn?`,
+        [
+          { text: "Hủy", style: "cancel" },
+          { text: `1 người`, onPress: () => logRecipeMeal(recipe.id, 1) },
+          { text: `${servings} người (Chuẩn)`, onPress: () => logRecipeMeal(recipe.id, servings) },
+          { text: `${servings * 2} người`, onPress: () => logRecipeMeal(recipe.id, servings * 2) },
+        ]
+      );
+    }
   };
 
   return (
@@ -158,6 +175,46 @@ const RecipeDetailScreen = ({ route, navigation }) => {
           ingredients={recipe.ingredients}
           pantryItems={pantryItems}
         />
+
+        {/* Modal chọn số người ăn (Cho Web) */}
+        <Modal
+          visible={showLogModal}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setShowLogModal(false)}
+        >
+          <Pressable 
+            style={styles.modalOverlay} 
+            onPress={() => setShowLogModal(false)}
+          >
+            <View style={styles.servingsModal}>
+              <Text style={styles.modalTitle}>Ghi nhận bữa ăn</Text>
+              <Text style={styles.modalSubTitle}>Bạn nấu cho mấy người ăn?</Text>
+              
+              <View style={styles.servingOptions}>
+                {[1, parseInt(recipe.servings) || 2, (parseInt(recipe.servings) || 2) * 2].map((s, idx) => (
+                  <TouchableOpacity 
+                    key={idx} 
+                    style={styles.servingBtn}
+                    onPress={() => {
+                      logRecipeMeal(recipe.id, s);
+                      setShowLogModal(false);
+                    }}
+                  >
+                    <Text style={styles.servingBtnText}>{s} người</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <TouchableOpacity 
+                style={styles.cancelBtn}
+                onPress={() => setShowLogModal(false)}
+              >
+                <Text style={styles.cancelBtnText}>Đóng</Text>
+              </TouchableOpacity>
+            </View>
+          </Pressable>
+        </Modal>
       </View>
     </ResponsiveContainer>
   );
@@ -190,6 +247,15 @@ const styles = StyleSheet.create({
   emptyReviews: { alignItems: 'center', paddingVertical: 32, gap: 8 },
   emptyReviewText: { fontSize: 14, fontWeight: '800', color: '#CCC', marginTop: 8 },
   emptyReviewSubText: { fontSize: 12, fontWeight: '600', color: '#DDD' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  servingsModal: { backgroundColor: '#FFF', borderRadius: 24, padding: 24, width: '90%', maxWidth: 400, alignItems: 'center' },
+  modalTitle: { fontSize: 20, fontWeight: '900', color: '#1A1D1E', marginBottom: 8 },
+  modalSubTitle: { fontSize: 14, fontWeight: '600', color: '#666', marginBottom: 24 },
+  servingOptions: { width: '100%', gap: 12, marginBottom: 20 },
+  servingBtn: { backgroundColor: '#F5F5F5', paddingVertical: 16, borderRadius: 16, alignItems: 'center' },
+  servingBtnText: { fontSize: 16, fontWeight: '800', color: '#1A1D1E' },
+  cancelBtn: { paddingVertical: 8 },
+  cancelBtnText: { fontSize: 14, fontWeight: '700', color: COLORS.primary },
 });
 
 export default RecipeDetailScreen;

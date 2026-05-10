@@ -202,3 +202,26 @@ def get_recipe_reviews(recipe_id):
         "stats": stats
     }), 200
 
+@recipe_bp.route('/log-recipe', methods=['POST'])
+@jwt_required()
+def log_recipe_meal():
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        recipe_id = data.get('recipeId')
+        servings = data.get('servings', 1)
+        
+        if not recipe_id:
+            return jsonify({"success": False, "message": "Thiếu recipeId"}), 400
+            
+        result = RecipeRepository.log_meal_and_deduct(user_id, recipe_id, servings)
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+@recipe_bp.route('/pantry/history', methods=['GET'])
+@jwt_required()
+def get_pantry_history():
+    user_id = get_jwt_identity()
+    result = RecipeRepository.get_pantry_history(user_id)
+    return jsonify({"success": True, "data": result}), 200

@@ -229,7 +229,25 @@ export const useAppStore = create((set, get) => ({
   // 4. PANTRY MANAGEMENT
   // ==========================================
 
-  clearPantryHistory: () => set({ pantryHistory: [] }),
+  // Lấy lịch sử tủ lạnh từ API
+  fetchPantryHistory: async () => {
+    try {
+      const response = await recipeApi.getPantryHistory();
+      if (response.success && response.data) {
+        // Backend trả về {success: true, data: [...]}
+        const historyData = Array.isArray(response.data.data) ? response.data.data : [];
+        set({ pantryHistory: historyData });
+      }
+    } catch (error) {
+      console.error("Lỗi fetch pantry history:", error);
+    }
+  },
+
+  clearPantryHistory: () => {
+    // Tạm thời chỉ xóa local, sau này có thể thêm API xóa
+    set({ pantryHistory: [] });
+    get().showToast('Đã xóa lịch sử hiển thị!', 'success');
+  },
 
   restorePantryItem: (historyId) => set((state) => {
     const histItem = state.pantryHistory.find(h => h.id === historyId);
@@ -331,7 +349,7 @@ export const useAppStore = create((set, get) => ({
   getFilteredItems: () => {
     const { pantryItems, selectedCategory, searchQuery } = get();
 
-    let filtered = [...pantryItems];
+    let filtered = pantryItems.filter(item => (item.quantity || 0) > 0);
 
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(item => item.category === selectedCategory);
@@ -521,6 +539,23 @@ export const useAppStore = create((set, get) => ({
       carbs_g: newMacros.carbs_g,
       fat_g: newMacros.fat_g,
     });
-  }
+  },
 
+  logRecipeMeal: async (recipeId, servings) => {
+    const response = await recipeApi.logRecipeMeal(recipeId, servings);
+    if (response.success && response.data.success) {
+      get().showToast(response.data.message, 'success');
+      
+      // Nếu có danh sách đồ đã trừ, log ra để check
+      if (response.data.deducted && response.data.deducted.length > 0) {
+        console.log("♻️ [Pantry] Đã trừ:", response.data.deducted);
+      }
+      
+      // Refresh lại tủ lạnh và lịch sử sau khi trừ
+      get().fetchPantryItems();
+      get().fetchPantryHistory();
+      return true;
+    }
+    return false;
+  },
 }));

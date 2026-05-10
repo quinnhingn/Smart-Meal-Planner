@@ -284,3 +284,126 @@ class RecipeRepository:
         except Exception as e:
             print(f"❌ [Get All Recipes Error] {e}")
             return []
+
+    @staticmethod
+    def log_meal_and_deduct(user_id, recipe_id, servings_eaten):
+        """
+        Ghi nhật ký ăn uống và tự động trừ nguyên liệu trong tủ lạnh
+        """
+        try:
+            from model.recipes.recipe_model import RecipeModel, UserPantryModel, MealLogModel, PantryHistoryModel
+            import uuid
+            
+            recipe = RecipeModel.query.get(recipe_id)
+            if not recipe:
+                return {"success": False, "message": "Không tìm thấy món ăn"}
+
+            # 1. Tính toán tỷ lệ dựa trên số người ăn
+            try:
+                import re
+                serv_match = re.search(r'\d+', str(recipe.servings))
+                recipe_servings = float(serv_match.group()) if serv_match else 2.0
+            except:
+                recipe_servings = 2.0
+                
+            ratio = float(servings_eaten) / recipe_servings
+            
+            nutrition = recipe.nutrition
+            calories = (nutrition.calories * ratio) if nutrition else 0
+            
+            # 2. Ghi nhật ký ăn uống (Meal Log)
+            now_vn = datetime.utcnow() + timedelta(hours=7)
+            hour = now_vn.hour
+            if 5 <= hour < 10: meal_type = 'Breakfast'
+            elif 10 <= hour < 15: meal_type = 'Lunch'
+            elif 15 <= hour < 20: meal_type = 'Dinner'
+            else: meal_type = 'Snack'
+
+            meal_log = MealLogModel(
+                id=uuid.uuid4(),
+                user_id=str(user_id),
+                recipe_id=recipe_id,
+                meal_name=recipe.name_vn,
+                meal_type=meal_type,
+                servings=servings_eaten,
+                calories_consumed=calories,
+                protein_g=(nutrition.protein * ratio) if nutrition else 0,
+                fat_g=(nutrition.fat * ratio) if nutrition else 0,
+                carbs_g=(nutrition.carbs * ratio) if nutrition else 0,
+                eaten_at=datetime.utcnow()
+            )
+            db.session.add(meal_log)
+
+            # 3. Trừ nguyên liệu trong tủ lạnh và Ghi Lịch sử
+            ingredients = recipe.ingredients if isinstance(recipe.ingredients, list) else json.loads(recipe.ingredients or '[]')
+            deducted_items = []
+            
+            for ing in ingredients:
+                name = ing.get('name', '').lower()
+                ing_grams = float(ing.get('grams', 100))
+                amount_needed_g = ing_grams * ratio
+                
+                if amount_needed_g <= 0: continue
+                
+                pantry_item = UserPantryModel.query.filter(
+                    UserPantryModel.user_id == str(user_id),
+                    func.lower(UserPantryModel.ingredient_name).contains(name)
+                ).first()
+                
+                if pantry_item:
+                    pantry_unit = (pantry_item.unit or 'g').lower()
+                    current_qty = pantry_item.quantity or 0
+                    
+                    if pantry_unit == 'kg': current_qty_g = current_qty * 1000
+                    else: current_qty_g = current_qty
+                    
+                    # Trừ
+                    actual_deduct_g = min(current_qty_g, amount_needed_g)
+                    new_qty_g = max(0, current_qty_g - amount_needed_g)
+                    
+                    if pantry_unit == 'kg': pantry_item.quantity = new_qty_g / 1000
+                    else: pantry_item.quantity = new_qty_g
+
+                    # Nếu hết sạch thì xóa luôn (Theo ý Ngân)
+                    if pantry_item.quantity <= 0:
+                        db.session.delete(pantry_item)
+                    
+                    # 4. Ghi vào Lịch sử Tủ lạnh
+                    history = PantryHistoryModel(
+                        id=uuid.uuid4(),
+                        user_id=str(user_id),
+                        ingredient_name=pantry_item.ingredient_name,
+                        quantity=actual_deduct_g if pantry_unit != 'kg' else actual_deduct_g / 1000,
+                        unit=pantry_unit,
+                        action_type='consumed',
+                        recipe_id=recipe.id,
+                        recipe_name=recipe.name_vn
+                    )
+                    db.session.add(history)
+
+                    deducted_items.append({
+                        "name": pantry_item.ingredient_name,
+                        "deducted": f"{round(amount_needed_g, 1)}g"
+                    })
+
+            db.session.commit()
+            return {
+                "success": True, 
+                "message": f"Đã ghi nhận bữa {meal_type} và cập nhật tủ lạnh",
+                "deducted": deducted_items,
+                "calories": round(calories, 1)
+            }
+        except Exception as e:
+            db.session.rollback()
+            print(f"❌ [Log Meal Error] {e}")
+            return {"success": False, "message": str(e)}
+
+    @staticmethod
+    def get_pantry_history(user_id):
+        try:
+            from model.recipes.recipe_model import PantryHistoryModel
+            history = PantryHistoryModel.query.filter_by(user_id=str(user_id)).order_by(PantryHistoryModel.action_at.desc()).all()
+            return [h.to_dict() for h in history]
+        except Exception as e:
+            print(f"❌ [Get Pantry History Error] {e}")
+            return []

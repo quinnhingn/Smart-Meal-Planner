@@ -92,3 +92,27 @@ class MealLogModel(db.Model):
     fat_g = db.Column(db.Float)
     carbs_g = db.Column(db.Float)
     eaten_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class PantryHistoryModel(db.Model):
+    __tablename__ = 'scr_pantry_history'
+    id = db.Column(UUID(as_uuid=True), primary_key=True)
+    user_id = db.Column(db.String(36), nullable=False)
+    ingredient_name = db.Column(db.String(255), nullable=False)
+    quantity = db.Column(db.Float, nullable=False)
+    unit = db.Column(db.String(50))
+    action_type = db.Column(db.String(50)) # 'consumed', 'discarded', 'added'
+    recipe_id = db.Column(db.Integer, nullable=True)
+    recipe_name = db.Column(db.String(255))
+    action_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'name': self.ingredient_name,
+            'quantity': self.quantity,
+            'unit': self.unit,
+            'action': self.action_type,
+            'recipeId': self.recipe_id,
+            'recipeName': self.recipe_name,
+            'usedAt': self.action_at.isoformat()
+        }

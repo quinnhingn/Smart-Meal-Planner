@@ -6,6 +6,7 @@ import DailyHeader from '../components/diary/DailyHeader';
 import WeekSelector from '../components/diary/WeekSelector';
 import CalendarModal from '../components/diary/CalendarModal';
 import MacroSummary from '../components/diary/MacroSummary';
+import NutritionInsight from '../components/diary/NutritionInsight';
 import MealSection from '../components/diary/MealSection';
 import DiaryItemModal from '../components/diary/DiaryItemModal';
 import { useAppStore } from '../store/useAppStore';
@@ -122,6 +123,7 @@ const DiaryScreen = () => {
             <WeekSelector selectedDate={selectedDate} onSelectDate={setSelectedDate} />
             <View style={styles.summaryWrap}>
               <MacroSummary stats={stats} targetCalo={targetCalo} />
+              <NutritionInsight />
             </View>
           </View>
 

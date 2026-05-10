@@ -22,26 +22,67 @@ const RecipesScreen = ({ navigation }) => {
     myRecipes, draftRecipes,
     addMyRecipe, updateMyRecipe, deleteMyRecipe,
     saveDraft, deleteDraft,
+    userProfile
   } = useAppStore();
 
   const [dbRecipes, setDbRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // LỌC CÔNG THỨC: Phân loại dữ liệu từ Database
+  // Lấy User ID chuẩn (thường là user_id hoặc id của user gốc)
+  const currentUserId = userProfile?.user_id || userProfile?.userId || userProfile?.id;
+  console.log('🆔 [ID dùng để lọc]:', currentUserId);
+  
+  // Cộng đồng = Tất cả món KHÔNG PHẢI của mình tạo
+  const communityRecipes = dbRecipes.filter(r => String(r.createdBy) !== String(currentUserId));
+  
+  // Do bạn tạo = Chỉ những món do chính mình tạo
+  const myDbRecipes = dbRecipes.filter(r => {
+    if (!currentUserId || !r.createdBy) return false;
+    return String(r.createdBy).trim() === String(currentUserId).trim();
+  });
+
+  // 3. Đã lưu = Những món có ID nằm trong danh sách yêu thích
+  const savedRecipes = dbRecipes.filter(r => savedRecipeIds.has(Number(r.id)));
+
   const fetchRecipes = async () => {
     try {
       setIsLoading(true);
-      console.log('🚀 [Recipes] Đang gọi API lấy danh sách món ăn...');
       const res = await recipeApi.getAll();
-      console.log('📦 [Recipes] Kết quả từ API:', res);
-
       if (res.success && res.data && res.data.success) {
-        console.log('✅ [Recipes] Đã lấy được', res.data.data.length, 'món ăn');
         setDbRecipes(res.data.data);
-      } else {
-        console.warn('⚠️ [Recipes] API trả về không thành công:', res.error || 'Unknown error');
       }
     } catch (err) {
-      console.error('❌ [Recipes] Lỗi khi gọi API:', err);
+      console.error('❌ [Recipes] Lỗi fetch:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // HÀM TẠO MOCK DATA (Theo ý Ngân)
+  const handleCreateMockRecipe = async () => {
+    try {
+      setIsLoading(true);
+      const mockData = {
+        name_vn: "Sườn xào chua ngọt của Ngân",
+        image_url: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
+        calories: 450,
+        protein: 30,
+        carbs: 20,
+        fat: 15,
+        ingredients: [{ name: "Sườn non", amount: "500g" }, { name: "Hành tây", amount: "1 củ" }],
+        steps: ["Rửa sạch sườn", "Chiên vàng", "Xào với sốt chua ngọt"],
+        cooking_time: "45 phút",
+        servings: "2 người"
+      };
+
+      const res = await recipeApi.create(mockData);
+      if (res.success) {
+        alert("🎉 Món 'Sườn xào chua ngọt' đã được lưu vào DB!");
+        await fetchRecipes(); // Tải lại danh sách để hiện món mới
+      }
+    } catch (error) {
+      alert("Lỗi khi tạo món mẫu");
     } finally {
       setIsLoading(false);
     }
@@ -83,21 +124,66 @@ const RecipesScreen = ({ navigation }) => {
     setShowReviewForm(true);
   };
 
-  const handleSaveForm = (data) => {
-    if (editingRecipe && !isEditingDraft) {
-      updateMyRecipe(editingRecipe.id, { ...data, id: editingRecipe.id });
-    } else {
-      const newRecipe = { ...data, id: `my_${Date.now()}`, author: { name: 'Bạn', avatar: '' } };
-      delete newRecipe.isDraft; // Đảm bảo xóa cờ draft khi đăng
-      addMyRecipe(newRecipe);
+  const handleSaveForm = async (data) => {
+    try {
+      setIsLoading(true);
+      let finalImageUrl = data.image;
 
-      // XÓA BẢN NHÁP SAU KHI ĐĂNG THÀNH CÔNG
-      if (isEditingDraft) {
-        deleteDraft(editingRecipe.id);
+      // KIỂM TRA: Nếu ảnh là link cục bộ (từ máy) thì phải upload lên Cloudinary trước
+      if (data.image && (data.image.startsWith('file:') || data.image.startsWith('blob:') || !data.image.startsWith('http'))) {
+        console.log('☁️ [Upload] Đang tải ảnh lên Cloudinary...');
+        const uploadRes = await recipeApi.uploadImage(data.image);
+        if (uploadRes.success && uploadRes.data.data.url) {
+          finalImageUrl = uploadRes.data.data.url;
+          console.log('✅ [Upload] Ảnh đã lên mây:', finalImageUrl);
+        } else {
+          alert("⚠️ Không thể tải ảnh lên Cloudinary. Vui lòng thử lại!");
+          setIsLoading(false);
+          return;
+        }
       }
+
+      // Gửi dữ liệu lên Backend
+      const recipePayload = {
+        name_vn: data.title,
+        image_url: finalImageUrl,
+        calories: data.macros?.calories || 0,
+        protein: data.macros?.protein || 0,
+        carbs: data.macros?.carbs || 0,
+        fat: data.macros?.fat || 0,
+        ingredients: data.ingredients || [],
+        steps: data.steps || [],
+        cooking_time: data.cookTime || "30",
+        servings: data.servings || "1",
+        category: data.category || "Do bạn tạo",
+        goals: data.goals || [],
+        meal_times: data.mealTimes || []
+      };
+
+      let res;
+      if (editingRecipe && !isEditingDraft) {
+        // TRƯỜNG HỢP: Cập nhật món cũ
+        console.log('🔄 [Update] Đang cập nhật công thức ID:', editingRecipe.id);
+        res = await recipeApi.update(editingRecipe.id, recipePayload);
+      } else {
+        // TRƯỜNG HỢP: Tạo món mới hoàn toàn
+        console.log('✨ [Create] Đang tạo công thức mới...');
+        res = await recipeApi.create(recipePayload);
+      }
+
+      if (res.success) {
+        alert("✅ Đã lưu công thức mới vào Database thành công!");
+        await fetchRecipes(); // Tải lại danh sách để hiện món vừa tạo
+      } else {
+        alert("⚠️ Lỗi: " + res.error);
+      }
+    } catch (error) {
+      console.error("❌ Lỗi lưu form:", error);
+    } finally {
+      setIsLoading(false);
+      setShowForm(false);
+      setEditingRecipe(null);
     }
-    setShowForm(false);
-    setEditingRecipe(null);
   };
 
   const handleSaveDraft = (data) => {
@@ -141,7 +227,7 @@ const RecipesScreen = ({ navigation }) => {
         <View style={styles.content}>
           {activeTab === 'community' && (
             <CommunityRecipesTab
-              dbRecipes={dbRecipes}
+              dbRecipes={communityRecipes}
               isLoading={isLoading}
               searchQuery={searchQuery}
               onRecipePress={handleRecipePress}
@@ -152,7 +238,7 @@ const RecipesScreen = ({ navigation }) => {
           )}
           {activeTab === 'my' && (
             <MyRecipesTab
-              myRecipes={myRecipes}
+              myRecipes={myDbRecipes}
               drafts={draftRecipes}
               onRecipePress={handleOpenForm}
               onEdit={handleOpenForm}
@@ -167,6 +253,7 @@ const RecipesScreen = ({ navigation }) => {
           )}
           {activeTab === 'saved' && (
             <SavedRecipesTab
+              recipes={savedRecipes}
               savedIds={savedRecipeIds}
               onRecipePress={handleRecipePress}
               onSaveToggle={toggleSaveRecipe}

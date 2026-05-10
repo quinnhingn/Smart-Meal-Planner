@@ -29,7 +29,7 @@ backend/venv/
 
 # AI Models & Data (Thường rất nặng, không nên đẩy lên Git)
 ai/train_data/
-*.h5
+
 *.tflite
 *.pb
 

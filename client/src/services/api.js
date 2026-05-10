@@ -1,20 +1,17 @@
 // src/services/api.js
 import axios from 'axios';
+import { Platform } from 'react-native';
 
-// Port 5001 dành riêng cho Client Backend (Admin dùng port 5000)
-// Dùng IP LAN thay vì localhost để Expo trên điện thoại kết nối được
-// const BASE_URL = 'http://192.168.1.84:5001/api';
 const BASE_URL = 'http://192.168.1.233:5001/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 60000, // Tăng lên 60 giây cho các vụ Upload ảnh
 });
 
-// Interceptor tự động nhét Token vào Header nếu đã đăng nhập
+// Interceptor tự động nhét Token vào Header
 apiClient.interceptors.request.use(
   (config) => {
-    // Phá vỡ vòng lặp (circular dependency) bằng cách require trực tiếp trong hàm
     try {
       const { useAppStore } = require('../store/useAppStore');
       const token = useAppStore.getState().token;
@@ -22,14 +19,14 @@ apiClient.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (e) {
-      // Ignore errors during initialization
+      // Ignore
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Wrapper chuẩn hóa việc gọi API với Try/Catch
+// Wrapper chuẩn hóa việc gọi API
 export const fetchApi = async (method, endpoint, data = null) => {
   try {
     const response = await apiClient({
@@ -42,73 +39,33 @@ export const fetchApi = async (method, endpoint, data = null) => {
     console.error(`[API Error] ${method} ${endpoint}:`, error.message);
     return {
       success: false,
-      error: error.response?.data?.message || 'Có lỗi kết nối máy chủ. Vui lòng thử lại!'
+      error: error.response?.data?.message || 'Có lỗi kết nối máy chủ.'
     };
   }
 };
 
-// ===========================================
-// AUTH API — Gọi trực tiếp không cần token
-// ===========================================
 export const authApi = {
-  register: async (name, email, password) => {
-    try {
-      const res = await axios.post(`${BASE_URL}/auth/register`, { name, email, password });
-      return res.data; // { success, message, data: { token, user } }
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Lỗi kết nối máy chủ'
-      };
-    }
-  },
-
-  login: async (email, password) => {
-    try {
-      const res = await axios.post(`${BASE_URL}/auth/login`, { email, password });
-      return res.data; // { success, message, data: { token, user } }
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Lỗi kết nối máy chủ'
-      };
-    }
-  },
-
-  getProfile: async () => {
-    return await fetchApi('GET', '/user/profile');
-  },
-
-  setupProfile: async (data) => {
-    return await fetchApi('POST', '/user/profile', data);
-  }
+  register: (name, email, password) => axios.post(`${BASE_URL}/auth/register`, { name, email, password }).then(r => r.data),
+  login: (email, password) => axios.post(`${BASE_URL}/auth/login`, { email, password }).then(r => r.data),
+  getProfile: () => fetchApi('GET', '/user/profile'),
+  setupProfile: (data) => fetchApi('POST', '/user/profile', data)
 };
 
-// ===========================================
-// RECIPE API — Tra cứu dinh dưỡng & công thức
-// ===========================================
+export const aiApi = {
+  predict: (formData) => fetchApi('POST', '/ai/predict', formData),
+  getNutritionInsight: () => fetchApi('GET', '/ai/nutrition-insight'),
+  suggestRecipesByPantry: () => fetchApi('GET', '/ai/suggest-recipes-pantry'),
+  logExternalRecipe: (recipeData) => fetchApi('POST', '/ai/log-external-recipe', recipeData)
+};
+
 export const recipeApi = {
-  lookup: async (name) => {
-    return await fetchApi('GET', `/recipes/lookup?name=${encodeURIComponent(name)}`);
-  },
-  logMeal: async (mealData) => {
-    return await fetchApi('POST', '/recipes/log', mealData);
-  },
-  getDailySummary: async () => {
-    return await fetchApi('GET', '/recipes/daily-summary');
-  },
-  importToPantry: async (items) => {
-    return await fetchApi('POST', '/recipes/pantry/import', { items });
-  },
-  getPantry: async () => {
-    return await fetchApi('GET', '/recipes/pantry');
-  },
-  getSuggestions: async () => {
-    return await fetchApi('GET', '/recipes/suggestions');
-  },
-  getAll: async () => {
-    return await fetchApi('GET', '/recipes');
-  },
+  lookup: (name) => fetchApi('GET', `/recipes/lookup?name=${encodeURIComponent(name)}`),
+  logMeal: (mealData) => fetchApi('POST', '/recipes/log', mealData),
+  getDailySummary: () => fetchApi('GET', '/recipes/daily-summary'),
+  importToPantry: (items) => fetchApi('POST', '/recipes/pantry/import', { items }),
+  getPantry: () => fetchApi('GET', '/recipes/pantry'),
+  getSuggestions: () => fetchApi('GET', '/recipes/suggestions'),
+  getAll: () => fetchApi('GET', '/recipes'),
   toggleFavorite: (recipeId) => fetchApi('POST', '/recipes/favorites/toggle', { recipeId }),
   getFavoriteIds: () => fetchApi('GET', '/recipes/favorites/ids'),
   addReview: (reviewData) => fetchApi('POST', '/recipes/reviews', reviewData),
@@ -129,6 +86,30 @@ export const recipeApi = {
   getDiary: () => fetchApi('GET', '/recipes/diary'),
   deleteDiaryItem: (logId) => fetchApi('DELETE', `/recipes/diary/${logId}`),
   updateDiaryItem: (logId, updates) => fetchApi('PUT', `/recipes/diary/${logId}`, updates),
+
+  // Recipe Management
+  create: (recipeData) => fetchApi('POST', '/recipes/create', recipeData),
+  update: (id, recipeData) => fetchApi('PUT', `/recipes/update/${id}`, recipeData),
+  
+  uploadImage: async (uri) => {
+    try {
+      const formData = new FormData();
+      const filename = uri.split('/').pop() || 'upload.jpg';
+      
+      if (Platform.OS === 'web') {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        formData.append('file', blob, filename);
+      } else {
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : `image/jpeg`;
+        formData.append('file', { uri, name: filename, type });
+      }
+      return await fetchApi('POST', '/recipes/upload-image', formData);
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
 };
 
 export default apiClient;

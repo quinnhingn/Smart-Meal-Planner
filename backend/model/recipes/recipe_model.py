@@ -17,6 +17,7 @@ class RecipeModel(db.Model):
     servings = db.Column(db.String(100))
     goals = db.Column(db.JSON)         # VD: ["lose", "keto"]
     meal_times = db.Column(db.JSON)    # VD: ["breakfast", "lunch"]
+    created_by = db.Column(db.Text)    # Lưu User ID nếu là công thức do người dùng tạo
     
     # Relationship sang bảng calo
     nutrition = db.relationship('DishCaloriesModel', backref='recipe', uselist=False)

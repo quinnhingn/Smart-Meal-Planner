@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Port 5001 dành riêng cho Client Backend (Admin dùng port 5000)
 // Dùng IP LAN thay vì localhost để Expo trên điện thoại kết nối được
-const BASE_URL = 'http://192.168.1.84:5001/api';
+const BASE_URL = 'http://192.168.1.233:5001/api';
 // const BASE_URL = 'http://192.168.1.13:5001/api';
 
 const apiClient = axios.create({
@@ -108,7 +108,9 @@ export const recipeApi = {
   },
   getAll: async () => {
     return await fetchApi('GET', '/recipes');
-  }
+  },
+  toggleFavorite: (recipeId) => fetchApi('POST', '/recipes/favorites/toggle', { recipeId }),
+  getFavoriteIds: () => fetchApi('GET', '/recipes/favorites/ids'),
 };
 
 export default apiClient;

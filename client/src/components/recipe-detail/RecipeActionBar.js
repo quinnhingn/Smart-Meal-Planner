@@ -35,12 +35,6 @@ const RecipeActionBar = ({ onReview, onShopping, onLog, onSave, isSaved, showSho
           <ActionBtn icon="cart-outline" label="Chuẩn bị" onPress={onShopping} primary />
         )}
         <ActionBtn icon="create-outline" label="Log" onPress={onLog} />
-        <ActionBtn
-          icon={isSaved ? 'heart' : 'heart-outline'}
-          label={isSaved ? 'Đã lưu' : 'Lưu'}
-          onPress={onSave}
-          danger={isSaved}
-        />
       </View>
     </View>
   );

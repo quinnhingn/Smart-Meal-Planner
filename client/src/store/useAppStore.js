@@ -27,6 +27,7 @@ export const useAppStore = create((set, get) => ({
         hasProfile: response.data.has_profile || false,
         isLoading: false 
       });
+      get().fetchFavoriteIds(); // Lấy danh sách yêu thích ngay khi đăng nhập
       return true;
     } else {
       set({ error: response.message, isLoading: false });
@@ -394,17 +395,29 @@ export const useAppStore = create((set, get) => ({
   shoppingList: [],
   recipeReviews: [],
 
-  toggleSaveRecipe: (recipeId) => set((state) => {
-    const next = new Set(state.savedRecipeIds);
-    if (next.has(recipeId)) {
-      next.delete(recipeId);
-      get().showToast('Đã bỏ lưu công thức', 'success');
-    } else {
-      next.add(recipeId);
-      get().showToast('Đã lưu công thức!', 'success');
+  fetchFavoriteIds: async () => {
+    const response = await recipeApi.getFavoriteIds();
+    if (response.success && response.data) {
+      set({ savedRecipeIds: new Set(response.data.data) });
     }
-    return { savedRecipeIds: next };
-  }),
+  },
+
+  toggleSaveRecipe: async (recipeId) => {
+    const response = await recipeApi.toggleFavorite(recipeId);
+    if (response.success) {
+      set((state) => {
+        const next = new Set(state.savedRecipeIds);
+        if (response.data.status === 'removed') {
+          next.delete(recipeId);
+          get().showToast('Đã bỏ lưu công thức', 'success');
+        } else {
+          next.add(recipeId);
+          get().showToast('Đã lưu công thức!', 'success');
+        }
+        return { savedRecipeIds: next };
+      });
+    }
+  },
 
   addToShoppingList: (items) => set((state) => {
     const newItems = items.map(item => ({

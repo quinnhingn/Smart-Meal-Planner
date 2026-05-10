@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from repository.recipes.recipe_repository import RecipeRepository
+from repository.recipes.favorite_repository import FavoriteRepository
 from model.recipes.recipe_model import MealLogModel, UserPantryModel
 from database.db import db
 from datetime import datetime, timedelta
@@ -147,3 +148,22 @@ def get_all_recipes():
         }), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Lỗi lấy danh sách món ăn: {str(e)}"}), 500
+@recipe_bp.route('/favorites/toggle', methods=['POST'])
+@jwt_required()
+def toggle_favorite():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    recipe_id = data.get('recipeId')
+    
+    if not recipe_id:
+        return jsonify({"success": False, "message": "Thiếu recipeId"}), 400
+        
+    result = FavoriteRepository.toggle_favorite(user_id, recipe_id)
+    return jsonify(result), 200
+
+@recipe_bp.route('/favorites/ids', methods=['GET'])
+@jwt_required()
+def get_favorite_ids():
+    user_id = get_jwt_identity()
+    fav_ids = FavoriteRepository.get_user_favorite_ids(user_id)
+    return jsonify({"success": True, "data": fav_ids}), 200

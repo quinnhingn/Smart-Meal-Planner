@@ -1,137 +1,66 @@
 // src/components/recipes/RecipeCardGrid.js
-import React, { useState, useCallback } from 'react';
-import {
-  FlatList, View, Text, StyleSheet, Platform, ActivityIndicator,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Platform } from 'react-native';
 import RecipeCard from './RecipeCard';
 import { compareWithPantry } from '../../utils/recipeHelpers';
-import { COLORS } from '../../constants/theme';
 
-const PAGE_SIZE = 6;
-const GAP = 12;
-const PADDING = 12;
-
-const RecipeCardGrid = ({ recipes, onRecipePress, onSaveToggle, savedIds, pantryItems }) => {
+const RecipeCardGrid = ({ 
+  recipes, onRecipePress, onSaveToggle, savedIds, pantryItems, 
+  isOwner = false, onEdit, onShowReviews 
+}) => {
   const [containerWidth, setContainerWidth] = useState(0);
-  const isWeb = Platform.OS === 'web';
+  const numColumns = Platform.OS === 'web' ? 3 : 2;
+  const cardWidth = Math.max(0, (containerWidth - 36) / numColumns);
 
-  // Responsive columns dựa trên container width thực tế (đo bằng onLayout)
-  const getNumColumns = (w) => {
-    if (!isWeb) return 2;
-    if (w > 1200) return 4;
-    if (w > 900) return 3;
-    if (w > 600) return 2;
-    return 1;
-  };
-
-  const numColumns = getNumColumns(containerWidth);
-
-  // Tính card width từ container width thực tế (đã trừ sidebar)
-  const availableWidth = Math.max(0, containerWidth - PADDING * 2);
-  const cardWidth = numColumns > 1
-    ? (availableWidth - GAP * (numColumns - 1)) / numColumns
-    : availableWidth;
-
-  // Infinite scroll
-  const [visibleCount, setVisibleCount] = useState(Math.min(PAGE_SIZE, recipes.length));
-  const [loadingMore, setLoadingMore] = useState(false);
-
-  const visibleRecipes = recipes.slice(0, visibleCount);
-  const hasMore = visibleCount < recipes.length;
-
-  const loadMore = useCallback(() => {
-    if (!hasMore || loadingMore) return;
-    setLoadingMore(true);
-    setTimeout(() => {
-      setVisibleCount(prev => Math.min(prev + PAGE_SIZE, recipes.length));
-      setLoadingMore(false);
-    }, 500);
-  }, [hasMore, loadingMore, recipes.length]);
-
-  const renderItem = ({ item }) => {
-    const { missing } = compareWithPantry(item.ingredients, pantryItems || []);
-    const isSaved = savedIds?.has(item.id);
-
-    return (
-      <View style={{ width: cardWidth }}>
-        <RecipeCard
-          recipe={item}
-          onPress={() => onRecipePress(item)}
-          onSaveToggle={() => onSaveToggle(item.id)}
-          isSaved={isSaved}
-          missingCount={missing.length}
-          totalIngredients={item.ingredients.length}
-          cardWidth={cardWidth}
-        />
-      </View>
-    );
-  };
-
-  const renderFooter = () => {
-    if (!hasMore && visibleRecipes.length > 0) {
-      return (
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Đã hiển thị tất cả {recipes.length} công thức</Text>
-        </View>
-      );
-    }
-    if (loadingMore) {
-      return (
-        <View style={styles.footer}>
-          <ActivityIndicator size="small" color={COLORS.primary} />
-          <Text style={[styles.footerText, { marginTop: 8 }]}>Đang tải thêm...</Text>
-        </View>
-      );
-    }
-    return null;
-  };
+  // Chia recipes thành từng hàng để render grid
+  const rows = [];
+  for (let i = 0; i < recipes.length; i += numColumns) {
+    rows.push(recipes.slice(i, i + numColumns));
+  }
 
   return (
-    <View 
-      style={styles.container}
-      onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
-    >
-      <FlatList
-        data={visibleRecipes}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        numColumns={numColumns}
-        key={`${numColumns}-${containerWidth}`} // Force re-render khi width/columns đổi
-        contentContainerStyle={[
-          styles.grid,
-          { paddingBottom: isWeb ? 60 : 160 }
-        ]}
-        columnWrapperStyle={numColumns > 1 ? styles.row : null}
-        showsVerticalScrollIndicator={false}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-      />
+    <View style={styles.container} onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}>
+      {rows.map((row, rowIndex) => (
+        <View key={rowIndex} style={styles.row}>
+          {row.map((recipe) => {
+            // Chỉ tính toán độ sẵn có nguyên liệu cho tab Cộng đồng (isOwner = false)
+            // compareWithPantry trả về { available: [], missing: [] }
+            const { missing } = isOwner 
+              ? { missing: [] } 
+              : compareWithPantry(recipe.ingredients || [], pantryItems || []);
+
+            const missingCount = missing.length;
+
+            return (
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                cardWidth={cardWidth}
+                onPress={() => isOwner ? onEdit?.(recipe) : onRecipePress?.(recipe)}
+                onSaveToggle={() => onSaveToggle?.(recipe.id)}
+                isSaved={savedIds?.has(recipe.id)}
+                missingCount={missingCount}
+                totalIngredients={recipe.ingredients?.length || 0}
+                isOwner={isOwner}
+                onEdit={onEdit}
+                onShowReviews={onShowReviews}
+              />
+            );
+          })}
+        </View>
+      ))}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  grid: {
-    paddingHorizontal: PADDING,
-    paddingTop: 4,
-  },
-  row: {
-    justifyContent: 'flex-start',
-    gap: GAP,
-    paddingBottom: GAP,
-  },
-  footer: {
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  footerText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#AAA',
+  container: { flex: 1 },
+  row: { 
+    flexDirection: 'row', 
+    justifyContent: 'flex-start', 
+    gap: 12, 
+    paddingHorizontal: 12,
+    marginBottom: 12,
   },
 });
 

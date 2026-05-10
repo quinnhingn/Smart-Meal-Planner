@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { recipeApi } from './api';
 
 // TRỎ VỀ BACKEND CHÍNH (Port 5001) - Để Backend xử lý cả Upload, AI và Log
-const BACKEND_URL = 'http://192.168.1.84:5001/api';
+const BACKEND_URL = 'http://192.168.1.233:5001/api';
 
 /**
  * Gửi ảnh lên Backend để xử lý trọn gói (AI + Cloudinary + Logging)
@@ -46,7 +46,7 @@ export const analyzeImageReal = async (imageUri, mode) => {
 
     if (result.success) {
       const data = result.data;
-      
+
       if (mode === 'diary') {
         return {
           topResult: {

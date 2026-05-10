@@ -1,6 +1,6 @@
 // src/screens/RecipesScreen.js
 import React, { useState, useCallback } from 'react';
-import { View, TextInput, StyleSheet, Platform } from 'react-native';
+import { View, TextInput, StyleSheet, Platform, useWindowDimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import ResponsiveContainer from '../components/ResponsiveContainer';
@@ -11,33 +11,62 @@ import SavedRecipesTab from '../components/recipes/SavedRecipesTab';
 import RecipeFormModal from '../components/recipe-form/RecipeFormModal';
 import AIFloatingChip from '../components/recipes/AIFloatingChip';
 import { useAppStore } from '../store/useAppStore';
+import { recipeApi } from '../services/api';
 
 const RecipesScreen = ({ navigation }) => {
+  const { width: windowWidth } = useWindowDimensions();
+  const isWebLarge = Platform.OS === 'web' && windowWidth > 768;
+
   const {
-    pantryItems, savedRecipeIds, toggleSaveRecipe,
-    setTabBarVisible, myRecipes, draftRecipes,
+    pantryItems, savedRecipeIds, toggleSaveRecipe, setTabBarVisible,
+    myRecipes, draftRecipes,
     addMyRecipe, updateMyRecipe, deleteMyRecipe,
     saveDraft, deleteDraft,
   } = useAppStore();
+
+  const [dbRecipes, setDbRecipes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchRecipes = async () => {
+    try {
+      setIsLoading(true);
+      console.log('🚀 [Recipes] Đang gọi API lấy danh sách món ăn...');
+      const res = await recipeApi.getAll();
+      console.log('📦 [Recipes] Kết quả từ API:', res);
+
+      if (res.success && res.data && res.data.success) {
+        console.log('✅ [Recipes] Đã lấy được', res.data.data.length, 'món ăn');
+        setDbRecipes(res.data.data);
+      } else {
+        console.warn('⚠️ [Recipes] API trả về không thành công:', res.error || 'Unknown error');
+      }
+    } catch (err) {
+      console.error('❌ [Recipes] Lỗi khi gọi API:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const [activeTab, setActiveTab] = useState('community');
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [isEditingDraft, setIsEditingDraft] = useState(false);
-  
+
   // STATE MỚI: Quản lý hiển thị form đánh giá
   const [showReviewForm, setShowReviewForm] = useState(false);
 
+  // Show tab bar and fetch data
   useFocusEffect(
     useCallback(() => {
       setTabBarVisible(true);
+      fetchRecipes();
       return () => {};
     }, [setTabBarVisible])
   );
 
   // LUỒNG 1: Dành cho tab Cộng đồng & Đã lưu -> Mở trang chi tiết
-  const handleRecipeDetail = (recipe) => {
+  const handleRecipePress = (recipe) => {
     navigation.navigate('RecipeDetail', { recipe });
   };
 
@@ -61,7 +90,7 @@ const RecipesScreen = ({ navigation }) => {
       const newRecipe = { ...data, id: `my_${Date.now()}`, author: { name: 'Bạn', avatar: '' } };
       delete newRecipe.isDraft; // Đảm bảo xóa cờ draft khi đăng
       addMyRecipe(newRecipe);
-      
+
       // XÓA BẢN NHÁP SAU KHI ĐĂNG THÀNH CÔNG
       if (isEditingDraft) {
         deleteDraft(editingRecipe.id);
@@ -112,8 +141,10 @@ const RecipesScreen = ({ navigation }) => {
         <View style={styles.content}>
           {activeTab === 'community' && (
             <CommunityRecipesTab
+              dbRecipes={dbRecipes}
+              isLoading={isLoading}
               searchQuery={searchQuery}
-              onRecipePress={handleRecipeDetail} // Truyền Luồng 1
+              onRecipePress={handleRecipePress}
               onSaveToggle={toggleSaveRecipe}
               savedIds={savedRecipeIds}
               pantryItems={pantryItems}
@@ -123,9 +154,9 @@ const RecipesScreen = ({ navigation }) => {
             <MyRecipesTab
               myRecipes={myRecipes}
               drafts={draftRecipes}
-              onRecipePress={handleOpenForm} // Truyền Luồng 2
-              onEdit={handleOpenForm}        // Truyền Luồng 2
-              onShowReviews={handleShowReviews} // Truyền hàm mở Review
+              onRecipePress={handleOpenForm}
+              onEdit={handleOpenForm}
+              onShowReviews={handleShowReviews}
               onSaveToggle={() => {}}
               savedIds={new Set()}
               pantryItems={pantryItems}
@@ -137,7 +168,7 @@ const RecipesScreen = ({ navigation }) => {
           {activeTab === 'saved' && (
             <SavedRecipesTab
               savedIds={savedRecipeIds}
-              onRecipePress={handleRecipeDetail} // Truyền Luồng 1
+              onRecipePress={handleRecipePress}
               onSaveToggle={toggleSaveRecipe}
               pantryItems={pantryItems}
               onExplore={handleExplore}

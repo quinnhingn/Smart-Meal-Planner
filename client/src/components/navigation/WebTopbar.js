@@ -16,11 +16,12 @@ const ROUTE_TITLES = {
   Profile: 'Hồ sơ cá nhân',
   Tracking: 'Thống kê & Theo dõi',
   Scan: 'Quét AI',
+  ShoppingList: 'Danh sách đi chợ',
 };
 
 const WebTopbar = ({ currentRoute }) => {
   const navigation = useNavigation();
-  const { userProfile } = useAppStore(); 
+  const { userProfile, shoppingList } = useAppStore(); 
 
   const title = ROUTE_TITLES[currentRoute] || 'Tổng quan';
 
@@ -32,9 +33,18 @@ const WebTopbar = ({ currentRoute }) => {
       </View>
 
       <View style={styles.rightSection}>
+        {shoppingList?.length > 0 && (
+          <Pressable style={styles.iconBtn} onPress={() => navigation.navigate('ShoppingList')}>
+            <Ionicons name="cart-outline" size={24} color={COLORS.primary} />
+            <View style={styles.cartBadge}>
+              <Text style={styles.badgeText}>{shoppingList.length}</Text>
+            </View>
+          </Pressable>
+        )}
+
         <Pressable style={styles.iconBtn}>
           <Ionicons name="notifications-outline" size={24} color="#555" />
-          <View style={styles.badge} />
+          <View style={styles.notifBadge} />
         </Pressable>
 
         <Pressable style={styles.avatarBtn} onPress={() => navigation.navigate('Profile')}>
@@ -67,7 +77,20 @@ const styles = StyleSheet.create({
   
   rightSection: { flexDirection: 'row', alignItems: 'center', gap: 20 },
   iconBtn: { position: 'relative', cursor: 'pointer' },
-  badge: { position: 'absolute', top: 0, right: 0, width: 10, height: 10, borderRadius: 5, backgroundColor: COLORS.danger, borderWidth: 2, borderColor: '#FFF' },
+  notifBadge: { position: 'absolute', top: 0, right: 0, width: 10, height: 10, borderRadius: 5, backgroundColor: COLORS.danger, borderWidth: 2, borderColor: '#FFF' },
+  cartBadge: { 
+    position: 'absolute', 
+    top: -5, 
+    right: -5, 
+    backgroundColor: '#FF5252', 
+    borderRadius: 9, 
+    minWidth: 18, 
+    height: 18, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    paddingHorizontal: 3,
+  },
+  badgeText: { color: '#FFF', fontSize: 11, fontWeight: 'bold' },
   avatarBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(76, 175, 80, 0.2)', justifyContent: 'center', alignItems: 'center', cursor: 'pointer' },
   avatarText: { fontSize: 16, fontWeight: '800', color: COLORS.primary }
 });

@@ -1,6 +1,6 @@
 // src/components/recipes/MyRecipesTab.js
 import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
+import { View, Text, Pressable, StyleSheet, Platform, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 import RecipeCardGrid from './RecipeCardGrid';
@@ -23,7 +23,6 @@ const MyRecipesTab = ({
       ) : (
         <View style={styles.container}>
           <View style={styles.subTabBar}>
-            {/* Đã FIX lỗi thiếu ngoặc nhọn {} bao quanh chuỗi backtick */}
             <TabItem 
               label={`Đã đăng (${myRecipes.length})`} 
               active={activeSubTab === 'published'} 
@@ -38,22 +37,26 @@ const MyRecipesTab = ({
 
           <View style={styles.contentArea}>
             <View style={[styles.gridWrapper, activeSubTab !== 'published' && styles.hidden]}>
-              <RecipeCardGrid
-                recipes={myRecipes}
-                isOwner={true} // Kích hoạt giao diện Tab cá nhân
-                onEdit={onEdit}
-                onShowReviews={onShowReviews}
-                pantryItems={pantryItems}
-              />
+              <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+                <RecipeCardGrid
+                  recipes={myRecipes}
+                  isOwner={true}
+                  onEdit={onEdit}
+                  onShowReviews={onShowReviews}
+                  pantryItems={pantryItems}
+                />
+              </ScrollView>
             </View>
 
             <View style={[styles.gridWrapper, activeSubTab !== 'drafts' && styles.hidden]}>
-              <RecipeCardGrid
-                recipes={drafts}
-                isOwner={true} // Kích hoạt giao diện Tab cá nhân
-                onEdit={(r) => onEdit?.(r, true)}
-                pantryItems={pantryItems}
-              />
+              <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+                <RecipeCardGrid
+                  recipes={drafts}
+                  isOwner={true}
+                  onEdit={(r) => onEdit?.(r, true)}
+                  pantryItems={pantryItems}
+                />
+              </ScrollView>
             </View>
           </View>
         </View>
@@ -84,6 +87,7 @@ const styles = StyleSheet.create({
   contentArea: { flex: 1 },
   gridWrapper: { flex: 1 },
   hidden: { display: 'none' },
+  scrollContent: { paddingBottom: 20 },
   fab: {
     position: 'absolute', bottom: Platform.OS === 'web' ? 32 : 100, right: 16, zIndex: 99,
     width: 56, height: 56, borderRadius: 28, backgroundColor: COLORS.primary,

@@ -5,11 +5,26 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 import { formatCookTime, getAvailabilityInfo } from '../../utils/recipeHelpers';
 
+// Inline MiniMacro component — hiển thị macro nhỏ gọn trong card
+const MiniMacro = ({ icon, value, color }) => (
+  <View style={styles.macroPill}>
+    <Ionicons name={icon} size={10} color={color} />
+    <Text style={[styles.macroPillText, { color }]}>{Math.round(value)}g</Text>
+  </View>
+);
+
 const RecipeCard = ({ 
   recipe, onPress, onSaveToggle, isSaved, missingCount, totalIngredients, cardWidth,
   isOwner = false, onEdit, onShowReviews 
 }) => {
   const avail = getAvailabilityInfo(missingCount, totalIngredients);
+
+  // Fallback colors nếu COLORS.macros không tồn tại
+  const macroColors = {
+    protein: COLORS?.macros?.protein || '#FF6B6B',
+    carbs: COLORS?.macros?.carbs || '#4ECDC4',
+    fat: COLORS?.macros?.fat || '#FFE66D',
+  };
 
   return (
     <Pressable 
@@ -22,7 +37,7 @@ const RecipeCard = ({
     >
       {/* PHẦN ẢNH & BADGE */}
       <View style={styles.imageWrap}>
-        <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="cover" />
+        <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="contain" />
 
         {/* Chỉ hiện Badge nguyên liệu nếu KHÔNG PHẢI là chủ sở hữu (Tab cộng đồng) */}
         {!isOwner && (
@@ -53,10 +68,17 @@ const RecipeCard = ({
         </Pressable>
       </View>
 
-      {/* THÔNG TIN CHI TIẾT (Giữ nguyên UI từ image_f965b8.png) */}
+      {/* THÔNG TIN CHI TIẾT */}
       <View style={styles.info}>
         <Text style={styles.title} numberOfLines={2}>{recipe.title}</Text>
-        
+
+        {/* MACRO ROW — mới thêm */}
+        <View style={styles.macroRow}>
+          <MiniMacro icon="nutrition-outline" value={recipe.macros?.protein || 0} color={macroColors.protein} />
+          <MiniMacro icon="cube-outline" value={recipe.macros?.carbs || 0} color={macroColors.carbs} />
+          <MiniMacro icon="water-outline" value={recipe.macros?.fat || 0} color={macroColors.fat} />
+        </View>
+
         <View style={styles.meta}>
           <View style={styles.metaItem}>
             <Ionicons name="time-outline" size={14} color="#888" />
@@ -64,7 +86,7 @@ const RecipeCard = ({
           </View>
           <View style={styles.metaItem}>
             <Ionicons name="flame-outline" size={14} color="#888" />
-            <Text style={styles.metaText}>{recipe.macros.calories} kcal</Text>
+            <Text style={styles.metaText}>{recipe.macros?.calories || 0} kcal</Text>
           </View>
         </View>
 
@@ -84,16 +106,73 @@ const RecipeCard = ({
 };
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: '#FFF', borderRadius: 20, overflow: 'hidden', marginBottom: 4, borderWidth: 1, borderColor: '#F0F0F0' },
-  cardPressed: { opacity: 0.9, transform: [{ scale: 0.98 }] },
-  imageWrap: { width: '100%', height: 140, position: 'relative' },
-  image: { width: '100%', height: '100%' },
-  availBadge: { position: 'absolute', top: 10, left: 10, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 20, gap: 4 },
+  card: {
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginBottom: 4,
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8 },
+      android: { elevation: 3 },
+      web: { boxShadow: '0 2px 12px rgba(0,0,0,0.08)' },
+    }),
+  },
+  cardPressed: { transform: [{ scale: 0.98 }], opacity: 0.9 },
+
+  imageWrap: {
+    position: 'relative',
+    width: '100%',
+    aspectRatio: 1.4,
+    backgroundColor: '#F8F9FA',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    padding: 10,
+  },
+  availBadge: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 20,
+    gap: 4,
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 },
+      android: { elevation: 2 },
+    }),
+  },
   dot: { width: 6, height: 6, borderRadius: 3 },
   availText: { fontSize: 10, fontWeight: '800' },
   actionBtn: { position: 'absolute', top: 10, right: 10, width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.9)', justifyContent: 'center', alignItems: 'center' },
+
   info: { padding: 12, gap: 6 },
   title: { fontSize: 14, fontWeight: '800', color: '#1A1D1E', lineHeight: 18 },
+
+  // MACRO ROW — style mới
+  macroRow: { 
+    flexDirection: 'row', 
+    gap: 8, 
+    marginTop: 2,
+    marginBottom: 2,
+  },
+  macroPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: '#F8F9FA',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  macroPillText: {
+    fontSize: 10,
+    fontWeight: '700',
+  },
+
   meta: { flexDirection: 'row', gap: 12 },
   metaItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   metaText: { fontSize: 11, color: '#888', fontWeight: '600' },

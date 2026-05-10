@@ -29,8 +29,8 @@ const MealSection = ({ type, items, totalCalo, isExpanded, onToggle, onEditItem,
           <Ionicons name={theme.icon} size={20} color={theme.color} />
         </View>
         <View style={styles.info}>
-          <Text style={styles.title}>Bữa {type.toLowerCase()}</Text>
-          <Text style={styles.subtitle}>{items.length} món · {totalCalo} kcal</Text>
+          <Text style={styles.title}>{type.startsWith('Bữa') ? type : `Bữa ${type.toLowerCase()}`}</Text>
+          <Text style={styles.subtitle}>{items.length} món · {totalCalo.toFixed(1)} kcal</Text>
         </View>
         <View style={styles.right}>
           <Ionicons name={isExpanded ? "chevron-up" : "chevron-down"} size={20} color="#888" />

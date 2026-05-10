@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { View, StyleSheet, Platform, useWindowDimensions, ScrollView } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import DailyHeader from '../components/diary/DailyHeader';
 import WeekSelector from '../components/diary/WeekSelector';
@@ -17,12 +18,22 @@ const DiaryScreen = () => {
   const { width: windowWidth } = useWindowDimensions();
   const isWebLarge = Platform.OS === 'web' && windowWidth > 768;
 
-  const { userProfile, diaryItems, addDiaryItem, updateDiaryItem, deleteDiaryItem } = useAppStore();
+  const { 
+    userProfile, diaryItems, fetchDiaryItems, 
+    addDiaryItem, updateDiaryItem, deleteDiaryItem 
+  } = useAppStore();
+
+  // TỰ ĐỘNG LOAD DỮ LIỆU
+  useFocusEffect(
+    useCallback(() => {
+      if (fetchDiaryItems) fetchDiaryItems();
+    }, [fetchDiaryItems])
+  );
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [expandedSections, setExpandedSections] = useState({
-    'Sáng': true, 'Trưa': true, 'Tối': false, 'Bữa phụ': false
+    'Sáng': true, 'Trưa': true, 'Tối': true, 'Bữa phụ': true
   });
 
   // Modal state
@@ -32,26 +43,41 @@ const DiaryScreen = () => {
 
   // Lọc items theo ngày đã chọn
   const dayItems = useMemo(() => {
+    if (!Array.isArray(diaryItems)) return [];
     return diaryItems.filter(item => {
-      if (!item.date) return isSameDay(new Date(), selectedDate);
-      return isSameDay(new Date(item.date), selectedDate);
+      const itemDate = item.date ? new Date(item.date) : new Date();
+      return isSameDay(itemDate, selectedDate);
     });
   }, [diaryItems, selectedDate]);
 
   const targetCalo = Math.round(userProfile?.targetCalories || userProfile?.tdee || 2000);
   const stats = useMemo(() => {
-    return dayItems.reduce((acc, item) => {
+    const raw = dayItems.reduce((acc, item) => {
       acc.calo += (item.calo || 0);
       acc.protein += (item.protein || 0);
       acc.carbs += (item.carbs || 0);
       acc.fat += (item.fat || 0);
       return acc;
     }, { calo: 0, protein: 0, carbs: 0, fat: 0 });
+
+    return {
+      calo: parseFloat(raw.calo.toFixed(1)),
+      protein: parseFloat(raw.protein.toFixed(1)),
+      carbs: parseFloat(raw.carbs.toFixed(1)),
+      fat: parseFloat(raw.fat.toFixed(1))
+    };
   }, [dayItems]);
 
   const mealGroups = useMemo(() => {
     return MEAL_TYPES.map(type => {
-      const items = dayItems.filter(item => item.mealType === type);
+      const items = dayItems.filter(item => {
+        const mType = (item.mealType || '').toLowerCase();
+        const searchType = type.toLowerCase();
+        if (searchType === 'sáng') return mType === 'sáng' || mType === 'breakfast';
+        if (searchType === 'trưa') return mType === 'trưa' || mType === 'lunch';
+        if (searchType === 'tối') return mType === 'tối' || mType === 'dinner';
+        return mType === 'bữa phụ' || mType === 'snack' || mType === 'bữa bữa phụ';
+      });
       const totalCalo = items.reduce((sum, i) => sum + (i.calo || 0), 0);
       return { type, items, totalCalo };
     });

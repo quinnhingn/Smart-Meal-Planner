@@ -1,25 +1,36 @@
 // src/components/recipes/CommunityRecipesTab.js
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import RecipeFilterChips from './RecipeFilterChips';
 import RecipeCardGrid from './RecipeCardGrid';
 import RecipeEmptyState from './RecipeEmptyState';
 import { mockRecipes } from '../../utils/mockRecipes';
 
-const CommunityRecipesTab = ({ searchQuery, onRecipePress, onSaveToggle, savedIds, pantryItems }) => {
+const CommunityRecipesTab = ({ 
+  dbRecipes = [], 
+  isLoading = false, 
+  searchQuery, 
+  onRecipePress, 
+  onSaveToggle, 
+  savedIds, 
+  pantryItems 
+}) => {
   // Chuyển từ activeFilter (chuỗi) sang activeFilters (mảng) để chọn nhiều
   const [activeFilters, setActiveFilters] = useState(['all']);
 
+  // Ưu tiên dùng dbRecipes từ API, fallback về mockRecipes nếu API chưa có data
+  const recipes = dbRecipes.length > 0 ? dbRecipes : mockRecipes;
+
   const filtered = useMemo(() => {
-    let result = [...mockRecipes];
+    let result = [...recipes];
 
     // 1. Lọc theo tìm kiếm
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(r =>
-        r.title.toLowerCase().includes(q) ||
-        r.labels.some(l => l.toLowerCase().includes(q)) ||
-        r.ingredients.some(i => i.name.toLowerCase().includes(q))
+        r.title?.toLowerCase().includes(q) ||
+        r.labels?.some(l => l.toLowerCase().includes(q)) ||
+        r.ingredients?.some(i => i.name?.toLowerCase().includes(q))
       );
     }
 
@@ -31,21 +42,21 @@ const CommunityRecipesTab = ({ searchQuery, onRecipePress, onSaveToggle, savedId
       return activeFilters.some(filterId => {
         switch (filterId) {
           case 'cookable':
-            const missing = recipe.ingredients.filter(ing =>
+            const missing = recipe.ingredients?.filter(ing =>
               !pantryItems?.some(p => p.name.toLowerCase().includes(ing.name.toLowerCase()))
             );
-            return missing.length === 0;
-          case 'snack': return recipe.labels.includes('Bữa phụ');
-          case 'breakfast': return recipe.labels.includes('Bữa sáng');
-          case 'lunch': return recipe.labels.includes('Bữa trưa');
-          case 'dinner': return recipe.labels.includes('Bữa tối');
-          case 'lowcarb': return recipe.labels.includes('Keto') || recipe.macros.carbs < 20;
-          case 'highprotein': return recipe.labels.includes('High Protein') || recipe.macros.protein > 25;
+            return missing?.length === 0;
+          case 'snack': return recipe.labels?.includes('Bữa phụ');
+          case 'breakfast': return recipe.labels?.includes('Bữa sáng');
+          case 'lunch': return recipe.labels?.includes('Bữa trưa');
+          case 'dinner': return recipe.labels?.includes('Bữa tối');
+          case 'lowcarb': return recipe.labels?.includes('Keto') || recipe.macros?.carbs < 20;
+          case 'highprotein': return recipe.labels?.includes('High Protein') || recipe.macros?.protein > 25;
           default: return false;
         }
       });
     });
-  }, [searchQuery, activeFilters, pantryItems]);
+  }, [recipes, searchQuery, activeFilters, pantryItems]);
 
   return (
     <View style={styles.container}>
@@ -54,10 +65,18 @@ const CommunityRecipesTab = ({ searchQuery, onRecipePress, onSaveToggle, savedId
         activeFilters={activeFilters} 
         onFilterChange={setActiveFilters} 
       />
-      
-      {/* listContainer giúp cô lập Grid, tránh bị stretch theo chiều dọc của Filter */}
-      <View style={styles.listContainer}>
-        {filtered.length === 0 ? (
+
+      {/* ScrollView thay vì FlatList để tránh lỗi VirtualizedLists nested */}
+      <ScrollView 
+        style={styles.listContainer} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {isLoading && dbRecipes.length === 0 ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#1A1D1E" />
+          </View>
+        ) : filtered.length === 0 ? (
           <RecipeEmptyState tab="community" searchQuery={searchQuery} />
         ) : (
           <RecipeCardGrid
@@ -68,14 +87,16 @@ const CommunityRecipesTab = ({ searchQuery, onRecipePress, onSaveToggle, savedId
             pantryItems={pantryItems}
           />
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  listContainer: { flex: 1 }, 
+  listContainer: { flex: 1 },
+  scrollContent: { paddingBottom: 20 },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 40 },
 });
 
 export default CommunityRecipesTab;

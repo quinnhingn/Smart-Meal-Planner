@@ -1,10 +1,12 @@
 // src/components/recipes/SavedRecipesTab.js
 import React, { useMemo } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import RecipeCardGrid from './RecipeCardGrid';
 import RecipeEmptyState from './RecipeEmptyState';
 import { mockRecipes } from '../../utils/mockRecipes';
 
+// LƯU Ý: dbRecipes chỉ hiển thị ở tab Cộng đồng.
+// Tab Đã lưu chỉ lọc từ mockRecipes theo savedIds (sau này sẽ chuyển sang API riêng cho saved recipes)
 const SavedRecipesTab = ({ savedIds, onRecipePress, onSaveToggle, pantryItems, onExplore }) => {
   const savedRecipes = useMemo(() => {
     return mockRecipes.filter(r => savedIds?.has(r.id));
@@ -15,13 +17,15 @@ const SavedRecipesTab = ({ savedIds, onRecipePress, onSaveToggle, pantryItems, o
       {savedRecipes.length === 0 ? (
         <RecipeEmptyState tab="saved" onCta={(action) => action === 'explore' && onExplore?.()} />
       ) : (
-        <RecipeCardGrid
-          recipes={savedRecipes}
-          onRecipePress={onRecipePress}
-          onSaveToggle={onSaveToggle}
-          savedIds={savedIds}
-          pantryItems={pantryItems}
-        />
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          <RecipeCardGrid
+            recipes={savedRecipes}
+            onRecipePress={onRecipePress}
+            onSaveToggle={onSaveToggle}
+            savedIds={savedIds}
+            pantryItems={pantryItems}
+          />
+        </ScrollView>
       )}
     </View>
   );
@@ -29,6 +33,7 @@ const SavedRecipesTab = ({ savedIds, onRecipePress, onSaveToggle, pantryItems, o
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  scrollContent: { paddingBottom: 20 },
 });
 
 export default SavedRecipesTab;

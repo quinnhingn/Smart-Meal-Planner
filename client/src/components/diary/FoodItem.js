@@ -18,7 +18,7 @@ const FoodItem = ({ item, isLast, onEdit, onDelete }) => (
       </Text>
     </View>
     <View style={styles.right}>
-      <Text style={styles.calo}>{item.calo} kcal</Text>
+      <Text style={styles.calo}>{Number(item.calo || 0).toFixed(1)} kcal</Text>
       <View style={styles.actions}>
         <Pressable onPress={() => onEdit(item)} style={styles.iconBtn}>
           <Ionicons name="pencil" size={16} color="#888" />

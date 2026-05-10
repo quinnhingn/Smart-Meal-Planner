@@ -4,6 +4,7 @@ export const categories = [
   { id: 'milks', name: 'Sữa & Trứng', count: 34, completeness: 78, bgColor: '#DBEAFE', image: 'https://emi.parkview.com/media/Image/Dashboard_952_Plant-Milk_10_22.jpg' },
   { id: 'grains', name: 'Ngũ cốc & Tinh bột', count: 42, completeness: 96, bgColor: '#FEF9C3', image: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Ngu-coc-granola-vua-hat-ngon.jpg' },
   { id: 'fruits', name: 'Trái cây', count: 51, completeness: 70, bgColor: '#FFF7ED', image: 'https://cdn.tgdd.vn/Files/2019/12/03/1224621/trai-cay-tot-nhung-nen-tranh-an-vao-cac-thoi-diem-nay-neu-khong-muon-tang-can-202112271556593399.jpg' },
+  { id: 'spices', name: 'Gia vị', count: 12, completeness: 85, bgColor: '#F3E8FF', image: '/assets/spices.png' },
 ];
 
 export const aiDetected = [

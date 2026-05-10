@@ -146,11 +146,24 @@ const fetchDashboardData = async () => {
 };
 
 const updateStats = () => {
-  // 1. Cập nhật số lượng món theo danh mục (Khớp ID trực tiếp)
-  categories.value.forEach(cat => {
-    const dbCount = recipeStore.recipes.filter(r => r.category?.toLowerCase() === cat.id).length;
-    // Cộng dồn vào mock data
-    cat.count += dbCount;
+  // 1. Cập nhật số lượng món theo danh mục
+  recipeStore.recipes.forEach(r => {
+    const catId = r.category?.toLowerCase() || 'other';
+    let targetCat = categories.value.find(c => c.id === catId);
+    
+    if (targetCat) {
+      targetCat.count += 1;
+    } else {
+      // Thêm danh mục mới nếu DB trả về category lạ
+      categories.value.push({
+        id: catId,
+        name: r.category ? r.category.charAt(0).toUpperCase() + r.category.slice(1) : 'Khác',
+        count: 1,
+        icon: 'fa-solid fa-utensils',
+        bgColor: '#f8f9fa',
+        color: '#64748B'
+      });
+    }
   });
 
   // 2. Cập nhật phân bổ mục tiêu

@@ -21,15 +21,12 @@ const RecipesScreen = ({ navigation }) => {
   } = useAppStore();
 
   const [activeTab, setActiveTab] = useState('community');
-  
-  // KHÔI PHỤC STATE TÌM KIẾM (Đã fix lỗi undefined)
   const [searchQuery, setSearchQuery] = useState('');
-  
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [isEditingDraft, setIsEditingDraft] = useState(false);
   
-  // State quản lý việc mở modal đánh giá
+  // STATE MỚI: Quản lý hiển thị form đánh giá
   const [showReviewForm, setShowReviewForm] = useState(false);
 
   useFocusEffect(
@@ -39,92 +36,108 @@ const RecipesScreen = ({ navigation }) => {
     }, [setTabBarVisible])
   );
 
-  // Nhấn vào card sẽ mở form để xem hoặc sửa
-  const handleRecipePress = (recipe) => {
+  // LUỒNG 1: Dành cho tab Cộng đồng & Đã lưu -> Mở trang chi tiết
+  const handleRecipeDetail = (recipe) => {
+    navigation.navigate('RecipeDetail', { recipe });
+  };
+
+  // LUỒNG 2: Dành cho tab Cá nhân -> Mở Form để Xem/Sửa
+  const handleOpenForm = (recipe) => {
     setEditingRecipe(recipe);
     setIsEditingDraft(!!recipe.isDraft);
     setShowForm(true);
   };
 
-  // Mở form đánh giá
+  // Dành cho nút Xem đánh giá
   const handleShowReviews = (recipe) => {
     setEditingRecipe(recipe);
     setShowReviewForm(true);
   };
 
-  // Lưu công thức (Đăng bài / Cập nhật)
   const handleSaveForm = (data) => {
     if (editingRecipe && !isEditingDraft) {
       updateMyRecipe(editingRecipe.id, { ...data, id: editingRecipe.id });
     } else {
-      addMyRecipe({ ...data, id: `my_${Date.now()}` });
-      if (isEditingDraft) deleteDraft(editingRecipe.id);
+      const newRecipe = { ...data, id: `my_${Date.now()}`, author: { name: 'Bạn', avatar: '' } };
+      delete newRecipe.isDraft; // Đảm bảo xóa cờ draft khi đăng
+      addMyRecipe(newRecipe);
+      
+      // XÓA BẢN NHÁP SAU KHI ĐĂNG THÀNH CÔNG
+      if (isEditingDraft) {
+        deleteDraft(editingRecipe.id);
+      }
     }
     setShowForm(false);
     setEditingRecipe(null);
   };
 
-  // Lưu nháp
   const handleSaveDraft = (data) => {
-    const draftId = editingRecipe?.id || `draft_${Date.now()}`;
-    saveDraft({ ...data, id: draftId, isDraft: true });
+    saveDraft({ ...data, id: editingRecipe?.id || `draft_${Date.now()}`, isDraft: true });
     setShowForm(false);
     setEditingRecipe(null);
   };
 
-  const handleExplore = () => setActiveTab('community');
-  const handleAIPress = () => navigation.navigate('Scan', { mode: 'recipe' });
+  const handleExplore = () => {
+    setActiveTab('community');
+  };
+
+  const handleAIPress = () => {
+    navigation.navigate('Scan', { mode: 'recipe' });
+  };
 
   return (
     <ResponsiveContainer useImageBg={false}>
       <View style={styles.container}>
-        
-        {/* KHÔI PHỤC SEARCH BAR */}
+        {/* Search bar */}
         <View style={styles.searchRow}>
           <View style={styles.searchWrap}>
-            <Ionicons name="search" size={18} color="#999" />
+            <Ionicons name="search" size={18} color="#999" style={styles.searchIcon} />
             <TextInput
               value={searchQuery}
               onChangeText={setSearchQuery}
               placeholder="Tìm công thức..."
+              placeholderTextColor="#AAA"
               style={styles.searchInput}
             />
+            {searchQuery.length > 0 && (
+              <Ionicons name="close-circle" size={18} color="#BBB" onPress={() => setSearchQuery('')} />
+            )}
           </View>
         </View>
 
+        {/* Tab bar */}
         <RecipeTabBar activeTab={activeTab} onChange={setActiveTab} />
 
+        {/* Tab content */}
         <View style={styles.content}>
           {activeTab === 'community' && (
             <CommunityRecipesTab
-              searchQuery={searchQuery} // TRUYỀN XUỐNG ĐỂ FIX LỖI .TRIM()
-              onRecipePress={handleRecipePress}
+              searchQuery={searchQuery}
+              onRecipePress={handleRecipeDetail} // Truyền Luồng 1
               onSaveToggle={toggleSaveRecipe}
               savedIds={savedRecipeIds}
               pantryItems={pantryItems}
             />
           )}
-
           {activeTab === 'my' && (
             <MyRecipesTab
-              myRecipes={myRecipes} 
+              myRecipes={myRecipes}
               drafts={draftRecipes}
-              onRecipePress={handleRecipePress}
-              onEdit={handleRecipePress}
+              onRecipePress={handleOpenForm} // Truyền Luồng 2
+              onEdit={handleOpenForm}        // Truyền Luồng 2
+              onShowReviews={handleShowReviews} // Truyền hàm mở Review
               onSaveToggle={() => {}}
               savedIds={new Set()}
               pantryItems={pantryItems}
               onCreate={() => { setEditingRecipe(null); setIsEditingDraft(false); setShowForm(true); }}
               onDelete={deleteMyRecipe}
               onDeleteDraft={deleteDraft}
-              onShowReviews={handleShowReviews}
             />
           )}
-
           {activeTab === 'saved' && (
             <SavedRecipesTab
               savedIds={savedRecipeIds}
-              onRecipePress={handleRecipePress}
+              onRecipePress={handleRecipeDetail} // Truyền Luồng 1
               onSaveToggle={toggleSaveRecipe}
               pantryItems={pantryItems}
               onExplore={handleExplore}
@@ -132,21 +145,22 @@ const RecipesScreen = ({ navigation }) => {
           )}
         </View>
 
+        {/* AI Chip — chỉ hiện ở tab Cộng đồng */}
         {activeTab === 'community' && <AIFloatingChip onPress={handleAIPress} />}
 
-        {/* Form Modal (Dùng chung cho xem/sửa) */}
+        {/* Form Modal */}
         <RecipeFormModal
           visible={showForm}
-          initialData={editingRecipe}
           onClose={() => { setShowForm(false); setEditingRecipe(null); }}
           onSave={handleSaveForm}
           onDraft={handleSaveDraft}
+          initialData={editingRecipe}
         />
-        
-        {/* Vùng chờ tích hợp Modal Xem Đánh Giá */}
+
+        {/* Chờ tích hợp Modal Đánh Giá */}
         {showReviewForm && (
            <View style={{display: 'none'}}>
-               {/* Modal Review của bạn sẽ đặt ở đây */}
+               {/* Đặt component ReviewModal của bạn ở đây */}
            </View>
         )}
       </View>
@@ -163,7 +177,8 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: 'rgba(0,0,0,0.06)',
     ...Platform.select({ web: { boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }, default: { elevation: 1 } }),
   },
-  searchInput: { flex: 1, fontSize: 15, fontWeight: '600', outlineStyle: 'none' },
+  searchIcon: { marginTop: 1 },
+  searchInput: { flex: 1, fontSize: 15, fontWeight: '600', color: '#1A1D1E', paddingVertical: 0, outlineStyle: 'none' },
   content: { flex: 1 },
 });
 

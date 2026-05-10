@@ -40,7 +40,7 @@ const MyRecipesTab = ({
             <View style={[styles.gridWrapper, activeSubTab !== 'published' && styles.hidden]}>
               <RecipeCardGrid
                 recipes={myRecipes}
-                isOwner={true}
+                isOwner={true} // Kích hoạt giao diện Tab cá nhân
                 onEdit={onEdit}
                 onShowReviews={onShowReviews}
                 pantryItems={pantryItems}
@@ -50,7 +50,7 @@ const MyRecipesTab = ({
             <View style={[styles.gridWrapper, activeSubTab !== 'drafts' && styles.hidden]}>
               <RecipeCardGrid
                 recipes={drafts}
-                isOwner={true}
+                isOwner={true} // Kích hoạt giao diện Tab cá nhân
                 onEdit={(r) => onEdit?.(r, true)}
                 pantryItems={pantryItems}
               />

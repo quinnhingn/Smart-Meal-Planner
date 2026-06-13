@@ -1,4 +1,7 @@
 // src/navigation/RootNavigator.js
+// NutriLens V2 — Mobile-only navigation shell
+// Bottom Tab: Dashboard | Diary | Scan (FAB) | Fitness | Recipes
+
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -6,12 +9,11 @@ import {
   StyleSheet,
   Pressable,
   Platform,
-  useWindowDimensions,
   Animated,
   Easing,
 } from 'react-native';
 
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,7 +22,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Screens
 import DashboardScreen from '../screens/DashboardScreen';
-import PantryScreen from '../screens/PantryScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
@@ -31,33 +32,46 @@ import DiaryScreen from '../screens/DiaryScreen';
 import RecipesScreen from '../screens/RecipesScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import AISuggestedRecipeDetailScreen from '../screens/AISuggestedRecipeDetailScreen';
-import ShoppingListScreen from '../screens/ShoppingListScreen';
 
 // Layout
-import CustomSidebar from '../components/navigation/CustomSidebar';
-import WebTopbar from '../components/navigation/WebTopbar';
 import MobileTopbar from '../components/navigation/MobileTopbar';
 import CustomToast from '../components/common/CustomToast';
+import FABActionSheet from '../components/navigation/FABActionSheet';
+import SearchModal from '../components/scan/SearchModal';
 
-const { COLORS, BREAKPOINTS } = require('../constants/theme');
-const { useAppStore } = require('../store/useAppStore');
+// Theme & Store
+import { COLORS, FONTS, SHADOWS, RADIUS } from '../constants/theme';
+import { useAppStore } from '../store/useAppStore';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+// ─── Placeholder screen for Fitness Hub (Phase 2) ───────────────────
+const FitnessHubPlaceholder = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.pastelBg }}>
+    <Ionicons name="barbell-outline" size={64} color={COLORS.primary} />
+    <Text style={{ fontSize: 18, fontFamily: FONTS.bold, color: COLORS.text.primary, marginTop: 16 }}>
+      Fitness Hub
+    </Text>
+    <Text style={{ fontSize: 14, fontFamily: FONTS.regular, color: COLORS.text.secondary, marginTop: 4 }}>
+      Sắp ra mắt ở Phase 2
+    </Text>
+  </View>
+);
+
 //////////////////////////////////////////////////////////
-// CUSTOM TAB BAR (MOBILE) — 5 TABS
+// CUSTOM TAB BAR — 5 TABS (Mobile-Only)
 //////////////////////////////////////////////////////////
 const TAB_CONFIG = [
   { name: 'Dashboard', label: 'Trang chủ', icon: 'home', iconOutline: 'home-outline' },
-  { name: 'Diary',    label: 'Nhật ký',  icon: 'book',  iconOutline: 'book-outline' },
-  { name: 'Scan',     label: null,       icon: 'camera', isCenter: true },
-  { name: 'Pantry',   label: 'Tủ lạnh',  icon: 'fast-food', iconOutline: 'fast-food-outline' },
-  { name: 'Recipes',  label: 'Công thức', icon: 'restaurant', iconOutline: 'restaurant-outline' },
+  { name: 'Diary',     label: 'Nhật ký',   icon: 'book', iconOutline: 'book-outline' },
+  { name: 'Scan',      label: null,         icon: 'camera', isCenter: true },
+  { name: 'Fitness',   label: 'Thể dục',   icon: 'barbell', iconOutline: 'barbell-outline' },
+  { name: 'Recipes',   label: 'Công thức', icon: 'restaurant', iconOutline: 'restaurant-outline' },
 ];
 
 const CustomTabBar = ({ state, navigation }) => {
-  const { tabBarVisible, setTabBarVisible } = useAppStore();
+  const { tabBarVisible, setTabBarVisible, setFabSheetVisible } = useAppStore();
   const insets = useSafeAreaInsets();
   const translateY = useRef(new Animated.Value(0)).current;
 
@@ -74,9 +88,7 @@ const CustomTabBar = ({ state, navigation }) => {
     }).start();
   }, [tabBarVisible]);
 
-  // ===== FIX: ẨN TAB BAR TRÊN WEB =====
-  if (Platform.OS === 'web') return null;
-
+  // Hide tab bar when Scan camera is active
   const currentRoute = state.routes[state.index]?.name;
   if (currentRoute === 'Scan') return null;
 
@@ -98,7 +110,7 @@ const CustomTabBar = ({ state, navigation }) => {
               <Pressable
                 key={tab.name}
                 style={styles.centerTab}
-                onPress={() => navigation.navigate('Scan', { mode: 'diary' })}
+                onPress={() => setFabSheetVisible(true)}
               >
                 <View style={styles.scanButton}>
                   <Ionicons name={tab.icon} size={26} color="#FFF" />
@@ -117,7 +129,7 @@ const CustomTabBar = ({ state, navigation }) => {
             >
               <Ionicons
                 name={isFocused ? tab.icon : tab.iconOutline}
-                size={22}
+                size={24}
                 color={isFocused ? COLORS.primary : '#888'}
               />
               <Text style={[styles.tabLabel, isFocused && styles.tabLabelActive]}>
@@ -132,7 +144,7 @@ const CustomTabBar = ({ state, navigation }) => {
 };
 
 //////////////////////////////////////////////////////////
-// MAIN TABS — 5 screen
+// MAIN TABS — 5 screens
 //////////////////////////////////////////////////////////
 const MainTabs = () => (
   <Tab.Navigator
@@ -142,13 +154,13 @@ const MainTabs = () => (
     <Tab.Screen name="Dashboard" component={DashboardScreen} />
     <Tab.Screen name="Diary"     component={DiaryScreen} />
     <Tab.Screen name="Scan"      component={ScanCameraScreen} />
-    <Tab.Screen name="Pantry"    component={PantryScreen} />
+    <Tab.Screen name="Fitness"   component={FitnessHubPlaceholder} />
     <Tab.Screen name="Recipes"   component={RecipesScreen} />
   </Tab.Navigator>
 );
 
 //////////////////////////////////////////////////////////
-// ROOT STACK — chứa thêm Profile, Tracking, RecipeDetail
+// ROOT STACK — contains Profile, Tracking, RecipeDetail
 //////////////////////////////////////////////////////////
 const RootStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -157,39 +169,17 @@ const RootStack = () => (
     <Stack.Screen name="Tracking"     component={TrackingScreen} />
     <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />
     <Stack.Screen name="AISuggestedRecipeDetail" component={AISuggestedRecipeDetailScreen} />
-    <Stack.Screen name="ShoppingList" component={ShoppingListScreen} />
-    {/* Thêm các screen sidebar khác vào đây nếu cần */}
   </Stack.Navigator>
 );
 
 //////////////////////////////////////////////////////////
-// MAIN LAYOUT
+// MAIN LAYOUT — Mobile-only, single column
 //////////////////////////////////////////////////////////
 const MainLayout = ({ currentRoute }) => {
-  const { width } = useWindowDimensions();
-  const isWebLarge =
-    Platform.OS === 'web' &&
-    width > (BREAKPOINTS?.mobileMax || 768);
-
-  const navigation = useNavigation();
-
   return (
-    <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
-      {isWebLarge ? (
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <CustomSidebar isWebLarge navigation={navigation} />
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <WebTopbar currentRoute={currentRoute} />
-            <RootStack />
-          </View>
-        </View>
-      ) : (
-        <View style={{ flex: 1 }}>
-          <MobileTopbar currentRoute={currentRoute} />
-          <RootStack />
-          <CustomSidebar isWebLarge={false} navigation={navigation} />
-        </View>
-      )}
+    <View style={{ flex: 1, backgroundColor: COLORS.pastelBg }}>
+      <MobileTopbar currentRoute={currentRoute} />
+      <RootStack />
     </View>
   );
 };
@@ -214,16 +204,18 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer
-      onStateChange={(state) => {
+      onStateChange={(navState) => {
         const getActiveRoute = (s) => {
           const route = s.routes[s.index];
           if (route.state) return getActiveRoute(route.state);
           return route.name;
         };
-        setCurrentRoute(getActiveRoute(state));
+        setCurrentRoute(getActiveRoute(navState));
       }}
     >
       <MainLayout currentRoute={currentRoute} />
+      <FABActionSheet />
+      <SearchModal />
       <CustomToast />
     </NavigationContainer>
   );
@@ -259,13 +251,13 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   tabLabel: {
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: 10,
+    fontFamily: FONTS.bold,
     color: '#888',
   },
   tabLabelActive: {
     color: COLORS.primary,
-    fontWeight: '800',
+    fontFamily: FONTS.extrabold,
   },
   centerTab: {
     flex: 1,
@@ -282,15 +274,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 4,
     borderColor: '#FFF',
-    ...Platform.select({
-      ios: {
-        shadowColor: COLORS.primary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.35,
-        shadowRadius: 8,
-      },
-      android: { elevation: 6 },
-    }),
+    ...SHADOWS.green,
   },
 });
 

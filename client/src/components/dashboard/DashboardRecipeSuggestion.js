@@ -28,10 +28,7 @@ const DashboardRecipeSuggestion = ({ suggestions = MOCK_SUGGESTIONS }) => {
         </View>
         
         <Pressable 
-          style={({ hovered }) => [
-            styles.actionBtn,
-            Platform.OS === 'web' && hovered && styles.actionBtnHover
-          ]}
+          style={styles.actionBtn}
           onPress={() => navigation.navigate('Suggestions')}
         >
           <Ionicons name="chevron-forward" size={18} color={COLORS.primary} />
@@ -86,11 +83,7 @@ const styles = StyleSheet.create({
   metaText: { fontSize: 12, color: '#888', fontWeight: '500' },
   actionBtn: {
     width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(76, 175, 80, 0.1)',
-    alignItems: 'center', justifyContent: 'center',
-    ...(Platform.OS === 'web' && { cursor: 'pointer' })
-  },
-  actionBtnHover: {
-    backgroundColor: 'rgba(76, 175, 80, 0.2)'
+    alignItems: 'center', justifyContent: 'center'
   }
 });
 

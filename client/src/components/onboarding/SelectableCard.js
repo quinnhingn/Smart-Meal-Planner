@@ -10,7 +10,6 @@ const SelectableCard = ({ title, description, isSelected, onPress, icon }) => {
       style={({ pressed }) => [
         styles.card,
         isSelected && styles.cardSelected,
-        Platform.OS === 'web' && { cursor: 'pointer' },
         pressed && styles.cardPressed
       ]}
     >

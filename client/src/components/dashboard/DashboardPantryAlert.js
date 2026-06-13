@@ -30,10 +30,7 @@ const DashboardPantryAlert = ({ alerts }) => {
               </View>
               
               <Pressable 
-                style={({ hovered }) => [
-                  styles.cartBtn,
-                  Platform.OS === 'web' && hovered && styles.cartBtnHover
-                ]}
+                style={styles.cartBtn}
                 onPress={() => console.log('Add to cart', item.id)}
               >
                 <Ionicons name="cart-outline" size={22} color="#888" />
@@ -89,11 +86,7 @@ const styles = StyleSheet.create({
   alertMsg: { fontSize: 12, fontWeight: '600', marginTop: 2 },
   cartBtn: {
     padding: 8,
-    borderRadius: 8,
-    ...(Platform.OS === 'web' && { cursor: 'pointer' })
-  },
-  cartBtnHover: {
-    backgroundColor: 'rgba(0,0,0,0.05)'
+    borderRadius: 8
   },
   emptyText: {
     fontSize: 14,

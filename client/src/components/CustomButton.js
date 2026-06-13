@@ -4,7 +4,7 @@ import { Text, StyleSheet, Pressable, Platform, ActivityIndicator, View } from '
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/theme';
 
-const CustomButton = ({ title, onPress, type = 'primary', style, isLoading = false, icon, disabled = false }) => {
+const CustomButton = ({ title, onPress, type = 'primary', style, textStyle, isLoading = false, icon, disabled = false }) => {
   const isGlass = type === 'glass';
 
   const getBgColor = () => {
@@ -24,13 +24,12 @@ const CustomButton = ({ title, onPress, type = 'primary', style, isLoading = fal
     <Pressable
       onPress={onPress}
       disabled={disabled || isLoading}
-      style={({ pressed, hovered }) => [
+      style={({ pressed }) => [
         styles.button,
         { backgroundColor: getBgColor() },
         isGlass && styles.glassStyle,
         !isGlass && styles.defaultShadow,
         pressed && styles.pressed,
-        Platform.OS === 'web' && hovered && styles.hovered,
         (disabled || isLoading) && styles.disabled,
         style
       ]}
@@ -39,8 +38,8 @@ const CustomButton = ({ title, onPress, type = 'primary', style, isLoading = fal
         <ActivityIndicator color={getTextColor()} />
       ) : (
         <View style={styles.contentRow}>
-          {icon && <Ionicons name={icon} size={20} color={getTextColor()} style={styles.icon} />}
-          {title && <Text style={[styles.text, { color: getTextColor() }]} numberOfLines={2}>{title}</Text>}
+          {icon && <Ionicons name={icon} size={20} color={textStyle?.color || getTextColor()} style={styles.icon} />}
+          {title && <Text style={[styles.text, { color: getTextColor() }, textStyle]} numberOfLines={2}>{title}</Text>}
         </View>
       )}
     </Pressable>
@@ -54,16 +53,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    // Thêm cursor cho Web như yêu cầu[cite: 1]
-    ...Platform.select({
-      web: { cursor: 'pointer' }
-    })
   },
   defaultShadow: {
-    ...Platform.select({
-      web: { boxShadow: '0px 4px 12px rgba(0,0,0,0.12)' }, // Sửa lỗi shadow deprecated[cite: 1]
-      default: { shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.15, shadowRadius: 6, elevation: 3 }
-    })
+    shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.15, shadowRadius: 6, elevation: 3
   },
   glassStyle: {
     borderWidth: 1,
@@ -73,7 +65,6 @@ const styles = StyleSheet.create({
   icon: { marginRight: 8 },
   text: { fontSize: 16, fontWeight: '600', textAlign: 'center' },
   pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-  hovered: { opacity: 0.92, transform: [{ scale: 1.02 }] },
   disabled: { opacity: 0.5 }
 });
 

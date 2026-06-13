@@ -17,7 +17,6 @@ const isSameDay = (d1, d2) => d1.toDateString() === d2.toDateString();
 
 const DiaryScreen = () => {
   const { width: windowWidth } = useWindowDimensions();
-  const isWebLarge = Platform.OS === 'web' && windowWidth > 768;
 
   const { 
     userProfile, diaryItems, fetchDiaryItems, 
@@ -116,9 +115,9 @@ const DiaryScreen = () => {
   return (
     <ResponsiveContainer useImageBg={false}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={[styles.layout, isWebLarge && styles.layoutWeb]}>
+        <View style={styles.layout}>
           
-          <View style={[styles.leftCol, isWebLarge && styles.leftColWeb]}>
+          <View style={styles.leftCol}>
             <DailyHeader date={selectedDate} onOpenCalendar={() => setShowCalendar(true)} />
             <WeekSelector selectedDate={selectedDate} onSelectDate={setSelectedDate} />
             <View style={styles.summaryWrap}>
@@ -127,7 +126,7 @@ const DiaryScreen = () => {
             </View>
           </View>
 
-          <View style={[styles.rightCol, isWebLarge && styles.rightColWeb]}>
+          <View style={styles.rightCol}>
             {mealGroups.map((group) => (
               <MealSection
                 key={group.type}
@@ -170,11 +169,8 @@ const styles = StyleSheet.create({
     flex: 1, flexDirection: 'column', padding: 16, paddingTop: 8,
     gap: 20, maxWidth: 1200, alignSelf: 'center', width: '100%' 
   },
-  layoutWeb: { flexDirection: 'row', alignItems: 'flex-start', gap: 28, padding: 24 },
   leftCol: { width: '100%' },
-  leftColWeb: { flex: 4, position: 'sticky', top: 24 },
   rightCol: { width: '100%' },
-  rightColWeb: { flex: 6 },
   summaryWrap: { marginTop: 20 },
 });
 

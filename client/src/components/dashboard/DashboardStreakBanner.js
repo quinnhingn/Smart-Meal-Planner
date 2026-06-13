@@ -59,11 +59,10 @@ const DashboardStreakBanner = ({ streakDays = 0, hasLoggedToday = false }) => {
   return (
     <>
       <Pressable onPress={() => setModalVisible(true)} style={styles.bannerContainer}>
-        {({ pressed, hovered }) => (
+        {({ pressed }) => (
           <GlassCard style={[
             styles.bannerWrapper, 
-            pressed && { opacity: 0.8 },
-            Platform.OS === 'web' && hovered && { transform: [{ scale: 1.01 }] }
+            pressed && { opacity: 0.8 }
           ]} intensity={70}>
             <View style={styles.bannerContent}>
               <View style={styles.streakInfo}>
@@ -183,8 +182,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     ...Platform.select({
       android: { elevation: 10 },
-      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.2, shadowRadius: 12 },
-      web: { boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.2)' }
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.2, shadowRadius: 12 }
     })
   },
   
@@ -193,7 +191,7 @@ const styles = StyleSheet.create({
   closeBtn: { padding: 4 },
   
   monthNav: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, backgroundColor: '#F5F5F5', borderRadius: 12, padding: 8 },
-  navBtn: { padding: 8, backgroundColor: '#FFF', borderRadius: 8, ...Platform.select({ web: { cursor: 'pointer' } }) },
+  navBtn: { padding: 8, backgroundColor: '#FFF', borderRadius: 8 },
   monthText: { fontSize: 16, fontWeight: '700', color: '#333' },
 
   calendarContainer: { width: '100%' },

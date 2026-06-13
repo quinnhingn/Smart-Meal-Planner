@@ -13,29 +13,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCamera } from '../hooks/useCamera';
 import { analyzeImageReal } from '../services/aiService';
 import { recipeApi } from '../services/api';
-import DiaryResult from '../components/scan/DiaryResult';
-import PantryResult from '../components/scan/PantryResult';
+import SessionConfirmSheet from '../components/scan/SessionConfirmSheet';
 import { COLORS } from '../constants/theme';
-
-// ==========================================
-// COMPONENT ĐỔI CHẾ ĐỘ (Dùng chung)
-// ==========================================
-const ModeSwitcher = ({ mode, setMode, onModeChange }) => (
-  <View style={styles.switcherContainer}>
-    <Pressable
-      style={[styles.switchBtn, mode === 'diary' && styles.switchBtnActive]}
-      onPress={() => { setMode('diary'); onModeChange?.(); }}
-    >
-      <Text style={[styles.switchText, mode === 'diary' && styles.switchTextActive]}>🥘 Nhật ký</Text>
-    </Pressable>
-    <Pressable
-      style={[styles.switchBtn, mode === 'pantry' && styles.switchBtnActive]}
-      onPress={() => { setMode('pantry'); onModeChange?.(); }}
-    >
-      <Text style={[styles.switchText, mode === 'pantry' && styles.switchTextActive]}>🛒 Tủ lạnh</Text>
-    </Pressable>
-  </View>
-);
 
 // ==========================================
 // MÀN HÌNH CHÍNH
@@ -50,12 +29,10 @@ const ScanCameraScreen = ({ navigation, route }) => {
 
   // KẾT NỐI VỚI ZUSTAND STORE
   const addDiaryItem = useAppStore(state => state.addDiaryItem);
-  const addPantryItems = useAppStore(state => state.addPantryItems);
   const isSaving = useAppStore(state => state.isSaving);
   const setTabBarVisible = useAppStore(state => state.setTabBarVisible);
   
   // STATE CHÍNH
-  const [scanMode, setScanMode] = useState(route?.params?.mode || 'diary');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiResults, setAiResults] = useState(null);
 
@@ -69,24 +46,18 @@ const ScanCameraScreen = ({ navigation, route }) => {
     }, [setTabBarVisible])
   );
 
-  // XÓA DỮ LIỆU KHI ĐỔI MODE
-  const handleModeChange = () => {
-    clearImage();
-    setAiResults(null);
-  };
-
   // XỬ LÝ CHỤP / TẢI ẢNH
   const handleTakePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync({ quality: 0.8 });
       setImageUri(photo.uri);
-      processImage(photo.uri, scanMode);
+      processImage(photo.uri, 'diary');
     }
   };
 
   const handlePickImage = async () => {
     const uri = await pickImageFromGallery();
-    if (uri) processImage(uri, scanMode);
+    if (uri) processImage(uri, 'diary');
   };
 
   const processImage = async (uri, currentMode) => {
@@ -107,115 +78,53 @@ const ScanCameraScreen = ({ navigation, route }) => {
     setAiResults(null);
   };
 
-  // THỰC THI LƯU DỮ LIỆU BẰNG API THẬT TỪ NHÁNH MAIN
-  const handleSave = async (data) => {
+  const handleSave = async (itemsArray) => {
     try {
-      setIsAnalyzing(true);
-      if (scanMode === 'diary') {
-        // Luồng lưu Nhật ký ăn uống
-        console.log("💾 [Flow] Đang lưu nhật ký vào Backend...", data);
-        const apiResult = await recipeApi.logMeal({
-          recipe_id: data.recipe_id || null,
-          meal_name: data.name,
-          meal_type: data.mealType === 'Sáng' ? 'breakfast' :
-            data.mealType === 'Trưa' ? 'lunch' :
-              data.mealType === 'Tối' ? 'dinner' : 'snack',
-          servings: data.value || 1.0,
-          calories: data.calo,
-          protein: data.protein,
-          fat: data.fat,
-          carbs: data.carbs
-        });
+      setIsAnalyzing(true); // Re-use this state for saving indicator
+      console.log("💾 [Mock Flow] Đang lưu mảng món ăn...", itemsArray);
+      
+      // MOCK DELAY CHO VIỆC LƯU
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-        if (apiResult.success) {
-          Alert.alert("Thành công", "Đã thêm món ăn vào nhật ký!");
-          await addDiaryItem(data);
-          navigation.goBack();
-        } else {
-          Alert.alert("Lỗi", apiResult.error || "Không thể lưu nhật ký.");
-        }
-      } else {
-        // Luồng lưu Tủ lạnh (Pantry)
-        console.log("🧊 [Flow] Đang nhập đồ vào tủ lạnh...", data);
-        const apiResult = await recipeApi.importToPantry(data);
+      // MOCK LƯU VÀO STORE
+      // Vì addDiaryItem gốc có thể chỉ hỗ trợ 1 món, ta map qua mảng
+      const hour = new Date().getHours();
+      const dynamicMealType = hour < 10 ? 'breakfast' : hour < 15 ? 'lunch' : hour < 20 ? 'dinner' : 'snack';
 
-        if (apiResult.success) {
-          Alert.alert("Thành công", `Đã nhập món vào tủ lạnh!`);
-          await addPantryItems(data);
-          navigation.goBack();
-        } else {
-          Alert.alert("Lỗi", "Không thể lưu vào tủ lạnh.");
-        }
+      for (const item of itemsArray) {
+        const mockLog = {
+          id: Math.random().toString(),
+          meal_name: item.name,
+          meal_type: dynamicMealType,
+          servings: 1,
+          calories: Math.round((item.base_calo * item.gram_input) / 100),
+          protein: Math.round((item.base_protein * item.gram_input) / 100),
+          carbs: Math.round((item.base_carbs * item.gram_input) / 100),
+          fat: Math.round((item.base_fat * item.gram_input) / 100),
+          created_at: new Date().toISOString()
+        };
+        await addDiaryItem(mockLog);
       }
+
+      Alert.alert("Thành công", `Đã lưu ${itemsArray.length} món vào nhật ký!`);
+      navigation.goBack();
+      
     } catch (error) {
       console.error("Lỗi khi lưu:", error);
-      Alert.alert("Lỗi", "Không thể kết nối tới máy chủ.");
+      Alert.alert("Lỗi", "Không thể lưu nhật ký.");
     } finally {
       setIsAnalyzing(false);
-      // Dọn sạch data trước khi thoát
       clearImage();
       setAiResults(null);
     }
   };
 
-  // ==========================================
-  // RENDER: WEB (SPLIT-SCREEN LAYOUT)
-  // ==========================================
-  if (Platform.OS === 'web') {
-    return (
-      <View style={styles.webContainer}>
-        {/* CỘT TRÁI: INPUT (40%) */}
-        <View style={styles.webLeftCol}>
-          <ModeSwitcher mode={scanMode} setMode={setScanMode} onModeChange={handleModeChange} />
+  const handleCancelSession = () => {
+    setAiResults(null);
+    clearImage();
+  };
 
-          <View style={styles.webUploadCard}>
-            {imageUri ? (
-              <Image source={{ uri: imageUri }} style={styles.webPreviewImg} resizeMode="cover" />
-            ) : (
-              <>
-                <Ionicons name="cloud-upload-outline" size={64} color={COLORS.primary} />
-                <Text style={styles.webUploadTitle}>Kéo thả hoặc tải ảnh lên</Text>
-                <Text style={styles.webUploadSub}>Đang chọn chế độ: {scanMode === 'diary' ? 'Quét Bữa ăn' : 'Quét Nguyên liệu'}</Text>
-              </>
-            )}
 
-            <Pressable style={styles.webBtn} onPress={handlePickImage}>
-              <Text style={styles.webBtnText}>{imageUri ? 'Chọn ảnh khác' : 'Chọn ảnh từ máy tính'}</Text>
-            </Pressable>
-          </View>
-        </View>
-
-        {/* CỘT PHẢI: OUTPUT (60%) */}
-        <View style={styles.webRightCol}>
-          {isAnalyzing ? (
-            <View style={styles.centerAll}>
-              <ActivityIndicator size="large" color={COLORS.primary} />
-              <Text style={{ marginTop: 16, fontWeight: '600' }}>AI đang phân tích dữ liệu...</Text>
-            </View>
-          ) : !aiResults ? (
-            <View style={styles.centerAll}>
-              <Ionicons name="scan-outline" size={80} color="#E0E0E0" />
-              <Text style={{ color: '#888', marginTop: 16 }}>Vui lòng tải ảnh lên để xem kết quả</Text>
-            </View>
-          ) : (
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {scanMode === 'diary'
-                ? <DiaryResult imageUri={imageUri} data={aiResults} onSave={handleSave} />
-                : <PantryResult data={aiResults} onSave={handleSave} />
-              }
-            </ScrollView>
-          )}
-        </View>
-
-        {isSaving && (
-          <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
-            <ActivityIndicator size="large" color={COLORS.primary} />
-            <Text style={styles.savingText}>Đang đồng bộ dữ liệu...</Text>
-          </View>
-        )}
-      </View>
-    );
-  }
 
   // ==========================================
   // RENDER: MOBILE PERMISSION
@@ -237,36 +146,39 @@ const ScanCameraScreen = ({ navigation, route }) => {
   // ==========================================
   if (imageUri) {
     return (
-      <SafeAreaView style={styles.mobileReviewContainer}>
-        <View style={styles.mobileHeader}>
-          <Pressable onPress={handleRetake} style={styles.backBtn}>
-            <Ionicons name="arrow-back" size={28} color="#1A1D1E" />
-          </Pressable>
-          <Text style={styles.headerTitle}>Kết quả nhận diện</Text>
-          <View style={{ width: 28 }} />
-        </View>
+      <View style={styles.mobileReviewContainer}>
+        {/* Background Image */}
+        <Image source={{ uri: imageUri }} style={StyleSheet.absoluteFillObject} />
+        <View style={[StyleSheet.absoluteFillObject, { backgroundColor: 'rgba(0,0,0,0.3)' }]} />
 
-        {isAnalyzing ? (
-          <View style={styles.centerAll}>
-            <ActivityIndicator size="large" color={COLORS.primary} />
-            <Text style={{ marginTop: 16 }}>AI đang phân tích...</Text>
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={[styles.mobileHeader, { borderBottomWidth: 0 }]}>
+            <Pressable onPress={handleRetake} style={[styles.backBtn, { backgroundColor: 'rgba(255,255,255,0.8)', borderRadius: 20 }]}>
+              <Ionicons name="arrow-back" size={28} color="#1A1D1E" />
+            </Pressable>
           </View>
-        ) : aiResults ? (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {scanMode === 'diary'
-              ? <DiaryResult imageUri={imageUri} data={aiResults} onSave={handleSave} />
-              : <PantryResult imageUri={imageUri} data={aiResults} onSave={handleSave} />
-            }
-          </ScrollView>
-        ) : null}
 
-        {isSaving && (
-          <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
-            <ActivityIndicator size="large" color={COLORS.primary} />
-            <Text style={styles.savingText}>Đang đồng bộ dữ liệu...</Text>
-          </View>
-        )}
-      </SafeAreaView>
+          {isAnalyzing ? (
+            <View style={[styles.centerAll, { backgroundColor: 'transparent' }]}>
+              <ActivityIndicator size="large" color="#FFF" />
+              <Text style={{ marginTop: 16, color: '#FFF', fontWeight: '700' }}>AI đang phân tích mâm cơm...</Text>
+            </View>
+          ) : aiResults ? (
+            <SessionConfirmSheet 
+              items={aiResults} 
+              onConfirm={handleSave} 
+              onCancel={handleCancelSession} 
+            />
+          ) : null}
+
+          {isSaving && (
+            <View style={[StyleSheet.absoluteFillObject, styles.savingOverlay]}>
+              <ActivityIndicator size="large" color={COLORS.primary} />
+              <Text style={styles.savingText}>Đang lưu nhật ký...</Text>
+            </View>
+          )}
+        </SafeAreaView>
+      </View>
     );
   }
 
@@ -281,7 +193,7 @@ const ScanCameraScreen = ({ navigation, route }) => {
       <View style={[StyleSheet.absoluteFillObject, styles.overlay]} pointerEvents="none">
         <View style={styles.scanFrame} />
         <Text style={styles.scanInstruction}>
-          {scanMode === 'diary' ? 'Đưa món ăn vào khung ngắm' : 'Đưa nguyên liệu vào khung ngắm'}
+          Đưa món ăn vào khung ngắm
         </Text>
       </View>
 
@@ -290,8 +202,6 @@ const ScanCameraScreen = ({ navigation, route }) => {
       </Pressable>
 
       <View style={styles.cameraControls}>
-        <ModeSwitcher mode={scanMode} setMode={setScanMode} />
-
         <View style={styles.cameraActionRow}>
           <Pressable style={styles.galleryBtn} onPress={handlePickImage}>
             <Ionicons name="image-outline" size={28} color="#FFF" />

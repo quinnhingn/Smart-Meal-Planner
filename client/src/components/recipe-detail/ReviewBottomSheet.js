@@ -27,11 +27,6 @@ const ReviewBottomSheet = ({ visible, onClose, onSubmit, recipeTitle }) => {
   };
 
   const handleImageAction = () => {
-    if (Platform.OS === 'web') {
-      pickImage();
-      return;
-    }
-    
     Alert.alert(
       'Thêm ảnh',
       'Chọn phương thức thêm ảnh',
@@ -45,20 +40,9 @@ const ReviewBottomSheet = ({ visible, onClose, onSubmit, recipeTitle }) => {
 
   const uriToBase64 = async (uri) => {
     try {
-      if (Platform.OS === 'web') {
-        const response = await fetch(uri);
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
-      } else {
-        // Native (iOS/Android)
-        const FileSystem = require('expo-file-system');
-        return await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
-      }
+      // Native (iOS/Android)
+      const FileSystem = require('expo-file-system');
+      return await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
     } catch (error) {
       console.error('[Base64 Error]', error);
       return uri;

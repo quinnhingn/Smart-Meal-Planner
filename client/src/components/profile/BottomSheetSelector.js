@@ -35,7 +35,7 @@ const BottomSheetSelector = ({ visible, onClose, title, data, selectedValue, onS
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
           <TouchableWithoutFeedback>
-            <View style={[styles.sheetContainer, Platform.OS === 'web' && styles.sheetContainerWeb]}>
+            <View style={styles.sheetContainer}>
               
               {/* Thanh kéo nhỏ phía trên */}
               <View style={styles.dragHandle} />
@@ -95,8 +95,7 @@ const styles = StyleSheet.create({
   overlay: { 
     flex: 1, 
     backgroundColor: 'rgba(0,0,0,0.4)', 
-    justifyContent: 'flex-end',
-    alignItems: 'center' // Căn giữa cho Web
+    justifyContent: 'flex-end'
   },
   sheetContainer: { 
     width: '100%', 
@@ -108,12 +107,7 @@ const styles = StyleSheet.create({
     elevation: 24,
     shadowColor: '#000', shadowOffset: { width: 0, height: -10 }, shadowOpacity: 0.1, shadowRadius: 20
   },
-  sheetContainerWeb: {
-    width: '100%',
-    maxWidth: 600, // Giới hạn chiều rộng trên Web để không bị tràn bành trướng
-    borderTopLeftRadius: 24, 
-    borderTopRightRadius: 24, 
-  },
+
   dragHandle: { 
     width: 40, height: 4, 
     backgroundColor: '#E0E0E0', 

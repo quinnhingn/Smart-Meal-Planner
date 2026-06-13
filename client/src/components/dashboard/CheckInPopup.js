@@ -54,10 +54,10 @@ const CheckInPopup = ({ visible, onClose }) => {
 
           <View style={styles.buttonRow}>
             <Pressable 
-                style={({ hovered }) => [
+                style={({ pressed }) => [
                 styles.btn, 
                 styles.btnSecondary,
-                Platform.OS === 'web' && hovered && { opacity: 0.8, cursor: 'pointer' } // <-- THÊM DÒNG NÀY
+                pressed && { opacity: 0.8 }
                 ]} 
                 onPress={onClose}
             >
@@ -65,11 +65,11 @@ const CheckInPopup = ({ visible, onClose }) => {
             </Pressable>
 
             <Pressable 
-                style={({ hovered }) => [
+                style={({ pressed }) => [
                 styles.btn, 
                 styles.btnPrimary, 
                 weight === '' && styles.btnDisabled,
-                Platform.OS === 'web' && hovered && weight !== '' && { opacity: 0.9, cursor: 'pointer' } // <-- THÊM DÒNG NÀY
+                pressed && weight !== '' && { opacity: 0.9 }
                 ]} 
                 onPress={handleUpdate}
                 disabled={isSubmitting || weight === ''}

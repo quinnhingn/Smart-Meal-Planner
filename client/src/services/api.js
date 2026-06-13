@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
 
-const BASE_URL = 'http://192.168.1.233:5001/api';
+const BASE_URL = 'http://192.168.1.6:5001/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -72,7 +72,7 @@ export const recipeApi = {
   getReviews: (recipeId) => fetchApi('GET', `/recipes/${recipeId}/reviews`),
   logRecipeMeal: (recipeId, servings) => fetchApi('POST', '/recipes/log-recipe', { recipeId, servings }),
   getPantryHistory: () => fetchApi('GET', '/recipes/pantry/history'),
-  
+
   // Shopping List
   getShoppingList: () => fetchApi('GET', '/recipes/shopping-list'),
   addToShoppingList: (recipeId, servings) => fetchApi('POST', '/recipes/shopping-list/add', { recipeId, servings }),
@@ -90,21 +90,15 @@ export const recipeApi = {
   // Recipe Management
   create: (recipeData) => fetchApi('POST', '/recipes/create', recipeData),
   update: (id, recipeData) => fetchApi('PUT', `/recipes/update/${id}`, recipeData),
-  
+
   uploadImage: async (uri) => {
     try {
       const formData = new FormData();
       const filename = uri.split('/').pop() || 'upload.jpg';
-      
-      if (Platform.OS === 'web') {
-        const response = await fetch(uri);
-        const blob = await response.blob();
-        formData.append('file', blob, filename);
-      } else {
-        const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : `image/jpeg`;
-        formData.append('file', { uri, name: filename, type });
-      }
+
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image/jpeg`;
+      formData.append('file', { uri, name: filename, type });
       return await fetchApi('POST', '/recipes/upload-image', formData);
     } catch (error) {
       return { success: false, error: error.message };

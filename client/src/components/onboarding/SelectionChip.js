@@ -10,7 +10,6 @@ const SelectionChip = ({ label, isSelected, onPress }) => {
       style={({ pressed }) => [
         styles.chip,
         isSelected && styles.chipSelected,
-        Platform.OS === 'web' && { cursor: 'pointer' },
         pressed && { opacity: 0.8 }
       ]}
     >

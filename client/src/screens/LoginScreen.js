@@ -25,11 +25,9 @@ const LoginScreen = ({ onNavigateToRegister }) => {
 
   const SocialButton = ({ icon, color }) => (
     <Pressable
-      style={({ pressed, hovered }) => [
+      style={({ pressed }) => [
         styles.socialButton,
-        pressed && styles.socialButtonPressed,
-        Platform.OS === 'web' && hovered && styles.socialButtonHovered,
-        Platform.OS === 'web' && { cursor: 'pointer' }
+        pressed && styles.socialButtonPressed
       ]}
     >
       <Ionicons name={icon} size={24} color={color} />
@@ -86,19 +84,13 @@ const LoginScreen = ({ onNavigateToRegister }) => {
                   />
                   <Pressable 
                     onPress={() => setShowPassword(!showPassword)} 
-                    style={({ hovered }) => [
-                        styles.iconRight, 
-                        Platform.OS === 'web' && hovered && { opacity: 0.7, cursor: 'pointer' }
-                    ]}
+                    style={styles.iconRight}
                   >
                     <Ionicons name={showPassword ? "eye-outline" : "eye-off-outline"} size={20} color="#666" />
                   </Pressable>
                 </View>
 
-                <Pressable style={({ hovered }) => [
-                    styles.forgotPasswordContainer, 
-                    Platform.OS === 'web' && hovered && { opacity: 0.7, cursor: 'pointer' }
-                ]}>
+                <Pressable style={styles.forgotPasswordContainer}>
                   <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
                 </Pressable>
 
@@ -122,12 +114,8 @@ const LoginScreen = ({ onNavigateToRegister }) => {
 
                 <View style={styles.footer}>
                   <Text style={{ color: '#555' }}>Chưa có tài khoản? </Text>
-                  <Pressable onPress={onNavigateToRegister} style={({ hovered }) => [
-                      Platform.OS === 'web' && hovered && { cursor: 'pointer' }
-                  ]}>
-                    {({ hovered }) => (
-                      <Text style={[styles.link, Platform.OS === 'web' && hovered && { textDecorationLine: 'underline' }]}>Đăng ký ngay</Text>
-                    )}
+                  <Pressable onPress={onNavigateToRegister}>
+                    <Text style={styles.link}>Đăng ký ngay</Text>
                   </Pressable>
                 </View>
               </View>
@@ -158,11 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 38,
     fontWeight: '900',
     color: COLORS.primary,
-    // Fix shadow cho web
-    ...Platform.select({
-        web: { textShadow: '0px 2px 10px rgba(255,255,255,0.8)' },
-        default: { textShadowColor: 'rgba(255,255,255,0.8)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 10 }
-    })
+    textShadowColor: 'rgba(255,255,255,0.8)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 10
   },
   subtitle: { fontSize: 16, color: '#9be69e', fontWeight: '600', marginTop: 4 },
   

@@ -84,7 +84,6 @@ const TrendIndicator = ({ current, previous, isWeight }) => {
 
 const TrackingScreen = ({ navigation }) => {
   const { width } = useWindowDimensions();
-  const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX;
   
   // STATE
   const [activeMetric, setActiveMetric] = useState('weight');
@@ -184,7 +183,7 @@ const TrackingScreen = ({ navigation }) => {
   const chartLabels = useMemo(() => {
     const total = filteredData.length;
     if (total === 0) return [];
-    const approxLabelWidth = isWebLarge ? 70 : 50;
+    const approxLabelWidth = 50;
     const maxLabels = Math.floor(chartWidth / approxLabelWidth);
     const step = Math.max(1, Math.ceil(total / maxLabels));
     
@@ -195,13 +194,13 @@ const TrackingScreen = ({ navigation }) => {
       const d = new Date(item.date);
       return `${d.getDate()}/${d.getMonth() + 1}`;
     });
-  }, [filteredData, chartWidth, isWebLarge]);
+  }, [filteredData, chartWidth]);
 
   const chartData = useMemo(() => filteredData.map(item => isWeight ? item.weight : item.calo), [filteredData, isWeight]);
   const targetValue = isWeight ? MOCK_PROFILE_STATS.targetWeight : MOCK_PROFILE_STATS.targetCalories;
 
   // Đảm bảo chart đủ rộng để scroll ngang trên mobile nếu cần
-  const pointWidth = isWebLarge ? 70 : 55;
+  const pointWidth = 55;
   const calculatedChartWidth = Math.max(chartWidth, filteredData.length * pointWidth);
 
   const chartConfig = useMemo(() => ({
@@ -279,7 +278,7 @@ const TrackingScreen = ({ navigation }) => {
       <Animated.ScrollView 
         contentContainerStyle={[
           styles.scrollContent, 
-          !isWebLarge && styles.scrollContentMobile
+          styles.scrollContentMobile
         ]} 
         showsVerticalScrollIndicator={false}
         style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
@@ -290,10 +289,7 @@ const TrackingScreen = ({ navigation }) => {
             <ScrollView 
               horizontal 
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={[
-                styles.statsRow, 
-                isWebLarge && styles.statsRowWeb
-              ]}
+              contentContainerStyle={styles.statsRow}
             >
               <StatBadge 
                 icon={isWeight ? "scale" : "flame"} 
@@ -362,12 +358,12 @@ const TrackingScreen = ({ navigation }) => {
         </View>
 
         {/* ===== MAIN GRID ===== */}
-        <View style={[styles.grid, isWebLarge && styles.gridWeb]}>
+        <View style={styles.grid}>
           
           {/* CHART CARD */}
           <View 
-            style={[styles.card, isWebLarge && styles.cardWeb, { flex: isWebLarge ? 1.5 : undefined }]} 
-            onLayout={(e) => setChartWidth(e.nativeEvent.layout.width - (isWebLarge ? 56 : 40))}
+            style={styles.card} 
+            onLayout={(e) => setChartWidth(e.nativeEvent.layout.width - 40)}
           >
             <View style={styles.cardHeader}>
               <View>
@@ -462,7 +458,7 @@ const TrackingScreen = ({ navigation }) => {
           </View>
 
           {/* HISTORY CARD */}
-          <View style={[styles.card, isWebLarge && styles.cardWeb, { flex: isWebLarge ? 1 : undefined }]}>
+          <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View>
                 <Text style={styles.cardTitle}>Lịch sử gần đây</Text>
@@ -530,11 +526,11 @@ const TrackingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   // ===== HEADER =====
   header: { 
-    flexDirection: Platform.OS === 'web' ? 'row' : 'column', 
+    flexDirection: 'column', 
     justifyContent: 'space-between', 
-    alignItems: Platform.OS === 'web' ? 'center' : 'flex-start',
-    paddingHorizontal: Platform.OS === 'web' ? 24 : 16,
-    paddingTop: Platform.OS === 'web' ? 20 : 16,
+    alignItems: 'flex-start',
+    paddingHorizontal: 16,
+    paddingTop: 16,
     paddingBottom: 12,
     backgroundColor: 'transparent',
     gap: 16 
@@ -550,7 +546,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     minHeight: 44,
     alignItems: 'center',
-    ...Platform.select({ web: { boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }, default: { elevation: 2 } })
+    elevation: 2 
   },
   filterBtn: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20 },
   filterBtnActive: { backgroundColor: '#F0F2F5' },
@@ -560,17 +556,12 @@ const styles = StyleSheet.create({
   // ===== STATS =====
   statsOuter: {
     marginBottom: 20,
-    marginLeft: Platform.OS === 'web' ? 0 : -4, // Mobile: sát viền hơn
+    marginLeft: -4, // Mobile: sát viền hơn
   },
   statsRow: { 
     flexDirection: 'row', 
     gap: 12, 
     paddingRight: 16, // Cho scroll ngang mượt
-  },
-  statsRowWeb: {
-    paddingRight: 0,
-    width: '100%',
-    maxWidth: 640,
   },
   statBadge: {
     flexDirection: 'row',
@@ -582,7 +573,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#F0F0F0',
     minWidth: 140, // Đảm bảo không bị ép quá nhỏ
-    ...Platform.select({ web: { boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }, default: { elevation: 2 } })
+    elevation: 2
   },
   statIconWrap: {
     width: 40,
@@ -605,7 +596,7 @@ const styles = StyleSheet.create({
     padding: 4, 
     borderRadius: 24, 
     position: 'relative',
-    ...Platform.select({ web: { boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }, default: { elevation: 2 } }) 
+    elevation: 2 
   },
   toggleIndicator: {
     position: 'absolute',
@@ -614,7 +605,7 @@ const styles = StyleSheet.create({
     height: 44,
     backgroundColor: COLORS.primary,
     borderRadius: 20,
-    ...Platform.select({ web: { boxShadow: '0 4px 12px rgba(76,175,80,0.3)' }, default: { elevation: 4 } })
+    elevation: 4
   },
   toggleBtn: { 
     paddingVertical: 12, 
@@ -638,29 +629,19 @@ const styles = StyleSheet.create({
   },
   grid: { 
     width: '100%', 
-    maxWidth: 1400, // Web: mở rộng tối đa
     flexDirection: 'column', 
     gap: 16, 
     alignSelf: 'center' 
-  },
-  gridWeb: { 
-    flexDirection: 'row', 
-    alignItems: 'flex-start', 
-    gap: 32 // Web: gap rộng hơn
   },
   
   // ===== CARD =====
   card: { 
     backgroundColor: '#FFF', 
-    borderRadius: 28, // Bo góc lớn hơn giống ảnh
-    padding: 20, // Mobile: mở rộng nội dung
+    borderRadius: 28, 
+    padding: 20, 
     borderWidth: 1, 
     borderColor: '#F0F0F0',
-    ...Platform.select({ web: { boxShadow: '0 4px 24px rgba(0,0,0,0.04)' }, default: { elevation: 2 } })
-  },
-  cardWeb: {
-    padding: 32, // Web: mở rộng padding
-    borderRadius: 32,
+    elevation: 2 
   },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 },
   cardTitle: { fontSize: 18, fontWeight: '800', color: '#1A1D1E' },
@@ -675,7 +656,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14, 
     paddingVertical: 10, 
     borderRadius: 14,
-    ...Platform.select({ web: { boxShadow: '0 4px 12px rgba(142,36,170,0.3)' }, default: { elevation: 3 } })
+    elevation: 3 
   },
   aiButtonActive: { backgroundColor: '#6A1B9A' },
   aiButtonText: { color: '#FFF', fontSize: 13, fontWeight: '800' },

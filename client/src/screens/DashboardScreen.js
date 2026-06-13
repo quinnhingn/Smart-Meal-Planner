@@ -22,7 +22,6 @@ import ResponsiveContainer from '../components/ResponsiveContainer';
 import MiniMealLog from '../components/MiniMealLog';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardEnergyCard from '../components/dashboard/DashboardEnergyCard';
-import DashboardPantryAlert from '../components/dashboard/DashboardPantryAlert';
 import DashboardRecipeSuggestion from '../components/dashboard/DashboardRecipeSuggestion';
 import DashboardStreakBanner from '../components/dashboard/DashboardStreakBanner';
 import NutritionInsight from '../components/diary/NutritionInsight';
@@ -32,7 +31,6 @@ import { COLORS } from '../constants/theme';
 import {
   DASHBOARD_MOCK_TRACKING,
   DASHBOARD_MOCK_WEIGHT_HISTORY,
-  DASHBOARD_MOCK_PANTRY_ALERTS,
 } from '../utils/mockDashboardData';
 
 const BREAKPOINT_MOBILE_MAX = 768;
@@ -115,11 +113,9 @@ const StatPill = ({ icon, label, value, unit, color }) => {
 const DashboardScreen = () => {
   const { width } = useWindowDimensions();
   const navigation = useNavigation();
-  const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX;
 
-  const { 
-    userProfile, getExpiringItems, fetchPantryItems, 
-    fetchShoppingList, fetchFavoriteIds, setCurrentStreak
+  const {
+    userProfile, fetchFavoriteIds, setCurrentStreak
   } = useAppStore();
   const [showCheckInPopup, setShowCheckInPopup] = useState(false);
 
@@ -128,7 +124,7 @@ const DashboardScreen = () => {
     meals: [],
     streak: 0
   });
-  
+
   const [recipeSuggestions, setRecipeSuggestions] = useState(null);
 
   // STATE CHO MODAL NHẬP TAY
@@ -167,7 +163,7 @@ const DashboardScreen = () => {
       alert("Vui lòng nhập đầy đủ tên và calo");
       return;
     }
-    
+
     setIsSaving(true);
     try {
       const res = await recipeApi.logMeal({
@@ -176,7 +172,7 @@ const DashboardScreen = () => {
         calories: parseFloat(manualForm.kcal),
         protein: 0, carbs: 0, fat: 0
       });
-      
+
       if (res.success) {
         setShowManualModal(false);
         setManualForm({ name: '', kcal: '', type: 'snack' });
@@ -193,9 +189,7 @@ const DashboardScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       fetchSummary();
-      if(fetchPantryItems) fetchPantryItems(); // Load tủ lạnh để lấy cảnh báo
-      if(fetchShoppingList) fetchShoppingList();
-      if(fetchFavoriteIds) fetchFavoriteIds();
+      if (fetchFavoriteIds) fetchFavoriteIds();
       fetchSuggestions(); // Lấy gợi ý món ăn dựa vào tủ lạnh
     }, [])
   );
@@ -221,18 +215,18 @@ const DashboardScreen = () => {
   };
 
   const realMacros = {
-    protein: { 
-      target: Math.round(userProfile?.protein_g || 150), 
+    protein: {
+      target: Math.round(userProfile?.protein_g || 150),
       current: Math.round(dailySummary.totals.protein),
       color: '#E53935'
     },
-    carbs: { 
-      target: Math.round(userProfile?.carbs_g || 250), 
+    carbs: {
+      target: Math.round(userProfile?.carbs_g || 250),
       current: Math.round(dailySummary.totals.carbs),
       color: '#29B6F6'
     },
-    fat: { 
-      target: Math.round(userProfile?.fat_g || 60), 
+    fat: {
+      target: Math.round(userProfile?.fat_g || 60),
       current: Math.round(dailySummary.totals.fat),
       color: '#FBC02D'
     }
@@ -243,24 +237,18 @@ const DashboardScreen = () => {
     realTracking.target_kcal - realTracking.consumed_kcal
   );
 
-  // Lấy dữ liệu cảnh báo tủ lạnh thật
-  const expiringItems = getExpiringItems ? getExpiringItems() : [];
-  const realAlerts = expiringItems.map(item => ({
-    id: item.id,
-    name: item.name,
-    status: item.urgency === 'expired' ? 'out_of_stock' : 'warning',
-    msg: item.urgency === 'expired' ? 'Đã hết hàng' : `Hết hạn trong ${item.daysLeft} ngày`
-  }));
+  // Tủ lạnh đã bỏ ở V2 nên list alert này để rỗng
+  const realAlerts = [];
 
   return (
     <ResponsiveContainer useImageBg={false}>
-      
+
       {/* ── HEADER (Giữ nguyên suốt) ── */}
       <View style={styles.fixedHeaderWrapper}>
-        <DashboardHeader 
-          userName={userName} 
-          remainingKcal={remainingKcal} 
-          showMenu={false} 
+        <DashboardHeader
+          userName={userName}
+          remainingKcal={remainingKcal}
+          showMenu={false}
         />
       </View>
 
@@ -278,13 +266,13 @@ const DashboardScreen = () => {
 
         {/* ── STATS ── */}
         <FadeInView delay={80} style={styles.statsOuter}>
-          <View style={[styles.statsRow, !isWebLarge && styles.statsRowMobile]}>
+          <View style={[styles.statsRow, styles.statsRowMobile]}>
             <StatPill icon="nutrition" label="Protein" value={realMacros.protein.target} unit="g" color="#E53935" />
-            <View style={[styles.statsDivider, !isWebLarge && styles.statsDividerMobile]} />
+            <View style={[styles.statsDivider, styles.statsDividerMobile]} />
             <StatPill icon="cube" label="Carbs" value={realMacros.carbs.target} unit="g" color="#29B6F6" />
-            <View style={[styles.statsDivider, !isWebLarge && styles.statsDividerMobile]} />
+            <View style={[styles.statsDivider, styles.statsDividerMobile]} />
             <StatPill icon="water" label="Chất béo" value={realMacros.fat.target} unit="g" color="#FBC02D" />
-            <View style={[styles.statsDivider, !isWebLarge && styles.statsDividerMobile]} />
+            <View style={[styles.statsDivider, styles.statsDividerMobile]} />
             <StatPill icon="flame" label="Mục tiêu" value={realTracking.target_kcal} unit="kcal" color={ACCENT_DARK} />
           </View>
         </FadeInView>
@@ -292,53 +280,36 @@ const DashboardScreen = () => {
 
 
         {/* ── MAIN GRID ── */}
-        <View style={[styles.dashboardGrid, isWebLarge && styles.dashboardGridWeb]}>
-          
-          {/* LEFT COLUMN */}
-          <View style={[styles.column, isWebLarge && { flex: 1.5 }]}>
+        <View style={styles.dashboardGrid}>
+
+          <View style={styles.column}>
             <FadeInView delay={160}>
               <View style={styles.card}>
-                <SectionHeader 
-                  title="Năng lượng hôm nay" 
-                  subtitle="Cập nhật theo thời gian thực" 
+                <SectionHeader
+                  title="Năng lượng hôm nay"
+                  subtitle="Cập nhật theo thời gian thực"
                 />
                 <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
 
-            {/* AI Insight Section */}
-            <FadeInView delay={300}>
-              <NutritionInsight />
-            </FadeInView>
+                {/* AI Insight Section */}
+                <FadeInView delay={300}>
+                  <NutritionInsight />
+                </FadeInView>
               </View>
             </FadeInView>
 
             <FadeInView delay={240}>
               <View style={styles.card}>
-                <SectionHeader 
-                  title="Nhật ký hôm nay" 
-                  actionLabel="Xem chi tiết →" 
-                  onAction={() => navigation.navigate('Diary')} // Gợi ý điều hướng sang Diary
+                <SectionHeader
+                  title="Nhật ký hôm nay"
+                  actionLabel="Xem chi tiết →"
+                  onAction={() => navigation.navigate('Diary')}
                 />
-                <MiniMealLog 
-                  logs={dailySummary.meals} 
+                <MiniMealLog
+                  logs={dailySummary.meals}
                   onAddMain={() => navigation.navigate('Scan')}
-                  onAddSnack={() => setShowManualModal(true)} 
+                  onAddSnack={() => setShowManualModal(true)}
                 />
-              </View>
-            </FadeInView>
-
-          </View>
-
-          {/* RIGHT COLUMN */}
-          <View style={[styles.column, isWebLarge && { flex: 1 }]}>
-            <FadeInView delay={200}>
-              <View style={styles.card}>
-                <SectionHeader 
-                  title="Tủ lạnh" 
-                  subtitle="Cảnh báo sắp hết hạn" 
-                  actionLabel="Quản lý →" 
-                  onAction={() => navigation.navigate('Pantry')} // Điều hướng
-                />
-                <DashboardPantryAlert alerts={realAlerts.length > 0 ? realAlerts : DASHBOARD_MOCK_PANTRY_ALERTS} />
               </View>
             </FadeInView>
 
@@ -350,7 +321,7 @@ const DashboardScreen = () => {
               <View style={styles.miniTipsCard}>
                 <Ionicons name="bulb-outline" size={18} color="#F59E0B" />
                 <Text style={styles.miniTipsText}>
-                  <Text style={{fontWeight: '700'}}>Mẹo: </Text>
+                  <Text style={{ fontWeight: '700' }}>Mẹo: </Text>
                   Uống 1 ly nước ấm trước bữa sáng giúp tiêu hoá tốt hơn.
                 </Text>
               </View>
@@ -369,15 +340,15 @@ const DashboardScreen = () => {
         <View style={styles.modalOverlay}>
           <View style={styles.addModalBox}>
             <Text style={styles.modalTitle}>🥣 Thêm bữa phụ</Text>
-            
+
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Tên món ăn</Text>
               <View style={styles.inputWrapper}>
-                <TextInput 
-                  style={styles.textInput} 
-                  placeholder="VD: Sữa chua, Trái cây..." 
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="VD: Sữa chua, Trái cây..."
                   value={manualForm.name}
-                  onChangeText={(val) => setManualForm({...manualForm, name: val})}
+                  onChangeText={(val) => setManualForm({ ...manualForm, name: val })}
                 />
               </View>
             </View>
@@ -385,12 +356,12 @@ const DashboardScreen = () => {
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Lượng Calo (kcal)</Text>
               <View style={styles.inputWrapper}>
-                <TextInput 
-                  style={styles.textInput} 
-                  placeholder="VD: 150" 
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="VD: 150"
                   keyboardType="numeric"
                   value={manualForm.kcal}
-                  onChangeText={(val) => setManualForm({...manualForm, kcal: val})}
+                  onChangeText={(val) => setManualForm({ ...manualForm, kcal: val })}
                 />
               </View>
             </View>
@@ -399,8 +370,8 @@ const DashboardScreen = () => {
               <Pressable style={styles.modalBtnCancel} onPress={() => setShowManualModal(false)}>
                 <Text style={styles.modalBtnCancelText}>Hủy</Text>
               </Pressable>
-              <Pressable 
-                style={[styles.modalBtnSubmit, isSaving && { opacity: 0.7 }]} 
+              <Pressable
+                style={[styles.modalBtnSubmit, isSaving && { opacity: 0.7 }]}
                 onPress={handleSaveManualMeal}
                 disabled={isSaving}
               >
@@ -422,14 +393,14 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 4,
     zIndex: 10,
-    backgroundColor: 'transparent', 
+    backgroundColor: 'transparent',
   },
 
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 16,
     paddingTop: 8,
-    paddingBottom: Platform.OS === 'web' ? 48 : 100,
+    paddingBottom: 100,
     alignItems: 'center',
     gap: 20,
   },
@@ -461,12 +432,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 24,
   },
-  statPill: { 
-    flex: 1, 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    gap: 10, 
-    paddingHorizontal: 4 
+  statPill: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 4
   },
   statPillMobile: {
     flexDirection: 'column',
@@ -491,9 +462,9 @@ const styles = StyleSheet.create({
   statUnit: { fontSize: 11, fontWeight: '600', color: '#999' },
   statLabel: { fontSize: 11, color: '#999', fontWeight: '600', marginTop: 2 },
   statsDivider: { width: 1, height: 32, backgroundColor: '#F0F0F0' },
-  statsDividerMobile: { 
-    width: 1, 
-    height: 40, 
+  statsDividerMobile: {
+    width: 1,
+    height: 40,
     backgroundColor: '#F0F0F0',
     marginHorizontal: 2,
   },
@@ -537,32 +508,32 @@ const styles = StyleSheet.create({
     }),
   },
   miniTipsText: { flex: 1, fontSize: 13, color: '#555', lineHeight: 18 },
-  
+
   // ================= MODAL STYLES =================
-  modalOverlay: { 
-    flex: 1, 
-    backgroundColor: 'rgba(0,0,0,0.5)', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    padding: 20 
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20
   },
-  addModalBox: { 
-    width: '100%', 
-    maxWidth: 400, 
-    backgroundColor: '#FFF', 
-    borderRadius: 24, 
+  addModalBox: {
+    width: '100%',
+    maxWidth: 400,
+    backgroundColor: '#FFF',
+    borderRadius: 24,
     padding: 24,
     elevation: 5
   },
   modalTitle: { fontSize: 20, fontWeight: '800', color: '#1A1D1E', marginBottom: 20, textAlign: 'center' },
   inputGroup: { marginBottom: 16 },
   inputLabel: { fontSize: 14, fontWeight: '700', color: '#444', marginBottom: 8 },
-  inputWrapper: { 
-    backgroundColor: '#F3F4F6', 
-    borderRadius: 12, 
-    paddingHorizontal: 12, 
-    height: 50, 
-    justifyContent: 'center' 
+  inputWrapper: {
+    backgroundColor: '#F3F4F6',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    height: 50,
+    justifyContent: 'center'
   },
   textInput: { fontSize: 15, color: '#1A1D1E', fontWeight: '600' },
   modalActionRow: { flexDirection: 'row', gap: 12, marginTop: 8 },

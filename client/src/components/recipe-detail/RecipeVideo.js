@@ -14,28 +14,6 @@ const RecipeVideo = ({ videoUrl }) => {
 
   const videoId = getYoutubeId(videoUrl);
 
-  if (Platform.OS === 'web') {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>▶ Video hướng dẫn</Text>
-        {videoId ? (
-          <iframe
-            width="100%"
-            height="300"
-            src={`https://www.youtube.com/embed/${videoId}`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            style={{ borderRadius: 20, marginTop: 10 }}
-          />
-        ) : (
-          <View style={styles.errorBox}>
-            <Text style={styles.errorText}>Link video không hợp lệ</Text>
-          </View>
-        )}
-      </View>
-    );
-  }
 
   // Trên Mobile nếu chưa cài thư viện WebView thì hiện placeholder đẹp
   return (

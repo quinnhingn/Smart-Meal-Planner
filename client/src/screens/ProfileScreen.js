@@ -26,8 +26,7 @@ const GENDER_OPTIONS = [
 ];
 
 const ProfileScreen = () => {
-  const { width } = useWindowDimensions(); 
-  const isWebLarge = Platform.OS === 'web' && width > BREAKPOINT_MOBILE_MAX; 
+  const { width } = useWindowDimensions();
   
   const { userProfile, updateProfile, isLoading, currentStreak } = useAppStore();
   
@@ -205,11 +204,10 @@ const ProfileScreen = () => {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
-        {/* GRID LAYOUT CHO WEB */}
-        <View style={[styles.grid, isWebLarge && styles.gridWeb]}>
+        {/* CHỈ HIỂN THỊ DẠNG CỘT CHO MOBILE */}
+        <View style={styles.grid}>
           
-          {/* ================= CỘT TRÁI (Web: 40%, Mobile: 100%) ================= */}
-          <View style={[styles.column, isWebLarge && { flex: 1 }]}>
+          <View style={styles.column}>
             
             {/* AVATAR */}
             <View style={styles.avatarSection}>
@@ -266,8 +264,7 @@ const ProfileScreen = () => {
             </View>
           </View>
 
-          {/* ================= CỘT PHẢI (Web: 60%, Mobile: 100%) ================= */}
-          <View style={[styles.column, isWebLarge && { flex: 1.5 }]}>
+          <View style={styles.column}>
             
             {/* PHÂN TÍCH & DỊ ỨNG & DISLIKES */}
             <View style={styles.card}>
@@ -436,10 +433,8 @@ const styles = StyleSheet.create({
   editBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: 'rgba(76, 175, 80, 0.1)', borderRadius: 16 },
   editBtnText: { color: COLORS.primary, fontWeight: '700' },
   
-  // NÂNG CẤP STYLES CHO GRID WEB
   scrollContent: { padding: 16, paddingBottom: 40 },
-  grid: { width: '100%', maxWidth: 1200, flexDirection: 'column', gap: 16, alignSelf: 'center' },
-  gridWeb: { flexDirection: 'row', alignItems: 'flex-start', gap: 24 },
+  grid: { width: '100%', flexDirection: 'column', gap: 16, alignSelf: 'center' },
   column: { width: '100%', gap: 16 },
   
   avatarSection: { alignItems: 'center' },

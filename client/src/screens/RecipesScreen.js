@@ -15,7 +15,6 @@ import { recipeApi } from '../services/api';
 
 const RecipesScreen = ({ navigation }) => {
   const { width: windowWidth } = useWindowDimensions();
-  const isWebLarge = Platform.OS === 'web' && windowWidth > 768;
 
   const {
     pantryItems, savedRecipeIds, toggleSaveRecipe, setTabBarVisible,

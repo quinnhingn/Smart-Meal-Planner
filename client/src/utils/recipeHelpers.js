@@ -1,7 +1,4 @@
 // src/utils/recipeHelpers.js
-
-import { getDaysUntilExpiry } from './mockPantryData';
-
 /**
  * Parse amount string like "200g", "1 quả", "300 ml" → { value, unit }
  */

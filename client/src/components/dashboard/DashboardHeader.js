@@ -7,10 +7,6 @@ import { useAppStore } from '../../store/useAppStore';
 const DashboardHeader = ({ userName = "Quỳnh Nhi", remainingKcal = 550 }) => {
   const setDrawerOpen = useAppStore((state) => state.setDrawerOpen);
   
-  const { width } = useWindowDimensions();
-  // Điểm ngắt (Breakpoint) khớp với cấu hình trong RootNavigator
-  const isWebLarge = Platform.OS === 'web' && width > 768; 
-
   const greetingText = useMemo(() => {
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 12) return 'Chào buổi sáng';

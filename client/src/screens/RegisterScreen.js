@@ -128,10 +128,8 @@ const RegisterScreen = ({ onNavigateToLogin }) => {
                 
                 <View style={styles.footer}>
                   <Text style={{ color: '#555' }}>Đã có tài khoản? </Text>
-                  <Pressable onPress={onNavigateToLogin} style={Platform.OS === 'web' && { cursor: 'pointer' }}>
-                    {({ hovered }) => (
-                      <Text style={[styles.link, Platform.OS === 'web' && hovered && { textDecorationLine: 'underline' }]}>Đăng nhập</Text>
-                    )}
+                  <Pressable onPress={onNavigateToLogin}>
+                    <Text style={styles.link}>Đăng nhập</Text>
                   </Pressable>
                 </View>
               </View>
@@ -156,10 +154,7 @@ const styles = StyleSheet.create({
   header: { alignItems: 'center', marginBottom: 24 },
   title: {
     fontSize: 38, fontWeight: '900', color: COLORS.primary,
-    ...Platform.select({
-        web: { textShadow: '0px 2px 10px rgba(255,255,255,0.8)' },
-        default: { textShadowColor: 'rgba(255,255,255,0.8)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 10 }
-    })
+    textShadowColor: 'rgba(255,255,255,0.8)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 10
   },
   subtitle: { fontSize: 16, color: '#9be69e', fontWeight: '600', marginTop: 4 },
   

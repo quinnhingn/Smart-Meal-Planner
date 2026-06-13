@@ -7,7 +7,7 @@ import RecipeCardGrid from './RecipeCardGrid';
 import RecipeEmptyState from './RecipeEmptyState';
 
 const MyRecipesTab = ({
-  myRecipes, drafts, onRecipePress, onSaveToggle, savedIds, pantryItems,
+  myRecipes, drafts, onRecipePress, onSaveToggle, savedIds,
   onCreate, onEdit, onDelete, onDeleteDraft, onShowReviews
 }) => {
   const [activeSubTab, setActiveSubTab] = useState(
@@ -43,7 +43,6 @@ const MyRecipesTab = ({
                   isOwner={true}
                   onEdit={onEdit}
                   onShowReviews={onShowReviews}
-                  pantryItems={pantryItems}
                 />
               </ScrollView>
             </View>
@@ -54,7 +53,6 @@ const MyRecipesTab = ({
                   recipes={drafts}
                   isOwner={true}
                   onEdit={(r) => onEdit?.(r, true)}
-                  pantryItems={pantryItems}
                 />
               </ScrollView>
             </View>
@@ -89,7 +87,7 @@ const styles = StyleSheet.create({
   hidden: { display: 'none' },
   scrollContent: { paddingBottom: 20 },
   fab: {
-    position: 'absolute', bottom: Platform.OS === 'web' ? 32 : 100, right: 16, zIndex: 99,
+    position: 'absolute', bottom: 100, right: 16, zIndex: 99,
     width: 56, height: 56, borderRadius: 28, backgroundColor: COLORS.primary,
     justifyContent: 'center', alignItems: 'center', elevation: 8,
   },

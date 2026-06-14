@@ -21,7 +21,11 @@ export const ROUTE_TITLES = {
   Settings: 'Cài đặt',
   Help: 'Trợ giúp',
   ShoppingList: 'Danh sách đi chợ',
+  Fitness: 'Thể dục',
+  ExploreFitness: 'Khám phá',
 };
+
+const MAIN_TABS = ['Dashboard', 'Diary', 'Fitness', 'Recipes'];
 
 const MobileTopbar = ({ currentRoute }) => {
   const insets = useSafeAreaInsets();
@@ -29,13 +33,20 @@ const MobileTopbar = ({ currentRoute }) => {
   const { userProfile, setDrawerOpen, shoppingList } = useAppStore();
 
   const title = ROUTE_TITLES[currentRoute] || 'SmartMeal';
+  const isNestedScreen = !MAIN_TABS.includes(currentRoute) && navigation.canGoBack();
 
   return (
     <View style={[styles.topbar, { paddingTop: Math.max(insets.top, Platform.OS === 'android' ? 30 : 0) }]}>
-      {/* Nút Hamburger mở Menu */}
-      <Pressable style={styles.iconBtn} onPress={() => setDrawerOpen(true)}>
-        <Ionicons name="menu" size={28} color="#1A1D1E" />
-      </Pressable>
+      {/* Nút Hamburger hoặc Nút Back */}
+      {isNestedScreen ? (
+        <Pressable style={styles.iconBtn} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={28} color="#1A1D1E" />
+        </Pressable>
+      ) : (
+        <Pressable style={styles.iconBtn} onPress={() => setDrawerOpen(true)}>
+          <Ionicons name="menu" size={28} color="#1A1D1E" />
+        </Pressable>
+      )}
 
       {/* Tên màn hình */}
       <Text style={styles.title} numberOfLines={1}>{title}</Text>
@@ -43,8 +54,8 @@ const MobileTopbar = ({ currentRoute }) => {
       {/* Avatar chuyển đến Profile */}
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         {shoppingList?.length > 0 && (
-          <Pressable 
-            style={[styles.iconBtn, { marginRight: 12 }]} 
+          <Pressable
+            style={[styles.iconBtn, { marginRight: 12 }]}
             onPress={() => navigation.navigate('ShoppingList')}
           >
             <Ionicons name="cart-outline" size={26} color={COLORS.primary} />
@@ -53,7 +64,7 @@ const MobileTopbar = ({ currentRoute }) => {
             </View>
           </Pressable>
         )}
-        
+
         <Pressable style={styles.avatarBtn} onPress={() => navigation.navigate('Profile')}>
           {userProfile?.avatarUri ? (
             <Image source={{ uri: userProfile.avatarUri }} style={styles.avatarImage} />

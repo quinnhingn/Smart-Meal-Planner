@@ -38,35 +38,44 @@ const DashboardRecipeSuggestion = ({ suggestions = MOCK_SUGGESTIONS }) => {
   };
 
   return (
-    <View style={{ padding: 0 }}>
-      <FlatList
-        data={suggestions}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        style={{ maxHeight: 400 }}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.internalPadding}
-        ListHeaderComponent={
-          <View style={styles.headerWrapper}>
-            <View style={styles.headerRow}>
-              <Text style={styles.sectionTitle}>Gợi ý món ăn</Text>
-              <Ionicons name="sparkles" size={20} color="#F59E0B" />
-            </View>
-            <Text style={styles.subtitle}>Tận dụng thực phẩm đang có sẵn</Text>
-          </View>
-        }
-      />
+    <View style={styles.card}>
+      <View style={styles.headerWrapper}>
+        <View style={styles.headerRow}>
+          <Text style={styles.sectionTitle}>Gợi ý món ăn</Text>
+          <Ionicons name="sparkles" size={20} color="#F59E0B" />
+        </View>
+        <Text style={styles.subtitle}>Tận dụng thực phẩm đang có sẵn</Text>
+      </View>
+      
+      <View style={styles.listContainer}>
+        {suggestions.map((item) => (
+          <React.Fragment key={item.id}>
+            {renderItem({ item })}
+          </React.Fragment>
+        ))}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  internalPadding: {
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
     padding: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 12 },
+      android: { elevation: 2 },
+      web: { boxShadow: '0 2px 16px rgba(0,0,0,0.05)' },
+    }),
+  },
+  listContainer: {
     gap: 12,
   },
   headerWrapper: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   sectionTitle: { fontSize: 18, fontWeight: '800', color: '#1A1D1E' },

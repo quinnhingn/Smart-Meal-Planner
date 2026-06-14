@@ -30,6 +30,7 @@ export const useAppStore = create((set, get) => ({
   currentStreak: 0,
   setCurrentStreak: (streak) => set({ currentStreak: streak }),
   aiInsight: null,
+  burnedCalories: 0,
   
   fetchAIInsight: async (force = false) => {
     const { aiInsight, isLoading } = get();
@@ -353,4 +354,12 @@ export const useAppStore = create((set, get) => ({
 
     return await state.updateProfile(newProfileData);
   },
+
+  // ==========================================
+  // 10. FITNESS & ACTIVITY LOG (Mock)
+  // ==========================================
+  addActivityLog: (burned) => set((state) => {
+    get().showToast(`🔥 Bạn đã tiêu hao ${Math.round(burned)} kcal! Quỹ Calo của bạn đã được cập nhật.`, 'success');
+    return { burnedCalories: state.burnedCalories + burned };
+  }),
 }));

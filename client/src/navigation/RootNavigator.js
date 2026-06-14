@@ -32,6 +32,8 @@ import DiaryScreen from '../screens/DiaryScreen';
 import RecipesScreen from '../screens/RecipesScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import AISuggestedRecipeDetailScreen from '../screens/AISuggestedRecipeDetailScreen';
+import FitnessHubScreen from '../screens/FitnessHubScreen';
+import ExploreFitnessScreen from '../screens/ExploreFitnessScreen';
 
 // Layout
 import MobileTopbar from '../components/navigation/MobileTopbar';
@@ -46,18 +48,7 @@ import { useAppStore } from '../store/useAppStore';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-// ─── Placeholder screen for Fitness Hub (Phase 2) ───────────────────
-const FitnessHubPlaceholder = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.pastelBg }}>
-    <Ionicons name="barbell-outline" size={64} color={COLORS.primary} />
-    <Text style={{ fontSize: 18, fontFamily: FONTS.bold, color: COLORS.text.primary, marginTop: 16 }}>
-      Fitness Hub
-    </Text>
-    <Text style={{ fontSize: 14, fontFamily: FONTS.regular, color: COLORS.text.secondary, marginTop: 4 }}>
-      Sắp ra mắt ở Phase 2
-    </Text>
-  </View>
-);
+// (Placeholder removed since Phase 2 is now active)
 
 //////////////////////////////////////////////////////////
 // CUSTOM TAB BAR — 5 TABS (Mobile-Only)
@@ -154,7 +145,7 @@ const MainTabs = () => (
     <Tab.Screen name="Dashboard" component={DashboardScreen} />
     <Tab.Screen name="Diary"     component={DiaryScreen} />
     <Tab.Screen name="Scan"      component={ScanCameraScreen} />
-    <Tab.Screen name="Fitness"   component={FitnessHubPlaceholder} />
+    <Tab.Screen name="Fitness"   component={FitnessHubScreen} />
     <Tab.Screen name="Recipes"   component={RecipesScreen} />
   </Tab.Navigator>
 );
@@ -169,6 +160,7 @@ const RootStack = () => (
     <Stack.Screen name="Tracking"     component={TrackingScreen} />
     <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />
     <Stack.Screen name="AISuggestedRecipeDetail" component={AISuggestedRecipeDetailScreen} />
+    <Stack.Screen name="ExploreFitness" component={ExploreFitnessScreen} />
   </Stack.Navigator>
 );
 

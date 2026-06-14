@@ -58,6 +58,15 @@ export const COLORS = {
     text: '#FFFFFF',
     textMuted: '#8B949E',
   },
+
+  // 8. Deep Emerald (Fitness Active Workout V2)
+  emerald: {
+    bg: '#1B4332',
+    surface: '#2D6A4F',
+    light: '#40916C',
+    accent: '#95D5B2',
+    textMuted: 'rgba(255,255,255,0.6)',
+  },
 };
 
 // ─── FONTS (Plus Jakarta Sans via @expo-google-fonts) ───────────────

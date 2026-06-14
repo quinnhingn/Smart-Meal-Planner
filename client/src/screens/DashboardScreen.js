@@ -115,7 +115,7 @@ const DashboardScreen = () => {
   const navigation = useNavigation();
 
   const {
-    userProfile, fetchFavoriteIds, setCurrentStreak
+    userProfile, fetchFavoriteIds, setCurrentStreak, burnedCalories
   } = useAppStore();
   const [showCheckInPopup, setShowCheckInPopup] = useState(false);
 
@@ -211,7 +211,7 @@ const DashboardScreen = () => {
     ...DASHBOARD_MOCK_TRACKING,
     target_kcal: Math.round(targetKcal),
     consumed_kcal: Math.round(dailySummary.totals.calories),
-    burned_kcal: 0
+    burned_kcal: Math.round(burnedCalories || 0)
   };
 
   const realMacros = {
@@ -234,7 +234,7 @@ const DashboardScreen = () => {
 
   const remainingKcal = Math.max(
     0,
-    realTracking.target_kcal - realTracking.consumed_kcal
+    realTracking.target_kcal - realTracking.consumed_kcal + realTracking.burned_kcal
   );
 
   // Tủ lạnh đã bỏ ở V2 nên list alert này để rỗng

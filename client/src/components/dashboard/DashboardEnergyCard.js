@@ -11,13 +11,17 @@ const DashboardEnergyCard = ({ tracking, macros }) => {
       <View style={styles.cardContent}>
         <Text style={styles.sectionTitle}>Chỉ số Năng lượng</Text>
         
-        {/* Khối vòng tròn Calo */}
+        {/* Khối vòng tròn Calo (Net Consumed) */}
         <View style={styles.ringWrapper}>
           <CalorieRing 
             target={tracking.target_kcal} 
-            consumed={tracking.consumed_kcal} 
+            consumed={Math.max(0, tracking.consumed_kcal - tracking.burned_kcal)} 
             size={220} 
           />
+          <View style={styles.breakdownRow}>
+            <Text style={styles.breakdownText}>🥗 Đã nạp: {tracking.consumed_kcal} kcal</Text>
+            <Text style={[styles.breakdownText, { color: '#E53935' }]}>🔥 Tiêu hao: {tracking.burned_kcal} kcal</Text>
+          </View>
         </View>
 
         {/* Khối thanh tiến độ Macros */}
@@ -65,6 +69,21 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     paddingVertical: 12, 
     marginBottom: 16 
+  },
+  breakdownRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 16,
+    marginTop: 16,
+    backgroundColor: 'rgba(0,0,0,0.02)',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+  },
+  breakdownText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#666'
   },
   macrosWrapper: { 
     width: '100%' 

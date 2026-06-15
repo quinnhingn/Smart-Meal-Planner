@@ -19,13 +19,9 @@ import { useAppStore } from '../store/useAppStore';
 import { recipeApi } from '../services/api';
 
 import ResponsiveContainer from '../components/ResponsiveContainer';
-import MiniMealLog from '../components/MiniMealLog';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardEnergyCard from '../components/dashboard/DashboardEnergyCard';
-import DashboardRecipeSuggestion from '../components/dashboard/DashboardRecipeSuggestion';
-import DashboardStreakBanner from '../components/dashboard/DashboardStreakBanner';
-import NutritionInsight from '../components/diary/NutritionInsight';
-import CheckInPopup from '../components/dashboard/CheckInPopup';
+import RecommendationsSheet from '../components/dashboard/RecommendationsSheet';
 import { COLORS } from '../constants/theme';
 
 import {
@@ -88,26 +84,7 @@ const SectionHeader = ({ title, subtitle, actionLabel, onAction }) => (
   </View>
 );
 
-// ─── Stat Pill ─────────────────────────────────────────────────────────────
-const StatPill = ({ icon, label, value, unit, color }) => {
-  const { width } = useWindowDimensions();
-  const isMobile = width <= BREAKPOINT_MOBILE_MAX;
 
-  return (
-    <View style={[styles.statPill, isMobile && styles.statPillMobile]}>
-      <View style={[styles.statIconWrap, { backgroundColor: color + '15' }]}>
-        <Ionicons name={icon} size={isMobile ? 20 : 16} color={color} />
-      </View>
-      <View style={[styles.statTextWrap, isMobile && styles.statTextWrapMobile]}>
-        <Text style={styles.statValue}>
-          {value}
-          <Text style={styles.statUnit}> {unit}</Text>
-        </Text>
-        <Text style={styles.statLabel}>{label}</Text>
-      </View>
-    </View>
-  );
-};
 
 // ─── Main Screen ───────────────────────────────────────────────────────────
 const DashboardScreen = () => {
@@ -115,17 +92,16 @@ const DashboardScreen = () => {
   const navigation = useNavigation();
 
   const {
-    userProfile, fetchFavoriteIds, setCurrentStreak, burnedCalories
+    userProfile, fetchFavoriteIds, currentStreak, setCurrentStreak, burnedCalories,
+    mockRecommendations, fetchMockRecommendations
   } = useAppStore();
-  const [showCheckInPopup, setShowCheckInPopup] = useState(false);
+  const [showRecommendations, setShowRecommendations] = useState(false);
 
   const [dailySummary, setDailySummary] = useState({
     totals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
     meals: [],
     streak: 0
   });
-
-  const [recipeSuggestions, setRecipeSuggestions] = useState(null);
 
   // STATE CHO MODAL NHẬP TAY
   const [showManualModal, setShowManualModal] = useState(false);
@@ -147,16 +123,7 @@ const DashboardScreen = () => {
     }
   };
 
-  const fetchSuggestions = async () => {
-    try {
-      const res = await recipeApi.getSuggestions();
-      if (res.success && res.data.data) {
-        setRecipeSuggestions(res.data.data);
-      }
-    } catch (error) {
-      console.error("Lỗi lấy gợi ý món ăn:", error);
-    }
-  };
+
 
   const handleSaveManualMeal = async () => {
     if (!manualForm.name || !manualForm.kcal) {
@@ -190,19 +157,9 @@ const DashboardScreen = () => {
     React.useCallback(() => {
       fetchSummary();
       if (fetchFavoriteIds) fetchFavoriteIds();
-      fetchSuggestions(); // Lấy gợi ý món ăn dựa vào tủ lạnh
+      fetchMockRecommendations(); // Lấy mock recommendations
     }, [])
   );
-
-  useEffect(() => {
-    if (DASHBOARD_MOCK_WEIGHT_HISTORY?.length > 0) {
-      const lastCheckIn = new Date(DASHBOARD_MOCK_WEIGHT_HISTORY[0].date);
-      const diffDays = Math.ceil(
-        Math.abs(new Date() - lastCheckIn) / (1000 * 60 * 60 * 24)
-      );
-      if (diffDays >= 7) setShowCheckInPopup(true);
-    }
-  }, []);
 
   const userName = userProfile?.name || 'Bạn';
   const targetKcal = userProfile?.targetCalories || userProfile?.tdee || 2000;
@@ -243,39 +200,19 @@ const DashboardScreen = () => {
   return (
     <ResponsiveContainer useImageBg={false}>
 
-      {/* ── HEADER (Giữ nguyên suốt) ── */}
-      <View style={styles.fixedHeaderWrapper}>
-        <DashboardHeader
-          userName={userName}
-          remainingKcal={remainingKcal}
-          showMenu={false}
-        />
-      </View>
-
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* ── STREAK ── */}
-        <FadeInView delay={0} style={styles.streakWrapper}>
-          <DashboardStreakBanner
-            streakDays={dailySummary.streak || 0}
-            hasLoggedToday={dailySummary.hasLoggedToday || false}
+        {/* ── HEADER ── */}
+        <View style={styles.headerWrapper}>
+          <DashboardHeader
+            userName={userName}
+            remainingKcal={remainingKcal}
+            streakDays={currentStreak || 0}
           />
-        </FadeInView>
+        </View>
 
-        {/* ── STATS ── */}
-        <FadeInView delay={80} style={styles.statsOuter}>
-          <View style={[styles.statsRow, styles.statsRowMobile]}>
-            <StatPill icon="nutrition" label="Protein" value={realMacros.protein.target} unit="g" color="#E53935" />
-            <View style={[styles.statsDivider, styles.statsDividerMobile]} />
-            <StatPill icon="cube" label="Carbs" value={realMacros.carbs.target} unit="g" color="#29B6F6" />
-            <View style={[styles.statsDivider, styles.statsDividerMobile]} />
-            <StatPill icon="water" label="Chất béo" value={realMacros.fat.target} unit="g" color="#FBC02D" />
-            <View style={[styles.statsDivider, styles.statsDividerMobile]} />
-            <StatPill icon="flame" label="Mục tiêu" value={realTracking.target_kcal} unit="kcal" color={ACCENT_DARK} />
-          </View>
-        </FadeInView>
 
 
 
@@ -290,31 +227,26 @@ const DashboardScreen = () => {
                   subtitle="Cập nhật theo thời gian thực"
                 />
                 <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
-
-                {/* AI Insight Section */}
-                <FadeInView delay={300}>
-                  <NutritionInsight />
-                </FadeInView>
               </View>
             </FadeInView>
 
-            <FadeInView delay={240}>
-              <View style={styles.card}>
-                <SectionHeader
-                  title="Nhật ký hôm nay"
-                  actionLabel="Xem chi tiết →"
-                  onAction={() => navigation.navigate('Diary')}
-                />
-                <MiniMealLog
-                  logs={dailySummary.meals}
-                  onAddMain={() => navigation.navigate('Scan')}
-                  onAddSnack={() => setShowManualModal(true)}
-                />
-              </View>
-            </FadeInView>
 
-            <FadeInView delay={240}>
-              <DashboardRecipeSuggestion suggestions={recipeSuggestions || undefined} />
+
+            {/* Nút Gợi ý món ăn (Neo-brutalism style) */}
+            <FadeInView delay={260}>
+              <View style={styles.neoBtnWrapper}>
+                <View style={styles.neoBtnShadow} />
+                <Pressable 
+                  style={styles.neoBtn}
+                  onPress={() => setShowRecommendations(true)}
+                >
+                  <Ionicons name="restaurant" size={20} color="#1A1D1E" />
+                  <Text style={styles.neoBtnText}>Gợi ý món ăn</Text>
+                  <View style={styles.neoBtnBadge}>
+                    <Text style={styles.neoBtnBadgeText}>{mockRecommendations?.length || 0}</Text>
+                  </View>
+                </Pressable>
+              </View>
             </FadeInView>
 
             <FadeInView delay={280}>
@@ -330,9 +262,10 @@ const DashboardScreen = () => {
         </View>
       </ScrollView>
 
-      <CheckInPopup
-        visible={showCheckInPopup}
-        onClose={() => setShowCheckInPopup(false)}
+      <RecommendationsSheet 
+        visible={showRecommendations} 
+        onClose={() => setShowRecommendations(false)} 
+        data={mockRecommendations} 
       />
 
       {/* MODAL NHẬP BỮA ĂN THỦ CÔNG */}
@@ -387,12 +320,10 @@ const DashboardScreen = () => {
 
 // ─── Styles ────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
-  fixedHeaderWrapper: {
+  headerWrapper: {
     width: '100%',
-    paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 4,
-    zIndex: 10,
     backgroundColor: 'transparent',
   },
 
@@ -541,6 +472,34 @@ const styles = StyleSheet.create({
   modalBtnCancelText: { color: '#666', fontWeight: '700' },
   modalBtnSubmit: { flex: 1, height: 50, backgroundColor: COLORS.primary, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
   modalBtnSubmitText: { color: '#FFF', fontWeight: '700' },
+  
+  // Neo-brutalism Button
+  neoBtnWrapper: { position: 'relative', width: '100%', paddingHorizontal: 4 },
+  neoBtnShadow: {
+    position: 'absolute',
+    top: 4, left: 8, right: 0, bottom: -4,
+    backgroundColor: '#1A1D1E',
+    borderRadius: 16,
+  },
+  neoBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    backgroundColor: '#AAEF65',
+    borderWidth: 2,
+    borderColor: '#1A1D1E',
+    borderRadius: 16,
+    paddingVertical: 18,
+  },
+  neoBtnText: { fontSize: 18, fontWeight: '900', color: '#1A1D1E' },
+  neoBtnBadge: { 
+    backgroundColor: '#1A1D1E', 
+    paddingHorizontal: 8, 
+    paddingVertical: 2, 
+    borderRadius: 12 
+  },
+  neoBtnBadgeText: { color: '#FFF', fontSize: 12, fontWeight: '800' },
 });
 
 export default DashboardScreen;

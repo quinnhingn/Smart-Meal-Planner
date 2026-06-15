@@ -15,7 +15,8 @@ const DashboardEnergyCard = ({ tracking, macros }) => {
         <View style={styles.ringWrapper}>
           <CalorieRing 
             target={tracking.target_kcal} 
-            consumed={Math.max(0, tracking.consumed_kcal - tracking.burned_kcal)} 
+            consumed={tracking.consumed_kcal} 
+            burned={tracking.burned_kcal}
             size={220} 
           />
           <View style={styles.breakdownRow}>
@@ -30,19 +31,16 @@ const DashboardEnergyCard = ({ tracking, macros }) => {
             label="Protein" 
             current={macros.protein.current} 
             target={macros.protein.target} 
-            color={macros.protein.color} 
           />
           <MacroBar 
             label="Carbs" 
             current={macros.carbs.current} 
             target={macros.carbs.target} 
-            color={macros.carbs.color} 
           />
           <MacroBar 
             label="Fat" 
             current={macros.fat.current} 
             target={macros.fat.target} 
-            color={macros.fat.color} 
           />
         </View>
       </View>

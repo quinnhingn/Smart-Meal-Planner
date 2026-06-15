@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Pressable, Platform, useWindowDimensions } from
 import { Ionicons } from '@expo/vector-icons';
 import { useAppStore } from '../../store/useAppStore';
 
-const DashboardHeader = ({ userName = "Quỳnh Nhi", remainingKcal = 550 }) => {
+const DashboardHeader = ({ userName = "Quỳnh Nhi", remainingKcal = 550, streakDays = 0 }) => {
   const setDrawerOpen = useAppStore((state) => state.setDrawerOpen);
   
   const greetingText = useMemo(() => {
@@ -20,6 +20,11 @@ const DashboardHeader = ({ userName = "Quỳnh Nhi", remainingKcal = 550 }) => {
         <View style={styles.titleWrapper}>
           <Text style={styles.greeting}>{greetingText},</Text>
           <Text style={styles.userName}>{userName} 👋</Text>
+        </View>
+        
+        <View style={styles.streakBadge}>
+          <Ionicons name="flame" size={18} color="#FF9800" />
+          <Text style={styles.streakText}>{streakDays}</Text>
         </View>
       </View>
 
@@ -39,6 +44,7 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 6,
   },
 
@@ -64,6 +70,22 @@ const styles = StyleSheet.create({
     fontWeight: '700', 
     color: '#4CAF50' 
   },
+  streakBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF4E5',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 100,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: '#FFE0B2',
+  },
+  streakText: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#E65100',
+  }
 });
 
 export default DashboardHeader;

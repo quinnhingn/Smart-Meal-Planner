@@ -40,6 +40,7 @@ import MobileTopbar from '../components/navigation/MobileTopbar';
 import CustomToast from '../components/common/CustomToast';
 import FABActionSheet from '../components/navigation/FABActionSheet';
 import SearchModal from '../components/scan/SearchModal';
+import SidebarMenu from '../components/navigation/SidebarMenu';
 
 // Theme & Store
 import { COLORS, FONTS, SHADOWS, RADIUS } from '../constants/theme';
@@ -206,6 +207,7 @@ const RootNavigator = () => {
       }}
     >
       <MainLayout currentRoute={currentRoute} />
+      <SidebarMenu />
       <FABActionSheet />
       <SearchModal />
       <CustomToast />

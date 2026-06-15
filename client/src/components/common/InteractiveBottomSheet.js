@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { 
-  View, StyleSheet, Animated, PanResponder, Dimensions, 
-  TouchableWithoutFeedback, Keyboard, Platform 
+import {
+  View, StyleSheet, Animated, PanResponder, Dimensions,
+  TouchableWithoutFeedback, Keyboard, Platform
 } from 'react-native';
+// Đảm bảo đường dẫn này khớp với cấu trúc dự án của bạn
 import { COLORS, SHADOWS } from '../../constants/theme';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -10,23 +11,22 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 /**
  * InteractiveBottomSheet
  * A gesture-driven bottom sheet supporting snap points and smooth dismissal.
- * 
- * Props:
+ * * Props:
  * - isVisible (bool)
  * - onClose (func)
  * - children (node): The content (can be ScrollView)
  * - snapPoints (array): e.g. [0.5, 0.9] -> 50% and 90% of screen height
  * - initialSnapIndex (number): index of snapPoints to start at
  */
-const InteractiveBottomSheet = ({ 
-  isVisible, 
-  onClose, 
-  children, 
+const InteractiveBottomSheet = ({
+  isVisible,
+  onClose,
+  children,
   snapPoints = [0.5, 0.9],
   initialSnapIndex = 0
 }) => {
   const [isOpen, setIsOpen] = useState(isVisible);
-  
+
   // Calculate pixel values for snap points (from top of screen)
   const snapPixels = snapPoints.map(p => SCREEN_HEIGHT * (1 - p));
   const hiddenY = SCREEN_HEIGHT;
@@ -35,30 +35,33 @@ const InteractiveBottomSheet = ({
   const translateY = useRef(new Animated.Value(hiddenY)).current;
   const backdropOpacity = useRef(new Animated.Value(0)).current;
 
-  // Track the current Y position for pan logic
-  const currentY = useRef(hiddenY);
-  translateY.addListener(({ value }) => {
-    currentY.current = value;
-  });
+  // Track the Y position where the pan started for resistance calculation
+  const panStartY = useRef(0);
 
   useEffect(() => {
     if (isVisible) {
+      // Đảm bảo view được render (isOpen = true) trước khi chạy animation
       setIsOpen(true);
-      Animated.parallel([
-        Animated.spring(translateY, {
-          toValue: initialY,
-          useNativeDriver: false,
-          bounciness: 4,
-          speed: 12
-        }),
-        Animated.timing(backdropOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: false
-        })
-      ]).start();
+      // Dùng setTimeout/requestAnimationFrame để animation bắt đầu MƯỢT sau khi mount
+      setTimeout(() => {
+        Animated.parallel([
+          Animated.spring(translateY, {
+            toValue: initialY,
+            useNativeDriver: false,
+            bounciness: 4,
+            speed: 12
+          }),
+          Animated.timing(backdropOpacity, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: false
+          })
+        ]).start();
+      }, 50);
     } else {
-      closeSheet();
+      if (isOpen) {
+        closeSheet();
+      }
     }
   }, [isVisible]);
 
@@ -89,23 +92,36 @@ const InteractiveBottomSheet = ({
         return Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 5;
       },
       onPanResponderGrant: () => {
-        translateY.setOffset(currentY.current);
-        translateY.setValue(0);
+        // 1. Dừng mọi animation đang chạy lỡ dở
+        translateY.stopAnimation();
+
+        // 2. Chuyển vị trí thực tế hiện tại vào offset và reset value về 0 một cách an toàn
+        translateY.extractOffset();
+
+        // 3. Lấy vị trí bắt đầu chuẩn xác từ offset (_offset là thuộc tính private nhưng an toàn để đọc)
+        panStartY.current = translateY._offset;
       },
       onPanResponderMove: (_, gestureState) => {
         // Prevent dragging above the highest snap point (lowest Y)
         const highestSnap = Math.min(...snapPixels);
-        if (currentY.current + gestureState.dy < highestSnap - 20) {
-          // Add resistance
-          translateY.setValue(gestureState.dy * 0.2);
+        const projectedY = panStartY.current + gestureState.dy;
+
+        if (projectedY < highestSnap) {
+          // Add resistance when pulling past the highest snap point
+          const maxDy = highestSnap - panStartY.current;
+          const overflowDy = gestureState.dy - maxDy;
+          translateY.setValue(maxDy + overflowDy * 0.2);
         } else {
           translateY.setValue(gestureState.dy);
         }
       },
       onPanResponderRelease: (_, gestureState) => {
+        // Gộp offset vào value hiện tại
         translateY.flattenOffset();
         const velocityY = gestureState.vy;
-        const finalY = currentY.current;
+
+        // 4. Tính toán finalY trực tiếp bằng toán học
+        const finalY = panStartY.current + gestureState.dy;
 
         // If dragged down fast -> close
         if (velocityY > 1.5) {
@@ -126,7 +142,7 @@ const InteractiveBottomSheet = ({
 
         // Find closest snap point
         const allPoints = [...snapPixels, hiddenY];
-        const closestPoint = allPoints.reduce((prev, curr) => 
+        const closestPoint = allPoints.reduce((prev, curr) =>
           Math.abs(curr - finalY) < Math.abs(prev - finalY) ? curr : prev
         );
 
@@ -152,9 +168,9 @@ const InteractiveBottomSheet = ({
         <Animated.View style={[styles.backdrop, { opacity: backdropOpacity }]} />
       </TouchableWithoutFeedback>
 
-      <Animated.View 
+      <Animated.View
         style={[
-          styles.sheetContainer, 
+          styles.sheetContainer,
           { top: translateY }
         ]}
       >
@@ -190,7 +206,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
-    ...SHADOWS.dark,
+    ...SHADOWS?.dark, // Dùng optional chaining phòng trường hợp SHADOWS.dark chưa khai báo chuẩn
+    shadowColor: '#000', // Các thuộc tính shadow dự phòng
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 10,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.05)',
   },

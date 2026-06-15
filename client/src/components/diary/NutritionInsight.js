@@ -40,7 +40,9 @@ const NutritionInsight = () => {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
+      <View style={styles.neoCardWrapper}>
+        <View style={styles.neoCardShadow} />
+        <LinearGradient
         colors={['#F0FDF4', '#DCFCE7']}
         style={styles.card}
         start={{ x: 0, y: 0 }}
@@ -67,6 +69,7 @@ const NutritionInsight = () => {
           </Pressable>
         </View>
       </LinearGradient>
+      </View>
 
       <SuggestedRecipesModal 
         visible={showModal} 
@@ -81,15 +84,24 @@ const NutritionInsight = () => {
 
 const styles = StyleSheet.create({
   container: { marginTop: 16, marginBottom: 8 },
+  neoCardWrapper: {
+    position: 'relative',
+    width: '100%',
+  },
+  neoCardShadow: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    right: -6,
+    bottom: -6,
+    backgroundColor: '#1A1D1E',
+    borderRadius: 20,
+  },
   card: {
     borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: '#BBF7D0',
-    ...Platform.select({
-      web: { boxShadow: '0 4px 12px rgba(5, 150, 105, 0.08)' },
-      default: { elevation: 2 }
-    })
+    borderWidth: 2,
+    borderColor: '#1A1D1E',
   },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   aiBadge: { 

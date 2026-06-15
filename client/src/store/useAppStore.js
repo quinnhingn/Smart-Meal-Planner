@@ -12,6 +12,9 @@ export const useAppStore = create((set, get) => ({
   tabBarVisible: true,
   setTabBarVisible: (visible) => set({ tabBarVisible: visible }),
   
+  isDrawerOpen: false,
+  setDrawerOpen: (visible) => set({ isDrawerOpen: visible }),
+  
   fabSheetVisible: false,
   setFabSheetVisible: (visible) => set({ fabSheetVisible: visible }),
   
@@ -362,4 +365,14 @@ export const useAppStore = create((set, get) => ({
     get().showToast(`🔥 Bạn đã tiêu hao ${Math.round(burned)} kcal! Quỹ Calo của bạn đã được cập nhật.`, 'success');
     return { burnedCalories: state.burnedCalories + burned };
   }),
+
+  // ==========================================
+  // 11. MOCK RECOMMENDATIONS
+  // ==========================================
+  mockRecommendations: [],
+  fetchMockRecommendations: () => {
+    import('../utils/mockDashboardData').then((module) => {
+      set({ mockRecommendations: module.DASHBOARD_MOCK_RECOMMENDATIONS });
+    });
+  },
 }));

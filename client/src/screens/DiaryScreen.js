@@ -18,9 +18,9 @@ const isSameDay = (d1, d2) => d1.toDateString() === d2.toDateString();
 const DiaryScreen = () => {
   const { width: windowWidth } = useWindowDimensions();
 
-  const { 
-    userProfile, diaryItems, fetchDiaryItems, 
-    addDiaryItem, updateDiaryItem, deleteDiaryItem 
+  const {
+    userProfile, diaryItems, fetchDiaryItems,
+    addDiaryItem, updateDiaryItem, deleteDiaryItem
   } = useAppStore();
 
   // TỰ ĐỘNG LOAD DỮ LIỆU
@@ -116,7 +116,7 @@ const DiaryScreen = () => {
     <ResponsiveContainer useImageBg={false}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.layout}>
-          
+
           <View style={styles.leftCol}>
             <DailyHeader date={selectedDate} onOpenCalendar={() => setShowCalendar(true)} />
             <WeekSelector selectedDate={selectedDate} onSelectDate={setSelectedDate} />
@@ -165,9 +165,9 @@ const DiaryScreen = () => {
 
 const styles = StyleSheet.create({
   scrollContent: { paddingBottom: 100 },
-  layout: { 
+  layout: {
     flex: 1, flexDirection: 'column', padding: 16, paddingTop: 8,
-    gap: 20, maxWidth: 1200, alignSelf: 'center', width: '100%' 
+    gap: 20, maxWidth: 1200, alignSelf: 'center', width: '100%'
   },
   leftCol: { width: '100%' },
   rightCol: { width: '100%' },

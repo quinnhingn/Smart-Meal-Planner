@@ -2,16 +2,21 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
+import { getMacroColor } from '../constants/theme';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
+const CalorieRing = ({ target = 1800, consumed = 0, burned = 0, size = 220 }) => {
   const strokeWidth = 20;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   
-  const safeConsumed = Math.min(consumed, target);
-  const targetOffset = circumference - (safeConsumed / target) * circumference;
+  // V2 Net Budget Formula
+  const netBudget = Math.max(target - burned, 1); // Clamp to 1 to prevent division by zero
+  const percentage = Math.round((consumed / netBudget) * 100) || 0;
+  const safePercentage = Math.min(percentage, 100);
+  
+  const targetOffset = circumference - (safePercentage / 100) * circumference;
 
   const animatedStrokeOffset = useRef(new Animated.Value(circumference)).current;
   const [displayNumber, setDisplayNumber] = useState(0);
@@ -33,7 +38,7 @@ const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       const easeProgress = 1 - Math.pow(1 - progress, 3); 
       
-      setDisplayNumber(Math.floor(easeProgress * consumed));
+      setDisplayNumber(Math.floor(easeProgress * percentage));
       
       if (progress < 1) {
         animationFrameId = requestAnimationFrame(step);
@@ -45,10 +50,9 @@ const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
-  }, [consumed, target, targetOffset, animatedStrokeOffset]);
+  }, [percentage, targetOffset, animatedStrokeOffset]);
 
-  const isOverKcal = consumed > target;
-  const ringColor = isOverKcal ? '#F44336' : '#4CAF50'; 
+  const ringColor = getMacroColor(percentage);
 
   return (
     <View style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center' }}>
@@ -78,10 +82,10 @@ const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
       </Svg>
 
       <View style={styles.centerTextContainer}>
-        <Text style={[styles.consumedText, isOverKcal && { color: '#F44336' }]}>
-          {displayNumber}
+        <Text style={[styles.consumedText, { color: ringColor }]}>
+          {displayNumber}%
         </Text>
-        <Text style={styles.targetText}>/ {target} kcal</Text>
+        <Text style={styles.targetText}>{consumed} / {netBudget} kcal</Text>
       </View>
     </View>
   );
@@ -90,7 +94,7 @@ const CalorieRing = ({ target = 1800, consumed = 0, size = 220 }) => {
 const styles = StyleSheet.create({
   centerTextContainer: { alignItems: 'center', justifyContent: 'center' },
   consumedText: { fontSize: 44, fontWeight: '900', color: '#1A1D1E', lineHeight: 50 },
-  targetText: { fontSize: 16, fontWeight: '600', color: '#888', marginTop: 4 },
+  targetText: { fontSize: 13, fontWeight: '600', color: '#888', marginTop: 4 },
 });
 
 export default CalorieRing;

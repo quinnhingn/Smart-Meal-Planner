@@ -16,10 +16,10 @@ export const GOALS = [
 ];
 
 export const ACTIVITY_LEVELS = [
-  { id: 'sedentary', title: 'Ít vận động', description: 'Ngồi nhiều, không tập' },
-  { id: 'light', title: 'Nhẹ', description: 'Đi bộ, tập 1-2 buổi/tuần' },
-  { id: 'moderate', title: 'Vừa phải', description: 'Tập 3-5 buổi/tuần' },
-  { id: 'active', title: 'Năng động', description: 'Tập nặng hàng ngày' },
+  { id: 'sedentary', title: 'Ít vận động', description: 'Ngồi nhiều, không tập', factor: 1.2 },
+  { id: 'light', title: 'Nhẹ', description: 'Đi bộ, tập 1-2 buổi/tuần', factor: 1.375 },
+  { id: 'moderate', title: 'Vừa phải', description: 'Tập 3-5 buổi/tuần', factor: 1.55 },
+  { id: 'active', title: 'Năng động', description: 'Tập nặng hàng ngày', factor: 1.725 },
 ];
 
 export const ALLERGIES = [
@@ -52,7 +52,6 @@ export const BODY_TYPES = [
 ];
 
 export const PACE_OPTIONS = [
-  { id: 'slow', title: 'Từ từ', description: 'Dễ duy trì, thoải mái' },
-  { id: 'normal', title: 'Tiêu chuẩn', description: 'Khuyến nghị bởi chuyên gia' },
-  { id: 'fast', title: 'Thần tốc', description: 'Cần kỷ luật cao' },
+  { id: 'slow', title: 'Chậm', description: '0,2% trọng lượng cơ thể/tuần' },
+  { id: 'normal', title: 'Vừa phải', description: '0,5% trọng lượng cơ thể/tuần' },
 ];

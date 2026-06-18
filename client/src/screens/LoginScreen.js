@@ -1,10 +1,11 @@
 // src/screens/LoginScreen.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, Text, TextInput, StyleSheet, ActivityIndicator, 
   Pressable, Platform, KeyboardAvoidingView, ScrollView, 
   StatusBar 
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import GlassCard from '../components/GlassCard';
@@ -13,14 +14,45 @@ import { COLORS } from '../constants/theme';
 import { useAppStore } from '../store/useAppStore';
 
 const LoginScreen = ({ onNavigateToRegister }) => {
-  const [email, setEmail] = useState('demo@gmail.com');
-  const [password, setPassword] = useState('18052004');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   
   const { login, isLoading, error } = useAppStore();
 
+  useEffect(() => {
+    const loadSavedCredentials = async () => {
+      try {
+        const savedEmail = await AsyncStorage.getItem('saved_email');
+        const savedPassword = await AsyncStorage.getItem('saved_password');
+        if (savedEmail && savedPassword) {
+          setEmail(savedEmail);
+          setPassword(savedPassword);
+          setRememberMe(true);
+        }
+      } catch (error) {
+        console.log('Lỗi tải tài khoản đã lưu', error);
+      }
+    };
+    loadSavedCredentials();
+  }, []);
+
   const handleLogin = async () => {
-    await login(email, password);
+    const success = await login(email, password);
+    if (success) {
+      try {
+        if (rememberMe) {
+          await AsyncStorage.setItem('saved_email', email);
+          await AsyncStorage.setItem('saved_password', password);
+        } else {
+          await AsyncStorage.removeItem('saved_email');
+          await AsyncStorage.removeItem('saved_password');
+        }
+      } catch (e) {
+        console.log('Lỗi lưu tài khoản', e);
+      }
+    }
   };
 
   const SocialButton = ({ icon, color }) => (
@@ -90,9 +122,19 @@ const LoginScreen = ({ onNavigateToRegister }) => {
                   </Pressable>
                 </View>
 
-                <Pressable style={styles.forgotPasswordContainer}>
-                  <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
-                </Pressable>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 24 }}>
+                  <Pressable 
+                    style={{ flexDirection: 'row', alignItems: 'center' }}
+                    onPress={() => setRememberMe(!rememberMe)}
+                  >
+                    <Ionicons name={rememberMe ? "checkbox" : "square-outline"} size={22} color={rememberMe ? COLORS.primary : '#666'} />
+                    <Text style={{ marginLeft: 8, color: '#333', fontSize: 14, fontWeight: '600' }}>Nhớ tài khoản</Text>
+                  </Pressable>
+
+                  <Pressable>
+                    <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
+                  </Pressable>
+                </View>
 
                 {isLoading ? (
                   <ActivityIndicator size="large" color={COLORS.primary} style={{ marginVertical: 20 }} />
@@ -168,7 +210,6 @@ const styles = StyleSheet.create({
   iconLeft: { paddingHorizontal: 14 },
   iconRight: { paddingHorizontal: 14, height: '100%', justifyContent: 'center' },
   input: { flex: 1, height: '100%', color: '#1A1D1E', fontSize: 16 },
-  forgotPasswordContainer: { alignSelf: 'flex-end', marginBottom: 24 },
   forgotPasswordText: { color: '#666', fontSize: 14, fontWeight: '600' },
   loginBtn: { width: '100%', borderRadius: 12 },
   

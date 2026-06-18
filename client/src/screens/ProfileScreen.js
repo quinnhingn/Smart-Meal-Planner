@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import { useAppStore } from '../store/useAppStore';
-import { COLORS } from '../constants/theme';
+import { COLORS, SHADOWS } from '../constants/theme';
 import { calculateTDEEAndMacros } from '../utils/calculator';
 import { GOALS, ACTIVITY_LEVELS, DIETS, ALLERGIES, BODY_TYPES, PACE_OPTIONS, DISLIKES } from '../utils/onboardingData';
 
@@ -44,20 +44,19 @@ const ProfileScreen = () => {
     avatarUri: userProfile?.avatarUri || null, 
     gender: userProfile?.gender || 'female',
     age: userProfile?.age?.toString() || '21',
-    weight: userProfile?.weight?.toString() || '55',
-    targetWeight: userProfile?.targetWeight?.toString() || '50',
-    height: userProfile?.height?.toString() || '165',
+    weight: userProfile?.weight_kg?.toString() || '55',
+    targetWeight: userProfile?.target_weight_kg?.toString() || '50',
+    height: userProfile?.height_cm?.toString() || '165',
     goal: userProfile?.goal || 'lose_weight',
-    bodyType: userProfile?.bodyType || 'mesomorph',
     pace: userProfile?.pace || 'normal',
-    activity: userProfile?.activity || 'light',
-    diet: userProfile?.diet || 'none', 
+    activity: userProfile?.activity_level ? (ACTIVITY_LEVELS.find(a => a.factor === userProfile.activity_level)?.id || 'light') : 'light',
+    diet: userProfile?.dietary_preference || 'none', 
     allergies: userProfile?.allergies || [], 
     dislikes: userProfile?.dislikes || [],
-    targetCalories: userProfile?.tdee?.toString() || userProfile?.targetCalories?.toString() || '1800',
-    protein: userProfile?.protein_g?.toString() || '135',
-    carbs: userProfile?.carbs_g?.toString() || '180',
-    fat: userProfile?.fat_g?.toString() || '60',
+    targetCalories: userProfile?.target_calories?.toString() || '1800',
+    protein: userProfile?.target_protein_g?.toString() || '135',
+    carbs: userProfile?.target_carbs_g?.toString() || '180',
+    fat: userProfile?.target_fat_g?.toString() || '60',
   });
 
   const handleChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
@@ -118,7 +117,6 @@ const ProfileScreen = () => {
       height: parseFloat(formData.height) || 0,
       weight: parseFloat(formData.weight) || 0,
       targetWeight: parseFloat(formData.targetWeight) || 0,
-      bodyType: formData.bodyType,
       pace: formData.pace,
       activity: formData.activity,
       goal: formData.goal,
@@ -132,11 +130,23 @@ const ProfileScreen = () => {
     const payload = {
       name: formData.name,
       avatarUri: formData.avatarUri, 
-      ...currentPhysicalData,
-      targetCalories: newMacros.tdee,
-      protein_g: newMacros.protein_g,
-      carbs_g: newMacros.carbs_g,
-      fat_g: newMacros.fat_g,
+      gender: formData.gender,
+      age: parseInt(formData.age) || 0,
+      height_cm: parseFloat(formData.height) || 0,
+      weight_kg: parseFloat(formData.weight) || 0,
+      target_weight_kg: parseFloat(formData.targetWeight) || 0,
+      speed: formData.pace,
+      activity_level: formData.activity,
+      goal: formData.goal,
+      diet: formData.diet,
+      allergies: formData.allergies,
+      dislikes: formData.dislikes,
+      tdee: newMacros.tdee,
+      target_calories: newMacros.tdee,
+      target_protein_g: newMacros.protein_g,
+      target_carbs_g: newMacros.carbs_g,
+      target_fat_g: newMacros.fat_g,
+      expectedWeeks: 0,
     };
 
     const success = await updateProfile(payload);
@@ -159,20 +169,19 @@ const ProfileScreen = () => {
       avatarUri: userProfile?.avatarUri || null, 
       gender: userProfile?.gender || 'female',
       age: userProfile?.age?.toString() || '21',
-      weight: userProfile?.weight?.toString() || '55',
-      targetWeight: userProfile?.targetWeight?.toString() || '50',
-      height: userProfile?.height?.toString() || '165',
+      weight: userProfile?.weight_kg?.toString() || '55',
+      targetWeight: userProfile?.target_weight_kg?.toString() || '50',
+      height: userProfile?.height_cm?.toString() || '165',
       goal: userProfile?.goal || 'lose_weight',
-      bodyType: userProfile?.bodyType || 'mesomorph',
       pace: userProfile?.pace || 'normal',
-      activity: userProfile?.activity || 'light',
-      diet: userProfile?.diet || 'none', 
+      activity: userProfile?.activity_level ? (ACTIVITY_LEVELS.find(a => a.factor === userProfile.activity_level)?.id || 'light') : 'light',
+      diet: userProfile?.dietary_preference || 'none', 
       allergies: userProfile?.allergies || [], 
       dislikes: userProfile?.dislikes || [],
-      targetCalories: userProfile?.tdee?.toString() || userProfile?.targetCalories?.toString() || '1800',
-      protein: userProfile?.protein_g?.toString() || '135',
-      carbs: userProfile?.carbs_g?.toString() || '180',
-      fat: userProfile?.fat_g?.toString() || '60',
+      targetCalories: userProfile?.target_calories?.toString() || '1800',
+      protein: userProfile?.target_protein_g?.toString() || '135',
+      carbs: userProfile?.target_carbs_g?.toString() || '180',
+      fat: userProfile?.target_fat_g?.toString() || '60',
     });
     setIsEditing(false);
     setShowCustomAllergy(false);
@@ -238,6 +247,33 @@ const ProfileScreen = () => {
             {/* THÔNG TIN CƠ THỂ */}
             <View style={styles.card}>
               <Text style={styles.cardTitle}>Chỉ số cơ thể</Text>
+              
+              {!isEditing ? (
+                <View style={styles.metricsGrid}>
+                  <View style={styles.metricBox}>
+                    <Ionicons name="calendar-outline" size={24} color={COLORS.primary} />
+                    <Text style={styles.metricValue}>{formData.age}</Text>
+                    <Text style={styles.metricLabel}>Tuổi</Text>
+                  </View>
+                  <View style={styles.metricBox}>
+                    <Ionicons name="body-outline" size={24} color={COLORS.primary} />
+                    <Text style={styles.metricValue}>{formData.height} <Text style={{fontSize: 12}}>cm</Text></Text>
+                    <Text style={styles.metricLabel}>Chiều cao</Text>
+                  </View>
+                  <View style={styles.metricBox}>
+                    <Ionicons name="scale-outline" size={24} color={COLORS.primary} />
+                    <Text style={styles.metricValue}>{formData.weight} <Text style={{fontSize: 12}}>kg</Text></Text>
+                    <Text style={styles.metricLabel}>Cân nặng</Text>
+                  </View>
+                </View>
+              ) : (
+                <View style={styles.editMetrics}>
+                  <InfoRow label="Tuổi" value={formData.age} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('age', txt.replace(/[^0-9]/g, ''))} />
+                  <InfoRow label="Chiều cao (cm)" value={formData.height} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('height', txt.replace(/[^0-9.]/g, ''))} />
+                  <InfoRow label="Cân nặng (kg)" value={formData.weight} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('weight', txt.replace(/[^0-9.]/g, ''))} />
+                </View>
+              )}
+
               <InfoRow label="Họ và tên" value={formData.name} isEditing={isEditing} onChangeText={(txt) => handleChange('name', txt)} />
               <Pressable style={styles.selectorRow} onPress={() => isEditing && setActiveSheet('gender')}>
                 <Text style={styles.infoLabel}>Giới tính</Text>
@@ -246,21 +282,10 @@ const ProfileScreen = () => {
                   {isEditing && <Ionicons name="chevron-down" size={16} color={COLORS.primary} style={{marginLeft: 4}} />}
                 </View>
               </Pressable>
-              <InfoRow label="Tuổi" value={formData.age} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('age', txt.replace(/[^0-9]/g, ''))} />
-              <InfoRow label="Chiều cao (cm)" value={formData.height} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('height', txt.replace(/[^0-9.]/g, ''))} />
-              <InfoRow label="Cân nặng (kg)" value={formData.weight} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('weight', txt.replace(/[^0-9.]/g, ''))} />
               
               {formData.goal !== 'maintain' && (
                 <InfoRow label="Cân nặng mục tiêu" value={formData.targetWeight} isEditing={isEditing} numeric onChangeText={(txt) => handleChange('targetWeight', txt.replace(/[^0-9.]/g, ''))} />
               )}
-
-              <Pressable style={styles.selectorRow} onPress={() => isEditing && setActiveSheet('bodyType')}>
-                <Text style={styles.infoLabel}>Tạng người</Text>
-                <View style={styles.selectorValueGroup}>
-                  <Text style={[styles.infoValue, isEditing && styles.textLink]}>{formatText('bodyType', formData.bodyType)}</Text>
-                  {isEditing && <Ionicons name="chevron-down" size={16} color={COLORS.primary} style={{marginLeft: 4}} />}
-                </View>
-              </Pressable>
             </View>
           </View>
 
@@ -268,38 +293,46 @@ const ProfileScreen = () => {
             
             {/* PHÂN TÍCH & DỊ ỨNG & DISLIKES */}
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Phân tích & Lộ trình</Text>
-              <Pressable style={styles.selectorRow} onPress={() => isEditing && setActiveSheet('goal')}>
-                <Text style={styles.infoLabel}>Mục tiêu</Text>
-                <View style={styles.selectorValueGroup}>
-                  <Text style={[styles.infoValue, isEditing && styles.textLink]}>{formatText('goal', formData.goal)}</Text>
-                  {isEditing && <Ionicons name="chevron-down" size={16} color={COLORS.primary} style={{marginLeft: 4}} />}
+              <Text style={styles.cardTitle}>Lộ trình & Sở thích</Text>
+              
+              <Pressable style={styles.pillSelectorRow} onPress={() => isEditing && setActiveSheet('goal')}>
+                <View style={styles.pillIconBg}><Ionicons name="flag" size={18} color={COLORS.primary} /></View>
+                <View style={styles.pillContent}>
+                  <Text style={styles.pillLabel}>Mục tiêu</Text>
+                  <Text style={[styles.pillValue, isEditing && styles.textLink]}>{formatText('goal', formData.goal)}</Text>
                 </View>
+                {isEditing && <Ionicons name="chevron-forward" size={18} color="#CCC" />}
               </Pressable>
-              <Pressable style={styles.selectorRow} onPress={() => isEditing && setActiveSheet('pace')}>
-                <Text style={styles.infoLabel}>Tốc độ thực hiện</Text>
-                <View style={styles.selectorValueGroup}>
-                  <Text style={[styles.infoValue, isEditing && styles.textLink]}>{formatText('pace', formData.pace)}</Text>
-                  {isEditing && <Ionicons name="chevron-down" size={16} color={COLORS.primary} style={{marginLeft: 4}} />}
+              
+              <Pressable style={styles.pillSelectorRow} onPress={() => isEditing && setActiveSheet('pace')}>
+                <View style={styles.pillIconBg}><Ionicons name="speedometer" size={18} color={COLORS.primary} /></View>
+                <View style={styles.pillContent}>
+                  <Text style={styles.pillLabel}>Tốc độ thực hiện</Text>
+                  <Text style={[styles.pillValue, isEditing && styles.textLink]}>{formatText('pace', formData.pace)}</Text>
                 </View>
+                {isEditing && <Ionicons name="chevron-forward" size={18} color="#CCC" />}
               </Pressable>
-              <Pressable style={styles.selectorRow} onPress={() => isEditing && setActiveSheet('activity')}>
-                <Text style={styles.infoLabel}>Mức vận động</Text>
-                <View style={styles.selectorValueGroup}>
-                  <Text style={[styles.infoValue, isEditing && styles.textLink]}>{formatText('activity', formData.activity)}</Text>
-                  {isEditing && <Ionicons name="chevron-down" size={16} color={COLORS.primary} style={{marginLeft: 4}} />}
+
+              <Pressable style={styles.pillSelectorRow} onPress={() => isEditing && setActiveSheet('activity')}>
+                <View style={styles.pillIconBg}><Ionicons name="bicycle" size={18} color={COLORS.primary} /></View>
+                <View style={styles.pillContent}>
+                  <Text style={styles.pillLabel}>Mức vận động</Text>
+                  <Text style={[styles.pillValue, isEditing && styles.textLink]}>{formatText('activity', formData.activity)}</Text>
                 </View>
+                {isEditing && <Ionicons name="chevron-forward" size={18} color="#CCC" />}
               </Pressable>
-              <Pressable style={styles.selectorRow} onPress={() => isEditing && setActiveSheet('diet')}>
-                <Text style={styles.infoLabel}>Chế độ ăn</Text>
-                <View style={styles.selectorValueGroup}>
-                  <Text style={[styles.infoValue, isEditing && styles.textLink]}>{formatText('diet', formData.diet)}</Text>
-                  {isEditing && <Ionicons name="chevron-down" size={16} color={COLORS.primary} style={{marginLeft: 4}} />}
+
+              <Pressable style={[styles.pillSelectorRow, {borderBottomWidth: 0, paddingBottom: 0}]} onPress={() => isEditing && setActiveSheet('diet')}>
+                <View style={styles.pillIconBg}><Ionicons name="restaurant" size={18} color={COLORS.primary} /></View>
+                <View style={styles.pillContent}>
+                  <Text style={styles.pillLabel}>Chế độ ăn</Text>
+                  <Text style={[styles.pillValue, isEditing && styles.textLink]}>{formatText('diet', formData.diet)}</Text>
                 </View>
+                {isEditing && <Ionicons name="chevron-forward" size={18} color="#CCC" />}
               </Pressable>
 
               {/* DỊ ỨNG */}
-              <View style={styles.allergySection}>
+              <View style={[styles.allergySection, { borderTopWidth: 1, borderColor: '#F0F0F0', marginTop: 16, paddingTop: 16 }]}>
                 <Text style={styles.infoLabel}>Dị ứng thực phẩm</Text>
                 <View style={styles.tagContainer}>
                   {isEditing ? (
@@ -446,8 +479,21 @@ const styles = StyleSheet.create({
   userName: { fontSize: 22, fontWeight: '700', color: '#1A1D1E' },
   userEmail: { fontSize: 14, fontWeight: '600', color: '#888', marginTop: 4 },
   
-  card: { backgroundColor: '#FFF', borderRadius: 16, padding: 16, borderWidth: 1, borderColor: '#EEE' },
+  card: { backgroundColor: '#FFF', borderRadius: 20, padding: 20, borderWidth: 1, borderColor: 'rgba(0,0,0,0.08)', ...SHADOWS.premium },
   cardTitle: { fontSize: 14, fontWeight: '800', color: COLORS.primary, marginBottom: 16, textTransform: 'uppercase', letterSpacing: 0.5 },
+  
+  metricsGrid: { flexDirection: 'row', gap: 12, marginBottom: 20 },
+  metricBox: { flex: 1, backgroundColor: 'rgba(76, 175, 80, 0.05)', borderRadius: 16, padding: 12, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(76, 175, 80, 0.2)' },
+  metricValue: { fontSize: 20, fontWeight: '900', color: '#1A1D1E', marginTop: 8 },
+  metricLabel: { fontSize: 12, fontWeight: '600', color: '#666', marginTop: 2 },
+  editMetrics: { marginBottom: 12 },
+
+  pillSelectorRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, borderBottomWidth: 1, borderColor: '#F0F0F0' },
+  pillIconBg: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(76, 175, 80, 0.1)', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  pillContent: { flex: 1 },
+  pillLabel: { fontSize: 13, color: '#888', fontWeight: '600', marginBottom: 2 },
+  pillValue: { fontSize: 15, color: '#1A1D1E', fontWeight: '700' },
+
   streakCard: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#FFF3E0', borderColor: '#FFE0B2' },
   streakInfo: { flex: 1 },
   streakTitle: { fontSize: 16, fontWeight: '800', color: '#E65100', marginBottom: 4 },

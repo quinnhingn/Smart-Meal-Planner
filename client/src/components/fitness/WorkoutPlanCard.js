@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.04)',
-    elevation: 1,
+    ...SHADOWS.premium,
   },
   thumbnail: {
     width: 80,

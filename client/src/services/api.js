@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
 
-const BASE_URL = 'http://192.168.1.6:5001/api';
+const BASE_URL = 'http://192.168.1.18:5001/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -45,8 +45,8 @@ export const fetchApi = async (method, endpoint, data = null) => {
 };
 
 export const authApi = {
-  register: (name, email, password) => axios.post(`${BASE_URL}/auth/register`, { name, email, password }).then(r => r.data),
-  login: (email, password) => axios.post(`${BASE_URL}/auth/login`, { email, password }).then(r => r.data),
+  register: (name, email, password) => fetchApi('POST', '/auth/register', { name, email, password }),
+  login: (email, password) => fetchApi('POST', '/auth/login', { email, password }),
   getProfile: () => fetchApi('GET', '/user/profile'),
   setupProfile: (data) => fetchApi('POST', '/user/profile', data)
 };

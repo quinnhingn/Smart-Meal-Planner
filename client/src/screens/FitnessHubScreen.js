@@ -294,9 +294,10 @@ const styles = StyleSheet.create({
   dayStrip: { paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
   dayChip: {
     width: 64, height: 64, justifyContent: 'center', alignItems: 'center', borderRadius: 16, backgroundColor: '#FFF',
-    borderWidth: 1, borderColor: '#E0E0E0',
+    borderWidth: 1, borderColor: 'rgba(0,0,0,0.08)',
+    ...SHADOWS.premium,
   },
-  dayChipActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
+  dayChipActive: { backgroundColor: COLORS.primary, borderWidth: 2, borderColor: COLORS.primary, ...SHADOWS.green },
   dayChipText: { fontSize: 13, fontWeight: '700', color: '#666' },
   dayChipTextActive: { color: '#FFF' },
 

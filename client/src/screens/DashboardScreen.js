@@ -162,7 +162,7 @@ const DashboardScreen = () => {
   );
 
   const userName = userProfile?.name || 'Bạn';
-  const targetKcal = userProfile?.targetCalories || userProfile?.tdee || 2000;
+  const targetKcal = userProfile?.target_calories || userProfile?.tdee || 2000;
 
   const realTracking = {
     ...DASHBOARD_MOCK_TRACKING,
@@ -173,17 +173,17 @@ const DashboardScreen = () => {
 
   const realMacros = {
     protein: {
-      target: Math.round(userProfile?.protein_g || 150),
+      target: Math.round(userProfile?.target_protein_g || 150),
       current: Math.round(dailySummary.totals.protein),
       color: '#E53935'
     },
     carbs: {
-      target: Math.round(userProfile?.carbs_g || 250),
+      target: Math.round(userProfile?.target_carbs_g || 250),
       current: Math.round(dailySummary.totals.carbs),
       color: '#29B6F6'
     },
     fat: {
-      target: Math.round(userProfile?.fat_g || 60),
+      target: Math.round(userProfile?.target_fat_g || 60),
       current: Math.round(dailySummary.totals.fat),
       color: '#FBC02D'
     }

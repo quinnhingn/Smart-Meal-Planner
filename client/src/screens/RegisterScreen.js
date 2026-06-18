@@ -18,6 +18,7 @@ const RegisterScreen = ({ onNavigateToLogin }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   
   const { width: windowWidth } = useWindowDimensions();
   const { register, isLoading, error } = useAppStore();
@@ -34,11 +35,20 @@ const RegisterScreen = ({ onNavigateToLogin }) => {
       return;
     }
     
-    await register({
+    const result = await register({
       name: displayName.trim(),
       email: email.trim(),
       password,
     });
+    
+    if (result && result.success) {
+      alert('Đăng ký thành công! Đang chuyển trang...');
+      setIsRedirecting(true);
+      setTimeout(() => {
+        const { useAppStore } = require('../store/useAppStore');
+        useAppStore.getState().setAuthData(result.token, result.user, false);
+      }, 1500);
+    }
   };
 
   return (
@@ -120,7 +130,7 @@ const RegisterScreen = ({ onNavigateToLogin }) => {
                   />
                 </View>
 
-                {isLoading ? (
+                {(isLoading || isRedirecting) ? (
                   <ActivityIndicator size="large" color={COLORS.primary} style={{ marginVertical: 20 }} />
                 ) : (
                   <CustomButton title="Đăng Ký" onPress={handleRegister} style={styles.registerBtn} />

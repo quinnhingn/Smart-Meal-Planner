@@ -28,6 +28,7 @@ export const useAppStore = create((set, get) => ({
   token: null,
   userProfile: null,
   hasProfile: false,
+  setAuthData: (token, userProfile, hasProfile) => set({ token, userProfile, hasProfile }),
   isLoading: false,
   error: null,
   currentStreak: 0,
@@ -56,37 +57,49 @@ export const useAppStore = create((set, get) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     
-    // MOCK-DRIVEN DEVELOPMENT: Bypass real backend
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        set({ 
-          token: 'mock-jwt-token-12345',
-          userProfile: { 
-            id: 1,
-            name: 'Nhi Nguyễn', 
-            email: email,
-            // Để hasProfile = false để test luồng Onboarding
-          },
-          hasProfile: false, 
-          isLoading: false 
+    try {
+      const response = await authApi.login(email, password);
+      
+      if (response.success && response.data?.success) {
+        const { token, user, has_profile, profile } = response.data.data;
+        set({
+          token,
+          userProfile: profile ? { ...user, ...profile } : user,
+          hasProfile: has_profile || false,
+          isLoading: false
         });
-        console.log('👤 [Mock Auth] User logged in, routing to Onboarding...');
-        resolve(true);
-      }, 1000);
-    });
+        console.log('👤 [Auth] User logged in successfully');
+        return true;
+      } else {
+        set({ error: response.error || response.data?.message || 'Đăng nhập thất bại', isLoading: false });
+        return false;
+      }
+    } catch (error) {
+      set({ error: 'Lỗi kết nối đến máy chủ', isLoading: false });
+      return false;
+    }
   },
 
   register: async ({ name, email, password }) => {
     set({ isLoading: true, error: null });
     
-    // MOCK-DRIVEN DEVELOPMENT
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        set({ isLoading: false });
-        console.log('👤 [Mock Auth] User registered successfully');
-        resolve(true);
-      }, 1000);
-    });
+    try {
+      const response = await authApi.register(name, email, password);
+      
+      if (response.success && response.data?.success) {
+        set({
+          isLoading: false
+        });
+        console.log('👤 [Auth] User registered successfully');
+        return { success: true, token: response.data.data.token, user: response.data.data.user };
+      } else {
+        set({ error: response.error || response.data?.message || 'Đăng ký thất bại', isLoading: false });
+        return false;
+      }
+    } catch (error) {
+      set({ error: 'Lỗi kết nối đến máy chủ', isLoading: false });
+      return false;
+    }
   },
 
   logout: () => set({ token: null, userProfile: null, hasProfile: false }),
@@ -193,11 +206,34 @@ export const useAppStore = create((set, get) => ({
 
   // 6. DASHBOARD & NUTRITION
   // ==========================================
+  submitOnboardingProfile: async (profileData) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await authApi.setupProfile(profileData);
+      if (response.success && response.data?.success) {
+        set((state) => ({
+          userProfile: { ...state.userProfile, ...response.data.data },
+          hasProfile: true,
+          isLoading: false
+        }));
+        get().showToast('Tạo hồ sơ thành công!', 'success');
+        return true;
+      } else {
+        set({ error: response.error || response.data?.message || 'Lưu hồ sơ thất bại', isLoading: false });
+        get().showToast('Lỗi lưu hồ sơ', 'error');
+        return false;
+      }
+    } catch (error) {
+      set({ error: 'Lỗi kết nối máy chủ', isLoading: false });
+      return false;
+    }
+  },
+
   updateProfile: async (updates) => {
-    const response = await authApi.updateProfile(updates);
+    const response = await authApi.setupProfile(updates);
     if (response.success) {
       set((state) => ({
-        userProfile: { ...state.userProfile, ...response.data }
+        userProfile: { ...state.userProfile, ...response.data.data }
       }));
       get().showToast('Đã cập nhật hồ sơ!', 'success');
     }
@@ -209,8 +245,8 @@ export const useAppStore = create((set, get) => ({
     if (!profile) return;
 
     const formData = {
-      gender: profile.gender, age: profile.age, height: profile.height,
-      weight: profile.weight, activity: field === 'activity' ? value : profile.activity,
+      gender: profile.gender, age: profile.age, height: profile.height_cm,
+      weight: profile.weight_kg, activity: field === 'activity_level' ? value : profile.activity_level,
       goal: field === 'goal' ? value : profile.goal
     };
 

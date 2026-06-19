@@ -18,7 +18,7 @@ class RecipeRepository:
         
         target_recipe = None
         for r in all_recipes:
-            # Chuẩn hóa tên trong DB
+            # So khớp tương đối với tên gốc
             name_db = unicodedata.normalize('NFC', r.name_vn).lower().strip()
             if normalized_search in name_db or name_db in normalized_search:
                 target_recipe = r
@@ -35,6 +35,7 @@ class RecipeRepository:
             "name": target_recipe.name_vn,
             "image": target_recipe.image_url,
             "servings": target_recipe.servings,
+            "item_type": target_recipe.item_type,
             "nutrition": target_recipe.nutrition.to_dict() if target_recipe.nutrition else {
                 "calories": 0, "protein": 0, "carbs": 0, "fat": 0
             }
@@ -222,7 +223,7 @@ class RecipeRepository:
         Lấy danh sách tất cả món ăn, bao gồm cả thông tin dinh dưỡng từ bảng scr_dishes_calories
         """
         try:
-            recipes = RecipeModel.query.all()
+            recipes = RecipeModel.query.filter_by(item_type='recipe').all()
             result = []
             for r in recipes:
                 # Ép kiểu JSON nếu nó đang ở dạng string (phòng hờ SQLite hoặc driver cũ)
@@ -293,7 +294,8 @@ class RecipeRepository:
                     "ingredients": formatted_ingredients,
                     "steps": formatted_steps,
                     "reviews": {"avgRating": 5.0, "total": 0},
-                    "createdBy": r.created_by # Thêm trường này để Frontend lọc
+                    "createdBy": r.created_by, # Thêm trường này để Frontend lọc
+                    "item_type": r.item_type
                 })
             return result
         except Exception as e:
@@ -624,11 +626,20 @@ class RecipeRepository:
     @staticmethod
     def get_meal_history(user_id):
         try:
-            from model.recipes.recipe_model import MealLogModel
-            logs = MealLogModel.query.filter_by(user_id=str(user_id)).order_by(MealLogModel.eaten_at.desc()).all()
+            from model.recipes.recipe_model import MealLogModel, RecipeModel
+            
+            # Sử dụng db.session.query để JOIN lấy thêm image_url từ bảng RecipeModel
+            logs_with_images = db.session.query(
+                MealLogModel, 
+                RecipeModel.image_url
+            ).outerjoin(
+                RecipeModel, MealLogModel.recipe_id == RecipeModel.id
+            ).filter(
+                MealLogModel.user_id == str(user_id)
+            ).order_by(MealLogModel.eaten_at.desc()).all()
             
             result = []
-            for log in logs:
+            for log, img_url in logs_with_images:
                 result.append({
                     "id": str(log.id),
                     "name": log.meal_name,
@@ -638,7 +649,8 @@ class RecipeRepository:
                     "carbs": log.carbs_g,
                     "fat": log.fat_g,
                     "date": log.eaten_at.isoformat(),
-                    "servings": log.servings
+                    "servings": log.servings,
+                    "image": img_url # Lấy trực tiếp từ bảng recipes!
                 })
             return result
         except Exception as e:
@@ -670,7 +682,10 @@ class RecipeRepository:
             
             if 'mealType' in updates: log.meal_type = updates['mealType']
             if 'name' in updates: log.meal_name = updates['name']
-            if 'calo' in updates: log.calories_consumed = float(updates['calo'])
+            if 'calo' in updates: log.calories_consumed = float(updates['calo'] or 0)
+            if 'protein' in updates: log.protein_g = float(updates['protein'] or 0)
+            if 'carbs' in updates: log.carbs_g = float(updates['carbs'] or 0)
+            if 'fat' in updates: log.fat_g = float(updates['fat'] or 0)
             
             db.session.commit()
             return {"success": True, "message": "Đã cập nhật nhật ký thành công"}

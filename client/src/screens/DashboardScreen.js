@@ -93,7 +93,7 @@ const DashboardScreen = () => {
 
   const {
     userProfile, fetchFavoriteIds, currentStreak, setCurrentStreak, burnedCalories,
-    mockRecommendations, fetchMockRecommendations
+    mockRecommendations, fetchRecommendations, recommendationMessage
   } = useAppStore();
   const [showRecommendations, setShowRecommendations] = useState(false);
 
@@ -102,6 +102,43 @@ const DashboardScreen = () => {
     meals: [],
     streak: 0
   });
+
+  // LOGIC TRẠNG THÁI NĂNG LƯỢNG
+  const targetCalo = Number(userProfile?.target_calories || userProfile?.tdee || 2000);
+  const currentCalo = Number(dailySummary.totals.calories || 0);
+  const lowerBound = targetCalo * 0.85;
+  const upperBound = targetCalo * 1.15;
+
+  const isOver = currentCalo > upperBound;
+  const isGoalMet = currentCalo >= lowerBound && currentCalo <= upperBound;
+  const isProgressing = currentCalo > 0 && currentCalo < lowerBound;
+  const isEmpty = currentCalo === 0;
+
+  // HÀM XÁC ĐỊNH BỮA ĂN & ĐẨY BỮA (MEAL SHIFTING)
+  const getCurrentMealType = () => {
+    const hour = new Date().getHours();
+    let baseMeal = 'snack';
+    if (hour < 10) baseMeal = 'breakfast';
+    else if (hour < 15) baseMeal = 'lunch';
+    else if (hour < 21) baseMeal = 'dinner';
+
+    const loggedMeals = dailySummary.meals.map(m => m.type);
+
+    // Logic đẩy bữa ăn (Cascade)
+    if (baseMeal === 'breakfast' && loggedMeals.includes('breakfast')) baseMeal = 'lunch';
+    if (baseMeal === 'lunch' && loggedMeals.includes('lunch')) baseMeal = 'dinner';
+    if (baseMeal === 'dinner' && loggedMeals.includes('dinner')) baseMeal = 'snack';
+
+    const labels = {
+      'breakfast': 'Bữa sáng',
+      'lunch': 'Bữa trưa',
+      'dinner': 'Bữa tối',
+      'snack': 'Bữa phụ'
+    };
+
+    return { type: baseMeal, label: labels[baseMeal] };
+  };
+  const currentMeal = getCurrentMealType();
 
   // STATE CHO MODAL NHẬP TAY
   const [showManualModal, setShowManualModal] = useState(false);
@@ -161,7 +198,8 @@ const DashboardScreen = () => {
     React.useCallback(() => {
       fetchSummary();
       if (fetchFavoriteIds) fetchFavoriteIds();
-      fetchMockRecommendations(); // Lấy mock recommendations
+      // Tự động gợi ý theo ngữ cảnh hiện tại
+      if (fetchRecommendations) fetchRecommendations(getCurrentMealType().type);
     }, [])
   );
 
@@ -192,6 +230,19 @@ const DashboardScreen = () => {
       color: '#FBC02D'
     }
   };
+
+  // Tính toán trạng thái Lệch Chất
+  const pRatio = realMacros.protein.target > 0 ? realMacros.protein.current / realMacros.protein.target : 0;
+  const cRatio = realMacros.carbs.target > 0 ? realMacros.carbs.current / realMacros.carbs.target : 0;
+  const fRatio = realMacros.fat.target > 0 ? realMacros.fat.current / realMacros.fat.target : 0;
+  
+  const highestRatio = Math.max(pRatio, cRatio, fRatio);
+  let highestMacroName = '';
+  if (highestRatio === fRatio) highestMacroName = 'Fat';
+  else if (highestRatio === cRatio) highestMacroName = 'Carbs';
+  else highestMacroName = 'Protein';
+
+  const isMacroImbalanced = highestRatio > 1.15;
 
   const remainingKcal = Math.max(
     0,
@@ -230,53 +281,106 @@ const DashboardScreen = () => {
                   title="Năng lượng hôm nay"
                   subtitle="Cập nhật theo thời gian thực"
                 />
-                <DashboardEnergyCard tracking={realTracking} macros={realMacros} />
+                <DashboardEnergyCard tracking={realTracking} macros={realMacros} isMacroImbalanced={isMacroImbalanced} />
               </View>
             </FadeInView>
 
 
 
-            {/* Nút Gợi ý món ăn (Neo-brutalism style) */}
+            {/* Vùng Thông Báo / Nút Gợi ý món ăn (Context-Aware) */}
             <FadeInView delay={260}>
-              <View style={styles.neoBtnWrapper}>
-                <View style={styles.neoBtnShadow} />
-                <Pressable 
-                  style={styles.neoBtn}
-                  onPress={() => setShowRecommendations(true)}
-                >
-                  <Ionicons name="restaurant" size={20} color="#1A1D1E" />
-                  <Text style={styles.neoBtnText}>Gợi ý món ăn</Text>
-                  <View style={styles.neoBtnBadge}>
-                    <Text style={styles.neoBtnBadgeText}>{mockRecommendations?.length || 0}</Text>
+              {isGoalMet && !isMacroImbalanced ? (
+                <View style={[styles.neoCardWrapper, { marginBottom: 24 }]}>
+                  <View style={[styles.neoCardShadow, { backgroundColor: '#10B981', borderRadius: 20 }]} />
+                  <View style={[styles.card, { backgroundColor: '#D1FAE5', borderColor: '#065F46', padding: 20, borderRadius: 20, borderWidth: 3 }]}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                      <View style={{ backgroundColor: '#10B981', padding: 8, borderRadius: 12, marginRight: 12, borderWidth: 2, borderColor: '#065F46' }}>
+                        <Ionicons name="trophy" size={24} color="#FFFFFF" />
+                      </View>
+                      <Text style={{ fontSize: 18, fontWeight: '800', color: '#065F46', fontFamily: 'Outfit_700Bold' }}>Mục Tiêu Hoàn Thành!</Text>
+                    </View>
+                    <Text style={{ fontSize: 14, color: '#047857', fontWeight: '600', lineHeight: 22 }}>
+                      Tuyệt vời! Bạn đã nạp đủ mức năng lượng lý tưởng cho ngày hôm nay. Hãy nghỉ ngơi và giữ vững phong độ nhé!
+                    </Text>
                   </View>
-                </Pressable>
-              </View>
-            </FadeInView>
+                </View>
+              ) : isGoalMet && isMacroImbalanced ? (
+                <View style={[styles.neoCardWrapper, { marginBottom: 24 }]}>
+                  <View style={[styles.neoCardShadow, { backgroundColor: '#F59E0B', borderRadius: 20 }]} />
+                  <View style={[styles.card, { backgroundColor: '#FEF3C7', borderColor: '#92400E', padding: 20, borderRadius: 20, borderWidth: 3 }]}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                      <View style={{ backgroundColor: '#F59E0B', padding: 8, borderRadius: 12, marginRight: 12, borderWidth: 2, borderColor: '#92400E' }}>
+                        <Ionicons name="warning" size={24} color="#FFFFFF" />
+                      </View>
+                      <Text style={{ fontSize: 18, fontWeight: '800', color: '#92400E', fontFamily: 'Outfit_700Bold' }}>Mất Cân Bằng Chất!</Text>
+                    </View>
+                    <Text style={{ fontSize: 14, color: '#92400E', fontWeight: '600', lineHeight: 22 }}>
+                      Quỹ Calo của bạn đang ở mức Tối ưu, nhưng lượng {highestMacroName} đã vượt quá giới hạn an toàn. Lần ăn tới hãy ưu tiên các món thanh đạm để cân bằng lại cơ thể nhé!
+                    </Text>
+                  </View>
+                </View>
+              ) : isOver ? (
+                <View style={[styles.neoCardWrapper, { marginBottom: 24 }]}>
+                  <View style={[styles.neoCardShadow, { backgroundColor: '#EF4444', borderRadius: 20 }]} />
+                  <View style={[styles.card, { backgroundColor: '#FEE2E2', borderColor: '#7F1D1D', padding: 20, borderRadius: 20, borderWidth: 3 }]}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                      <View style={{ backgroundColor: '#EF4444', padding: 8, borderRadius: 12, marginRight: 12, borderWidth: 2, borderColor: '#7F1D1D' }}>
+                        <Ionicons name="warning" size={24} color="#FFFFFF" />
+                      </View>
+                      <Text style={{ fontSize: 18, fontWeight: '800', color: '#7F1D1D', fontFamily: 'Outfit_700Bold' }}>Vượt Ngưỡng Calo!</Text>
+                    </View>
+                    <Text style={{ fontSize: 14, color: '#991B1B', fontWeight: '600', lineHeight: 22 }}>
+                      {isMacroImbalanced 
+                        ? `Cơ thể đang quá tải năng lượng và lố cả lượng ${highestMacroName} cho phép. Hãy ưu tiên vận động mạnh để đốt cháy mỡ thừa ngay nhé!`
+                        : `Bạn đã nạp năng lượng vượt quá mục tiêu cho phép. Ưu tiên vận động nhẹ nhàng để đốt cháy bớt lượng Calo dư thừa nhé!`}
+                    </Text>
+                  </View>
+                </View>
+              ) : (
+                <View style={[styles.neoCardWrapper, { marginBottom: 24 }]}>
+                  <View style={[styles.neoCardShadow, { backgroundColor: '#FCD34D', borderRadius: 20 }]} />
+                  <View style={[styles.card, { backgroundColor: '#FEF3C7', borderColor: '#92400E', padding: 20, borderRadius: 20, borderWidth: 3 }]}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                      <View style={{ backgroundColor: '#F59E0B', padding: 8, borderRadius: 12, marginRight: 12, borderWidth: 2, borderColor: '#92400E' }}>
+                        <Ionicons name="restaurant" size={24} color="#FFFFFF" />
+                      </View>
+                      <Text style={{ fontSize: 18, fontWeight: '800', color: '#92400E', fontFamily: 'Outfit_700Bold', flex: 1 }}>
+                        Gợi Ý {currentMeal.label}
+                      </Text>
+                    </View>
+                    <Text style={{ fontSize: 14, color: '#B45309', fontWeight: '600', lineHeight: 22, marginBottom: 16 }}>
+                      {recommendationMessage || `Bạn chưa biết ăn gì vào ${currentMeal.label.toLowerCase()}? Xem ngay các món ăn tuyệt ngon được chọn lọc riêng cho quỹ Calo hiện tại của bạn nhé!`}
+                    </Text>
 
-            <FadeInView delay={280}>
-              <View style={styles.miniTipsCard}>
-                <Ionicons name="bulb-outline" size={18} color="#F59E0B" />
-                <Text style={styles.miniTipsText}>
-                  <Text style={{ fontWeight: '700' }}>Mẹo: </Text>
-                  Uống 1 ly nước ấm trước bữa sáng giúp tiêu hoá tốt hơn.
-                </Text>
-              </View>
+                    <Pressable
+                      style={({ pressed }) => [
+                        styles.neoBtn,
+                        { backgroundColor: '#FFFFFF', borderColor: '#92400E', paddingVertical: 12, width: '100%', transform: [{ scale: pressed ? 0.98 : 1 }] }
+                      ]}
+                      onPress={() => setShowRecommendations(true)}
+                    >
+                      <Text style={[styles.neoBtnText, { color: '#92400E' }]}>Xem {mockRecommendations?.length || 0} món gợi ý</Text>
+                      <Ionicons name="arrow-forward" size={18} color="#92400E" style={{ marginLeft: 8 }} />
+                    </Pressable>
+                  </View>
+                </View>
+              )}
             </FadeInView>
           </View>
         </View>
       </ScrollView>
 
-      <RecommendationsSheet 
-        visible={showRecommendations} 
-        onClose={() => setShowRecommendations(false)} 
-        data={mockRecommendations} 
+      <RecommendationsSheet
+        visible={showRecommendations}
+        onClose={() => setShowRecommendations(false)}
+        data={mockRecommendations}
       />
 
       {/* MODAL NHẬP BỮA ĂN THỦ CÔNG */}
       <Modal visible={showManualModal} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.addModalBox}>
-            <Text style={styles.modalTitle}>🥣 Thêm bữa phụ</Text>
+            <Text style={styles.modalTitle}>Thêm bữa phụ</Text>
 
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Tên món ăn</Text>
@@ -476,7 +580,7 @@ const styles = StyleSheet.create({
   modalBtnCancelText: { color: '#666', fontWeight: '700' },
   modalBtnSubmit: { flex: 1, height: 50, backgroundColor: COLORS.primary, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
   modalBtnSubmitText: { color: '#FFF', fontWeight: '700' },
-  
+
   // Neo-brutalism Button
   neoBtnWrapper: { position: 'relative', width: '100%', paddingHorizontal: 4 },
   neoBtnShadow: {
@@ -497,11 +601,11 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
   },
   neoBtnText: { fontSize: 18, fontWeight: '900', color: '#1A1D1E' },
-  neoBtnBadge: { 
-    backgroundColor: '#1A1D1E', 
-    paddingHorizontal: 8, 
-    paddingVertical: 2, 
-    borderRadius: 12 
+  neoBtnBadge: {
+    backgroundColor: '#1A1D1E',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 12
   },
   neoBtnBadgeText: { color: '#FFF', fontSize: 12, fontWeight: '800' },
 });

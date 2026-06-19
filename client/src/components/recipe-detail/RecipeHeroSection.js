@@ -2,16 +2,19 @@
 import React from 'react';
 import { View, Text, Image, Pressable, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../constants/theme';
 
 const RecipeHeroSection = ({ recipe, onBack, onSave, isSaved }) => {
+  const insets = useSafeAreaInsets();
+  
   return (
     <View style={styles.container}>
       <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="cover" />
       <View style={styles.overlay} />
 
       {/* Top buttons */}
-      <View style={styles.topBar}>
+      <View style={[styles.topBar, { paddingTop: Math.max(insets.top, Platform.OS === 'android' ? 30 : 0) + 10 }]}>
         <Pressable onPress={onBack} style={styles.iconBtn}>
           <Ionicons name="arrow-back" size={22} color="#FFF" />
         </Pressable>
@@ -47,7 +50,7 @@ const styles = StyleSheet.create({
   topBar: {
     position: 'absolute', top: 0, left: 0, right: 0,
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    paddingHorizontal: 16, paddingTop: Platform.OS === 'ios' ? 50 : 16,
+    paddingHorizontal: 16,
     zIndex: 10,
   },
   iconBtn: {

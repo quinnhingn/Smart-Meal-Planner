@@ -60,6 +60,11 @@ export const aiApi = {
   logExternalRecipe: (recipeData) => fetchApi('POST', '/ai/log-external-recipe', recipeData)
 };
 
+export const recommendationApi = {
+  getRecommendations: (mealType = 'dinner') => fetchApi('GET', `/recommendations?meal_type=${mealType}`),
+  getExplain: (recipeId, mealType = 'dinner') => fetchApi('GET', `/recommendations/${recipeId}/explain?meal_type=${mealType}`)
+};
+
 export const recipeApi = {
   lookup: (name) => fetchApi('GET', `/recipes/lookup?name=${encodeURIComponent(name)}`),
   logMeal: (mealData) => fetchApi('POST', '/recipes/log', mealData),

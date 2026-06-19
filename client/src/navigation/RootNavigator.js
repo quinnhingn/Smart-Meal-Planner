@@ -173,9 +173,10 @@ const RootStack = () => (
 // MAIN LAYOUT — Mobile-only, single column
 //////////////////////////////////////////////////////////
 const MainLayout = ({ currentRoute }) => {
+  const hideTopbar = currentRoute === 'RecipeDetail';
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.pastelBg }}>
-      <MobileTopbar currentRoute={currentRoute} />
+      {!hideTopbar && <MobileTopbar currentRoute={currentRoute} />}
       <RootStack />
     </View>
   );

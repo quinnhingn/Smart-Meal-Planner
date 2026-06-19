@@ -107,27 +107,67 @@ def predict_and_log():
         if not predictions:
             return jsonify({"success": False, "message": "Không nhận diện được nội dung ảnh"}), 404
             
-        top_pred = predictions[0]
-        
         # 3. Tra cứu dinh dưỡng (Chỉ cho mode diary)
-        nutrition_info = None
-        confirmed_dish_id = None
+        processed_items = []
+        confirmed_dish_ids = []
         
         if mode == 'diary':
-            lookup = RecipeRepository.find_by_name_with_nutrition(top_pred['label'])
-            if lookup:
-                nutrition_info = lookup['nutrition']
-                confirmed_dish_id = lookup['id']
+            import re
+            def parse_servings(s):
+                if not s: return 1.0
+                try: return float(s)
+                except ValueError:
+                    match = re.search(r'\d+', str(s))
+                    return float(match.group()) if match else 1.0
+
+            candidates_list = []
+            
+            # Map predictions to candidates
+            for p in predictions:
+                label = p['label']
+                conf = p['confidence']
+                lookup = RecipeRepository.find_by_name_with_nutrition(label)
+                
+                if lookup:
+                    nutrition_info = lookup['nutrition']
+                    servings = parse_servings(lookup.get('servings', 1))
+                    candidates_list.append({
+                        "id": lookup['id'], 
+                        "name": lookup['name'], 
+                        "confidence": conf, 
+                        "base_calo": nutrition_info.get('calories', 0) / servings,
+                        "base_protein": nutrition_info.get('protein', 0) / servings,
+                        "base_carbs": nutrition_info.get('carbs', 0) / servings,
+                        "base_fat": nutrition_info.get('fat', 0) / servings
+                    })
+            if candidates_list:
+                main_candidate = candidates_list[0]
+                confirmed_dish_ids.append(main_candidate['id'])
+                    
+                processed_items.append({
+                    "id": str(uuid.uuid4()),
+                    "name": main_candidate['name'],
+                    "base_calo": main_candidate['base_calo'],
+                    "base_protein": main_candidate['base_protein'],
+                    "base_carbs": main_candidate['base_carbs'],
+                    "base_fat": main_candidate['base_fat'],
+                    "servings_input": 1, # Mặc định 1 khẩu phần
+                    "image_url": image_url,
+                    "recipe_id": main_candidate['id'],
+                    "candidates": candidates_list
+                })
+        else:
+            processed_items = predictions # Đối với pantry, giữ nguyên mảng
         
         # 4. Lưu Log vào Database
         print("💾 [AI Flow] Bắt đầu lưu lịch sử vào DB...")
         scan_log = AIScanLogModel()
-        scan_log.id = uuid.uuid4() # Bỏ str()
+        scan_log.id = uuid.uuid4()
         scan_log.user_id = user_id
         scan_log.scan_type = 'cooked_meal' if mode == 'diary' else 'ingredient'
         scan_log.image_url = image_url
         scan_log.ai_result = ai_data_for_log
-        scan_log.confirmed_dish_id = confirmed_dish_id
+        scan_log.confirmed_dish_id = confirmed_dish_ids[0] if confirmed_dish_ids else None
         scan_log.was_corrected = False
         
         db.session.add(scan_log)
@@ -139,13 +179,10 @@ def predict_and_log():
         return jsonify({
             "success": True,
             "data": {
-                "label": lookup['name'] if (mode == 'diary' and lookup) else top_pred['label'],
-                "confidence": round(top_pred['confidence'] * 100),
-                "nutrition": nutrition_info,
-                "recipe_id": confirmed_dish_id if mode == 'diary' else None,
+                "items": processed_items,
                 "image_url": image_url,
-                "log_id": str(scan_log.id), # Ép kiểu String để tránh lỗi 500 khi jsonify
-                "predictions": predictions
+                "log_id": str(scan_log.id),
+                "raw_predictions": predictions
             }
         }), 200
 

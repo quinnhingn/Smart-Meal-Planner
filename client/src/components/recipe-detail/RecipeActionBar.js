@@ -26,15 +26,12 @@ const ActionBtn = ({ icon, label, onPress, primary, danger, disabled }) => (
   </Pressable>
 );
 
-const RecipeActionBar = ({ onReview, onShopping, onLog, onSave, isSaved, showShopping }) => {
+const RecipeActionBar = ({ onReview, onLog, onSave, isSaved }) => {
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
         <ActionBtn icon="star-outline" label="Đánh giá" onPress={onReview} />
-        {showShopping && (
-          <ActionBtn icon="cart-outline" label="Chuẩn bị" onPress={onShopping} primary />
-        )}
-        <ActionBtn icon="create-outline" label="Log" onPress={onLog} />
+        <ActionBtn icon="create-outline" label="Log" onPress={onLog} primary />
       </View>
     </View>
   );

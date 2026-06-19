@@ -30,9 +30,9 @@ const MacroChips = ({ macros }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', gap: 10, paddingHorizontal: 16 },
+  container: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', paddingHorizontal: 16 },
   chip: {
-    flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8,
+    width: '48%', flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10,
     backgroundColor: '#FFF', borderRadius: 16, padding: 12,
     borderWidth: 1, borderColor: 'rgba(0,0,0,0.04)',
   },

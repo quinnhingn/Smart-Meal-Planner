@@ -15,7 +15,7 @@ const DetectionCard = ({ item, onUpdate, onDelete }) => {
     candidates.length > 0 ? candidates[0].id : null
   );
   
-  const [gram, setGram] = useState(item.gram_input);
+  const [servings, setServings] = useState(item.servings_input ?? 1);
   const { setSearchModalVisible } = useAppStore();
 
   const selectedCandidate = candidates.find(c => c.id === selectedCandidateId) || item;
@@ -25,14 +25,14 @@ const DetectionCard = ({ item, onUpdate, onDelete }) => {
   const basePro = Number(selectedCandidate.base_protein) || 0;
   const baseCarb = Number(selectedCandidate.base_carbs) || 0;
   const baseFat = Number(selectedCandidate.base_fat) || 0;
-  const safeGram = Number(gram) || 0;
+  const safeServings = Number(servings) || 0;
 
-  const currentCalo = Math.round((baseCalo * safeGram) / 100);
-  const currentProtein = Math.round((basePro * safeGram) / 100);
-  const currentCarbs = Math.round((baseCarb * safeGram) / 100);
-  const currentFat = Math.round((baseFat * safeGram) / 100);
+  const currentCalo = Math.round(baseCalo * safeServings);
+  const currentProtein = Math.round(basePro * safeServings);
+  const currentCarbs = Math.round(baseCarb * safeServings);
+  const currentFat = Math.round(baseFat * safeServings);
 
-  const handleUpdateItemData = (newGram, newCandidate) => {
+  const handleUpdateItemData = (newServings, newCandidate) => {
     onUpdate({
       ...item,
       name: newCandidate.name,
@@ -40,48 +40,49 @@ const DetectionCard = ({ item, onUpdate, onDelete }) => {
       base_protein: newCandidate.base_protein,
       base_carbs: newCandidate.base_carbs,
       base_fat: newCandidate.base_fat,
-      gram_input: newGram
+      servings_input: newServings,
+      recipe_id: newCandidate.id?.toString().startsWith('fallback_') ? null : newCandidate.id
     });
   };
 
   const handleGramChange = (val) => {
-    // Allow empty string so user can clear the input
     if (val === '') {
-      setGram('');
+      setServings('');
       handleUpdateItemData(0, selectedCandidate);
       return;
     }
-    const newGram = Number(val);
-    if (!isNaN(newGram)) {
-      setGram(newGram);
-      handleUpdateItemData(newGram, selectedCandidate);
+    const newServings = Number(val);
+    if (!isNaN(newServings)) {
+      setServings(newServings);
+      handleUpdateItemData(newServings, selectedCandidate);
     }
   };
 
   const handleMinus = () => {
-    const safeGram = Number(gram) || 0;
-    const newGram = Math.max(0, safeGram - 10);
-    setGram(newGram);
-    handleUpdateItemData(newGram, selectedCandidate);
+    const currentVal = Number(servings) || 0;
+    const newVal = Math.max(0.5, currentVal - 0.5);
+    setServings(newVal);
+    handleUpdateItemData(newVal, selectedCandidate);
   };
 
   const handlePlus = () => {
-    const safeGram = Number(gram) || 0;
-    const newGram = safeGram + 10;
-    setGram(newGram);
-    handleUpdateItemData(newGram, selectedCandidate);
+    const currentVal = Number(servings) || 0;
+    const newVal = currentVal + 0.5;
+    setServings(newVal);
+    handleUpdateItemData(newVal, selectedCandidate);
   };
 
   const selectCandidate = (cand) => {
     setSelectedCandidateId(cand.id);
-    const safeGram = Number(gram) || 0;
-    handleUpdateItemData(safeGram, cand);
+    const currentVal = Number(servings) || 0;
+    handleUpdateItemData(currentVal, cand);
   };
 
   const openSearchFallback = () => {
     setSearchModalVisible(true, (manualItem) => {
-      // Khi chọn xong từ modal, manualItem là đối tượng đã có gram_input, name, base_*
-      setGram(manualItem.gram_input);
+      // Khi chọn xong từ modal, manualItem là đối tượng đã có gram_input, ta quy nó thành servings_input
+      const modalServings = manualItem.gram_input === 100 ? 1 : manualItem.gram_input / 100;
+      setServings(modalServings);
       
       // Ta cần gán thủ công item này như là một "candidate" đặc biệt
       const newCandidate = {
@@ -106,7 +107,7 @@ const DetectionCard = ({ item, onUpdate, onDelete }) => {
         base_protein: newCandidate.base_protein,
         base_carbs: newCandidate.base_carbs,
         base_fat: newCandidate.base_fat,
-        gram_input: manualItem.gram_input
+        servings_input: modalServings
       });
     });
   };
@@ -186,14 +187,14 @@ const DetectionCard = ({ item, onUpdate, onDelete }) => {
         </View>
       </View>
 
-      {/* Gram Input */}
       <View style={styles.footerRow}>
-        <Text style={styles.gramLabel}>Khối lượng ước tính:</Text>
+        <Text style={styles.gramLabel}>Khẩu phần:</Text>
         <GramInput 
-          value={gram}
+          value={servings}
           onChange={handleGramChange}
           onMinus={handleMinus}
           onPlus={handlePlus}
+          unit="phần"
         />
       </View>
     </View>

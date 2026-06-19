@@ -57,15 +57,77 @@ export const useWorkoutStore = create(
         const newProgressMap = { ...state.exerciseProgressMap };
         delete newProgressMap[state.currentExerciseIndex];
 
-        if (nextIndex >= state.flatExercises.length) {
+        // Tìm bài tập CHƯA hoàn thành tiếp theo
+        let targetIndex = -1;
+        for (let i = nextIndex; i < state.flatExercises.length; i++) {
+          if (!newCompleted.includes(i)) {
+            targetIndex = i;
+            break;
+          }
+        }
+        
+        // Nếu không có ở phía sau, vòng lại từ đầu để tìm bài CHƯA hoàn thành
+        if (targetIndex === -1) {
+          for (let i = 0; i < state.currentExerciseIndex; i++) {
+            if (!newCompleted.includes(i)) {
+              targetIndex = i;
+              break;
+            }
+          }
+        }
+
+        // Nếu vẫn không tìm thấy, nghĩa là TẤT CẢ đã hoàn thành!
+        if (targetIndex === -1) {
           return { status: 'DONE', completedIndexes: newCompleted, exerciseProgressMap: newProgressMap };
         }
-        const nextEx = state.flatExercises[nextIndex];
+        
+        const nextEx = state.flatExercises[targetIndex];
         return {
-          currentExerciseIndex: nextIndex,
+          currentExerciseIndex: targetIndex,
           currentExerciseTimeRemaining: nextEx.duration_seconds || 60,
           savedVideoTimestamp: 0,
           status: 'REST', // Put into rest mode before starting next
+          completedIndexes: newCompleted,
+          exerciseProgressMap: newProgressMap
+        };
+      }),
+
+      skipExercise: () => set((state) => {
+        const nextIndex = state.currentExerciseIndex + 1;
+        const newCompleted = [...state.completedIndexes]; // Không add current index
+        const newProgressMap = { ...state.exerciseProgressMap };
+        delete newProgressMap[state.currentExerciseIndex];
+
+        // Tìm bài tập CHƯA hoàn thành tiếp theo
+        let targetIndex = -1;
+        for (let i = nextIndex; i < state.flatExercises.length; i++) {
+          if (!newCompleted.includes(i)) {
+            targetIndex = i;
+            break;
+          }
+        }
+        
+        // Vòng lại từ đầu
+        if (targetIndex === -1) {
+          for (let i = 0; i < state.currentExerciseIndex; i++) {
+            if (!newCompleted.includes(i)) {
+              targetIndex = i;
+              break;
+            }
+          }
+        }
+
+        // Nếu chỉ còn 1 bài này là chưa hoàn thành và ta skip nó luôn -> xem như xong
+        if (targetIndex === -1) {
+          return { status: 'DONE', completedIndexes: newCompleted, exerciseProgressMap: newProgressMap };
+        }
+        
+        const nextEx = state.flatExercises[targetIndex];
+        return {
+          currentExerciseIndex: targetIndex,
+          currentExerciseTimeRemaining: nextEx.duration_seconds || 60,
+          savedVideoTimestamp: 0,
+          status: 'REST',
           completedIndexes: newCompleted,
           exerciseProgressMap: newProgressMap
         };

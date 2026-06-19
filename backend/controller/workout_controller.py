@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from database.db import db
 from model.workout.workout_plan_model import WorkoutPlanModel, DailyWorkoutModel
 from model.workout.preset_program_model import PresetProgramModel
+from model.workout.activity_log_model import ActivityLogModel
 from model.auth.user_profile_model import UserProfileModel
 import google.generativeai as genai
 import os
@@ -319,6 +320,33 @@ def delete_plan(plan_id):
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@workout_bp.route('/history', methods=['GET'])
+@jwt_required()
+def get_workout_history():
+    try:
+        user_id = get_jwt_identity()
+        results = db.session.query(DailyWorkoutModel, WorkoutPlanModel)\
+            .join(WorkoutPlanModel, DailyWorkoutModel.plan_id == WorkoutPlanModel.id)\
+            .filter(WorkoutPlanModel.user_id == user_id, DailyWorkoutModel.is_completed == True)\
+            .order_by(DailyWorkoutModel.completed_at.desc())\
+            .all()
+        
+        history = []
+        for day, plan in results:
+            history.append({
+                "id": str(day.id),
+                "plan_id": str(plan.id),
+                "plan_title": plan.preset_title if plan.preset_title else "Lộ trình tập luyện",
+                "day_number": day.day_number,
+                "calories": day.calories,
+                "duration_minutes": day.duration_minutes,
+                "completed_at": day.completed_at.isoformat() if day.completed_at else None
+            })
+            
+        return jsonify({"success": True, "data": history}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
 @workout_bp.route('/current', methods=['GET'])
 @jwt_required()
 def get_current_plan():
@@ -352,6 +380,23 @@ def complete_day():
         next_day = DailyWorkoutModel.query.filter_by(plan_id=daily.plan_id, day_number=daily.day_number + 1).first()
         if next_day:
             next_day.is_unlocked = True
+            
+        # Log the remaining calories to ActivityLogModel
+        from model.workout.activity_log_model import ActivityLogModel
+        from sqlalchemy import func
+        logged_cals = db.session.query(func.sum(ActivityLogModel.calories_burned)).filter_by(daily_workout_id=daily.id).scalar() or 0
+        remaining_cals = max(0, daily.calories - logged_cals)
+        
+        if remaining_cals > 0:
+            activity_log = ActivityLogModel(
+                user_id=user_id,
+                daily_workout_id=daily.id,
+                activity_name=f"Hoàn thành {daily.title}",
+                duration_minutes=daily.duration_minutes, # estimate
+                calories_burned=remaining_cals,
+                source='app_workout_completed'
+            )
+            db.session.add(activity_log)
             
         db.session.commit()
         return jsonify({"success": True, "message": "Đã hoàn thành ngày tập"}), 200
@@ -388,6 +433,45 @@ def save_progress():
             
         db.session.commit()
         return jsonify({"success": True, "message": "Đã lưu tiến độ tập"}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
+
+@workout_bp.route('/log-activity', methods=['POST'])
+@jwt_required()
+def log_activity():
+    try:
+        user_id = get_jwt_identity()
+        data = request.json
+        
+        activity_name = data.get('activity_name')
+        duration_minutes = data.get('duration_minutes', 0)
+        calories_burned = data.get('calories_burned', 0)
+        source = data.get('source', 'manual_mets')
+        daily_workout_id = data.get('daily_workout_id')
+        
+        if not activity_name or not duration_minutes:
+            return jsonify({"success": False, "message": "Thiếu thông tin bắt buộc"}), 400
+            
+        from model.workout.activity_log_model import ActivityLogModel
+        activity_log = ActivityLogModel(
+            user_id=user_id,
+            daily_workout_id=daily_workout_id,
+            activity_name=activity_name,
+            duration_minutes=int(duration_minutes),
+            calories_burned=int(calories_burned),
+            source=source
+        )
+        
+        db.session.add(activity_log)
+        db.session.commit()
+        
+        return jsonify({
+            "success": True, 
+            "message": "Đã ghi nhận bài tập",
+            "data": activity_log.to_dict()
+        }), 200
         
     except Exception as e:
         db.session.rollback()

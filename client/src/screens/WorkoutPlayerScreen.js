@@ -8,6 +8,7 @@ import { useWorkoutPlanStore } from '../store/useWorkoutPlanStore';
 import { useAppStore } from '../store/useAppStore';
 import { COLORS, SHADOWS } from '../constants/theme';
 import CustomButton from '../components/CustomButton';
+import { workoutApi } from '../services/api';
 
 const { width } = Dimensions.get('window');
 
@@ -24,7 +25,7 @@ const WorkoutPlayerScreen = ({ navigation }) => {
   const { completeDay } = useWorkoutPlanStore();
   const { 
     activeWorkout, flatExercises, currentExerciseIndex, currentExerciseTimeRemaining, 
-    status, updateTimer, pauseWorkout, resumeWorkout, nextExercise, prevExercise, finishWorkout, quitEarly,
+    status, updateTimer, pauseWorkout, resumeWorkout, nextExercise, skipExercise, prevExercise, finishWorkout, quitEarly,
     savedVideoTimestamp
   } = useWorkoutStore();
 
@@ -243,7 +244,7 @@ const WorkoutPlayerScreen = ({ navigation }) => {
           <Ionicons name={playing ? "pause" : "play"} size={32} color="#FFF" />
         </Pressable>
 
-        <Pressable onPress={() => nextExercise()} style={styles.secBtn}>
+        <Pressable onPress={() => skipExercise()} style={styles.secBtn}>
           <Ionicons name="play-skip-forward" size={24} color="#555" />
         </Pressable>
       </View>
@@ -291,6 +292,18 @@ const WorkoutPlayerScreen = ({ navigation }) => {
                   console.log("Logged early workout:", data);
                   if (data?.burnedCalories && data.burnedCalories > 0) {
                     addActivityLog(data.burnedCalories);
+                    // Lưu lên backend ActivityLog
+                    try {
+                      await workoutApi.logActivity({
+                        activity_name: `Tập dở dang: ${activeWorkout?.title || 'Chưa rõ'}`,
+                        duration_minutes: Math.round(data.timeElapsed / 60) || 1,
+                        calories_burned: Math.round(data.burnedCalories),
+                        source: 'app_workout',
+                        daily_workout_id: activeWorkout?.id
+                      });
+                    } catch (err) {
+                      console.log("Lỗi lưu activity", err);
+                    }
                   }
                   setShowQuitConfirm(false);
                   if (quitActionRef.current) {

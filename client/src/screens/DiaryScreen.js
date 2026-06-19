@@ -8,7 +8,10 @@ import CalendarModal from '../components/diary/CalendarModal';
 import MacroSummary from '../components/diary/MacroSummary';
 import MealSection from '../components/diary/MealSection';
 import DiaryItemModal from '../components/diary/DiaryItemModal';
+import WorkoutHistoryList from '../components/diary/WorkoutHistoryList';
 import { useAppStore } from '../store/useAppStore';
+import { useWorkoutPlanStore } from '../store/useWorkoutPlanStore';
+import { TouchableOpacity, Text } from 'react-native';
 
 const MEAL_TYPES = ['Sáng', 'Trưa', 'Tối', 'Bữa phụ'];
 
@@ -22,13 +25,17 @@ const DiaryScreen = () => {
     addDiaryItem, updateDiaryItem, deleteDiaryItem
   } = useAppStore();
 
+  const { workoutHistory, fetchWorkoutHistory } = useWorkoutPlanStore();
+
   // TỰ ĐỘNG LOAD DỮ LIỆU
   useFocusEffect(
     useCallback(() => {
       if (fetchDiaryItems) fetchDiaryItems();
-    }, [fetchDiaryItems])
+      if (fetchWorkoutHistory) fetchWorkoutHistory();
+    }, [fetchDiaryItems, fetchWorkoutHistory])
   );
 
+  const [activeTab, setActiveTab] = useState('nutrition'); // 'nutrition' | 'workout'
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [expandedSections, setExpandedSections] = useState({
@@ -126,25 +133,47 @@ const DiaryScreen = () => {
           <View style={styles.leftCol}>
             <DailyHeader date={selectedDate} onOpenCalendar={() => setShowCalendar(true)} />
             <WeekSelector selectedDate={selectedDate} onSelectDate={setSelectedDate} />
-            <View style={styles.summaryWrap}>
-              <MacroSummary stats={stats} targetCalo={targetCalo} />
+            
+            <View style={styles.tabContainer}>
+              <TouchableOpacity 
+                style={[styles.tabButton, activeTab === 'nutrition' && styles.tabActive]}
+                onPress={() => setActiveTab('nutrition')}
+              >
+                <Text style={[styles.tabText, activeTab === 'nutrition' && styles.tabTextActive]}>Dinh dưỡng</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.tabButton, activeTab === 'workout' && styles.tabActive]}
+                onPress={() => setActiveTab('workout')}
+              >
+                <Text style={[styles.tabText, activeTab === 'workout' && styles.tabTextActive]}>Tập luyện</Text>
+              </TouchableOpacity>
             </View>
+
+            {activeTab === 'nutrition' && (
+              <View style={styles.summaryWrap}>
+                <MacroSummary stats={stats} targetCalo={targetCalo} />
+              </View>
+            )}
           </View>
 
           <View style={styles.rightCol}>
-            {mealGroups.map((group) => (
-              <MealSection
-                key={group.type}
-                type={group.type}
-                items={group.items}
-                totalCalo={group.totalCalo}
-                isExpanded={expandedSections[group.type]}
-                onToggle={toggleExpand}
-                onEditItem={handleEditItem}
-                onDeleteItem={handleDeleteItem}
-                onAddItem={handleAddItem}
-              />
-            ))}
+            {activeTab === 'nutrition' ? (
+              mealGroups.map((group) => (
+                <MealSection
+                  key={group.type}
+                  type={group.type}
+                  items={group.items}
+                  totalCalo={group.totalCalo}
+                  isExpanded={expandedSections[group.type]}
+                  onToggle={toggleExpand}
+                  onEditItem={handleEditItem}
+                  onDeleteItem={handleDeleteItem}
+                  onAddItem={handleAddItem}
+                />
+              ))
+            ) : (
+              <WorkoutHistoryList date={selectedDate} historyItems={workoutHistory} />
+            )}
           </View>
         </View>
       </ScrollView>
@@ -176,7 +205,37 @@ const styles = StyleSheet.create({
   },
   leftCol: { width: '100%' },
   rightCol: { width: '100%' },
-  summaryWrap: { marginTop: 20 },
+  summaryWrap: { marginTop: 10 },
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#E2E8F0',
+    borderRadius: 12,
+    padding: 4,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  tabActive: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  tabText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#718096',
+  },
+  tabTextActive: {
+    color: '#2D3748',
+  }
 });
 
 export default DiaryScreen;

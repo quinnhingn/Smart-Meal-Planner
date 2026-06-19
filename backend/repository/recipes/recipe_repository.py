@@ -128,18 +128,16 @@ class RecipeRepository:
                 func.date(func.timezone('Asia/Ho_Chi_Minh', MealLogModel.eaten_at)) == func.date(func.timezone('Asia/Ho_Chi_Minh', func.now()))
             ).first()
             
-            # Tính tổng calo tiêu hao từ Workout hôm nay
-            from model.workout.workout_plan_model import WorkoutPlanModel, DailyWorkoutModel
-
-            burned_summary = db.session.query(
-                func.sum(DailyWorkoutModel.calories).label('total_burned')
-            ).join(WorkoutPlanModel, DailyWorkoutModel.plan_id == WorkoutPlanModel.id).filter(
-                WorkoutPlanModel.user_id == user_id,
-                DailyWorkoutModel.is_completed == True,
-                func.date(func.timezone('Asia/Ho_Chi_Minh', DailyWorkoutModel.completed_at)) == func.date(func.timezone('Asia/Ho_Chi_Minh', func.now()))
+            # Tính tổng calo từ các hoạt động tự nhập hoặc hoàn thành bài tập (ActivityLogModel) hôm nay
+            from model.workout.activity_log_model import ActivityLogModel
+            activity_summary = db.session.query(
+                func.sum(ActivityLogModel.calories_burned).label('total_activity_burned')
+            ).filter(
+                ActivityLogModel.user_id == user_id,
+                func.date(func.timezone('Asia/Ho_Chi_Minh', ActivityLogModel.logged_at)) == func.date(func.timezone('Asia/Ho_Chi_Minh', func.now()))
             ).first()
             
-            total_burned = float(burned_summary.total_burned or 0) if burned_summary else 0
+            total_burned = float(activity_summary.total_activity_burned or 0) if activity_summary else 0
             
             # 2. Lấy danh sách món
             logs = MealLogModel.query.filter(

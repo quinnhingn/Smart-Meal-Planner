@@ -15,6 +15,7 @@ from controller.recipes.recommendation_controller import recommendation_bp
 from controller.ai.ai_controller import ai_bp
 from controller.workout_controller import workout_bp
 from controller.community.community_controller import community_bp
+from controller.dashboard.dashboard_controller import dashboard_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -43,6 +44,7 @@ app.register_blueprint(recommendation_bp)
 app.register_blueprint(ai_bp)
 app.register_blueprint(workout_bp)
 app.register_blueprint(community_bp)
+app.register_blueprint(dashboard_bp)
 
 @app.route('/')
 def health_check():

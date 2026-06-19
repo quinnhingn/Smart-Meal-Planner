@@ -3,6 +3,7 @@ import { fetchApi } from '../services/api';
 
 export const useWorkoutPlanStore = create((set, get) => ({
   plans: [],
+  workoutHistory: [],
   isLoading: false,
   error: null,
 
@@ -18,6 +19,17 @@ export const useWorkoutPlanStore = create((set, get) => ({
       }
     } catch (err) {
       set({ error: err.message, isLoading: false });
+    }
+  },
+
+  fetchWorkoutHistory: async () => {
+    try {
+      const res = await fetchApi('GET', '/workout/history');
+      if (res.success) {
+        set({ workoutHistory: res.data?.data || [] });
+      }
+    } catch (err) {
+      console.error("Error fetching workout history:", err);
     }
   },
 

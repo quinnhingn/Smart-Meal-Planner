@@ -114,25 +114,28 @@ export const recipeApi = {
 };
 
 export const communityApi = {
-  getPosts: () => fetchApi('GET', '/community/posts'),
-  createPost: async (formData) => {
-    // formData is an instance of FormData containing caption, kcal, duration_minutes, program_title, and image file
-    return await fetchApi('POST', '/community/posts', formData);
-  },
-  toggleLike: (postId) => fetchApi('POST', `/community/posts/${postId}/like`),
-  getComments: (postId) => fetchApi('GET', `/community/posts/${postId}/comments`),
-  addComment: (postId, data) => fetchApi('POST', `/community/posts/${postId}/comments`, data),
+  getPosts: (page = 1) => fetchApi('GET', `/community/posts?page=${page}`),
+  createPost: (data) => fetchApi('POST', '/community/posts', data),
+  likePost: (postId) => fetchApi('POST', `/community/posts/${postId}/like`),
+  addComment: (postId, content) => fetchApi('POST', `/community/posts/${postId}/comments`, { content }),
   deletePost: (postId) => fetchApi('DELETE', `/community/posts/${postId}`),
   savePost: (postId) => fetchApi('POST', `/community/posts/${postId}/save`)
 };
+
+export const dashboardApi = {
+  getTracking: (timeRange = '1w') => fetchApi('GET', `/dashboard/tracking?timeRange=${timeRange}`)
+};
+
 export const workoutApi = {
   getPresetPrograms: () => fetchApi('GET', '/workout/presets'),
   generatePlan: (data) => fetchApi('POST', '/workout/generate', data),
-  getCurrentPlan: () => fetchApi('GET', '/workout/current-plan'),
+  getCurrentPlan: () => fetchApi('GET', '/workout/current'),
   completeDay: (data) => fetchApi('POST', '/workout/complete-day', data),
   saveProgress: (data) => fetchApi('POST', '/workout/save-progress', data),
   searchWorkoutByAI: (query) => fetchApi('POST', '/workout/ai/search', { query }),
-  deletePlan: (planId) => fetchApi('DELETE', `/workout/plan/${planId}`)
+  deletePlan: (planId) => fetchApi('DELETE', `/workout/plan/${planId}`),
+  getHistory: () => fetchApi('GET', '/workout/history'),
+  logActivity: (data) => fetchApi('POST', '/workout/log-activity', data)
 };
 
 export default apiClient;

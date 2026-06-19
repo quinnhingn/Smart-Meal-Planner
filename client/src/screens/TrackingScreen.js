@@ -9,8 +9,9 @@ import { LineChart, BarChart } from 'react-native-chart-kit';
 
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import { COLORS, SHADOWS } from '../constants/theme';
-import { MOCK_180D_TRACKING, MOCK_PROFILE_STATS, MOCK_AI_INSIGHTS } from '../utils/mockTrackingData';
+import { MOCK_AI_INSIGHTS } from '../utils/mockTrackingData';
 import AiInsightCard from '../components/tracking/AiInsightCard';
+import { dashboardApi } from '../services/api';
 
 const TIME_FILTERS = [
   { id: '1w', label: '1 Tuần', limit: 7 },
@@ -106,6 +107,29 @@ const TrackingScreen = ({ navigation }) => {
   const [chartWidth, setChartWidth] = useState(width - 48);
   const [showAiAnalysis, setShowAiAnalysis] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [trackingData, setTrackingData] = useState([]);
+  const [profileStats, setProfileStats] = useState({ targetWeight: 60, targetCalories: 2000 });
+
+  // Fetch real data when timeRange changes
+  useEffect(() => {
+    const fetchTracking = async () => {
+      setIsLoading(true);
+      try {
+        const res = await dashboardApi.getTracking(timeRange);
+        if (res.success && res.data && res.data.data) {
+          setTrackingData(res.data.data.trackingData || []);
+          if (res.data.data.profileStats) {
+            setProfileStats(res.data.data.profileStats);
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi lấy dữ liệu tracking:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTracking();
+  }, [timeRange]);
 
   // ANIMATIONS
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -170,50 +194,45 @@ const TrackingScreen = ({ navigation }) => {
 
   const handleFilterChange = useCallback((filterId) => {
     if (filterId === timeRange) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      setTimeRange(filterId);
-      setIsLoading(false);
-    }, 200);
+    setTimeRange(filterId);
+    setShowAiAnalysis(false);
   }, [timeRange]);
 
   const filteredData = useMemo(() => {
-    const limit = TIME_FILTERS.find(f => f.id === timeRange)?.limit || 30;
     if (isWeight) {
-      return MOCK_180D_TRACKING.slice(-limit).filter(item => item.isCheckInDay);
+      return trackingData.filter(item => item.isCheckInDay);
     } else {
-      // For calories, we might want to show every day if it's 1w, or sample if it's longer
-      let data = MOCK_180D_TRACKING.slice(-limit);
+      let data = trackingData;
+      const limit = TIME_FILTERS.find(f => f.id === timeRange)?.limit || 30;
       if (limit > 30) {
-        // Sample data for 3m, 6m to avoid chart overcrowding
         const step = Math.ceil(limit / 30);
         data = data.filter((_, idx) => idx % step === 0);
       }
       return data;
     }
-  }, [activeMetric, timeRange]);
+  }, [activeMetric, trackingData, timeRange]);
 
   const stats = useMemo(() => {
     const data = filteredData;
     if (data.length === 0) return null;
     
     if (isWeight) {
-      const current = data[data.length - 1].weight;
-      const target = MOCK_PROFILE_STATS.targetWeight;
-      const start = data[0].weight;
+      const current = data[data.length - 1].weight || 0;
+      const target = profileStats.targetWeight || 0;
+      const start = data[0].weight || 0;
       const totalChange = current - start;
       return { 
-        primary: current, primaryLabel: "Hiện tại", primaryUnit: "kg",
+        primary: current.toFixed(1), primaryLabel: "Hiện tại", primaryUnit: "kg",
         secondary: totalChange, secondaryLabel: "Thay đổi", secondaryUnit: "kg",
         target: target, targetLabel: "Mục tiêu", targetUnit: "kg",
         count: data.length
       };
     } else {
-      const current = data[data.length - 1].calo;
-      const target = MOCK_PROFILE_STATS.targetCalories;
-      const sum = data.reduce((acc, curr) => acc + curr.calo, 0);
+      const current = data[data.length - 1].calo || 0;
+      const target = profileStats.targetCalories || 2000;
+      const sum = data.reduce((acc, curr) => acc + (curr.calo || 0), 0);
       const avg = Math.round(sum / data.length);
-      const max = Math.max(...data.map(d => d.calo));
+      const max = Math.max(...data.map(d => d.calo || 0));
       return {
         primary: avg, primaryLabel: "Trung bình/ngày", primaryUnit: "kcal",
         secondary: max, secondaryLabel: "Cao nhất", secondaryUnit: "kcal",
@@ -239,8 +258,8 @@ const TrackingScreen = ({ navigation }) => {
     });
   }, [filteredData, chartWidth, isWeight]);
 
-  const chartData = useMemo(() => filteredData.map(item => isWeight ? item.weight : item.calo), [filteredData, isWeight]);
-  const targetValue = isWeight ? MOCK_PROFILE_STATS.targetWeight : MOCK_PROFILE_STATS.targetCalories;
+  const chartData = useMemo(() => filteredData.map(item => isWeight ? (item.weight || 0) : (item.calo || 0)), [filteredData, isWeight]);
+  const targetValue = isWeight ? profileStats.targetWeight : profileStats.targetCalories;
 
   const pointWidth = isWeight ? 55 : 35;
   const calculatedChartWidth = Math.max(chartWidth, filteredData.length * pointWidth);

@@ -109,6 +109,57 @@ const FitnessHubScreen = ({ navigation }) => {
   const [isPosting, setIsPosting] = useState(false);
   const [playingPostId, setPlayingPostId] = useState(null);
   
+  // States for Manual Activity Log
+  const [isLogActivityModalVisible, setIsLogActivityModalVisible] = useState(false);
+  const [logActivityTab, setLogActivityTab] = useState(0); // 0 = Auto, 1 = Manual
+  const [logActivityType, setLogActivityType] = useState('Chạy bộ');
+  const [logActivityDuration, setLogActivityDuration] = useState('');
+  const [logActivityCalories, setLogActivityCalories] = useState('');
+  const [isLoggingActivity, setIsLoggingActivity] = useState(false);
+
+  const MET_VALUES = {
+    'Chạy bộ': 8.3,
+    'Đạp xe': 7.5,
+    'Gym (Weightlifting)': 3.5,
+    'Bơi lội': 6.0,
+    'Yoga': 2.5,
+    'Nhảy dây': 10.0,
+    'Khác': 5.0
+  };
+
+  const handleLogActivitySubmit = async () => {
+    if (!logActivityDuration) return alert("Vui lòng nhập thời gian tập!");
+    
+    let burned = parseFloat(logActivityCalories);
+    if (logActivityTab === 0 || !burned) {
+      const weight = parseFloat(userProfile?.weight_kg || userProfile?.weight || 65);
+      const met = MET_VALUES[logActivityType] || 5.0;
+      burned = (met * weight * (parseFloat(logActivityDuration) / 60));
+    }
+    
+    setIsLoggingActivity(true);
+    try {
+      const res = await workoutApi.logActivity({
+        activity_name: logActivityType,
+        duration_minutes: parseInt(logActivityDuration),
+        calories_burned: Math.round(burned),
+        source: logActivityTab === 0 ? 'manual_mets' : 'external_device'
+      });
+      if (res.success) {
+        addActivityLog(burned);
+        setIsLogActivityModalVisible(false);
+        setLogActivityDuration('');
+        setLogActivityCalories('');
+      } else {
+        alert(res.message || "Lỗi khi lưu bài tập");
+      }
+    } catch (e) {
+      alert("Lỗi kết nối");
+    } finally {
+      setIsLoggingActivity(false);
+    }
+  };
+  
   const communityTags = ['Giảm mỡ', 'Tăng cơ', 'Duy trì', 'Yoga', 'Cardio'];
 
   const fetchPosts = async () => {
@@ -1004,6 +1055,104 @@ const FitnessHubScreen = ({ navigation }) => {
             </View>
           </View>
         </Modal>
+
+        {/* LOG ACTIVITY MODAL */}
+        <Modal visible={isLogActivityModalVisible} animationType="fade" transparent={true}>
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+            <View style={{ backgroundColor: '#FFF', width: '100%', borderRadius: 24, padding: 20, maxHeight: '80%' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <Text style={{ fontSize: 18, fontWeight: '800', color: '#1A1D1E' }}>Ghi nhận bài tập ngoài</Text>
+                <Pressable onPress={() => setIsLogActivityModalVisible(false)} style={{ padding: 4, marginRight: -4 }}>
+                  <Ionicons name="close" size={24} color="#333" />
+                </Pressable>
+              </View>
+
+              <View style={{ flexDirection: 'row', marginBottom: 16, backgroundColor: '#F0F0F0', borderRadius: 12, padding: 4 }}>
+                <Pressable 
+                  style={{ flex: 1, paddingVertical: 8, alignItems: 'center', backgroundColor: logActivityTab === 0 ? '#FFF' : 'transparent', borderRadius: 8, elevation: logActivityTab === 0 ? 2 : 0 }}
+                  onPress={() => setLogActivityTab(0)}
+                >
+                  <Text style={{ fontWeight: '600', color: logActivityTab === 0 ? COLORS.primary : '#888' }}>Tính tự động</Text>
+                </Pressable>
+                <Pressable 
+                  style={{ flex: 1, paddingVertical: 8, alignItems: 'center', backgroundColor: logActivityTab === 1 ? '#FFF' : 'transparent', borderRadius: 8, elevation: logActivityTab === 1 ? 2 : 0 }}
+                  onPress={() => setLogActivityTab(1)}
+                >
+                  <Text style={{ fontWeight: '600', color: logActivityTab === 1 ? COLORS.primary : '#888' }}>Nhập thủ công</Text>
+                </Pressable>
+              </View>
+
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={{ marginBottom: 16 }}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#555', marginBottom: 8 }}>Môn thể thao</Text>
+                  {logActivityTab === 0 ? (
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                      {Object.keys(MET_VALUES).map(act => (
+                        <Pressable 
+                          key={act} 
+                          onPress={() => setLogActivityType(act)}
+                          style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16, backgroundColor: logActivityType === act ? COLORS.primary : '#F5F5F5' }}
+                        >
+                          <Text style={{ color: logActivityType === act ? '#FFF' : '#555', fontWeight: '600', fontSize: 13 }}>{act}</Text>
+                        </Pressable>
+                      ))}
+                    </View>
+                  ) : (
+                    <TextInput
+                      style={{ backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 12, fontSize: 15 }}
+                      placeholder="VD: Đạp xe công viên"
+                      value={logActivityType}
+                      onChangeText={setLogActivityType}
+                    />
+                  )}
+                </View>
+
+                <View style={{ marginBottom: 16 }}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#555', marginBottom: 8 }}>Thời gian (phút)</Text>
+                  <TextInput
+                    style={{ backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 12, fontSize: 15 }}
+                    placeholder="Nhập số phút tập"
+                    keyboardType="numeric"
+                    value={logActivityDuration}
+                    onChangeText={setLogActivityDuration}
+                  />
+                  {logActivityType === 'Gym (Weightlifting)' && logActivityTab === 0 && (
+                    <Text style={{ fontSize: 11, color: '#888', marginTop: 6, fontStyle: 'italic' }}>* Nhập tổng thời gian buổi tập (bao gồm cả lúc nghỉ)</Text>
+                  )}
+                </View>
+
+                {logActivityTab === 1 && (
+                  <View style={{ marginBottom: 16 }}>
+                    <Text style={{ fontSize: 13, fontWeight: '700', color: '#555', marginBottom: 8 }}>Số Calo tiêu hao (kcal)</Text>
+                    <TextInput
+                      style={{ backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 12, fontSize: 15 }}
+                      placeholder="Nhập số Calo từ đồng hồ"
+                      keyboardType="numeric"
+                      value={logActivityCalories}
+                      onChangeText={setLogActivityCalories}
+                    />
+                  </View>
+                )}
+
+                <CustomButton 
+                  title={isLoggingActivity ? "ĐANG LƯU..." : "LƯU KẾT QUẢ"} 
+                  onPress={handleLogActivitySubmit} 
+                  disabled={isLoggingActivity}
+                  style={{ borderRadius: 16, height: 48, marginTop: 12, width: '100%' }}
+                />
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
+
+        {activeTab === 0 && (
+          <Pressable 
+            style={{ position: 'absolute', right: 20, bottom: 80, backgroundColor: COLORS.primary, width: 60, height: 60, borderRadius: 30, justifyContent: 'center', alignItems: 'center', elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 3 }}
+            onPress={() => setIsLogActivityModalVisible(true)}
+          >
+            <Ionicons name="add" size={32} color="#FFF" />
+          </Pressable>
+        )}
 
       </ResponsiveContainer>
     );

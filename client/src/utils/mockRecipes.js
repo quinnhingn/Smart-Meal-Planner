@@ -275,7 +275,9 @@ export const mockRecipes = [
 
 export const RECIPE_FILTERS = [
   { id: 'all', label: 'Tất cả' },
-  { id: 'cookable', label: 'Có thể nấu' },
+  { id: 'easy', label: 'Dễ' },
+  { id: 'medium', label: 'Trung bình' },
+  { id: 'hard', label: 'Khó' },
   { id: 'snack', label: 'Bữa phụ' },
   { id: 'breakfast', label: 'Bữa sáng' },
   { id: 'lunch', label: 'Bữa trưa' },

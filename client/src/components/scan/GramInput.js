@@ -4,7 +4,7 @@ import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 
-const GramInput = ({ value, onChange, onMinus, onPlus }) => {
+const GramInput = ({ value, onChange, onMinus, onPlus, unit = 'g' }) => {
   return (
     <View style={styles.container}>
       <Pressable onPress={onMinus} style={styles.btn}>
@@ -19,7 +19,7 @@ const GramInput = ({ value, onChange, onMinus, onPlus }) => {
           onChangeText={onChange}
           maxLength={4}
         />
-        <Text style={styles.unit}>g</Text>
+        <Text style={styles.unit}>{unit}</Text>
       </View>
 
       <Pressable onPress={onPlus} style={styles.btn}>

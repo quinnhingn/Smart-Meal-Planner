@@ -11,6 +11,7 @@ from database.db import db
 from controller.auth.auth_controller import auth_bp
 from controller.auth.user_profile_controller import profile_bp
 from controller.recipes.recipe_controller import recipe_bp
+from controller.recipes.recommendation_controller import recommendation_bp
 from controller.ai.ai_controller import ai_bp
 
 app = Flask(__name__)
@@ -36,6 +37,7 @@ db.init_app(app)
 app.register_blueprint(auth_bp)
 app.register_blueprint(profile_bp)
 app.register_blueprint(recipe_bp)
+app.register_blueprint(recommendation_bp)
 app.register_blueprint(ai_bp)
 
 @app.route('/')

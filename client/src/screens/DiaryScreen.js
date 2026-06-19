@@ -1,12 +1,11 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { View, StyleSheet, Platform, useWindowDimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, Platform, useWindowDimensions, ScrollView, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import ResponsiveContainer from '../components/ResponsiveContainer';
 import DailyHeader from '../components/diary/DailyHeader';
 import WeekSelector from '../components/diary/WeekSelector';
 import CalendarModal from '../components/diary/CalendarModal';
 import MacroSummary from '../components/diary/MacroSummary';
-import NutritionInsight from '../components/diary/NutritionInsight';
 import MealSection from '../components/diary/MealSection';
 import DiaryItemModal from '../components/diary/DiaryItemModal';
 import { useAppStore } from '../store/useAppStore';
@@ -50,7 +49,7 @@ const DiaryScreen = () => {
     });
   }, [diaryItems, selectedDate]);
 
-  const targetCalo = Math.round(userProfile?.targetCalories || userProfile?.tdee || 2000);
+  const targetCalo = Math.round(userProfile?.target_calories || userProfile?.tdee || 2000);
   const stats = useMemo(() => {
     const raw = dayItems.reduce((acc, item) => {
       acc.calo += (item.calo || 0);
@@ -101,7 +100,14 @@ const DiaryScreen = () => {
   };
 
   const handleDeleteItem = (id) => {
-    deleteDiaryItem?.(id);
+    Alert.alert(
+      "Xác nhận xóa",
+      "Bạn có chắc chắn muốn xóa món này khỏi nhật ký?",
+      [
+        { text: "Hủy", style: "cancel" },
+        { text: "Xóa", style: "destructive", onPress: () => deleteDiaryItem?.(id) }
+      ]
+    );
   };
 
   const handleSaveItem = (payload) => {
@@ -122,7 +128,6 @@ const DiaryScreen = () => {
             <WeekSelector selectedDate={selectedDate} onSelectDate={setSelectedDate} />
             <View style={styles.summaryWrap}>
               <MacroSummary stats={stats} targetCalo={targetCalo} />
-              <NutritionInsight />
             </View>
           </View>
 

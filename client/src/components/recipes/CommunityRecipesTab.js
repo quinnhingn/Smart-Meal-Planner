@@ -1,7 +1,6 @@
 // src/components/recipes/CommunityRecipesTab.js
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
-import RecipeFilterChips from './RecipeFilterChips';
 import RecipeCardGrid from './RecipeCardGrid';
 import RecipeEmptyState from './RecipeEmptyState';
 import { mockRecipes } from '../../utils/mockRecipes';
@@ -13,11 +12,9 @@ const CommunityRecipesTab = ({
   onRecipePress, 
   onSaveToggle, 
   savedIds, 
-  pantryItems 
+  pantryItems,
+  activeFilters = ['all']
 }) => {
-  // Chuyển từ activeFilter (chuỗi) sang activeFilters (mảng) để chọn nhiều
-  const [activeFilters, setActiveFilters] = useState(['all']);
-
   // Ưu tiên dùng dbRecipes từ API, fallback về mockRecipes nếu API chưa có data
   const recipes = dbRecipes.length > 0 ? dbRecipes : mockRecipes;
 
@@ -41,11 +38,9 @@ const CommunityRecipesTab = ({
       // Recipe được hiển thị nếu khớp với ÍT NHẤT MỘT bộ lọc đang chọn (OR logic)
       return activeFilters.some(filterId => {
         switch (filterId) {
-          case 'cookable':
-            const missing = recipe.ingredients?.filter(ing =>
-              !pantryItems?.some(p => p.name.toLowerCase().includes(ing.name.toLowerCase()))
-            );
-            return missing?.length === 0;
+          case 'easy': return recipe.difficulty === 'Dễ';
+          case 'medium': return recipe.difficulty === 'Trung bình';
+          case 'hard': return recipe.difficulty === 'Khó';
           case 'snack': return recipe.labels?.includes('Bữa phụ');
           case 'breakfast': return recipe.labels?.includes('Bữa sáng');
           case 'lunch': return recipe.labels?.includes('Bữa trưa');
@@ -60,12 +55,6 @@ const CommunityRecipesTab = ({
 
   return (
     <View style={styles.container}>
-      {/* Cập nhật props cho component Chips đã nâng cấp */}
-      <RecipeFilterChips 
-        activeFilters={activeFilters} 
-        onFilterChange={setActiveFilters} 
-      />
-
       {/* ScrollView thay vì FlatList để tránh lỗi VirtualizedLists nested */}
       <ScrollView 
         style={styles.listContainer} 

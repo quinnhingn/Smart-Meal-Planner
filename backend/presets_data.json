@@ -1,0 +1,440 @@
+[
+  {
+    "id": "p1",
+    "title": "Giảm mỡ toàn thân",
+    "goal": "Giảm mỡ",
+    "difficulty": "Người mới",
+    "duration_days": 7,
+    "calories_per_day": "200 - 300 kcal",
+    "image": "https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=800&q=80",
+    "description": "Lộ trình 7 ngày thiết kế đặc biệt để tối đa hoá việc đốt mỡ thừa thông qua các bài tập Cardio và HIIT cường độ vừa.",
+    "suitable_time": "Sáng sớm (trước khi ăn)",
+    "focus_areas": ["Toàn thân", "Tim mạch", "Bụng"],
+    "daily_avg_duration": "20 - 30 phút",
+    "preview_schedule": [
+      { 
+        "day": 1, "title": "Ngày 1: Cardio nhịp tim thấp", 
+        "exercises": [
+          { "name": "Khởi động toàn thân", "duration": "5 phút", "thumb": "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=200", "videoUrl": "https://www.youtube.com/watch?v=g_tea8ZNkZc" },
+          { "name": "Nhảy dây tại chỗ", "duration": "60 giây x 3", "thumb": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200", "videoUrl": "https://www.youtube.com/watch?v=u3zgHI8QnqE" },
+          { "name": "Squats cơ bản", "duration": "15 reps x 3", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=gcNh17Ckjgg" }
+        ] 
+      },
+      { 
+        "day": 2, "title": "Ngày 2: HIIT Đốt mỡ bụng", 
+        "exercises": [
+          { "name": "Burpees", "duration": "45 giây", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=qLBImHhCXSw" },
+          { "name": "Plank", "duration": "60 giây", "thumb": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200", "videoUrl": "https://www.youtube.com/watch?v=pSHjTRCQxIw" },
+          { "name": "Gập bụng", "duration": "20 reps x 3", "thumb": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200", "videoUrl": "https://www.youtube.com/watch?v=1fbU_MkV7NE" }
+        ] 
+      },
+      { 
+        "day": 3, "title": "Ngày 3: Phục hồi chủ động", 
+        "exercises": [
+          { "name": "Yoga giãn cơ", "duration": "15 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" },
+          { "name": "Thiền định", "duration": "5 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=inpok4MKVLM" }
+        ] 
+      },
+      { 
+        "day": 4, "title": "Ngày 4: Tăng cường thể lực", 
+        "exercises": [
+          { "name": "Chạy nâng cao đùi", "duration": "60 giây x 3", "thumb": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200", "videoUrl": "https://www.youtube.com/watch?v=ZZhD3D4aWYI" },
+          { "name": "Jumping Jacks", "duration": "45 giây x 3", "thumb": "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=200", "videoUrl": "https://www.youtube.com/watch?v=tj00AQnU12Q" },
+          { "name": "Leo núi chéo gối", "duration": "60 giây", "thumb": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200", "videoUrl": "https://www.youtube.com/watch?v=nmwgirgXLYM" }
+        ] 
+      },
+      { 
+        "day": 5, "title": "Ngày 5: Cardio cường độ cao", 
+        "exercises": [
+          { "name": "Nhảy chéo chân", "duration": "60 giây x 4", "thumb": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200", "videoUrl": "https://www.youtube.com/watch?v=p4JzS1B6Kls" },
+          { "name": "Bật nhảy tại chỗ", "duration": "45 giây x 3", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=Zc0A4z_kOFE" },
+          { "name": "Gập bụng đạp xe", "duration": "20 reps x 3", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=IwyvozcjUP8" }
+        ] 
+      },
+      { 
+        "day": 6, "title": "Ngày 6: Đốt mỡ toàn thân", 
+        "exercises": [
+          { "name": "Burpees cường độ cao", "duration": "60 giây", "thumb": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200", "videoUrl": "https://www.youtube.com/watch?v=qLBImHhCXSw" },
+          { "name": "Squat jumps", "duration": "15 reps x 3", "thumb": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200", "videoUrl": "https://www.youtube.com/watch?v=CVaEhXotL7M" },
+          { "name": "Plank nghiêng", "duration": "45 giây / bên", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=N_82E7_LwU" }
+        ] 
+      },
+      { 
+        "day": 7, "title": "Ngày 7: Giãn cơ & Tổng kết", 
+        "exercises": [
+          { "name": "Giãn cơ đùi & lưng", "duration": "10 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" },
+          { "name": "Thiền định sâu", "duration": "10 phút", "thumb": "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=200", "videoUrl": "https://www.youtube.com/watch?v=inpok4MKVLM" }
+        ] 
+      }
+    ]
+  },
+  {
+    "id": "p2",
+    "title": "Xây dựng cơ bắp",
+    "goal": "Tăng cơ",
+    "difficulty": "Trung bình",
+    "duration_days": 14,
+    "calories_per_day": "300 - 450 kcal",
+    "image": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800&q=80",
+    "description": "Tập trung vào phát triển nhóm cơ lớn (Ngực, Lưng, Đùi) với tần suất cao, kết hợp phục hồi chủ động.",
+    "suitable_time": "Chiều tối (16h - 19h)",
+    "focus_areas": ["Ngực", "Lưng xô", "Đùi & Mông"],
+    "daily_avg_duration": "40 - 50 phút",
+    "preview_schedule": [
+      { 
+        "day": 1, "title": "Ngày 1: Ngày đẩy (Push Day)", 
+        "exercises": [
+          { "name": "Chống đẩy", "duration": "12 reps x 4", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=IODxDxX7oi4" },
+          { "name": "Đẩy vai", "duration": "10 reps x 3", "thumb": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200", "videoUrl": "https://www.youtube.com/watch?v=B-aVqZw5O0o" },
+          { "name": "Tay sau", "duration": "15 reps x 3", "thumb": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200", "videoUrl": "https://www.youtube.com/watch?v=nRiJVZDpdY0" }
+        ] 
+      },
+      { 
+        "day": 2, "title": "Ngày 2: Ngày kéo (Pull Day)", 
+        "exercises": [
+          { "name": "Hít xà đơn", "duration": "8 reps x 3", "thumb": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200", "videoUrl": "https://www.youtube.com/watch?v=eGo4IYb0KDU" },
+          { "name": "Gập lưng", "duration": "15 reps x 3", "thumb": "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=200", "videoUrl": "https://www.youtube.com/watch?v=rLoPiS4X1E" },
+          { "name": "Cuốn tạ tay trước", "duration": "12 reps x 3", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=ykJmrZ5v0Oo" }
+        ] 
+      },
+      { 
+        "day": 3, "title": "Ngày 3: Ngày thân dưới (Leg Day)", 
+        "exercises": [
+          { "name": "Squats tạ", "duration": "12 reps x 4", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=gcNh17Ckjgg" },
+          { "name": "Lunge", "duration": "10 reps x 3 mỗi chân", "thumb": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200", "videoUrl": "https://www.youtube.com/watch?v=QOVaHwm-Q6U" }
+        ] 
+      },
+      { 
+        "day": 4, "title": "Ngày 4: Phục hồi chủ động", 
+        "exercises": [
+          { "name": "Đi bộ nhanh", "duration": "30 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=enYITIuwVKc" },
+          { "name": "Giãn cơ", "duration": "15 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 5, "title": "Ngày 5: Ngày đẩy cường độ cao", 
+        "exercises": [
+          { "name": "Chống đẩy hẹp tay", "duration": "15 reps x 4", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=IODxDxX7oi4" },
+          { "name": "Đẩy ngực tạ đơn", "duration": "12 reps x 3", "thumb": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200", "videoUrl": "https://www.youtube.com/watch?v=VmB1G1K7v94" },
+          { "name": "Chống đẩy tĩnh", "duration": "30 giây x 3", "thumb": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200", "videoUrl": "https://www.youtube.com/watch?v=pSHjTRCQxIw" }
+        ] 
+      },
+      { 
+        "day": 6, "title": "Ngày 6: Ngày kéo nâng cao", 
+        "exercises": [
+          { "name": "Hít xà biến thể", "duration": "10 reps x 3", "thumb": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200", "videoUrl": "https://www.youtube.com/watch?v=eGo4IYb0KDU" },
+          { "name": "Gập lưng có tạ", "duration": "12 reps x 4", "thumb": "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=200", "videoUrl": "https://www.youtube.com/watch?v=rLoPiS4X1E" },
+          { "name": "Kéo cáp", "duration": "15 reps x 3", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=vw5_yUINqEY" }
+        ] 
+      },
+      { 
+        "day": 7, "title": "Ngày 7: Ngày thân dưới tập trung", 
+        "exercises": [
+          { "name": "Sumo Squats", "duration": "15 reps x 4", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=9ZuCqNnLw0" },
+          { "name": "Bulgarian Split Squats", "duration": "12 reps x 3 mỗi chân", "thumb": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200", "videoUrl": "https://www.youtube.com/watch?v=2C-uNgKwPLE" }
+        ] 
+      },
+      { "day": 8, "title": "Ngày 8: Nghỉ ngơi", "exercises": [] },
+      { "day": 9, "title": "Ngày 9: Ngày đẩy (Push Day)", "exercises": [{ "name": "Chống đẩy", "duration": "12 reps x 4", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=IODxDxX7oi4" }] },
+      { "day": 10, "title": "Ngày 10: Ngày kéo (Pull Day)", "exercises": [{ "name": "Hít xà đơn", "duration": "8 reps x 3", "thumb": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200", "videoUrl": "https://www.youtube.com/watch?v=eGo4IYb0KDU" }] },
+      { "day": 11, "title": "Ngày 11: Ngày thân dưới (Leg Day)", "exercises": [{ "name": "Squats tạ", "duration": "12 reps x 4", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=gcNh17Ckjgg" }] },
+      { "day": 12, "title": "Ngày 12: Phục hồi chủ động", "exercises": [{ "name": "Yoga", "duration": "30 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }] },
+      { "day": 13, "title": "Ngày 13: Full Body Strength", "exercises": [{ "name": "Burpees", "duration": "15 reps x 4", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=qLBImHhCXSw" }] },
+      { "day": 14, "title": "Ngày 14: Nghỉ ngơi", "exercises": [] }
+    ]
+  },
+  {
+    "id": "p3",
+    "title": "Yoga & Thư giãn",
+    "goal": "Duy trì vóc dáng",
+    "difficulty": "Nhẹ nhàng",
+    "duration_days": 7,
+    "calories_per_day": "100 - 150 kcal",
+    "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80",
+    "description": "Các chuỗi bài tập Yoga nhẹ nhàng giúp cơ thể dẻo dai, giảm stress và phục hồi cơ bắp.",
+    "suitable_time": "Sáng sớm hoặc trước ngủ",
+    "focus_areas": ["Toàn thân", "Xương khớp", "Thư giãn"],
+    "daily_avg_duration": "15 - 20 phút",
+    "preview_schedule": [
+      { 
+        "day": 1, "title": "Ngày 1: Chào mặt trời", 
+        "exercises": [
+          { "name": "Tư thế ngọn núi", "duration": "1 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" },
+          { "name": "Chó úp mặt", "duration": "1 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" },
+          { "name": "Tư thế chiến binh", "duration": "1 phút", "thumb": "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 2, "title": "Ngày 2: Kéo giãn cột sống", 
+        "exercises": [
+          { "name": "Tư thế con mèo", "duration": "2 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" },
+          { "name": "Tư thế em bé", "duration": "2 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 3, "title": "Ngày 3: Cân bằng & Tĩnh tâm", 
+        "exercises": [
+          { "name": "Tư thế cái cây", "duration": "2 phút", "thumb": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" },
+          { "name": "Tập thở bụng", "duration": "5 phút", "thumb": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 4, "title": "Ngày 4: Mở rộng lồng ngực", 
+        "exercises": [
+          { "name": "Tư thế cây cầu", "duration": "2 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 5, "title": "Ngày 5: Linh hoạt khớp háng", 
+        "exercises": [
+          { "name": "Góc cố định nằm ngửa", "duration": "3 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 6, "title": "Ngày 6: Giảm đau mỏi lưng cổ", 
+        "exercises": [
+          { "name": "Ngồi vặn xoắn", "duration": "2 phút / bên", "thumb": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 7, "title": "Ngày 7: Phục hồi toàn diện", 
+        "exercises": [
+          { "name": "Savasana (Tư thế xác chết)", "duration": "10 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      }
+    ]
+  },
+  {
+    "id": "p4",
+    "title": "Pilates Đốt Mỡ Thon Gọn",
+    "goal": "Giảm mỡ",
+    "difficulty": "Trung bình",
+    "duration_days": 7,
+    "calories_per_day": "200 - 250 kcal",
+    "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80",
+    "description": "Bài tập Pilates giúp siết eo, thon gọn đùi và định hình cơ thể, không yêu cầu tạ.",
+    "suitable_time": "Sáng hoặc chiều",
+    "focus_areas": ["Eo", "Đùi", "Bụng"],
+    "daily_avg_duration": "30 - 40 phút",
+    "preview_schedule": [
+      { 
+        "day": 1, "title": "Ngày 1: Đánh thức cơ trung tâm", 
+        "exercises": [
+          { "name": "Khởi động cột sống", "duration": "5 phút", "thumb": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200", "videoUrl": "https://www.youtube.com/watch?v=K-PpFCz5wOQ" },
+          { "name": "Gập bụng Pilates", "duration": "20 reps x 3", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=1fbU_MkV7NE" }
+        ] 
+      },
+      { 
+        "day": 2, "title": "Ngày 2: Siết mỡ eo đùi", 
+        "exercises": [
+          { "name": "Nâng chân nghiêng", "duration": "15 reps x 3", "thumb": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200", "videoUrl": "https://www.youtube.com/watch?v=mE_O3QWv27E" }
+        ] 
+      },
+      { 
+        "day": 3, "title": "Ngày 3: Phục hồi nhẹ", 
+        "exercises": [
+          { "name": "Yoga cơ bản", "duration": "15 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 4, "title": "Ngày 4: Thon gọn bắp tay", 
+        "exercises": [
+          { "name": "Chống đẩy đầu gối", "duration": "15 reps x 3", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=IODxDxX7oi4" }
+        ] 
+      },
+      { 
+        "day": 5, "title": "Ngày 5: Căng cơ toàn diện", 
+        "exercises": [
+          { "name": "Giãn cơ cổ", "duration": "3 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 6, "title": "Ngày 6: Sức mạnh vùng lõi", 
+        "exercises": [
+          { "name": "Plank xoay", "duration": "45 giây x 3", "thumb": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200", "videoUrl": "https://www.youtube.com/watch?v=pSHjTRCQxIw" }
+        ] 
+      },
+      { 
+        "day": 7, "title": "Ngày 7: Giãn cơ cuối tuần", 
+        "exercises": [
+          { "name": "Thiền định", "duration": "10 phút", "thumb": "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=200", "videoUrl": "https://www.youtube.com/watch?v=inpok4MKVLM" }
+        ] 
+      }
+    ]
+  },
+  {
+    "id": "p5",
+    "title": "Thử thách Cardio 7 Ngày",
+    "goal": "Tăng thể lực",
+    "difficulty": "Nâng cao",
+    "duration_days": 7,
+    "calories_per_day": "400 - 500 kcal",
+    "image": "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=800&q=80",
+    "description": "Thử thách nâng cao nhịp tim, đốt mỡ tối đa với các bài HIIT và Cardio cường độ cao.",
+    "suitable_time": "Sáng sớm",
+    "focus_areas": ["Toàn thân", "Tim mạch"],
+    "daily_avg_duration": "45 phút",
+    "preview_schedule": [
+      { 
+        "day": 1, "title": "Ngày 1: Bùng nổ HIIT", 
+        "exercises": [
+          { "name": "Burpees siêu tốc", "duration": "1 phút x 4", "thumb": "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=200", "videoUrl": "https://www.youtube.com/watch?v=qLBImHhCXSw" },
+          { "name": "Jump Squat", "duration": "45 giây x 4", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=CVaEhXotL7M" }
+        ] 
+      },
+      { 
+        "day": 2, "title": "Ngày 2: Cardio nhịp độ thấp", 
+        "exercises": [
+          { "name": "Chạy bộ tại chỗ", "duration": "10 phút", "thumb": "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=200", "videoUrl": "https://www.youtube.com/watch?v=enYITIuwVKc" }
+        ] 
+      },
+      { 
+        "day": 3, "title": "Ngày 3: Phục hồi chủ động", 
+        "exercises": [
+          { "name": "Đi bộ nhanh", "duration": "20 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=enYITIuwVKc" }
+        ] 
+      },
+      { 
+        "day": 4, "title": "Ngày 4: Nhảy dây tốc độ", 
+        "exercises": [
+          { "name": "Nhảy dây tàng hình", "duration": "2 phút x 5", "thumb": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200", "videoUrl": "https://www.youtube.com/watch?v=u3zgHI8QnqE" }
+        ] 
+      },
+      { 
+        "day": 5, "title": "Ngày 5: Sức bền toàn thân", 
+        "exercises": [
+          { "name": "Chống đẩy bật nhảy", "duration": "45 giây x 4", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=IODxDxX7oi4" }
+        ] 
+      },
+      { 
+        "day": 6, "title": "Ngày 6: HIIT Max Heart Rate", 
+        "exercises": [
+          { "name": "Chạy nước rút tại chỗ", "duration": "30 giây x 6", "thumb": "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=200", "videoUrl": "https://www.youtube.com/watch?v=enYITIuwVKc" }
+        ] 
+      },
+      { 
+        "day": 7, "title": "Ngày 7: Căng cơ phục hồi", 
+        "exercises": [
+          { "name": "Yoga giãn cơ sâu", "duration": "20 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      }
+    ]
+  },
+  {
+    "id": "p6",
+    "title": "Cơ bụng 6 múi",
+    "goal": "Tăng cơ",
+    "difficulty": "Trung bình",
+    "duration_days": 7,
+    "calories_per_day": "150 - 200 kcal",
+    "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
+    "description": "Lộ trình chuyên biệt tập trung vào nhóm cơ bụng, giúp định hình rãnh bụng và giảm mỡ vòng 2 hiệu quả.",
+    "suitable_time": "Mọi lúc",
+    "focus_areas": ["Bụng", "Lõi (Core)"],
+    "daily_avg_duration": "15 - 25 phút",
+    "preview_schedule": [
+      { 
+        "day": 1, "title": "Ngày 1: Đánh thức cơ bụng", 
+        "exercises": [
+          { "name": "Gập bụng cơ bản", "duration": "20 reps x 3", "thumb": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200", "videoUrl": "https://www.youtube.com/watch?v=1fbU_MkV7NE" },
+          { "name": "Plank", "duration": "45 giây x 3", "thumb": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200", "videoUrl": "https://www.youtube.com/watch?v=pSHjTRCQxIw" }
+        ] 
+      },
+      { 
+        "day": 2, "title": "Ngày 2: Bụng dưới săn chắc", 
+        "exercises": [
+          { "name": "Nâng chân (Leg raises)", "duration": "15 reps x 3", "thumb": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200", "videoUrl": "https://www.youtube.com/watch?v=l4kQd9eWclE" }
+        ] 
+      },
+      { 
+        "day": 3, "title": "Ngày 3: Bụng chéo (Obliques)", 
+        "exercises": [
+          { "name": "Gập bụng đạp xe", "duration": "20 reps x 3", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=IwyvozcjUP8" },
+          { "name": "Russian Twist", "duration": "30 giây x 3", "thumb": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200", "videoUrl": "https://www.youtube.com/watch?v=wkD8rjkodUI" }
+        ] 
+      },
+      { 
+        "day": 4, "title": "Ngày 4: Phục hồi vùng lõi", 
+        "exercises": [
+          { "name": "Giãn cơ bụng", "duration": "5 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 5, "title": "Ngày 5: Thử thách Core", 
+        "exercises": [
+          { "name": "Leo núi chéo gối", "duration": "45 giây x 3", "thumb": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200", "videoUrl": "https://www.youtube.com/watch?v=nmwgirgXLYM" }
+        ] 
+      },
+      { 
+        "day": 6, "title": "Ngày 6: Vắt kiệt sức bụng", 
+        "exercises": [
+          { "name": "V-ups", "duration": "12 reps x 3", "thumb": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200", "videoUrl": "https://www.youtube.com/watch?v=7UVcs01L5pI" }
+        ] 
+      },
+      { 
+        "day": 7, "title": "Ngày 7: Căng cơ bụng", 
+        "exercises": [
+          { "name": "Yoga cơ bản", "duration": "15 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      }
+    ]
+  },
+  {
+    "id": "p7",
+    "title": "Yoga Giảm Stress",
+    "goal": "Duy trì vóc dáng",
+    "difficulty": "Người mới",
+    "duration_days": 7,
+    "calories_per_day": "100 kcal",
+    "image": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
+    "description": "Các bài tập Yoga nhẹ nhàng, kết hợp kỹ thuật thở sâu để thư giãn tinh thần và giảm đau mỏi cổ vai gáy.",
+    "suitable_time": "Trước khi ngủ",
+    "focus_areas": ["Tinh thần", "Cổ vai gáy"],
+    "daily_avg_duration": "15 - 20 phút",
+    "preview_schedule": [
+      { 
+        "day": 1, "title": "Ngày 1: Thả lỏng vai gáy", 
+        "exercises": [
+          { "name": "Xoay cổ nhẹ nhàng", "duration": "3 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" },
+          { "name": "Tư thế em bé", "duration": "3 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 2, "title": "Ngày 2: Giãn mềm thắt lưng", 
+        "exercises": [
+          { "name": "Tư thế con mèo - bò", "duration": "3 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 3, "title": "Ngày 3: Mở ngực hít thở sâu", 
+        "exercises": [
+          { "name": "Thở bằng cơ hoành", "duration": "5 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=inpok4MKVLM" }
+        ] 
+      },
+      { 
+        "day": 4, "title": "Ngày 4: Xoa dịu tâm trí", 
+        "exercises": [
+          { "name": "Savasana tĩnh lặng", "duration": "10 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=inpok4MKVLM" }
+        ] 
+      },
+      { 
+        "day": 5, "title": "Ngày 5: Cân bằng cảm xúc", 
+        "exercises": [
+          { "name": "Thiền tập trung hơi thở", "duration": "10 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=inpok4MKVLM" }
+        ] 
+      },
+      { 
+        "day": 6, "title": "Ngày 6: Xua tan mệt mỏi", 
+        "exercises": [
+          { "name": "Gác chân lên tường", "duration": "5 phút", "thumb": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      },
+      { 
+        "day": 7, "title": "Ngày 7: Chuẩn bị giấc ngủ ngon", 
+        "exercises": [
+          { "name": "Giãn cơ toàn thân", "duration": "5 phút", "thumb": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200", "videoUrl": "https://www.youtube.com/watch?v=v7SN-d4qXx0" }
+        ] 
+      }
+    ]
+  }
+]

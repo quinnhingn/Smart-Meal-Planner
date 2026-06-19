@@ -34,6 +34,8 @@ import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import AISuggestedRecipeDetailScreen from '../screens/AISuggestedRecipeDetailScreen';
 import FitnessHubScreen from '../screens/FitnessHubScreen';
 import ExploreFitnessScreen from '../screens/ExploreFitnessScreen';
+import WorkoutDetailScreen from '../screens/WorkoutDetailScreen';
+import WorkoutPlayerScreen from '../screens/WorkoutPlayerScreen';
 
 // Layout
 import MobileTopbar from '../components/navigation/MobileTopbar';
@@ -162,6 +164,8 @@ const RootStack = () => (
     <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />
     <Stack.Screen name="AISuggestedRecipeDetail" component={AISuggestedRecipeDetailScreen} />
     <Stack.Screen name="ExploreFitness" component={ExploreFitnessScreen} />
+    <Stack.Screen name="WorkoutDetail" component={WorkoutDetailScreen} />
+    <Stack.Screen name="WorkoutPlayer" component={WorkoutPlayerScreen} />
   </Stack.Navigator>
 );
 

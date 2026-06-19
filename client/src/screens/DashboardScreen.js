@@ -117,6 +117,10 @@ const DashboardScreen = () => {
         if (res.data.data.streak !== undefined) {
           setCurrentStreak(res.data.data.streak);
         }
+        // Cập nhật calo tiêu thụ từ DB
+        if (res.data.data.totals && res.data.data.totals.burned_calories !== undefined) {
+          useAppStore.setState({ burnedCalories: res.data.data.totals.burned_calories });
+        }
       }
     } catch (error) {
       console.error("Lỗi lấy summary:", error);
@@ -168,7 +172,7 @@ const DashboardScreen = () => {
     ...DASHBOARD_MOCK_TRACKING,
     target_kcal: Math.round(targetKcal),
     consumed_kcal: Math.round(dailySummary.totals.calories),
-    burned_kcal: Math.round(burnedCalories || 0)
+    burned_kcal: Math.round(dailySummary.totals?.burned_calories || burnedCalories || 0)
   };
 
   const realMacros = {

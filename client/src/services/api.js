@@ -2,7 +2,9 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
 
-const BASE_URL = 'http://192.168.1.18:5001/api';
+export const BASE_URL = Platform.OS === 'web' 
+  ? 'http://localhost:5001/api' 
+  : 'http://192.168.1.251:5001/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -104,6 +106,28 @@ export const recipeApi = {
       return { success: false, error: error.message };
     }
   }
+};
+
+export const communityApi = {
+  getPosts: () => fetchApi('GET', '/community/posts'),
+  createPost: async (formData) => {
+    // formData is an instance of FormData containing caption, kcal, duration_minutes, program_title, and image file
+    return await fetchApi('POST', '/community/posts', formData);
+  },
+  toggleLike: (postId) => fetchApi('POST', `/community/posts/${postId}/like`),
+  getComments: (postId) => fetchApi('GET', `/community/posts/${postId}/comments`),
+  addComment: (postId, data) => fetchApi('POST', `/community/posts/${postId}/comments`, data),
+  deletePost: (postId) => fetchApi('DELETE', `/community/posts/${postId}`),
+  savePost: (postId) => fetchApi('POST', `/community/posts/${postId}/save`)
+};
+export const workoutApi = {
+  getPresetPrograms: () => fetchApi('GET', '/workout/presets'),
+  generatePlan: (data) => fetchApi('POST', '/workout/generate', data),
+  getCurrentPlan: () => fetchApi('GET', '/workout/current-plan'),
+  completeDay: (data) => fetchApi('POST', '/workout/complete-day', data),
+  saveProgress: (data) => fetchApi('POST', '/workout/save-progress', data),
+  searchWorkoutByAI: (query) => fetchApi('POST', '/workout/ai/search', { query }),
+  deletePlan: (planId) => fetchApi('DELETE', `/workout/plan/${planId}`)
 };
 
 export default apiClient;

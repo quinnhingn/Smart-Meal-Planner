@@ -12,6 +12,8 @@ from controller.auth.auth_controller import auth_bp
 from controller.auth.user_profile_controller import profile_bp
 from controller.recipes.recipe_controller import recipe_bp
 from controller.ai.ai_controller import ai_bp
+from controller.workout_controller import workout_bp
+from controller.community.community_controller import community_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -37,10 +39,17 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(profile_bp)
 app.register_blueprint(recipe_bp)
 app.register_blueprint(ai_bp)
+app.register_blueprint(workout_bp)
+app.register_blueprint(community_bp)
 
 @app.route('/')
 def health_check():
     return {"status": "ok", "message": "Smart Meal Planner Client API is running!"}
+
+import flask
+@app.route('/uploads/community/<filename>')
+def uploaded_file(filename):
+    return flask.send_from_directory(os.path.join(app.root_path, 'uploads/community'), filename)
 
 if __name__ == '__main__':
     print("🚀 Khởi động Client Backend trên cổng 5001...")

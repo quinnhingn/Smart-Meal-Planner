@@ -127,6 +127,19 @@ class RecipeRepository:
                 func.date(func.timezone('Asia/Ho_Chi_Minh', MealLogModel.eaten_at)) == func.date(func.timezone('Asia/Ho_Chi_Minh', func.now()))
             ).first()
             
+            # Tính tổng calo tiêu hao từ Workout hôm nay
+            from model.workout.workout_plan_model import WorkoutPlanModel, DailyWorkoutModel
+
+            burned_summary = db.session.query(
+                func.sum(DailyWorkoutModel.calories).label('total_burned')
+            ).join(WorkoutPlanModel, DailyWorkoutModel.plan_id == WorkoutPlanModel.id).filter(
+                WorkoutPlanModel.user_id == user_id,
+                DailyWorkoutModel.is_completed == True,
+                func.date(func.timezone('Asia/Ho_Chi_Minh', DailyWorkoutModel.completed_at)) == func.date(func.timezone('Asia/Ho_Chi_Minh', func.now()))
+            ).first()
+            
+            total_burned = float(burned_summary.total_burned or 0) if burned_summary else 0
+            
             # 2. Lấy danh sách món
             logs = MealLogModel.query.filter(
                 MealLogModel.user_id == user_id,
@@ -184,7 +197,8 @@ class RecipeRepository:
                     "calories": float(summary.total_calories or 0),
                     "protein": float(summary.total_protein or 0),
                     "carbs": float(summary.total_carbs or 0),
-                    "fat": float(summary.total_fat or 0)
+                    "fat": float(summary.total_fat or 0),
+                    "burned_calories": total_burned
                 },
                 "meals": [
                     {
@@ -200,7 +214,7 @@ class RecipeRepository:
             }
         except Exception as e:
             print(f"❌ [Dashboard Error] {e}")
-            return {"totals": {"calories": 0, "protein": 0, "carbs": 0, "fat": 0}, "meals": [], "streak": 0, "hasLoggedToday": False}
+            return {"totals": {"calories": 0, "protein": 0, "carbs": 0, "fat": 0, "burned_calories": 0}, "meals": [], "streak": 0, "hasLoggedToday": False}
 
     @staticmethod
     def get_all_recipes():

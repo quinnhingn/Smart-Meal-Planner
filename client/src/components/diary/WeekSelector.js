@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const VI_DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 
@@ -7,7 +8,7 @@ const WeekSelector = ({ selectedDate, onSelectDate }) => {
   const weekDays = useMemo(() => {
     const curr = new Date(selectedDate);
     const day = curr.getDay(); // 0 = CN
-    const diff = curr.getDate() - day + (day === 0 ? -6 : 0); // Lấy thứ 2 đầu tuần
+    const diff = curr.getDate() - day + (day === 0 ? -6 : 1); // Lấy thứ 2 đầu tuần
     const monday = new Date(curr.setDate(diff));
     
     return Array.from({ length: 7 }).map((_, i) => {
@@ -19,44 +20,70 @@ const WeekSelector = ({ selectedDate, onSelectDate }) => {
 
   const today = new Date().toDateString();
 
+  const handlePrevWeek = () => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() - 7);
+    onSelectDate(d);
+  };
+
+  const handleNextWeek = () => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() + 7);
+    onSelectDate(d);
+  };
+
   return (
-    <ScrollView 
-      horizontal 
-      showsHorizontalScrollIndicator={false} 
-      contentContainerStyle={styles.scroll}
-    >
-      {weekDays.map((date) => {
-        const isSelected = date.toDateString() === selectedDate.toDateString();
-        const isToday = date.toDateString() === today;
-        const dayIndex = date.getDay();
-        
-        return (
-          <Pressable
-            key={date.toISOString()}
-            style={[styles.dayBox, isSelected && styles.dayBoxActive]}
-            onPress={() => onSelectDate(date)}
-          >
-            <Text style={[styles.dayLabel, isSelected && styles.dayLabelActive]}>
-              {VI_DAYS[dayIndex]}
-            </Text>
-            <View style={[styles.numberCircle, isSelected && styles.numberCircleActive, isToday && !isSelected && styles.numberCircleToday]}>
-              <Text style={[
-                styles.numberText, 
-                isSelected && styles.numberTextActive,
-                isToday && !isSelected && styles.numberTextToday
-              ]}>
-                {date.getDate()}
+    <View style={styles.wrapper}>
+      <Pressable onPress={handlePrevWeek} style={styles.navBtn}>
+        <Ionicons name="chevron-back" size={22} color="#888" />
+      </Pressable>
+
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={styles.scroll}
+        style={styles.scrollContainer}
+      >
+        {weekDays.map((date) => {
+          const isSelected = date.toDateString() === selectedDate.toDateString();
+          const isToday = date.toDateString() === today;
+          const dayIndex = date.getDay();
+          
+          return (
+            <Pressable
+              key={date.toISOString()}
+              style={[styles.dayBox, isSelected && styles.dayBoxActive]}
+              onPress={() => onSelectDate(date)}
+            >
+              <Text style={[styles.dayLabel, isSelected && styles.dayLabelActive]}>
+                {VI_DAYS[dayIndex]}
               </Text>
-            </View>
-          </Pressable>
-        );
-      })}
-    </ScrollView>
+              <View style={[styles.numberCircle, isSelected && styles.numberCircleActive, isToday && !isSelected && styles.numberCircleToday]}>
+                <Text style={[
+                  styles.numberText, 
+                  isSelected && styles.numberTextActive,
+                  isToday && !isSelected && styles.numberTextToday
+                ]}>
+                  {date.getDate()}
+                </Text>
+              </View>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
+      <Pressable onPress={handleNextWeek} style={styles.navBtn}>
+        <Ionicons name="chevron-forward" size={22} color="#888" />
+      </Pressable>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 12, gap: 6 },
+  wrapper: { flexDirection: 'row', alignItems: 'center' },
+  navBtn: { padding: 4, justifyContent: 'center', alignItems: 'center' },
+  scrollContainer: { flex: 1, marginHorizontal: 4 },
+  scroll: { paddingHorizontal: 2, gap: 6 },
   dayBox: { 
     alignItems: 'center', 
     paddingVertical: 8, 

@@ -18,7 +18,6 @@ import ShoppingChecklist from '../components/recipe-detail/ShoppingChecklist';
 import RecipeVideo from '../components/recipe-detail/RecipeVideo';
 import ReviewItem from '../components/recipe-detail/ReviewItem';
 import { useAppStore } from '../store/useAppStore';
-import { compareWithPantry } from '../utils/recipeHelpers';
 import { COLORS } from '../constants/theme';
 
 const RecipeDetailScreen = ({ route, navigation }) => {
@@ -33,7 +32,7 @@ const RecipeDetailScreen = ({ route, navigation }) => {
   } = useAppStore();
 
   const [showReview, setShowReview] = useState(false);
-  const [currentStats, setCurrentStats] = useState(recipe.reviews);
+  const [currentStats, setCurrentStats] = useState(recipe.reviews || { avgRating: 0, total: 0 });
 
   // Hide tab bar when entering detail & Fetch reviews
   useFocusEffect(
@@ -52,31 +51,10 @@ const RecipeDetailScreen = ({ route, navigation }) => {
 
   const isSaved = savedRecipeIds?.has(recipe.id);
 
-  const { missing } = useMemo(
-    () => compareWithPantry(recipe.ingredients, pantryItems || []),
-    [recipe.ingredients, pantryItems]
-  );
-
-  const hasMissingIngredients = missing.length > 0;
-
   const handleSave = () => toggleSaveRecipe?.(recipe.id);
 
   const handleReviewSubmit = (reviewData) => {
     submitReview?.(recipe.id, reviewData);
-  };
-
-  const handleShoppingAdd = () => {
-    const servings = parseInt(recipe.servings) || 2;
-    Alert.alert(
-      "Lên kế hoạch đi chợ",
-      `Bạn muốn tính toán nguyên liệu thiếu cho mấy người ăn?`,
-      [
-        { text: "Hủy", style: "cancel" },
-        { text: `1 người`, onPress: () => addToShoppingList(recipe.id, 1) },
-        { text: `${servings} người`, onPress: () => addToShoppingList(recipe.id, servings) },
-        { text: `${servings * 2} người`, onPress: () => addToShoppingList(recipe.id, servings * 2) },
-      ]
-    );
   };
 
   const handleLog = () => {
@@ -118,8 +96,12 @@ const RecipeDetailScreen = ({ route, navigation }) => {
 
             <RecipeVideo videoUrl={recipe.videoUrl} />
 
-            <IngredientTable ingredients={recipe.ingredients} pantryItems={pantryItems} />
-            <CookingSteps steps={recipe.steps} />
+            {recipe.item_type !== 'food' && (
+              <>
+                <IngredientTable ingredients={recipe.ingredients || []} pantryItems={pantryItems} />
+                <CookingSteps steps={recipe.steps || []} />
+              </>
+            )}
 
             {/* Reviews summary & List */}
             <View style={styles.reviewSummary}>
@@ -157,11 +139,9 @@ const RecipeDetailScreen = ({ route, navigation }) => {
 
         <RecipeActionBar
           onReview={() => setShowReview(true)}
-          onShopping={handleShoppingAdd}
           onLog={handleLog}
           onSave={handleSave}
           isSaved={isSaved}
-          showShopping={hasMissingIngredients}
         />
 
         <ReviewBottomSheet

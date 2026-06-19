@@ -47,16 +47,13 @@ const RecipeTabBar = ({ activeTab, onChange }) => {
 
 const styles = StyleSheet.create({
   outerContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    alignItems: 'flex-start', // Trên Web không kéo dài hết chiều ngang
+    flex: 1,
   },
   container: {
     flexDirection: 'row',
     backgroundColor: 'rgba(0,0,0,0.05)', // Nền xám nhẹ dạng track
     borderRadius: 16,
     padding: 4,
-    width: '100%',
   },
   containerWeb: {
     width: 'auto', // Trên Web chỉ dài theo nội dung
@@ -64,7 +61,8 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
     alignItems: 'center',
     borderRadius: 12,
     transitionDuration: '200ms', // Chỉ áp dụng cho Web
@@ -82,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.5)',
   },
   label: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
     color: '#666',
   },

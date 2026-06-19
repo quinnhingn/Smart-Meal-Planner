@@ -24,7 +24,6 @@ const MealSection = ({ type, items, totalCalo, isExpanded, onToggle, onEditItem,
 
   return (
     <View style={styles.neoCardWrapper}>
-      <View style={styles.neoCardShadow} />
       <View style={styles.card}>
       <Pressable style={styles.header} onPress={handleToggle}>
         <View style={[styles.iconBox, { backgroundColor: theme.bg }]}>
@@ -71,20 +70,16 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 16,
   },
-  neoCardShadow: {
-    position: 'absolute',
-    top: 6,
-    left: 6,
-    right: -6,
-    bottom: -6,
-    backgroundColor: '#1A1D1E',
-    borderRadius: 24,
-  },
   card: {
     backgroundColor: '#FFF',
     borderRadius: 24,
-    borderWidth: 2,
-    borderColor: '#1A1D1E',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
     overflow: 'hidden',
   },
   header: { flexDirection: 'row', alignItems: 'center', padding: 16 },

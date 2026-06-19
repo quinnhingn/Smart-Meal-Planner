@@ -78,35 +78,27 @@ const ScanCameraScreen = ({ navigation, route }) => {
     setAiResults(null);
   };
 
-  const handleSave = async (itemsArray) => {
+  const handleSave = async (itemsArray, selectedMeal) => {
     try {
       setIsAnalyzing(true); // Re-use this state for saving indicator
-      console.log("💾 [Mock Flow] Đang lưu mảng món ăn...", itemsArray);
-      
-      // MOCK DELAY CHO VIỆC LƯU
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // MOCK LƯU VÀO STORE
-      // Vì addDiaryItem gốc có thể chỉ hỗ trợ 1 món, ta map qua mảng
-      const hour = new Date().getHours();
-      const dynamicMealType = hour < 10 ? 'breakfast' : hour < 15 ? 'lunch' : hour < 20 ? 'dinner' : 'snack';
+      console.log("💾 [AI Flow] Đang lưu mảng món ăn...", itemsArray);
 
       for (const item of itemsArray) {
-        const mockLog = {
-          id: Math.random().toString(),
+        const logData = {
           meal_name: item.name,
-          meal_type: dynamicMealType,
-          servings: 1,
-          calories: Math.round((item.base_calo * item.gram_input) / 100),
-          protein: Math.round((item.base_protein * item.gram_input) / 100),
-          carbs: Math.round((item.base_carbs * item.gram_input) / 100),
-          fat: Math.round((item.base_fat * item.gram_input) / 100),
+          meal_type: selectedMeal,
+          servings: item.servings_input || 1,
+          calories: Math.round(item.base_calo * (item.servings_input || 1)),
+          protein: Math.round(item.base_protein * (item.servings_input || 1)),
+          carbs: Math.round(item.base_carbs * (item.servings_input || 1)),
+          fat: Math.round(item.base_fat * (item.servings_input || 1)),
+          recipe_id: item.recipe_id, // Truyền ID để lấy ảnh
           created_at: new Date().toISOString()
         };
-        await addDiaryItem(mockLog);
+        await addDiaryItem(logData);
       }
 
-      Alert.alert("Thành công", `Đã lưu ${itemsArray.length} món vào nhật ký!`);
+      // Thông báo thành công đã được addDiaryItem xử lý (Toast)
       navigation.goBack();
       
     } catch (error) {

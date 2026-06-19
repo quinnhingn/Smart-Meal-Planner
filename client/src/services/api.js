@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
 
-const BASE_URL = 'http://192.168.1.18:5001/api';
+const BASE_URL = 'http://192.168.1.8:5001/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -56,6 +56,11 @@ export const aiApi = {
   getNutritionInsight: () => fetchApi('GET', '/ai/nutrition-insight'),
   suggestRecipesByPantry: () => fetchApi('GET', '/ai/suggest-recipes-pantry'),
   logExternalRecipe: (recipeData) => fetchApi('POST', '/ai/log-external-recipe', recipeData)
+};
+
+export const recommendationApi = {
+  getRecommendations: (mealType = 'dinner') => fetchApi('GET', `/recommendations?meal_type=${mealType}`),
+  getExplain: (recipeId, mealType = 'dinner') => fetchApi('GET', `/recommendations/${recipeId}/explain?meal_type=${mealType}`)
 };
 
 export const recipeApi = {

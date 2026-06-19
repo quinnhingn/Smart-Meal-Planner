@@ -3,8 +3,17 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet, Image, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
-import { formatCookTime, getAvailabilityInfo } from '../../utils/recipeHelpers';
+import { formatCookTime } from '../../utils/recipeHelpers';
 import Svg, { Circle } from 'react-native-svg';
+
+const getDifficultyColor = (diff) => {
+  switch (diff) {
+    case 'Dễ': return { bg: '#E8F5E9', text: '#2E7D32' };
+    case 'Trung bình': return { bg: '#FFF3E0', text: '#E65100' };
+    case 'Khó': return { bg: '#FFEBEE', text: '#C62828' };
+    default: return { bg: '#F5F5F5', text: '#616161' };
+  }
+};
 
 const MatchRing = ({ percentage, size = 48 }) => {
   const strokeWidth = 4;
@@ -47,28 +56,20 @@ const MatchRing = ({ percentage, size = 48 }) => {
   );
 };
 
-const MiniMacroBar = ({ label, percentage, color, absoluteValue }) => {
-  // If percentage is undefined, fallback to a relative visual fill (max 100g = 100%)
-  const safePercentage = Math.min(percentage !== undefined ? percentage : Math.min(absoluteValue, 100), 100);
+const MacroPill = ({ label, color, absoluteValue }) => {
   return (
-    <View style={styles.miniBarContainer}>
-      <View style={styles.miniBarHeader}>
-        <Text style={styles.miniBarLabel}>{label}</Text>
-        <Text style={styles.miniBarAbsolute}>{Math.round(absoluteValue)}g</Text>
-      </View>
-      <View style={styles.miniBarBg}>
-        <View style={[styles.miniBarFill, { width: `${safePercentage}%`, backgroundColor: color }]} />
-      </View>
+    <View style={[styles.macroPill, { backgroundColor: `${color}15`, borderColor: `${color}30` }]}>
+      <Text style={[styles.macroPillText, { color: color }]}>
+        {label} {Math.round(absoluteValue)}g
+      </Text>
     </View>
   );
 };
 
 const RecipeCard = ({ 
-  recipe, onPress, onSaveToggle, isSaved, missingCount, totalIngredients, cardWidth,
+  recipe, onPress, onSaveToggle, isSaved, cardWidth,
   isOwner = false, onEdit, onShowReviews 
 }) => {
-  const avail = getAvailabilityInfo(missingCount, totalIngredients);
-
   return (
     <View style={[styles.cardWrapper, cardWidth ? { width: cardWidth } : null]}>
       <View style={styles.shadowBlock} />
@@ -106,11 +107,9 @@ const RecipeCard = ({
               <Ionicons name="time-outline" size={14} /> {formatCookTime(recipe.cookTime || recipe.time)}  •  {recipe.macros?.calories || recipe.calories || 0} kcal
             </Text>
 
-            {/* Chỉ hiện Badge nguyên liệu nếu KHÔNG PHẢI là chủ sở hữu (Tab cộng đồng) */}
-            {!isOwner && (
-              <View style={[styles.availBadge, { backgroundColor: avail.bgColor }]}>
-                <View style={[styles.dot, { backgroundColor: avail.color }]} />
-                <Text style={[styles.availText, { color: avail.color }]}>{avail.label}</Text>
+            {!isOwner && recipe.difficulty && (
+              <View style={[styles.availBadge, { backgroundColor: getDifficultyColor(recipe.difficulty).bg }]}>
+                <Text style={[styles.availText, { color: getDifficultyColor(recipe.difficulty).text }]}>{recipe.difficulty}</Text>
               </View>
             )}
           </View>
@@ -118,10 +117,10 @@ const RecipeCard = ({
           {recipe.match_percent && <MatchRing percentage={recipe.match_percent} />}
         </View>
 
-        <View style={styles.macroGaps}>
-          <MiniMacroBar label="Pro" percentage={recipe.fill_percent?.protein} color="#E53935" absoluteValue={recipe.macros?.protein || 0} />
-          <MiniMacroBar label="Carb" percentage={recipe.fill_percent?.carbs} color="#29B6F6" absoluteValue={recipe.macros?.carbs || 0} />
-          <MiniMacroBar label="Fat" percentage={recipe.fill_percent?.fat} color="#FBC02D" absoluteValue={recipe.macros?.fat || 0} />
+        <View style={styles.macroPillsContainer}>
+          <MacroPill label="Pro" color="#E53935" absoluteValue={recipe.macros?.protein || 0} />
+          <MacroPill label="Carb" color="#29B6F6" absoluteValue={recipe.macros?.carbs || 0} />
+          <MacroPill label="Fat" color="#FBC02D" absoluteValue={recipe.macros?.fat || 0} />
         </View>
 
         {/* Nút Xem đánh giá: Chỉ hiện ở tab Cá nhân */}
@@ -143,7 +142,6 @@ const styles = StyleSheet.create({
   // Neo-brutalism Card Style
   cardWrapper: {
     position: 'relative',
-    marginBottom: 16,
     width: '100%',
   },
   shadowBlock: {
@@ -200,13 +198,9 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
 
-  macroGaps: { flexDirection: 'row', gap: 12, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#F0F0F0' },
-  miniBarContainer: { flex: 1 },
-  miniBarHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
-  miniBarLabel: { fontSize: 11, fontWeight: '700', color: '#888', textTransform: 'uppercase' },
-  miniBarAbsolute: { fontSize: 11, fontWeight: '800', color: '#1A1D1E' },
-  miniBarBg: { height: 6, backgroundColor: '#F0F0F0', borderRadius: 3, overflow: 'hidden' },
-  miniBarFill: { height: '100%', borderRadius: 3 },
+  macroPillsContainer: { flexDirection: 'row', justifyContent: 'space-between', gap: 8, paddingTop: 14, borderTopWidth: 1, borderTopColor: '#F0F0F0', flexWrap: 'nowrap' },
+  macroPill: { flex: 1, paddingHorizontal: 4, paddingVertical: 6, borderRadius: 12, borderWidth: 1, alignItems: 'center' },
+  macroPillText: { fontSize: 12, fontWeight: '800' },
   
   reviewBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 12, marginTop: 12, borderTopWidth: 1, borderTopColor: '#1A1D1E', borderStyle: 'dashed' },
   reviewText: { fontSize: 13, fontWeight: '800', color: '#1A1D1E' },

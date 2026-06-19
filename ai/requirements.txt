@@ -1,7 +1,6 @@
 
 flask
 flask-cors
-tensorflow-macos==2.15.0
-tensorflow-metal==1.1.0
+tensorflow
 pillow
 numpy<2.0.0

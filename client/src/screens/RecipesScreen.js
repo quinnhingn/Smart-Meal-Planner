@@ -1,6 +1,6 @@
 // src/screens/RecipesScreen.js
 import React, { useState, useCallback } from 'react';
-import { View, TextInput, StyleSheet, Platform, useWindowDimensions } from 'react-native';
+import { View, TextInput, StyleSheet, Platform, useWindowDimensions, Modal, Text, Pressable, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import ResponsiveContainer from '../components/ResponsiveContainer';
@@ -9,9 +9,10 @@ import CommunityRecipesTab from '../components/recipes/CommunityRecipesTab';
 import MyRecipesTab from '../components/recipes/MyRecipesTab';
 import SavedRecipesTab from '../components/recipes/SavedRecipesTab';
 import RecipeFormModal from '../components/recipe-form/RecipeFormModal';
-import AIFloatingChip from '../components/recipes/AIFloatingChip';
 import { useAppStore } from '../store/useAppStore';
 import { recipeApi } from '../services/api';
+import { RECIPE_FILTERS } from '../utils/mockRecipes';
+import { COLORS } from '../constants/theme';
 
 const RecipesScreen = ({ navigation }) => {
   const { width: windowWidth } = useWindowDimensions();
@@ -95,6 +96,11 @@ const RecipesScreen = ({ navigation }) => {
 
   // STATE MỚI: Quản lý hiển thị form đánh giá
   const [showReviewForm, setShowReviewForm] = useState(false);
+
+  // STATE MỚI: Quản lý Header Động và Lọc
+  const [activeFilters, setActiveFilters] = useState(['all']);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
 
   // Show tab bar and fetch data
   useFocusEffect(
@@ -195,32 +201,53 @@ const RecipesScreen = ({ navigation }) => {
     setActiveTab('community');
   };
 
-  const handleAIPress = () => {
-    navigation.navigate('Scan', { mode: 'recipe' });
-  };
-
   return (
     <ResponsiveContainer useImageBg={false}>
       <View style={styles.container}>
-        {/* Search bar */}
-        <View style={styles.searchRow}>
-          <View style={styles.searchWrap}>
-            <Ionicons name="search" size={18} color="#999" style={styles.searchIcon} />
-            <TextInput
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholder="Tìm công thức..."
-              placeholderTextColor="#AAA"
-              style={styles.searchInput}
-            />
-            {searchQuery.length > 0 && (
-              <Ionicons name="close-circle" size={18} color="#BBB" onPress={() => setSearchQuery('')} />
-            )}
-          </View>
+        {/* Dynamic Header */}
+        <View style={styles.headerRow}>
+          {!isSearchExpanded ? (
+            <>
+              {/* Tab Bar takes up remaining space */}
+              <RecipeTabBar activeTab={activeTab} onChange={setActiveTab} />
+              
+              {/* Action Buttons */}
+              <View style={styles.headerActions}>
+                <Pressable onPress={() => setIsSearchExpanded(true)} style={styles.iconButton}>
+                  <Ionicons name="search" size={20} color="#1A1D1E" />
+                </Pressable>
+                
+                <Pressable onPress={() => setIsFilterModalVisible(true)} style={styles.iconButton}>
+                  <Ionicons name="options-outline" size={20} color="#1A1D1E" />
+                  {/* Badge for active filters */}
+                  {activeFilters.length > 0 && !activeFilters.includes('all') && (
+                    <View style={styles.filterBadge} />
+                  )}
+                </Pressable>
+              </View>
+            </>
+          ) : (
+            <View style={styles.expandedSearchWrap}>
+              <Ionicons name="search" size={18} color="#999" style={styles.searchIcon} />
+              <TextInput
+                autoFocus
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                placeholder="Tìm công thức..."
+                placeholderTextColor="#AAA"
+                style={styles.searchInput}
+              />
+              {searchQuery.length > 0 && (
+                <Pressable onPress={() => setSearchQuery('')} style={styles.clearSearchBtn} hitSlop={8}>
+                  <Ionicons name="close-circle" size={18} color="#BBB" />
+                </Pressable>
+              )}
+              <Pressable onPress={() => setIsSearchExpanded(false)} style={styles.closeSearchBtn}>
+                <Text style={styles.closeSearchText}>Đóng</Text>
+              </Pressable>
+            </View>
+          )}
         </View>
-
-        {/* Tab bar */}
-        <RecipeTabBar activeTab={activeTab} onChange={setActiveTab} />
 
         {/* Tab content */}
         <View style={styles.content}>
@@ -229,6 +256,7 @@ const RecipesScreen = ({ navigation }) => {
               dbRecipes={communityRecipes}
               isLoading={isLoading}
               searchQuery={searchQuery}
+              activeFilters={activeFilters}
               onRecipePress={handleRecipePress}
               onSaveToggle={toggleSaveRecipe}
               savedIds={savedRecipeIds}
@@ -262,9 +290,6 @@ const RecipesScreen = ({ navigation }) => {
           )}
         </View>
 
-        {/* AI Chip — chỉ hiện ở tab Cộng đồng */}
-        {activeTab === 'community' && <AIFloatingChip onPress={handleAIPress} />}
-
         {/* Form Modal */}
         <RecipeFormModal
           visible={showForm}
@@ -280,23 +305,91 @@ const RecipesScreen = ({ navigation }) => {
                {/* Đặt component ReviewModal của bạn ở đây */}
            </View>
         )}
+
+        {/* Filter Bottom Sheet / Modal */}
+        <Modal visible={isFilterModalVisible} animationType="slide" transparent={true}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.bottomSheet}>
+              <View style={styles.sheetHeader}>
+                <Text style={styles.sheetTitle}>Bộ lọc tìm kiếm</Text>
+                <Pressable onPress={() => setIsFilterModalVisible(false)} hitSlop={10}>
+                  <Ionicons name="close" size={24} color="#1A1D1E" />
+                </Pressable>
+              </View>
+              
+              <ScrollView contentContainerStyle={styles.sheetContent}>
+                <View style={styles.filterGrid}>
+                  {RECIPE_FILTERS.map((filter) => {
+                    const isActive = activeFilters.includes(filter.id);
+                    return (
+                      <Pressable
+                        key={filter.id}
+                        onPress={() => {
+                          if (filter.id === 'all') {
+                            setActiveFilters(['all']);
+                          } else {
+                            let newFilters = activeFilters.filter(f => f !== 'all');
+                            if (newFilters.includes(filter.id)) {
+                              newFilters = newFilters.filter(f => f !== filter.id);
+                              if (newFilters.length === 0) newFilters = ['all'];
+                            } else {
+                              newFilters.push(filter.id);
+                            }
+                            setActiveFilters(newFilters);
+                          }
+                        }}
+                        style={[styles.filterChip, isActive && styles.filterChipActive]}
+                      >
+                        {isActive && filter.id !== 'all' && (
+                          <Ionicons name="checkmark" size={14} color="#FFF" style={{marginRight: 4}} />
+                        )}
+                        <Text style={[styles.filterChipText, isActive && styles.filterChipTextActive]}>{filter.label}</Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </ScrollView>
+              
+              <View style={styles.sheetFooter}>
+                <Pressable onPress={() => setIsFilterModalVisible(false)} style={styles.applyBtn}>
+                  <Text style={styles.applyBtnText}>Áp dụng ({activeFilters.includes('all') ? 'Tất cả' : activeFilters.length})</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ResponsiveContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 4 },
-  searchRow: { paddingHorizontal: 16, marginBottom: 8, marginTop: 4 },
-  searchWrap: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF',
-    borderRadius: 16, paddingHorizontal: 14, paddingVertical: 12, gap: 10,
-    borderWidth: 1, borderColor: 'rgba(0,0,0,0.06)',
-    ...Platform.select({ web: { boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }, default: { elevation: 1 } }),
-  },
+  container: { flex: 1, paddingTop: 4, paddingBottom: 90 },
+  headerRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, marginBottom: 12, marginTop: 4, height: 44 },
+  headerActions: { flexDirection: 'row', gap: 8, marginLeft: 12 },
+  iconButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(0,0,0,0.06)' },
+  filterBadge: { position: 'absolute', top: 8, right: 8, width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.danger, borderWidth: 1, borderColor: '#FFF' },
+  expandedSearchWrap: { flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF', borderRadius: 22, paddingHorizontal: 14, height: 44, borderWidth: 1, borderColor: 'rgba(0,0,0,0.06)', ...Platform.select({ web: { boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }, default: { elevation: 1 } }) },
+  clearSearchBtn: { padding: 4 },
+  closeSearchBtn: { marginLeft: 8, paddingHorizontal: 8, justifyContent: 'center' },
+  closeSearchText: { fontSize: 14, fontWeight: '700', color: COLORS.primary },
   searchIcon: { marginTop: 1 },
   searchInput: { flex: 1, fontSize: 15, fontWeight: '600', color: '#1A1D1E', paddingVertical: 0, outlineStyle: 'none' },
   content: { flex: 1 },
+  
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' },
+  bottomSheet: { backgroundColor: '#FFF', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, paddingBottom: Platform.OS === 'ios' ? 40 : 20, maxHeight: '80%' },
+  sheetHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  sheetTitle: { fontSize: 18, fontWeight: '800', color: '#1A1D1E' },
+  sheetContent: { paddingBottom: 20 },
+  filterGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  filterChip: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#F8F9FA', borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)' },
+  filterChipActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
+  filterChipText: { fontSize: 14, fontWeight: '600', color: '#555' },
+  filterChipTextActive: { color: '#FFF' },
+  sheetFooter: { marginTop: 10 },
+  applyBtn: { backgroundColor: '#1A1D1E', borderRadius: 16, paddingVertical: 14, alignItems: 'center' },
+  applyBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
 });
 
 export default RecipesScreen;

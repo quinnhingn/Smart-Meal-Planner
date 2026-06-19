@@ -3,13 +3,18 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const MacroSummary = ({ stats, targetCalo }) => {
-  const isGoalMet = stats.calo >= targetCalo;
-  const isProgressing = stats.calo > 0 && stats.calo < targetCalo;
+  const lowerBound = targetCalo * 0.85; // Dung sai 15%
+  const upperBound = targetCalo * 1.15;
+
+  const isEmpty = stats.calo === 0;
+  const isOver = stats.calo > upperBound;
+  const isGoalMet = stats.calo >= lowerBound && stats.calo <= upperBound;
+  const isProgressing = stats.calo > 0 && stats.calo < lowerBound;
+
   const percent = Math.min(100, Math.round((stats.calo / targetCalo) * 100));
 
   return (
     <View style={styles.neoCardWrapper}>
-      <View style={styles.neoCardShadow} />
       <View style={styles.card}>
         <View style={styles.topRow}>
           <View>
@@ -21,18 +26,22 @@ const MacroSummary = ({ stats, targetCalo }) => {
           </View>
           <View style={[
             styles.badge,
-            isGoalMet ? styles.badgeSuccess : (isProgressing ? styles.badgeWarning : styles.badgeDefault)
+            isGoalMet ? styles.badgeSuccess :
+              isOver ? styles.badgeDanger :
+                (isProgressing ? styles.badgeWarning : styles.badgeDefault)
           ]}>
             <Ionicons
-              name={isGoalMet ? "checkmark-circle" : (isProgressing ? "time" : "ellipse-outline")}
+              name={isGoalMet ? "checkmark-circle" : isOver ? "alert-circle" : (isProgressing ? "time" : "ellipse-outline")}
               size={14}
-              color={isGoalMet ? "#2E7D32" : (isProgressing ? "#E65100" : "#888")}
+              color={isGoalMet ? "#2E7D32" : isOver ? "#C62828" : (isProgressing ? "#E65100" : "#888")}
             />
             <Text style={[
               styles.badgeText,
-              isGoalMet ? styles.textSuccess : (isProgressing ? styles.textWarning : styles.textDefault)
+              isGoalMet ? styles.textSuccess :
+                isOver ? styles.textDanger :
+                  (isProgressing ? styles.textWarning : styles.textDefault)
             ]}>
-              {isGoalMet ? "Đạt mục tiêu" : (isProgressing ? "Chưa đủ" : "Chưa có dữ liệu")}
+              {isGoalMet ? "Ngưỡng tối ưu" : isOver ? "Vượt ngưỡng" : (isProgressing ? "Thiếu hụt Calo" : "Chưa có dữ liệu")}
             </Text>
           </View>
         </View>
@@ -42,7 +51,8 @@ const MacroSummary = ({ stats, targetCalo }) => {
           <View style={[
             styles.progressFill,
             { width: `${percent}%` },
-            !isGoalMet && styles.progressFillOver
+            isGoalMet ? styles.progressFillGoal :
+              isOver ? styles.progressFillOver : null
           ]} />
         </View>
         <Text style={styles.targetText}>Mục tiêu: {targetCalo.toLocaleString()} kcal</Text>
@@ -75,21 +85,17 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
   },
-  neoCardShadow: {
-    position: 'absolute',
-    top: 6,
-    left: 6,
-    right: -6,
-    bottom: -6,
-    backgroundColor: '#1A1D1E',
-    borderRadius: 24,
-  },
   card: {
     backgroundColor: '#FFF',
     borderRadius: 24,
     padding: 20,
-    borderWidth: 2,
-    borderColor: '#1A1D1E',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
   },
   topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
   label: { fontSize: 13, fontWeight: '700', color: '#888', marginBottom: 4 },
@@ -104,22 +110,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     gap: 4
   },
-  badgeSuccess: { backgroundColor: '#E8F5E9' },
-  badgeWarning: { backgroundColor: '#FFF3E0' },
-  badgeDefault: { backgroundColor: '#F5F5F5' },
-  badgeText: { fontSize: 12, fontWeight: '800' },
+  badgeSuccess: { backgroundColor: '#E8F5E9', borderColor: '#C8E6C9' },
+  badgeWarning: { backgroundColor: '#FFF3E0', borderColor: '#FFE0B2' },
+  badgeDanger: { backgroundColor: '#FFEBEE', borderColor: '#FFCDD2' },
+  badgeDefault: { backgroundColor: '#F5F5F5', borderColor: '#E0E0E0' },
+  badgeText: { fontSize: 13, fontWeight: '800' },
   textSuccess: { color: '#2E7D32' },
   textWarning: { color: '#E65100' },
+  textDanger: { color: '#C62828' },
   textDefault: { color: '#888' },
-  progressTrack: {
-    height: 8,
-    backgroundColor: '#F0F0F0',
-    borderRadius: 4,
-    marginBottom: 6,
-    overflow: 'hidden'
-  },
-  progressFill: { height: '100%', backgroundColor: '#4CAF50', borderRadius: 4 },
-  progressFillOver: { backgroundColor: '#FF6B6B' },
+  progressTrack: { height: 10, backgroundColor: '#F0F0F0', borderRadius: 8, overflow: 'hidden', marginBottom: 8 },
+  progressFill: { height: '100%', backgroundColor: '#4CAF50', borderRadius: 8 },
+  progressFillGoal: { backgroundColor: '#4CAF50' },
+  progressFillOver: { backgroundColor: '#F44336' },
   targetText: { fontSize: 12, color: '#AAA', fontWeight: '600', marginBottom: 16 },
   pillsRow: { flexDirection: 'row', gap: 10 },
   pill: {

@@ -2,7 +2,8 @@
 import { create } from 'zustand';
 
 // Gộp Import: Dùng API thật từ nhánh main, giữ nguyên các Utils
-import { authApi, recipeApi } from '../services/api'; 
+import { authApi, recipeApi, recommendationApi } from '../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { calculateTDEEAndMacros } from '../utils/calculator';
 
 export const useAppStore = create((set, get) => ({
@@ -161,47 +162,118 @@ export const useAppStore = create((set, get) => ({
   // ==========================================
   diaryItems: [],
   fetchDiaryItems: async () => {
-    // MOCK-DRIVEN DEVELOPMENT: Skip real API call
-    set({ isLoading: false });
+    try {
+      set({ isLoading: true });
+      const res = await recipeApi.getDiary();
+      if (res.success && res.data?.data) {
+        const mealTypeMap = {
+          'breakfast': 'Sáng',
+          'lunch': 'Trưa',
+          'dinner': 'Tối',
+          'snack': 'Bữa phụ'
+        };
+        const formattedData = res.data.data.map(item => ({
+          ...item,
+          mealType: mealTypeMap[item.mealType] || item.mealType
+        }));
+        set({ diaryItems: formattedData });
+      }
+    } catch (e) {
+      console.error("Lỗi lấy nhật ký:", e);
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
   addDiaryItem: async (payload) => {
-    // MOCK-DRIVEN DEVELOPMENT
-    // Chuẩn hóa keys để tương thích với cả form tay và AI Scanner (trả về meal_name, calories...)
-    const mockLog = {
-      id: payload.id || Math.random().toString(),
-      name: payload.meal_name || payload.name,
-      mealType: payload.meal_type === 'lunch' ? 'Trưa' : 
-                payload.meal_type === 'dinner' ? 'Tối' : 
-                payload.meal_type === 'breakfast' ? 'Sáng' : 
-                payload.mealType || 'Trưa',
-      calo: payload.calories !== undefined ? payload.calories : (payload.calo || 0),
-      protein: payload.protein || 0,
-      carbs: payload.carbs || 0,
-      fat: payload.fat || 0,
-      date: payload.created_at || payload.date || new Date().toISOString()
-    };
-    
-    set((state) => ({ diaryItems: [mockLog, ...state.diaryItems] }));
-    get().showToast("Đã lưu nhật ký ăn uống!", 'success');
-    return true;
+    try {
+      set({ isSaving: true });
+      // Map UI fields (calo, name, mealType) or AI fields (calories, meal_name, meal_type) to Backend API fields
+      const mealTypeMapping = {
+        'Sáng': 'breakfast',
+        'Trưa': 'lunch',
+        'Tối': 'dinner',
+        'Bữa phụ': 'snack'
+      };
+
+      const rawMealType = payload.meal_type || payload.mealType || 'Trưa';
+      const apiMealType = mealTypeMapping[rawMealType] || rawMealType;
+
+      const apiPayload = {
+        meal_name: payload.meal_name || payload.name,
+        meal_type: apiMealType,
+        calories: payload.calories !== undefined ? payload.calories : (payload.calo || 0),
+        protein: payload.protein || 0,
+        carbs: payload.carbs || 0,
+        fat: payload.fat || 0,
+        servings: payload.servings || 1,
+        recipe_id: payload.recipe_id
+      };
+      
+      const res = await recipeApi.logMeal(apiPayload);
+      if (res.success) {
+        get().fetchDiaryItems();
+        get().showToast('Thêm món thành công!', 'success');
+      } else {
+        get().showToast(res.message || 'Lỗi thêm món', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      get().showToast('Lỗi mạng', 'error');
+    } finally {
+      set({ isSaving: false });
+    }
   },
 
   deleteDiaryItem: async (logId) => {
-    // MOCK-DRIVEN DEVELOPMENT
-    set((state) => ({
-      diaryItems: state.diaryItems.filter(item => item.id !== logId.toString() && item.id !== logId)
-    }));
-    get().showToast("Đã xóa nhật ký ăn uống", 'info');
+    try {
+      const res = await recipeApi.deleteDiaryItem(logId);
+      if (res.success) {
+        get().fetchDiaryItems();
+        get().showToast("Đã xóa nhật ký ăn uống", 'info');
+      } else {
+        get().showToast(res.message || 'Lỗi xóa nhật ký', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      get().showToast('Lỗi mạng', 'error');
+    }
   },
 
   updateDiaryItem: async (payload) => {
-    // MOCK-DRIVEN DEVELOPMENT
-    const { id, ...updates } = payload;
-    set((state) => ({
-      diaryItems: state.diaryItems.map(item => item.id === id ? { ...item, ...updates } : item)
-    }));
-    get().showToast("Đã cập nhật nhật ký", 'success');
+    try {
+      set({ isSaving: true });
+      
+      const mealTypeMapping = {
+        'Sáng': 'breakfast',
+        'Trưa': 'lunch',
+        'Tối': 'dinner',
+        'Bữa phụ': 'snack'
+      };
+      const apiMealType = mealTypeMapping[payload.mealType] || payload.mealType;
+
+      const updates = {
+        name: payload.name,
+        mealType: apiMealType,
+        calo: payload.calo,
+        protein: payload.protein,
+        carbs: payload.carbs,
+        fat: payload.fat
+      };
+      
+      const res = await recipeApi.updateDiaryItem(payload.id, updates);
+      if (res.success) {
+        get().fetchDiaryItems();
+        get().showToast("Đã cập nhật nhật ký", 'success');
+      } else {
+        get().showToast(res.message || 'Lỗi cập nhật', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      get().showToast('Lỗi mạng', 'error');
+    } finally {
+      set({ isSaving: false });
+    }
   },
 
   // 6. DASHBOARD & NUTRITION
@@ -403,12 +475,23 @@ export const useAppStore = create((set, get) => ({
   }),
 
   // ==========================================
-  // 11. MOCK RECOMMENDATIONS
+  // 11. RECOMMENDATIONS
   // ==========================================
   mockRecommendations: [],
-  fetchMockRecommendations: () => {
-    import('../utils/mockDashboardData').then((module) => {
-      set({ mockRecommendations: module.DASHBOARD_MOCK_RECOMMENDATIONS });
-    });
+  recommendationMessage: "",
+  fetchRecommendations: async (mealType = 'dinner') => {
+    try {
+      const response = await recommendationApi.getRecommendations(mealType);
+      if (response.success) {
+        set({ 
+          mockRecommendations: response.data?.data || [],
+          recommendationMessage: response.data?.message || ""
+        });
+      } else {
+        console.error("Lỗi lấy gợi ý: ", response.message);
+      }
+    } catch (e) {
+      console.error("Lỗi gọi API gợi ý:", e);
+    }
   },
 }));

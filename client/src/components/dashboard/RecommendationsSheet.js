@@ -48,17 +48,12 @@ const MatchRing = ({ percentage, size = 48 }) => {
   );
 };
 
-const MiniMacroBar = ({ label, percentage, color, absoluteValue }) => {
-  const safePercentage = Math.min(percentage, 100);
+const MacroPill = ({ label, color, absoluteValue }) => {
   return (
-    <View style={styles.miniBarContainer}>
-      <View style={styles.miniBarHeader}>
-        <Text style={styles.miniBarLabel}>{label}</Text>
-        <Text style={styles.miniBarAbsolute}>{absoluteValue}g</Text>
-      </View>
-      <View style={styles.miniBarBg}>
-        <View style={[styles.miniBarFill, { width: `${safePercentage}%`, backgroundColor: color }]} />
-      </View>
+    <View style={[styles.macroPill, { backgroundColor: `${color}15`, borderColor: `${color}30` }]}>
+      <Text style={[styles.macroPillText, { color: color }]}>
+        {absoluteValue}g {label}
+      </Text>
     </View>
   );
 };
@@ -71,10 +66,25 @@ const RecommendationsSheet = ({ visible, onClose, data = [] }) => {
       <View style={styles.cardWrapper}>
         <View style={styles.shadowBlock} />
         <Pressable 
-          style={styles.card}
+          style={({ pressed }) => [
+            styles.card,
+            { transform: [{ scale: pressed ? 0.98 : 1 }] }
+          ]}
           onPress={() => {
             onClose();
-            // navigation.navigate('RecipeDetail', { recipeId: item.id });
+            // Map the recommendation object to the shape expected by RecipeDetailScreen
+            const fullRecipe = {
+              ...item,
+              title: item.name,
+              cookTime: item.time,
+              servings: item.servings || "1",
+              author: { name: 'Cộng đồng' },
+              labels: [],
+            };
+            // Đợi 300ms để Bottom Sheet đóng mượt mà trước khi chuyển trang
+            setTimeout(() => {
+              navigation.navigate('RecipeDetail', { recipe: fullRecipe });
+            }, 300);
           }}
         >
           <View style={styles.cardTop}>
@@ -89,9 +99,9 @@ const RecommendationsSheet = ({ visible, onClose, data = [] }) => {
           </View>
 
           <View style={styles.macroGaps}>
-            <MiniMacroBar label="Pro" percentage={item.fill_percent?.protein} color="#E53935" absoluteValue={item.macros?.protein || 0} />
-            <MiniMacroBar label="Carb" percentage={item.fill_percent?.carbs} color="#29B6F6" absoluteValue={item.macros?.carbs || 0} />
-            <MiniMacroBar label="Fat" percentage={item.fill_percent?.fat} color="#FBC02D" absoluteValue={item.macros?.fat || 0} />
+            <MacroPill label="Pro" color="#E53935" absoluteValue={item.macros?.protein || 0} />
+            <MacroPill label="Carb" color="#29B6F6" absoluteValue={item.macros?.carbs || 0} />
+            <MacroPill label="Fat" color="#FBC02D" absoluteValue={item.macros?.fat || 0} />
           </View>
         </Pressable>
       </View>
@@ -176,13 +186,9 @@ const styles = StyleSheet.create({
   
   ringText: { fontSize: 13, fontWeight: '800', position: 'absolute' },
   
-  macroGaps: { flexDirection: 'row', gap: 12, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#F0F0F0' },
-  miniBarContainer: { flex: 1 },
-  miniBarHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
-  miniBarLabel: { fontSize: 11, fontWeight: '700', color: '#888', textTransform: 'uppercase' },
-  miniBarAbsolute: { fontSize: 11, fontWeight: '800', color: '#1A1D1E' },
-  miniBarBg: { height: 6, backgroundColor: '#F0F0F0', borderRadius: 3, overflow: 'hidden' },
-  miniBarFill: { height: '100%', borderRadius: 3 },
+  macroGaps: { flexDirection: 'row', gap: 8, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#F0F0F0', flexWrap: 'nowrap' },
+  macroPill: { flex: 1, paddingHorizontal: 4, paddingVertical: 6, borderRadius: 12, borderWidth: 1, alignItems: 'center' },
+  macroPillText: { fontSize: 12, fontWeight: '800' },
 });
 
 export default RecommendationsSheet;

@@ -37,7 +37,7 @@ const OnboardingScreen = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const progressAnim = useRef(new Animated.Value(0)).current;
-  
+
   // Toast State
   const [toast, setToast] = useState({ visible: false, message: '' });
   const toastAnim = useRef(new Animated.Value(-100)).current;
@@ -115,7 +115,7 @@ const OnboardingScreen = () => {
           showToast('Vui lòng nhập cân nặng mục tiêu!');
           return;
         }
-        
+
         const currentW = parseFloat(formData.weight_kg);
         const targetW = parseFloat(formData.target_weight_kg);
 

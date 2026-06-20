@@ -513,66 +513,96 @@ const FitnessHubScreen = ({ navigation }) => {
                 <Pressable style={[styles.subTab, exploreTab === 1 && styles.subTabActive]} onPress={() => setExploreTab(1)}><Text style={[styles.subTabText, exploreTab === 1 && styles.subTabTextActive]}>Cộng đồng</Text></Pressable>
               </View>
               
-              <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F5F5F5', borderRadius: 12, paddingHorizontal: 12, marginBottom: 12 }}>
-                  <Ionicons name="search" size={20} color="#888" />
-                  <TextInput 
-                    style={{ flex: 1, height: 44, marginLeft: 8, fontSize: 14, color: '#333' }} 
-                    placeholder="Tìm kiếm bài tập, lộ trình..." 
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                  />
-                  {searchQuery !== '' && (
-                    <Pressable onPress={() => setSearchQuery('')}>
-                      <Ionicons name="close-circle" size={20} color="#888" />
-                    </Pressable>
-                  )}
-                </View>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 10 }}>
-                  {EXPLORE_CATEGORIES.map(cat => (
-                    <Pressable 
-                      key={cat} 
-                      style={{ paddingHorizontal: 16, paddingVertical: 8, backgroundColor: selectedCategory === cat ? COLORS.primary : '#F0F0F0', borderRadius: 20, marginRight: 8 }}
-                      onPress={() => setSelectedCategory(cat)}
-                    >
-                      <Text style={{ color: selectedCategory === cat ? '#FFF' : '#666', fontWeight: '600', fontSize: 13 }}>{cat}</Text>
-                    </Pressable>
-                  ))}
-                </ScrollView>
-              </View>
-
               {exploreTab === 0 ? (
-                <ScrollView contentContainerStyle={{ padding: 20, paddingTop: 0 }}>
-                  {isLoadingPresets ? (
-                    <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 50 }} />
-                  ) : (
-                    dbPresetPrograms.filter(prog => {
-                      const matchesSearch = prog.title.toLowerCase().includes(searchQuery.toLowerCase());
-                      const matchesCat = selectedCategory === 'Tất cả' || prog.goal === selectedCategory || prog.title.includes(selectedCategory);
-                      return matchesSearch && matchesCat;
-                    }).map(prog => (
-                    <Pressable key={prog.id} style={styles.programCard} onPress={() => { setSelectedProgram(prog); setExpandedPreviewDay(0); }}>
-                      <Image source={{ uri: prog.image }} style={styles.programImage} />
-                      <LinearGradient colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.9)']} style={styles.programOverlay}>
-                        <View style={styles.programBadge}><Text style={styles.programBadgeText}>{prog.duration_days} NGÀY</Text></View>
-                        <Text style={styles.programTitle}>{prog.title}</Text>
-                      </LinearGradient>
-                    </Pressable>
-                  )))}
+                <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+                  <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F5F5F5', borderRadius: 12, paddingHorizontal: 12, marginBottom: 12 }}>
+                      <Ionicons name="search" size={20} color="#888" />
+                      <TextInput 
+                        style={{ flex: 1, height: 44, marginLeft: 8, fontSize: 14, color: '#333' }} 
+                        placeholder="Tìm kiếm bài tập, lộ trình..." 
+                        value={searchQuery}
+                        onChangeText={setSearchQuery}
+                      />
+                      {searchQuery !== '' && (
+                        <Pressable onPress={() => setSearchQuery('')}>
+                          <Ionicons name="close-circle" size={20} color="#888" />
+                        </Pressable>
+                      )}
+                    </View>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 10 }}>
+                      {EXPLORE_CATEGORIES.map(cat => (
+                        <Pressable 
+                          key={cat} 
+                          style={{ paddingHorizontal: 16, paddingVertical: 8, backgroundColor: selectedCategory === cat ? COLORS.primary : '#F0F0F0', borderRadius: 20, marginRight: 8 }}
+                          onPress={() => setSelectedCategory(cat)}
+                        >
+                          <Text style={{ color: selectedCategory === cat ? '#FFF' : '#666', fontWeight: '600', fontSize: 13 }}>{cat}</Text>
+                        </Pressable>
+                      ))}
+                    </ScrollView>
+                  </View>
+                  <View style={{ padding: 20, paddingTop: 0 }}>
+                    {isLoadingPresets ? (
+                      <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 50 }} />
+                    ) : (
+                      dbPresetPrograms.filter(prog => {
+                        const matchesSearch = prog.title.toLowerCase().includes(searchQuery.toLowerCase());
+                        const matchesCat = selectedCategory === 'Tất cả' || prog.goal === selectedCategory || prog.title.includes(selectedCategory);
+                        return matchesSearch && matchesCat;
+                      }).map(prog => (
+                      <Pressable key={prog.id} style={styles.programCard} onPress={() => { setSelectedProgram(prog); setExpandedPreviewDay(0); }}>
+                        <Image source={{ uri: prog.image }} style={styles.programImage} />
+                        <LinearGradient colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.9)']} style={styles.programOverlay}>
+                          <View style={styles.programBadge}><Text style={styles.programBadgeText}>{prog.duration_days} NGÀY</Text></View>
+                          <Text style={styles.programTitle}>{prog.title}</Text>
+                        </LinearGradient>
+                      </Pressable>
+                    )))}
+                  </View>
                 </ScrollView>
               ) : (
                 <View style={{ flex: 1 }}>
                   {isFeedLoading ? <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 50 }} /> : (
                     <FlatList
+                      ListHeaderComponent={() => (
+                        <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F5F5F5', borderRadius: 12, paddingHorizontal: 12, marginBottom: 12 }}>
+                            <Ionicons name="search" size={20} color="#888" />
+                            <TextInput 
+                              style={{ flex: 1, height: 44, marginLeft: 8, fontSize: 14, color: '#333' }} 
+                              placeholder="Tìm kiếm bài tập, lộ trình..." 
+                              value={searchQuery}
+                              onChangeText={setSearchQuery}
+                            />
+                            {searchQuery !== '' && (
+                              <Pressable onPress={() => setSearchQuery('')}>
+                                <Ionicons name="close-circle" size={20} color="#888" />
+                              </Pressable>
+                            )}
+                          </View>
+                          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 10 }}>
+                            {EXPLORE_CATEGORIES.map(cat => (
+                              <Pressable 
+                                key={cat} 
+                                style={{ paddingHorizontal: 16, paddingVertical: 8, backgroundColor: selectedCategory === cat ? COLORS.primary : '#F0F0F0', borderRadius: 20, marginRight: 8 }}
+                                onPress={() => setSelectedCategory(cat)}
+                              >
+                                <Text style={{ color: selectedCategory === cat ? '#FFF' : '#666', fontWeight: '600', fontSize: 13 }}>{cat}</Text>
+                              </Pressable>
+                            ))}
+                          </ScrollView>
+                        </View>
+                      )}
                       data={feedPosts.filter(post => {
                         const matchesSearch = (post.caption || '').toLowerCase().includes(searchQuery.toLowerCase()) || (post.program_title || '').toLowerCase().includes(searchQuery.toLowerCase());
                         const matchesCat = selectedCategory === 'Tất cả' || (post.workout_data && post.workout_data.goal === selectedCategory) || (post.program_title || '').includes(selectedCategory);
                         return matchesSearch && matchesCat;
                       })}
                       keyExtractor={item => item.id}
-                      contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+                      contentContainerStyle={{ paddingBottom: 100 }}
                       showsVerticalScrollIndicator={false}
-                      ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
+                      ItemSeparatorComponent={() => <View style={{ height: 24, paddingHorizontal: 20 }} />}
                       renderItem={({ item }) => {
                         let imageUrl = item.image_url?.startsWith('/uploads') ? BASE_URL.replace('/api', '') + item.image_url : item.image_url;
                         if (!imageUrl && item.workout_data && item.workout_data.exercises && item.workout_data.exercises[0]?.thumb) {
@@ -580,7 +610,8 @@ const FitnessHubScreen = ({ navigation }) => {
                         }
                         
                         return (
-                          <View style={[styles.feedCard, { zIndex: optionsPostId === item.id ? 100 : 1 }]}>
+                          <View style={{ paddingHorizontal: 20 }}>
+                            <View style={[styles.feedCard, { zIndex: optionsPostId === item.id ? 100 : 1 }]}>
                             <View style={[styles.feedHeader, { zIndex: optionsPostId === item.id ? 100 : 1 }]}>
                               <Image source={{ uri: item.avatar || 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Lucky' }} style={styles.feedAvatar} />
                               <View style={{ flex: 1 }}>
@@ -718,6 +749,7 @@ const FitnessHubScreen = ({ navigation }) => {
                                 </Pressable>
                               ) : null}
                             </View>
+                          </View>
                           </View>
                         );
                       }}
